@@ -38,6 +38,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ILocationReference.cs" />
+    <Compile Include="Locations\CircleLocation.cs" />
+    <Compile Include="Locations\GridLocation.cs" />
+    <Compile Include="Locations\ILocation.cs" />
+    <Compile Include="Locations\LineLocation.cs" />
+    <Compile Include="Locations\PointAlongLineLocation.cs" />
+    <Compile Include="Locations\PoiWithAccessPointLocation.cs" />
+    <Compile Include="Locations\PolygonLocation.cs" />
+    <Compile Include="Locations\RectangleLocation.cs" />
     <Compile Include="LocationType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
