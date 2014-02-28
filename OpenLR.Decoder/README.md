@@ -1,0 +1,1 @@
+﻿This project contains all location type decoders.
