@@ -1,24 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{036AD1DA-006A-48B6-826C-83D12561411D}</ProjectGuid>
+    <ProjectGuid>{FBE5BE08-EF13-4108-92B2-46A960879F33}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OpenLR</RootNamespace>
-    <AssemblyName>OpenLR</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Profile154</TargetFrameworkProfile>
+    <RootNamespace>OpenLR.Tests</RootNamespace>
+    <AssemblyName>OpenLR.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
-    <OldToolsVersion>4.0</OldToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -38,23 +30,36 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <!-- A reference to the entire .NET Framework is automatically included -->
-    <None Include="README.md" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ILocationReference.cs" />
-    <Compile Include="Locations\CircleLocation.cs" />
-    <Compile Include="Locations\GridLocation.cs" />
-    <Compile Include="Locations\ILocation.cs" />
-    <Compile Include="Locations\LineLocation.cs" />
-    <Compile Include="Locations\PointAlongLineLocation.cs" />
-    <Compile Include="Locations\PoiWithAccessPointLocation.cs" />
-    <Compile Include="Locations\PolygonLocation.cs" />
-    <Compile Include="Locations\RectangleLocation.cs" />
-    <Compile Include="LocationType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\OpenLR.Binary\OpenLR.Binary.csproj">
+      <Project>{252d884c-8bed-4711-a2da-21f8dc05d697}</Project>
+      <Name>OpenLR.Binary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OpenLR.Decoder\OpenLR.Decoder.csproj">
+      <Project>{16d90c9d-8f4b-4b17-b606-89fd3dc5bd2e}</Project>
+      <Name>OpenLR.Decoder</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OpenLR.Encoder\OpenLR.Encoder.csproj">
+      <Project>{f06bc9db-fcfb-4185-afde-18535b251458}</Project>
+      <Name>OpenLR.Encoder</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OpenLR\OpenLR.csproj">
+      <Project>{036ad1da-006a-48b6-826c-83d12561411d}</Project>
+      <Name>OpenLR</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

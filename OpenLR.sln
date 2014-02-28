@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenLR", "OpenLR\OpenLR.csproj", "{036AD1DA-006A-48B6-826C-83D12561411D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenLR.Encoder", "OpenLR.Encoder\OpenLR.Encoder.csproj", "{F06BC9DB-FCFB-4185-AFDE-18535B251458}"
@@ -8,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenLR.Decoder", "OpenLR.Decoder\OpenLR.Decoder.csproj", "{16D90C9D-8F4B-4B17-B606-89FD3DC5BD2E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenLR.Binary", "OpenLR.Binary\OpenLR.Binary.csproj", "{252D884C-8BED-4711-A2DA-21F8DC05D697}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenLR.Tests", "OpenLR.Tests\OpenLR.Tests.csproj", "{FBE5BE08-EF13-4108-92B2-46A960879F33}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +35,10 @@ Global
 		{252D884C-8BED-4711-A2DA-21F8DC05D697}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{252D884C-8BED-4711-A2DA-21F8DC05D697}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{252D884C-8BED-4711-A2DA-21F8DC05D697}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBE5BE08-EF13-4108-92B2-46A960879F33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBE5BE08-EF13-4108-92B2-46A960879F33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBE5BE08-EF13-4108-92B2-46A960879F33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBE5BE08-EF13-4108-92B2-46A960879F33}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
