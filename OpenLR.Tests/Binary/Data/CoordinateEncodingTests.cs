@@ -16,6 +16,7 @@ namespace OpenLR.Tests.Binary.Data
         /// <summary>
         /// Tests the simple decoding case.
         /// </summary>
+        [Test]
         public void TestDecoding1()
         {
             double delta = 0.0001;
