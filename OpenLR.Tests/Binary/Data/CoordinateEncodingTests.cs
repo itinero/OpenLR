@@ -1,9 +1,6 @@
 ﻿using NUnit.Framework;
 using OpenLR.Binary.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using OsmSharp.Math.Geo;
 
 namespace OpenLR.Tests.Binary.Data
 {
@@ -66,6 +63,30 @@ namespace OpenLR.Tests.Binary.Data
             Assert.IsNotNull(coordinate);
             Assert.AreEqual(49.60851, coordinate.Latitude, delta);
             Assert.AreEqual(6.12683, coordinate.Longitude, delta);
+        }
+
+        /// <summary>
+        /// Tests the simple simple relative decoding case.
+        /// </summary>
+        [Test]
+        public void TestDecodingRelative1()
+        {
+            double delta = 0.0001;
+
+            // manually specify a binary coordinate (see example in OpenLR whitepaper).
+            byte[] data = new byte[4];
+            data[0] = 0;
+            data[1] = 155;
+            data[2] = 254;
+            data[3] = 59;
+
+            // decode the coordinate relative to another coordinate.
+            var reference = new GeoCoordinate(49.60851, 6.12683);
+            var coordinate = CoordinateConverter.DecodeRelative(reference, data);
+
+            Assert.IsNotNull(coordinate);
+            Assert.AreEqual(6.12838, coordinate.Longitude, delta);
+            Assert.AreEqual(49.60398, coordinate.Latitude, delta);
         }
     }
 }
