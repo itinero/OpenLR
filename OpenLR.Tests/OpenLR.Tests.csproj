@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>OpenLR.Tests</RootNamespace>
     <AssemblyName>OpenLR.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0.3</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,6 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="nunit.framework">
@@ -54,6 +56,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Binary\Data\CoordinateEncodingTests.cs" />
+    <Compile Include="Binary\Data\FunctionalRoadClassConvertorTests.cs" />
+    <Compile Include="Binary\LineLocationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XmlSerializerTests.cs" />
   </ItemGroup>
@@ -61,6 +65,10 @@
     <ProjectReference Include="..\OpenLR.Binary\OpenLR.Binary.csproj">
       <Project>{252d884c-8bed-4711-a2da-21f8dc05d697}</Project>
       <Name>OpenLR.Binary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OpenLR.Decoder\OpenLR.Decoder.csproj">
+      <Project>{85b9de13-7dc2-4632-8db9-9558271a7c14}</Project>
+      <Name>OpenLR.Decoder</Name>
     </ProjectReference>
     <ProjectReference Include="..\OpenLR.Encoder\OpenLR.Encoder.csproj">
       <Project>{f06bc9db-fcfb-4185-afde-18535b251458}</Project>

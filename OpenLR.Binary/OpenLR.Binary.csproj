@@ -45,13 +45,26 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BinaryDecoder.cs" />
     <Compile Include="Data\CoordinateConverter.cs" />
+    <Compile Include="Data\FunctionalRoadClassConvertor.cs" />
+    <Compile Include="Decoders\LineLocationDecoder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="OsmSharp">
       <HintPath>..\packages\OsmSharp.4.0.2.581\lib\portable-net40+sl4+win8+wp7\OsmSharp.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OpenLR.Decoder\OpenLR.Decoder.csproj">
+      <Project>{85b9de13-7dc2-4632-8db9-9558271a7c14}</Project>
+      <Name>OpenLR.Decoder</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OpenLR\OpenLR.csproj">
+      <Project>{036ad1da-006a-48b6-826c-83d12561411d}</Project>
+      <Name>OpenLR</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -63,6 +63,13 @@ namespace OpenLR.Tests.Binary.Data
             Assert.IsNotNull(coordinate);
             Assert.AreEqual(49.60851, coordinate.Latitude, delta);
             Assert.AreEqual(6.12683, coordinate.Longitude, delta);
+
+            // decode the coordinate (ensure full code coverage).
+            coordinate = CoordinateConverter.Decode(data, 0);
+
+            Assert.IsNotNull(coordinate);
+            Assert.AreEqual(49.60851, coordinate.Latitude, delta);
+            Assert.AreEqual(6.12683, coordinate.Longitude, delta);
         }
 
         /// <summary>
@@ -83,6 +90,13 @@ namespace OpenLR.Tests.Binary.Data
             // decode the coordinate relative to another coordinate.
             var reference = new GeoCoordinate(49.60851, 6.12683);
             var coordinate = CoordinateConverter.DecodeRelative(reference, data);
+
+            Assert.IsNotNull(coordinate);
+            Assert.AreEqual(6.12838, coordinate.Longitude, delta);
+            Assert.AreEqual(49.60398, coordinate.Latitude, delta);
+
+            // (ensure full code coverage).
+            coordinate = CoordinateConverter.DecodeRelative(reference, data, 0);
 
             Assert.IsNotNull(coordinate);
             Assert.AreEqual(6.12838, coordinate.Longitude, delta);

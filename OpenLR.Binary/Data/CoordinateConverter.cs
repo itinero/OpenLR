@@ -3,7 +3,7 @@
 namespace OpenLR.Binary.Data
 {
     /// <summary>
-    /// Represents a coordinate endoder that encoded coordinates into the binary OpenLR format.
+    /// Represents a coordinate convertor that encodes/decodes coordinates into the binary OpenLR format.
     /// </summary>
     public static class CoordinateConverter
     {
@@ -14,9 +14,20 @@ namespace OpenLR.Binary.Data
         /// <returns></returns>
         public static GeoCoordinate Decode(byte[] data)
         {
+            return CoordinateConverter.Decode(data, 0);
+        }
+
+        /// <summary>
+        /// Decodes binary OpenLR coordinate data into a coordinate.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="startIndex"></param>
+        /// <returns></returns>
+        public static GeoCoordinate Decode(byte[] data, int startIndex)
+        {
             return new GeoCoordinate(
-                CoordinateConverter.DecodeDegrees(CoordinateConverter.DecodeInt24(data, 3)),
-                CoordinateConverter.DecodeDegrees(CoordinateConverter.DecodeInt24(data, 0)));
+                CoordinateConverter.DecodeDegrees(CoordinateConverter.DecodeInt24(data, startIndex + 3)),
+                CoordinateConverter.DecodeDegrees(CoordinateConverter.DecodeInt24(data, startIndex + 0)));
         }
 
         /// <summary>
@@ -27,9 +38,21 @@ namespace OpenLR.Binary.Data
         /// <returns></returns>
         public static GeoCoordinate DecodeRelative(GeoCoordinate reference, byte[] data)
         {
+            return CoordinateConverter.DecodeRelative(reference, data, 0);
+        }
+
+        /// <summary>
+        /// Decodes binary OpenLR relative coordinate data into a coordinate.
+        /// </summary>
+        /// <param name="reference"></param>
+        /// <param name="data"></param>
+        /// <param name="startIndex"></param>
+        /// <returns></returns>
+        public static GeoCoordinate DecodeRelative(GeoCoordinate reference, byte[] data, int startIndex)
+        {
             return new GeoCoordinate(
-                reference.Latitude + (CoordinateConverter.DecodeInt16(data, 2) / 100000.0),
-                reference.Longitude + (CoordinateConverter.DecodeInt16(data, 0) / 100000.0));
+                reference.Latitude + (CoordinateConverter.DecodeInt16(data, startIndex + 2) / 100000.0),
+                reference.Longitude + (CoordinateConverter.DecodeInt16(data, startIndex + 0) / 100000.0));
         }
 
         /// <summary>
