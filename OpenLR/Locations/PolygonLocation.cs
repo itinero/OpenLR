@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using OsmSharp.Math.Geo;
 
 namespace OpenLR.Locations
 {
@@ -10,6 +7,9 @@ namespace OpenLR.Locations
     /// </summary>
     public class PolygonLocation : ILocation
     {
-
+        /// <summary>
+        /// Gets or sets the list of coordinates.
+        /// </summary>
+        public GeoCoordinate[] GeoCoordinate { get; set; }
     }
 }

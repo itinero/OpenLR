@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace OpenLR
+﻿namespace OpenLR
 {
     /// <summary>
     /// Enumerates the different possible location types in the OpenLR domain.

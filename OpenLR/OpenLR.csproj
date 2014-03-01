@@ -41,11 +41,14 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
+    <None Include="packages.config" />
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ILocationReference.cs" />
     <Compile Include="Locations\CircleLocation.cs" />
+    <Compile Include="Locations\ClosedLineLocation.cs" />
+    <Compile Include="Locations\GeoCoordinateLocation.cs" />
     <Compile Include="Locations\GridLocation.cs" />
     <Compile Include="Locations\ILocation.cs" />
     <Compile Include="Locations\LineLocation.cs" />
@@ -54,7 +57,17 @@
     <Compile Include="Locations\PolygonLocation.cs" />
     <Compile Include="Locations\RectangleLocation.cs" />
     <Compile Include="LocationType.cs" />
+    <Compile Include="Model\FormOfWay.cs" />
+    <Compile Include="Model\FunctionalRoadClass.cs" />
+    <Compile Include="Model\LocationReferencePoint.cs" />
+    <Compile Include="Model\Orientation.cs" />
+    <Compile Include="Model\SideOfRoad.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="OsmSharp">
+      <HintPath>..\packages\OsmSharp.4.0.2.581\lib\portable-net40+sl4+win8+wp7\OsmSharp.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

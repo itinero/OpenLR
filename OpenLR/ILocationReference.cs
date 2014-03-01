@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace OpenLR
+﻿namespace OpenLR
 {
     /// <summary>
     /// Abstract definition of a location reference in the OpenLR domain.

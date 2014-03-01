@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using OsmSharp.Math.Geo;
 
 namespace OpenLR.Locations
 {
@@ -10,6 +7,19 @@ namespace OpenLR.Locations
     /// </summary>
     public class GridLocation : ILocation
     {
+        /// <summary>
+        /// Gets or sets the box.
+        /// </summary>
+        public GeoCoordinateBox Box { get; set; }
 
+        /// <summary>
+        /// Gets or sets the number of rows.
+        /// </summary>
+        public int Rows { get; set; }
+
+        /// <summary>
+        /// Gets or sets the number of columns.
+        /// </summary>
+        public int Columns { get; set; }
     }
 }
