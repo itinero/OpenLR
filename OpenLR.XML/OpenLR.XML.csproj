@@ -45,10 +45,16 @@
     <Compile Include="DATEXIISchema_1_0_1_0_HDT_HDF.cs">
       <DependentUpon>DATEXIISchema_1_0_1_0_HDT_HDF.XSD</DependentUpon>
     </Compile>
+    <Compile Include="OpenLRSchema.cs">
+      <DependentUpon>OpenLRSchema.xsd</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DATEXIISchema_1_0_1_0_HDT_HDF.XSD">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="OpenLRSchema.xsd">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
