@@ -34,6 +34,13 @@
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="OsmSharp, Version=4.0.2.581, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\OsmSharp.4.0.2.581\lib\portable-net40+sl4+win8+wp7\OsmSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="protobuf-net">
+      <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -41,8 +48,12 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Zlib.Portable">
+      <HintPath>..\packages\Zlib.Portable.1.9.2\lib\portable-net4+sl4+wp71+win8\Zlib.Portable.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Binary\Data\CoordinateEncodingTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XmlSerializerTests.cs" />
   </ItemGroup>
@@ -50,10 +61,6 @@
     <ProjectReference Include="..\OpenLR.Binary\OpenLR.Binary.csproj">
       <Project>{252d884c-8bed-4711-a2da-21f8dc05d697}</Project>
       <Name>OpenLR.Binary</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OpenLR.Decoder\OpenLR.Decoder.csproj">
-      <Project>{16d90c9d-8f4b-4b17-b606-89fd3dc5bd2e}</Project>
-      <Name>OpenLR.Decoder</Name>
     </ProjectReference>
     <ProjectReference Include="..\OpenLR.Encoder\OpenLR.Encoder.csproj">
       <Project>{f06bc9db-fcfb-4185-afde-18535b251458}</Project>
