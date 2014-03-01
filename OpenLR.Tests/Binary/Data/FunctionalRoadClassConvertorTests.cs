@@ -16,7 +16,7 @@ namespace OpenLR.Tests.Binary.Data
         [Test]
         public void TestDecoding1()
         {
-            Assert.AreEqual(FunctionalRoadClass.Frc0, FunctionalRoadClassConvertor.Decode(new byte[] { 0 }, 0));
+            Assert.AreEqual(FunctionalRoadClass.Frc0, FunctionalRoadClassConvertor.Decode(new byte[] { 0 }, 0, 0));
             Assert.AreEqual(FunctionalRoadClass.Frc0, FunctionalRoadClassConvertor.Decode(new byte[] { 0 }, 5));
             Assert.AreEqual(FunctionalRoadClass.Frc1, FunctionalRoadClassConvertor.Decode(new byte[] { 1 }, 5));
             Assert.AreEqual(FunctionalRoadClass.Frc2, FunctionalRoadClassConvertor.Decode(new byte[] { 2 }, 5));

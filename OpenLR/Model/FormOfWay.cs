@@ -24,7 +24,7 @@
         /// <summary>
         /// A Roundabout is a road which forms a ring on which traffic traveling in only one direction is allowed.
         /// </summary>
-        Routabout,
+        Roundabout,
         /// <summary>
         /// A Traffic Square is an open area (partly) enclosed by roads which is used for non-traffic purposes and which is not a Roundabout.
         /// </summary>

@@ -56,6 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Binary\Data\CoordinateEncodingTests.cs" />
+    <Compile Include="Binary\Data\FormOfWayConvertorTests.cs" />
     <Compile Include="Binary\Data\FunctionalRoadClassConvertorTests.cs" />
     <Compile Include="Binary\LineLocationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
