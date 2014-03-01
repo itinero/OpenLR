@@ -28,5 +28,19 @@ namespace OpenLR.Tests
             Assert.IsNotNull(deserialized);
             Assert.IsInstanceOf<D2LogicalModel>(deserialized);
         }
+
+        /// <summary>
+        /// A simple XML deserialization test of an OpenLR XML sample against the OpenLR XSD generate schema.
+        /// </summary>
+        [Test]
+        public void DeSerializeOpenLRSample()
+        {
+            var xmlSerializer = new XmlSerializer(typeof(OpenLR.XML.OpenLR));
+            var deserialized = xmlSerializer.Deserialize(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("OpenLR.Tests.Data.ExampleLocation.xml"));
+
+            Assert.IsNotNull(deserialized);
+            Assert.IsInstanceOf<OpenLR.XML.OpenLR>(deserialized);
+        }
     }
 }
