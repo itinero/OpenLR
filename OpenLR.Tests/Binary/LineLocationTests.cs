@@ -25,6 +25,8 @@ namespace OpenLR.Tests.Binary
             // decode.
             var decoder = new LineLocationDecoder();
             var location = decoder.Decode(stringData);
+
+            Assert.IsNotNull(location);
         }
     }
 }

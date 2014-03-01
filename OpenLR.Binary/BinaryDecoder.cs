@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenLR.Locations;
+using System;
 
 namespace OpenLR.Binary
 {
@@ -12,7 +13,7 @@ namespace OpenLR.Binary
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public override ILocationReference Decode(string data)
+        public override ILocation Decode(string data)
         {
             if (data == null) { throw new ArgumentNullException("data"); }
 
@@ -36,6 +37,6 @@ namespace OpenLR.Binary
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        protected abstract ILocationReference Decode(byte[] data);
+        protected abstract ILocation Decode(byte[] data);
     }
 }

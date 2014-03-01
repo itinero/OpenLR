@@ -1,4 +1,5 @@
-﻿namespace OpenLR.Decoder
+﻿using OpenLR.Locations;
+namespace OpenLR.Decoder
 {
     /// <summary>
     /// Abstract representation of a decoder.
@@ -9,6 +10,6 @@
         /// Decodes a byte array into a location reference.
         /// </summary>
         /// <returns></returns>
-        public abstract ILocationReference Decode(string data);
+        public abstract ILocation Decode(string data);
     }
 }

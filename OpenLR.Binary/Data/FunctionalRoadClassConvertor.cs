@@ -7,12 +7,12 @@ using System.Text;
 namespace OpenLR.Binary.Data
 {
     /// <summary>
-    /// Represents a function road class convertor that encodes/decodes into the binary OpenLR format.
+    /// Represents a functional road class convertor that encodes/decodes into the binary OpenLR format.
     /// </summary>
     public static class FunctionalRoadClassConvertor
     {
         /// <summary>
-        /// Decodes a function road class from binary data.
+        /// Decodes a functional road class from binary data.
         /// </summary>
         /// <param name="data">The binary data.</param>
         /// <param name="byteIndex">The index of the data in the first byte.</param>

@@ -1,4 +1,6 @@
 ﻿using OpenLR.Binary.Data;
+using OpenLR.Locations;
+using OpenLR.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,12 +18,20 @@ namespace OpenLR.Binary.Decoders
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        protected override ILocationReference Decode(byte[] data)
+        protected override ILocation Decode(byte[] data)
         {
             // decode first location reference point.
-            var coordinate = CoordinateConverter.Decode(data, 1);
+            var first = new LocationReferencePoint();
+            first.Coordinate = CoordinateConverter.Decode(data, 1);
+            first.FuntionalRoadClass = FunctionalRoadClassConvertor.Decode(data, 7, 2);
+            first.FormOfWay = FormOfWayConvertor.Decode(data, 7, 5);
+            first.LowestFunctionalRoadClassToNext = FunctionalRoadClassConvertor.Decode(data, 8, 0);
+            first.BearingDistance = BearingConvertor.Decode(data, 8, 3);
 
-            return null;
+            // create line location.
+            var lineLocation = new LineLocation();
+            lineLocation.First = first;
+            return lineLocation;
         }
     }
 }

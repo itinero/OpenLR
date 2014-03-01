@@ -48,6 +48,7 @@
     <Compile Include="BinaryDecoder.cs" />
     <Compile Include="Data\CoordinateConverter.cs" />
     <Compile Include="Data\FormOfWayConvertor.cs" />
+    <Compile Include="Data\BearingConvertor.cs" />
     <Compile Include="Data\FunctionalRoadClassConvertor.cs" />
     <Compile Include="Decoders\LineLocationDecoder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
