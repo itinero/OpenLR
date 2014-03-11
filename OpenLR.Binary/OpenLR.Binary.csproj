@@ -50,6 +50,7 @@
     <Compile Include="Data\FormOfWayConvertor.cs" />
     <Compile Include="Data\BearingConvertor.cs" />
     <Compile Include="Data\FunctionalRoadClassConvertor.cs" />
+    <Compile Include="Decoders\GeoCoordinateDecoder.cs" />
     <Compile Include="Decoders\LineLocationDecoder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

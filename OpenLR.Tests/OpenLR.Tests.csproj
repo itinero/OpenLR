@@ -59,6 +59,7 @@
     <Compile Include="Binary\Data\BearingConvertorTests.cs" />
     <Compile Include="Binary\Data\FormOfWayConvertorTests.cs" />
     <Compile Include="Binary\Data\FunctionalRoadClassConvertorTests.cs" />
+    <Compile Include="Binary\GeoCoordinateTests.cs" />
     <Compile Include="Binary\LineLocationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XmlSerializerTests.cs" />
