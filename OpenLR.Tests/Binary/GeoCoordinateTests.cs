@@ -22,7 +22,7 @@ namespace OpenLR.Tests.Binary
             string stringData = "IwRbYyNGuw==";
 
             // decode.
-            var decoder = new GeoCoordinateDecoder();
+            var decoder = new GeoCoordinateLocationDecoder();
             var location = decoder.Decode(stringData);
 
             Assert.IsNotNull(location);

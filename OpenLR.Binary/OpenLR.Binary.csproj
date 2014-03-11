@@ -53,7 +53,8 @@
     <Compile Include="Data\OrientationConvertor.cs" />
     <Compile Include="Data\SideOfRoadConverter.cs" />
     <Compile Include="Decoders\CircleLocationDecoder.cs" />
-    <Compile Include="Decoders\GeoCoordinateDecoder.cs" />
+    <Compile Include="Decoders\GeoCoordinateLocationDecoder.cs" />
+    <Compile Include="Decoders\GridLocationDecoder.cs" />
     <Compile Include="Decoders\LineLocationDecoder.cs" />
     <Compile Include="Decoders\PointAlongLineDecoder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
