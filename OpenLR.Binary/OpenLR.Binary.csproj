@@ -50,14 +50,18 @@
     <Compile Include="Data\FormOfWayConvertor.cs" />
     <Compile Include="Data\BearingConvertor.cs" />
     <Compile Include="Data\FunctionalRoadClassConvertor.cs" />
+    <Compile Include="Data\OrientationConvertor.cs" />
+    <Compile Include="Data\SideOfRoadConverter.cs" />
     <Compile Include="Decoders\GeoCoordinateDecoder.cs" />
     <Compile Include="Decoders\LineLocationDecoder.cs" />
+    <Compile Include="Decoders\PointAlongLineDecoder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="OsmSharp">
       <HintPath>..\packages\OsmSharp.4.0.2.581\lib\portable-net40+sl4+win8+wp7\OsmSharp.dll</HintPath>
     </Reference>
+    <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OpenLR.Decoder\OpenLR.Decoder.csproj">

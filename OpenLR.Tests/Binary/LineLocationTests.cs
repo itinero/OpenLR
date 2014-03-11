@@ -2,10 +2,6 @@
 using OpenLR.Binary.Decoders;
 using OpenLR.Locations;
 using OpenLR.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace OpenLR.Tests.Binary
 {
