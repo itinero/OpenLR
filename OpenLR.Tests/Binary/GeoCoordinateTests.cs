@@ -18,7 +18,7 @@ namespace OpenLR.Tests.Binary
         {
             double delta = 0.0001;
 
-            // define a base64 string we are sure is a line location.
+            // define a base64 string.
             string stringData = "IwRbYyNGuw==";
 
             // decode.

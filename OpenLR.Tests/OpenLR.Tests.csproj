@@ -55,6 +55,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Binary\CircleLocationTests.cs" />
     <Compile Include="Binary\Data\CoordinateEncodingTests.cs" />
     <Compile Include="Binary\Data\BearingConvertorTests.cs" />
     <Compile Include="Binary\Data\FormOfWayConvertorTests.cs" />

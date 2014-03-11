@@ -52,6 +52,7 @@
     <Compile Include="Data\FunctionalRoadClassConvertor.cs" />
     <Compile Include="Data\OrientationConvertor.cs" />
     <Compile Include="Data\SideOfRoadConverter.cs" />
+    <Compile Include="Decoders\CircleLocationDecoder.cs" />
     <Compile Include="Decoders\GeoCoordinateDecoder.cs" />
     <Compile Include="Decoders\LineLocationDecoder.cs" />
     <Compile Include="Decoders\PointAlongLineDecoder.cs" />
