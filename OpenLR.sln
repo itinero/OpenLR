@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenLR.Tests", "OpenLR.Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenLR.XML", "OpenLR.XML\OpenLR.XML.csproj", "{CF358CF6-913D-47DC-9A83-DE90153A82F2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenLR.OsmSharp", "OpenLR.OsmSharp\OpenLR.OsmSharp.csproj", "{61C1F8E2-9AFB-4EDA-8465-B0ECB20296D7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{CF358CF6-913D-47DC-9A83-DE90153A82F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF358CF6-913D-47DC-9A83-DE90153A82F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF358CF6-913D-47DC-9A83-DE90153A82F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61C1F8E2-9AFB-4EDA-8465-B0ECB20296D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61C1F8E2-9AFB-4EDA-8465-B0ECB20296D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61C1F8E2-9AFB-4EDA-8465-B0ECB20296D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61C1F8E2-9AFB-4EDA-8465-B0ECB20296D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
