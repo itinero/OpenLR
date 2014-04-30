@@ -1,5 +1,4 @@
 ﻿using OpenLR.Model;
-using OsmSharp.Math.Geo;
 
 namespace OpenLR.Locations
 {
@@ -21,7 +20,7 @@ namespace OpenLR.Locations
         /// <summary>
         /// Gets or sets the coordinate of the access point (COORD).
         /// </summary>
-        public GeoCoordinate Coordinate { get; set; }
+        public Coordinate Coordinate { get; set; }
 
         /// <summary>
         /// Gets or sets the positive offset (POFF).

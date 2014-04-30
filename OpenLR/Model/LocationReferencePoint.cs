@@ -1,6 +1,4 @@
-﻿using OsmSharp.Math.Geo;
-
-namespace OpenLR.Model
+﻿namespace OpenLR.Model
 {
     /// <summary>
     /// Represents a point of the location which holds relevant information for a map-independent location reference.
@@ -10,7 +8,7 @@ namespace OpenLR.Model
         /// <summary>
         /// Gets or sets the location.
         /// </summary>
-        public GeoCoordinate Coordinate { get; set; }
+        public Coordinate Coordinate { get; set; }
 
         /// <summary>
         /// Gets or sets the bearing distances.

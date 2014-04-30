@@ -1,5 +1,10 @@
 ﻿using OpenLR.Locations;
-namespace OpenLR.Decoder
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace OpenLR.Decoding
 {
     /// <summary>
     /// Abstract representation of a decoder.

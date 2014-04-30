@@ -6,7 +6,7 @@ namespace OpenLR.Binary
     /// <summary>
     /// Abstract representation of a binary decoder.
     /// </summary>
-    public abstract class BinaryDecoder : OpenLR.Decoder.Decoder
+    public abstract class BinaryDecoder : OpenLR.Decoding.Decoder
     {
         /// <summary>
         /// Decodes the given data into a location reference.

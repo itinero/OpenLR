@@ -1,4 +1,4 @@
-﻿using OsmSharp.Math.Geo;
+﻿using OpenLR.Model;
 
 namespace OpenLR.Locations
 {
@@ -10,6 +10,6 @@ namespace OpenLR.Locations
         /// <summary>
         /// Gets or sets the location.
         /// </summary>
-        public GeoCoordinate Coordinate { get; set; }
+        public Coordinate Coordinate { get; set; }
     }
 }

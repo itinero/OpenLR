@@ -36,36 +36,6 @@
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
     </Reference>
-    <Reference Include="OsmSharp">
-      <HintPath>..\packages\OsmSharp.4.1.0.689\lib\net40\OsmSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="OsmSharp.Data.Oracle">
-      <HintPath>..\packages\OsmSharp.4.1.0.689\lib\net40\OsmSharp.Data.Oracle.dll</HintPath>
-    </Reference>
-    <Reference Include="OsmSharp.Data.PostgreSQL">
-      <HintPath>..\packages\OsmSharp.4.1.0.689\lib\net40\OsmSharp.Data.PostgreSQL.dll</HintPath>
-    </Reference>
-    <Reference Include="OsmSharp.Data.Redis">
-      <HintPath>..\packages\OsmSharp.4.1.0.689\lib\net40\OsmSharp.Data.Redis.dll</HintPath>
-    </Reference>
-    <Reference Include="OsmSharp.Data.SQLite">
-      <HintPath>..\packages\OsmSharp.4.1.0.689\lib\net40\OsmSharp.Data.SQLite.dll</HintPath>
-    </Reference>
-    <Reference Include="OsmSharp.Data.SQLServer">
-      <HintPath>..\packages\OsmSharp.4.1.0.689\lib\net40\OsmSharp.Data.SQLServer.dll</HintPath>
-    </Reference>
-    <Reference Include="OsmSharp.Osm">
-      <HintPath>..\packages\OsmSharp.4.1.0.689\lib\net40\OsmSharp.Osm.dll</HintPath>
-    </Reference>
-    <Reference Include="OsmSharp.Routing">
-      <HintPath>..\packages\OsmSharp.4.1.0.689\lib\net40\OsmSharp.Routing.dll</HintPath>
-    </Reference>
-    <Reference Include="OsmSharp.UI">
-      <HintPath>..\packages\OsmSharp.4.1.0.689\lib\net40\OsmSharp.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="OsmSharp.WinForms.UI">
-      <HintPath>..\packages\OsmSharp.4.1.0.689\lib\net40\OsmSharp.WinForms.UI.dll</HintPath>
-    </Reference>
     <Reference Include="protobuf-net">
       <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
     </Reference>
@@ -97,14 +67,6 @@
     <ProjectReference Include="..\OpenLR.Binary\OpenLR.Binary.csproj">
       <Project>{252d884c-8bed-4711-a2da-21f8dc05d697}</Project>
       <Name>OpenLR.Binary</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OpenLR.Decoder\OpenLR.Decoder.csproj">
-      <Project>{85b9de13-7dc2-4632-8db9-9558271a7c14}</Project>
-      <Name>OpenLR.Decoder</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OpenLR.Encoder\OpenLR.Encoder.csproj">
-      <Project>{f06bc9db-fcfb-4185-afde-18535b251458}</Project>
-      <Name>OpenLR.Encoder</Name>
     </ProjectReference>
     <ProjectReference Include="..\OpenLR.XML\OpenLR.XML.csproj">
       <Project>{cf358cf6-913d-47dc-9a83-de90153a82f2}</Project>

@@ -5,15 +5,11 @@ VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenLR", "OpenLR\OpenLR.csproj", "{036AD1DA-006A-48B6-826C-83D12561411D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenLR.Encoder", "OpenLR.Encoder\OpenLR.Encoder.csproj", "{F06BC9DB-FCFB-4185-AFDE-18535B251458}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenLR.Binary", "OpenLR.Binary\OpenLR.Binary.csproj", "{252D884C-8BED-4711-A2DA-21F8DC05D697}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenLR.Tests", "OpenLR.Tests\OpenLR.Tests.csproj", "{FBE5BE08-EF13-4108-92B2-46A960879F33}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenLR.XML", "OpenLR.XML\OpenLR.XML.csproj", "{CF358CF6-913D-47DC-9A83-DE90153A82F2}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenLR.Decoder", "OpenLR.Decoder\OpenLR.Decoder.csproj", "{85B9DE13-7DC2-4632-8DB9-9558271A7C14}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +21,6 @@ Global
 		{036AD1DA-006A-48B6-826C-83D12561411D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{036AD1DA-006A-48B6-826C-83D12561411D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{036AD1DA-006A-48B6-826C-83D12561411D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F06BC9DB-FCFB-4185-AFDE-18535B251458}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F06BC9DB-FCFB-4185-AFDE-18535B251458}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F06BC9DB-FCFB-4185-AFDE-18535B251458}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F06BC9DB-FCFB-4185-AFDE-18535B251458}.Release|Any CPU.Build.0 = Release|Any CPU
 		{252D884C-8BED-4711-A2DA-21F8DC05D697}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{252D884C-8BED-4711-A2DA-21F8DC05D697}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{252D884C-8BED-4711-A2DA-21F8DC05D697}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -41,10 +33,6 @@ Global
 		{CF358CF6-913D-47DC-9A83-DE90153A82F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF358CF6-913D-47DC-9A83-DE90153A82F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF358CF6-913D-47DC-9A83-DE90153A82F2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{85B9DE13-7DC2-4632-8DB9-9558271A7C14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{85B9DE13-7DC2-4632-8DB9-9558271A7C14}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{85B9DE13-7DC2-4632-8DB9-9558271A7C14}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{85B9DE13-7DC2-4632-8DB9-9558271A7C14}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

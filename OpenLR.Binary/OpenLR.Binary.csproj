@@ -11,7 +11,7 @@
     <RootNamespace>OpenLR.Binary</RootNamespace>
     <AssemblyName>OpenLR.Binary</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Profile147</TargetFrameworkProfile>
+    <TargetFrameworkProfile>Profile158</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <FileUpgradeFlags>
@@ -60,16 +60,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="OsmSharp">
-      <HintPath>..\packages\OsmSharp.4.0.2.581\lib\portable-net40+sl4+win8+wp7\OsmSharp.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OpenLR.Decoder\OpenLR.Decoder.csproj">
-      <Project>{85b9de13-7dc2-4632-8db9-9558271a7c14}</Project>
-      <Name>OpenLR.Decoder</Name>
-    </ProjectReference>
     <ProjectReference Include="..\OpenLR\OpenLR.csproj">
       <Project>{036ad1da-006a-48b6-826c-83d12561411d}</Project>
       <Name>OpenLR</Name>

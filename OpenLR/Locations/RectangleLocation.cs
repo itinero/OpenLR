@@ -1,4 +1,4 @@
-﻿using OsmSharp.Math.Geo;
+﻿using OpenLR.Model;
 
 namespace OpenLR.Locations
 {
@@ -10,6 +10,11 @@ namespace OpenLR.Locations
         /// <summary>
         /// Gets or sets the box.
         /// </summary>
-        public GeoCoordinateBox Box { get; set; }
+        public Coordinate LowerLeft { get; set; }
+
+        /// <summary>
+        /// Gets or sets the box.
+        /// </summary>
+        public Coordinate UpperRight { get; set; }
     }
 }

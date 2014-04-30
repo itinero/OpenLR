@@ -1,5 +1,4 @@
-﻿using OsmSharp.Math.Geo;
-using OpenLR.Model;
+﻿using OpenLR.Model;
 using System;
 
 namespace OpenLR.Binary.Data

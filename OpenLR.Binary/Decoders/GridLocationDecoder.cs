@@ -25,7 +25,8 @@ namespace OpenLR.Binary.Decoders
 
             // create grid location.
             var grid = new GridLocation();
-            grid.Box = new OsmSharp.Math.Geo.GeoCoordinateBox(lowerLeft, upperRight);
+            grid.LowerLeft = lowerLeft;
+            grid.UpperRight = upperRight;
             grid.Columns = columns;
             grid.Rows = rows;
             return grid;

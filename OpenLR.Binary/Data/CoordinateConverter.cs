@@ -1,4 +1,4 @@
-﻿using OsmSharp.Math.Geo;
+﻿using OpenLR.Model;
 
 namespace OpenLR.Binary.Data
 {
@@ -12,7 +12,7 @@ namespace OpenLR.Binary.Data
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public static GeoCoordinate Decode(byte[] data)
+        public static Coordinate Decode(byte[] data)
         {
             return CoordinateConverter.Decode(data, 0);
         }
@@ -23,11 +23,13 @@ namespace OpenLR.Binary.Data
         /// <param name="data"></param>
         /// <param name="startIndex"></param>
         /// <returns></returns>
-        public static GeoCoordinate Decode(byte[] data, int startIndex)
+        public static Coordinate Decode(byte[] data, int startIndex)
         {
-            return new GeoCoordinate(
-                CoordinateConverter.DecodeDegrees(CoordinateConverter.DecodeInt24(data, startIndex + 3)),
-                CoordinateConverter.DecodeDegrees(CoordinateConverter.DecodeInt24(data, startIndex + 0)));
+            return new Coordinate()
+            {
+                Latitude = CoordinateConverter.DecodeDegrees(CoordinateConverter.DecodeInt24(data, startIndex + 3)),
+                Longitude = CoordinateConverter.DecodeDegrees(CoordinateConverter.DecodeInt24(data, startIndex + 0))
+            };
         }
 
         /// <summary>
@@ -36,7 +38,7 @@ namespace OpenLR.Binary.Data
         /// <param name="reference"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        public static GeoCoordinate DecodeRelative(GeoCoordinate reference, byte[] data)
+        public static Coordinate DecodeRelative(Coordinate reference, byte[] data)
         {
             return CoordinateConverter.DecodeRelative(reference, data, 0);
         }
@@ -48,11 +50,13 @@ namespace OpenLR.Binary.Data
         /// <param name="data"></param>
         /// <param name="startIndex"></param>
         /// <returns></returns>
-        public static GeoCoordinate DecodeRelative(GeoCoordinate reference, byte[] data, int startIndex)
+        public static Coordinate DecodeRelative(Coordinate reference, byte[] data, int startIndex)
         {
-            return new GeoCoordinate(
-                reference.Latitude + (CoordinateConverter.DecodeInt16(data, startIndex + 2) / 100000.0),
-                reference.Longitude + (CoordinateConverter.DecodeInt16(data, startIndex + 0) / 100000.0));
+            return new Coordinate()
+            {
+                Latitude = reference.Latitude + (CoordinateConverter.DecodeInt16(data, startIndex + 2) / 100000.0),
+                Longitude = reference.Longitude + (CoordinateConverter.DecodeInt16(data, startIndex + 0) / 100000.0)
+            };
         }
 
         /// <summary>

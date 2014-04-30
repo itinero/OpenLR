@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 using OpenLR.Binary.Data;
-using OsmSharp.Math.Geo;
+using OpenLR.Model;
 
 namespace OpenLR.Tests.Binary.Data
 {
@@ -88,7 +88,11 @@ namespace OpenLR.Tests.Binary.Data
             data[3] = 59;
 
             // decode the coordinate relative to another coordinate.
-            var reference = new GeoCoordinate(49.60851, 6.12683);
+            var reference = new Coordinate()
+            {
+                Latitude = 49.60851,
+                Longitude = 6.12683
+            };
             var coordinate = CoordinateConverter.DecodeRelative(reference, data);
 
             Assert.IsNotNull(coordinate);
