@@ -3,6 +3,7 @@ using OpenLR.Model;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Units.Distance;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,8 +21,9 @@ namespace OpenLR.OsmSharp.Decoding
         /// Creates a line location graph decoder.
         /// </summary>
         /// <param name="graph"></param>
-        public LineLocationGraphDecoder(OpenLR.Decoding.Decoder rawDecoder, DynamicGraphRouterDataSource<TEdge> graph)
-            : base(rawDecoder, graph)
+        /// <param name="router"></param>
+        public LineLocationGraphDecoder(OpenLR.Decoding.Decoder rawDecoder, DynamicGraphRouterDataSource<TEdge> graph, IBasicRouter<TEdge> router)
+            : base(rawDecoder, graph, router)
         {
 
         }
@@ -51,6 +53,9 @@ namespace OpenLR.OsmSharp.Decoding
             lrps.Add(location.Last);
             candidates.Add(this.FindCandidatesFor(location.Last, true));
 
+            // keep the total pathsegment.
+            LineLocationGraph<TEdge> lineLocation = null;
+
             // find a route between each pair of sequential points.
             var previous = lrps[0];
             var previousCandidates = candidates[0];
@@ -73,14 +78,56 @@ namespace OpenLR.OsmSharp.Decoding
                     }
                 }
 
-                object selectedPath = null;
+                // find the best candidate route.
+                CandidateRoute best = null;
                 while(combinedScores.Count > 0)
                 {
+                    // get the first pair.
+                    var combinedScore = combinedScores.First();
+                    combinedScores.Remove(combinedScore);
 
+                    // find a route.
+                    var candidate = this.FindCandiateRoute(combinedScore.Source.Vertex, combinedScore.Target.Vertex,
+                        previous.LowestFunctionalRoadClassToNext.Value);
+
+                    // confirm first/last edge.
+                    // TODO: this part.
+
+                    // check candidate.
+                    if (best == null)
+                    { // there was no previous candidate.
+                        best = candidate;
+                    }
+                    else if(best.Score < candidate.Score)
+                    { // the new candidate is better.
+                        best = candidate;
+                    }
+                    else if(best.Score > candidate.Score)
+                    { // the current candidate is better.
+                        break;
+                    }
                 }
+
+                // append the current best.
+                if(best == null)
+                { // no location reference found between two points.
+                    return null;
+                }
+                if(lineLocation == null)
+                { // no previous route.
+                    lineLocation = best.Route;
+                }
+                else
+                { // append.
+                    lineLocation.Add(best.Route);
+                }
+
+                // assign new previous.
+                previous = current;
+                previousCandidates = currentCandidates;
             }
 
-            return null;
+            return lineLocation;
         }
 
         /// <summary>

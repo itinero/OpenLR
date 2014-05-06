@@ -36,6 +36,26 @@
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="OsmSharp, Version=4.1.0.689, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\OsmSharp.4.1.0.689\lib\net40\OsmSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="OsmSharp.Osm">
+      <HintPath>..\packages\OsmSharp.4.1.0.689\lib\net40\OsmSharp.Osm.dll</HintPath>
+    </Reference>
+    <Reference Include="OsmSharp.Routing">
+      <HintPath>..\packages\OsmSharp.4.1.0.689\lib\net40\OsmSharp.Routing.dll</HintPath>
+    </Reference>
+    <Reference Include="OsmSharp.UI">
+      <HintPath>..\packages\OsmSharp.4.1.0.689\lib\net40\OsmSharp.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="OsmSharp.WinForms.UI">
+      <HintPath>..\packages\OsmSharp.4.1.0.689\lib\net40\OsmSharp.WinForms.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -43,6 +63,10 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Zlib.Portable, Version=1.9.1.9000, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Zlib.Portable.1.9.2\lib\portable-net4+sl4+wp71+win8\Zlib.Portable.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Binary\CircleLocationTests.cs" />
@@ -55,12 +79,17 @@
     <Compile Include="Binary\LineLocationTests.cs" />
     <Compile Include="Binary\PointAlongLineTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Referenced\LineLocationGraphDecoderTests.cs" />
     <Compile Include="XmlSerializerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OpenLR.Binary\OpenLR.Binary.csproj">
       <Project>{252d884c-8bed-4711-a2da-21f8dc05d697}</Project>
       <Name>OpenLR.Binary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OpenLR.OsmSharp\OpenLR.OsmSharp.csproj">
+      <Project>{61c1f8e2-9afb-4eda-8465-b0ecb20296d7}</Project>
+      <Name>OpenLR.OsmSharp</Name>
     </ProjectReference>
     <ProjectReference Include="..\OpenLR.XML\OpenLR.XML.csproj">
       <Project>{cf358cf6-913d-47dc-9a83-de90153a82f2}</Project>
@@ -80,6 +109,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Data\ExampleLocation.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -4,8 +4,12 @@ using OpenLR.Referenced;
 using OpenLR.Referenced.Decoding;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
+using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Units.Distance;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -30,13 +34,20 @@ namespace OpenLR.OsmSharp.Decoding
         private DynamicGraphRouterDataSource<TEdge> _graph;
 
         /// <summary>
+        /// Holds a basic router.
+        /// </summary>
+        private IBasicRouter<TEdge> _router;
+
+        /// <summary>
         /// Creates a new dynamic graph decoder.
         /// </summary>
         /// <param name="graph"></param>
-        public GraphDecoder(OpenLR.Decoding.Decoder rawDecoder, DynamicGraphRouterDataSource<TEdge> graph)
+        /// <param name="router"></param>
+        public GraphDecoder(OpenLR.Decoding.Decoder rawDecoder, DynamicGraphRouterDataSource<TEdge> graph, IBasicRouter<TEdge> router)
             : base(rawDecoder)
         {
             _graph = graph;
+            _router = router;
         }
 
         /// <summary>
@@ -54,7 +65,7 @@ namespace OpenLR.OsmSharp.Decoding
         /// <returns></returns>
         protected virtual SortedSet<CandidateVertexEdge> FindCandidatesFor(LocationReferencePoint lrp, bool forward)
         {
-            var vertexEdgeCandidates = new SortedSet<CandidateVertexEdge>();
+            var vertexEdgeCandidates = new SortedSet<CandidateVertexEdge>(new CandidateVertexEdgeComparer());
             var vertexCandidates = this.FindCandidateVerticesFor(lrp);
             foreach(var vertexCandidate in vertexCandidates)
             {
@@ -176,7 +187,6 @@ namespace OpenLR.OsmSharp.Decoding
             }
 
             // TODO: take into account form of way? Maybe not for OSM-data?
-
             switch(frc)
             { // check there reference values against OSM: http://wiki.openstreetmap.org/wiki/Highway
                 case FunctionalRoadClass.Frc0: // main road.
@@ -184,32 +194,32 @@ namespace OpenLR.OsmSharp.Decoding
                     {
                         return 1;
                     }
-                    return 0; // no match.
+                    break;
                 case FunctionalRoadClass.Frc1: // first class road.
                     if (highway == "primary" || highway == "primary_link")
                     {
                         return 1;
                     }
-                    return 0; // no match.
+                    break;
                 case FunctionalRoadClass.Frc2: // second class road.
                     if (highway == "secondary" || highway == "secondary_link")
                     {
                         return 1;
                     }
-                    return 0; // no match.
+                    break;
                 case FunctionalRoadClass.Frc3: // third class road.
                     if (highway == "tertiary" || highway == "tertiary_link")
                     {
                         return 1;
                     }
-                    return 0; // no match.
+                    break;
                 case FunctionalRoadClass.Frc4:
                     if (highway == "road" || highway == "road_link" ||
                         highway == "unclassified" || highway == "residential")
                     {
                         return 1;
                     }
-                    return 0; // no match.
+                    break;
                 case FunctionalRoadClass.Frc5:
                     if (highway == "road" || highway == "road_link" ||
                         highway == "unclassified" || highway == "residential" ||
@@ -217,7 +227,7 @@ namespace OpenLR.OsmSharp.Decoding
                     {
                         return 1;
                     }
-                    return 0; // no match.
+                    break;
                 case FunctionalRoadClass.Frc6:
                     if (highway == "road" || highway == "track" ||
                         highway == "unclassified" || highway == "residential" ||
@@ -225,7 +235,7 @@ namespace OpenLR.OsmSharp.Decoding
                     {
                         return 1;
                     }
-                    return 0; // no match.
+                    break;
                 case FunctionalRoadClass.Frc7: // other class road.
                     if (highway == "footway" || highway == "bridleway" ||
                         highway == "steps" || highway == "path" ||
@@ -233,9 +243,75 @@ namespace OpenLR.OsmSharp.Decoding
                     {
                         return 1;
                     }
-                    return 0; // no match.
+                    break;
+            }
+
+            if (highway != null && highway.Length > 0)
+            { // for any other highway return a low match.
+                return 0.2f;
             }
             return 0;
+        }
+
+        /// <summary>
+        /// Calculates a route between the two given vertices.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="minimum">The minimum FRC.</param>
+        /// <returns></returns>
+        protected virtual CandidateRoute FindCandiateRoute(uint from, uint to, FunctionalRoadClass minimum)
+        {
+            var fromList = new PathSegmentVisitList();
+            fromList.UpdateVertex(new PathSegment<long>(from));
+            var toList = new PathSegmentVisitList();
+            toList.UpdateVertex(new PathSegment<long>(to));
+
+            var path = _router.Calculate(_graph, new OsmRoutingInterpreter(), Vehicle.Car, fromList, toList, double.MaxValue);
+            var edges = new List<TEdge>();
+            var vertices = new List<long>();
+            vertices.Add(path.VertexId);
+            while(path.From != null)
+            {
+                // add to vertices list.
+                vertices.Add(path.From.VertexId);
+
+                // get edge between current and from.
+                uint fromVertex = (uint)path.From.VertexId;
+                uint toVertex = (uint)path.VertexId;
+
+                bool found = false;
+                foreach(var arc in _graph.GetArcs(fromVertex))
+                {
+                    if(arc.Key == toVertex)
+                    { // there is a candidate arc.
+                        found = true;
+                        edges.Add(arc.Value);
+                    }
+                }
+
+                if(!found)
+                { // this should be impossible.
+                    throw new Exception("No edge found between two consequtive vertices on a route.");
+                }
+
+                // move to next segment.
+                path = path.From;
+            }
+
+            // reverse lists.
+            edges.Reverse();
+            vertices.Reverse();
+
+            return new CandidateRoute()
+            {
+                Route = new LineLocationGraph<TEdge>()
+                {
+                    Edges = edges.ToArray(),
+                    Vertices = vertices.ToArray()
+                },
+                Score = 1
+            };
         }
 
         /// <summary>
@@ -370,6 +446,22 @@ namespace OpenLR.OsmSharp.Decoding
             {
                 return x.Score.CompareTo(y.Score);
             }
+        }
+
+        /// <summary>
+        /// Represents a candiate route and associated score.
+        /// </summary>
+        public class CandidateRoute
+        {
+            /// <summary>
+            /// Gets or sets the route.
+            /// </summary>
+            public LineLocationGraph<TEdge> Route { get; set; }
+
+            /// <summary>
+            /// Gets or sets the score.
+            /// </summary>
+            public float Score { get; set; }
         }
     }
 }
