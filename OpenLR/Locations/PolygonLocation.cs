@@ -10,6 +10,6 @@ namespace OpenLR.Locations
         /// <summary>
         /// Gets or sets the list of coordinates.
         /// </summary>
-        public Coordinate[] GeoCoordinate { get; set; }
+        public Coordinate[] Coordinates { get; set; }
     }
 }

@@ -80,6 +80,7 @@
     <Compile Include="Binary\LineLocationTests.cs" />
     <Compile Include="Binary\PointAlongLineTests.cs" />
     <Compile Include="Binary\PoiWithAccessPointLocationDecoderTests.cs" />
+    <Compile Include="Binary\PolygonLocationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Referenced\LineLocationGraphDecoderTests.cs" />
     <Compile Include="XmlSerializerTests.cs" />

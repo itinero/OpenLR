@@ -58,6 +58,7 @@
     <Compile Include="Decoders\LineLocationDecoder.cs" />
     <Compile Include="Decoders\PointAlongLineDecoder.cs" />
     <Compile Include="Decoders\PoiWithAccessPointLocationDecoder.cs" />
+    <Compile Include="Decoders\PolygonLocationDecoder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
