@@ -52,6 +52,7 @@
     <Compile Include="Data\OrientationConvertor.cs" />
     <Compile Include="Data\SideOfRoadConverter.cs" />
     <Compile Include="Decoders\CircleLocationDecoder.cs" />
+    <Compile Include="Decoders\ClosedLineLocationDecoder.cs" />
     <Compile Include="Decoders\GeoCoordinateLocationDecoder.cs" />
     <Compile Include="Decoders\GridLocationDecoder.cs" />
     <Compile Include="Decoders\LineLocationDecoder.cs" />
