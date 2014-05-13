@@ -65,6 +65,8 @@
     <Compile Include="Decoding\ReferencedGeoCoordinate.cs" />
     <Compile Include="Decoding\ReferencedGeoCoordinateDecoder.cs" />
     <Compile Include="Decoding\ReferencedDecoder.cs" />
+    <Compile Include="Decoding\ReferencedGrid.cs" />
+    <Compile Include="Decoding\ReferencedGridDecoder.cs" />
     <Compile Include="Decoding\ReferencedLine.cs" />
     <Compile Include="Decoding\ReferencedLineDecoder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
