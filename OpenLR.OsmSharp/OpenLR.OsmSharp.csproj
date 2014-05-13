@@ -69,6 +69,8 @@
     <Compile Include="Decoding\ReferencedGridDecoder.cs" />
     <Compile Include="Decoding\ReferencedLine.cs" />
     <Compile Include="Decoding\ReferencedLineDecoder.cs" />
+    <Compile Include="Decoding\ReferencedPolygon.cs" />
+    <Compile Include="Decoding\ReferencedPolygonDecoder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
