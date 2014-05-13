@@ -88,6 +88,7 @@
     <Compile Include="Referenced\ReferencedCircleDecoderTests.cs" />
     <Compile Include="Referenced\ReferencedGeoCoordinateDecoderTests.cs" />
     <Compile Include="Referenced\ReferencedLineDecoderTests.cs" />
+    <Compile Include="Referenced\ReferencedRectangleDecoderTests.cs" />
     <Compile Include="XmlSerializerTests.cs" />
   </ItemGroup>
   <ItemGroup>

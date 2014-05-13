@@ -71,6 +71,8 @@
     <Compile Include="Decoding\ReferencedLineDecoder.cs" />
     <Compile Include="Decoding\ReferencedPolygon.cs" />
     <Compile Include="Decoding\ReferencedPolygonDecoder.cs" />
+    <Compile Include="Decoding\ReferencedRectangle.cs" />
+    <Compile Include="Decoding\ReferencedRectangleDecoder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
