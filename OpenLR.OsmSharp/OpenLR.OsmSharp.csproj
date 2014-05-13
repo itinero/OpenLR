@@ -60,6 +60,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Decoding\GeoCoordinateGraph.cs" />
+    <Compile Include="Decoding\GeoCoordinateGraphDecoder.cs" />
     <Compile Include="Decoding\GraphDecoder.cs" />
     <Compile Include="Decoding\LineLocationGraph.cs" />
     <Compile Include="Decoding\LineLocationGraphDecoder.cs" />

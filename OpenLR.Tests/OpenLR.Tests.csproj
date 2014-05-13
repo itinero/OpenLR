@@ -83,6 +83,7 @@
     <Compile Include="Binary\PolygonLocationTests.cs" />
     <Compile Include="Binary\RectangleLocationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Referenced\GeoCoordinateGraphDecoderTests.cs" />
     <Compile Include="Referenced\LineLocationGraphDecoderTests.cs" />
     <Compile Include="XmlSerializerTests.cs" />
   </ItemGroup>

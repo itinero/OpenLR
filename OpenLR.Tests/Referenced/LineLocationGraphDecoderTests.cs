@@ -89,7 +89,7 @@ namespace OpenLR.Tests.Referenced
             var referencedDecoder = new LineLocationGraphDecoder<LiveEdge>(decoder, graph, router);
             var referencedLocation = referencedDecoder.Decode(location);
 
-            // test result.
+            // confirm result.
             Assert.IsNotNull(referencedLocation);
             Assert.IsNotNull(referencedLocation.Vertices);
             Assert.AreEqual(3, referencedLocation.Vertices.Length);
