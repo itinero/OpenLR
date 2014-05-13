@@ -9,7 +9,7 @@ namespace OpenLR.Tests.Referenced
     /// Contains tests for decoding/encoding an OpenLR geo coordinate location to a referenced geo coordinate location.
     /// </summary>
     [TestFixture]
-    public class GeoCoordinateGraphDecoderTests
+    public class ReferencedGeoCoordinateDecoderTests
     {
         /// <summary>
         /// An extremely simple referenced geo coordinate location decoding test.
@@ -25,7 +25,7 @@ namespace OpenLR.Tests.Referenced
 
             // decode the location
             //var decoder = new GeoCoordinateLocationDecoder();
-            var referencedDecoder = new GeoCoordinateGraphDecoder<LiveEdge>(null, null, null);
+            var referencedDecoder = new ReferencedGeoCoordinateDecoder<LiveEdge>(null, null, null);
             var referencedLocation = referencedDecoder.Decode(location);
 
             // confirm result.

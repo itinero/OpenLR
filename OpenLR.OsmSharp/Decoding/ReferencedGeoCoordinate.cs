@@ -11,7 +11,7 @@ namespace OpenLR.OsmSharp.Decoding
     /// Represents a referenced geo coordinate location with a graph as a reference.
     /// </summary>
     /// <remarks>The reference graph play no part here, a geo coordinate is just a geo coordinate.</remarks>
-    public class GeoCoordinateGraph : ReferencedLocation
+    public class ReferencedGeoCoordinate : ReferencedLocation
     {
         /// <summary>
         /// Gets or sets the latitude.

@@ -13,7 +13,7 @@ namespace OpenLR.OsmSharp.Decoding
     /// Represents a referenced geo coordinate location decoder.
     /// </summary>
     /// <typeparam name="TEdge"></typeparam>
-    public class GeoCoordinateGraphDecoder<TEdge> : GraphDecoder<GeoCoordinateGraph, GeoCoordinateLocation, TEdge>
+    public class ReferencedGeoCoordinateDecoder<TEdge> : ReferencedDecoder<ReferencedGeoCoordinate, GeoCoordinateLocation, TEdge>
         where TEdge : IDynamicGraphEdgeData
     {
         /// <summary>
@@ -21,7 +21,7 @@ namespace OpenLR.OsmSharp.Decoding
         /// </summary>
         /// <param name="graph"></param>
         /// <param name="router"></param>
-        public GeoCoordinateGraphDecoder(OpenLR.Decoding.Decoder rawDecoder, DynamicGraphRouterDataSource<TEdge> graph, IBasicRouter<TEdge> router)
+        public ReferencedGeoCoordinateDecoder(OpenLR.Decoding.Decoder rawDecoder, DynamicGraphRouterDataSource<TEdge> graph, IBasicRouter<TEdge> router)
             : base(rawDecoder, graph, router)
         {
 
@@ -32,9 +32,9 @@ namespace OpenLR.OsmSharp.Decoding
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
-        public override GeoCoordinateGraph Decode(GeoCoordinateLocation location)
+        public override ReferencedGeoCoordinate Decode(GeoCoordinateLocation location)
         {
-            return new GeoCoordinateGraph()
+            return new ReferencedGeoCoordinate()
             {
                 Latitude = location.Coordinate.Latitude,
                 Longitude = location.Coordinate.Longitude

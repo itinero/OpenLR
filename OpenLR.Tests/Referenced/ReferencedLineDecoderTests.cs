@@ -20,7 +20,7 @@ namespace OpenLR.Tests.Referenced
     /// Contains tests for decoding/encoding a OpenLR line location to a referenced line location.
     /// </summary>
     [TestFixture]
-    public class LineLocationGraphDecoderTests
+    public class ReferencedLineDecoderTests
     {
         /// <summary>
         /// A simple referenced line location decoding test.
@@ -86,7 +86,7 @@ namespace OpenLR.Tests.Referenced
             // decode the location
             var decoder = new LineLocationDecoder();
             var router = new DykstraRoutingLive();
-            var referencedDecoder = new LineLocationGraphDecoder<LiveEdge>(decoder, graph, router);
+            var referencedDecoder = new ReferencedLineDecoder<LiveEdge>(decoder, graph, router);
             var referencedLocation = referencedDecoder.Decode(location);
 
             // confirm result.

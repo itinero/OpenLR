@@ -7,7 +7,7 @@ namespace OpenLR.OsmSharp.Decoding
     /// <summary>
     /// Represents a referenced line location with a graph as a reference.
     /// </summary>
-    public class LineLocationGraph<TEdge> : ReferencedLocation
+    public class ReferencedLine<TEdge> : ReferencedLocation
         where TEdge : IDynamicGraphEdgeData
     {
         /// <summary>
@@ -24,7 +24,7 @@ namespace OpenLR.OsmSharp.Decoding
         /// Adds another line location to this one.
         /// </summary>
         /// <param name="location"></param>
-        public void Add(LineLocationGraph<TEdge> location)
+        public void Add(ReferencedLine<TEdge> location)
         {
             if(this.Vertices[this.Vertices.Length - 1] == location.Vertices[0])
             { // there is a match.

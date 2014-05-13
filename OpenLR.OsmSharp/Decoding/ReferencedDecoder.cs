@@ -18,7 +18,7 @@ namespace OpenLR.OsmSharp.Decoding
     /// <summary>
     /// Represents a dynamic graph decoder: Decodes a raw OpenLR location into a location referenced to a dynamic graph.
     /// </summary>
-    public abstract class GraphDecoder<TReferencedLocation, TLocation, TEdge> : ReferencedDecoder<TReferencedLocation, TLocation>
+    public abstract class ReferencedDecoder<TReferencedLocation, TLocation, TEdge> : ReferencedDecoder<TReferencedLocation, TLocation>
         where TEdge : IDynamicGraphEdgeData
         where TReferencedLocation : ReferencedLocation
         where TLocation : ILocation
@@ -43,7 +43,7 @@ namespace OpenLR.OsmSharp.Decoding
         /// </summary>
         /// <param name="graph"></param>
         /// <param name="router"></param>
-        public GraphDecoder(OpenLR.Decoding.Decoder rawDecoder, DynamicGraphRouterDataSource<TEdge> graph, IBasicRouter<TEdge> router)
+        public ReferencedDecoder(OpenLR.Decoding.Decoder rawDecoder, DynamicGraphRouterDataSource<TEdge> graph, IBasicRouter<TEdge> router)
             : base(rawDecoder)
         {
             _graph = graph;
@@ -305,7 +305,7 @@ namespace OpenLR.OsmSharp.Decoding
 
             return new CandidateRoute()
             {
-                Route = new LineLocationGraph<TEdge>()
+                Route = new ReferencedLine<TEdge>()
                 {
                     Edges = edges.ToArray(),
                     Vertices = vertices.ToArray()
@@ -456,7 +456,7 @@ namespace OpenLR.OsmSharp.Decoding
             /// <summary>
             /// Gets or sets the route.
             /// </summary>
-            public LineLocationGraph<TEdge> Route { get; set; }
+            public ReferencedLine<TEdge> Route { get; set; }
 
             /// <summary>
             /// Gets or sets the score.

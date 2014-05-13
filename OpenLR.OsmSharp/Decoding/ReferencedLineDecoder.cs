@@ -14,7 +14,7 @@ namespace OpenLR.OsmSharp.Decoding
     /// Represents a referenced line location decoder.
     /// </summary>
     /// <typeparam name="TEdge"></typeparam>
-    public class LineLocationGraphDecoder<TEdge> : GraphDecoder<LineLocationGraph<TEdge>, LineLocation, TEdge>
+    public class ReferencedLineDecoder<TEdge> : ReferencedDecoder<ReferencedLine<TEdge>, LineLocation, TEdge>
         where TEdge : IDynamicGraphEdgeData
     {
         /// <summary>
@@ -22,7 +22,7 @@ namespace OpenLR.OsmSharp.Decoding
         /// </summary>
         /// <param name="graph"></param>
         /// <param name="router"></param>
-        public LineLocationGraphDecoder(OpenLR.Decoding.Decoder rawDecoder, DynamicGraphRouterDataSource<TEdge> graph, IBasicRouter<TEdge> router)
+        public ReferencedLineDecoder(OpenLR.Decoding.Decoder rawDecoder, DynamicGraphRouterDataSource<TEdge> graph, IBasicRouter<TEdge> router)
             : base(rawDecoder, graph, router)
         {
 
@@ -33,7 +33,7 @@ namespace OpenLR.OsmSharp.Decoding
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
-        public override LineLocationGraph<TEdge> Decode(LineLocation location)
+        public override ReferencedLine<TEdge> Decode(LineLocation location)
         {
             // get candidate vertices and edges.
             var candidates = new List<SortedSet<CandidateVertexEdge>>();
@@ -54,7 +54,7 @@ namespace OpenLR.OsmSharp.Decoding
             candidates.Add(this.FindCandidatesFor(location.Last, true));
 
             // keep the total pathsegment.
-            LineLocationGraph<TEdge> lineLocation = null;
+            ReferencedLine<TEdge> lineLocation = null;
 
             // find a route between each pair of sequential points.
             var previous = lrps[0];
