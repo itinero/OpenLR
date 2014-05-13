@@ -1,5 +1,6 @@
 ﻿using OpenLR.Locations;
 using OpenLR.Model;
+using OpenLR.OsmSharp.Decoding.Candidates;
 using OpenLR.Referenced;
 using OpenLR.Referenced.Decoding;
 using OsmSharp.Collections.Tags;
@@ -63,16 +64,16 @@ namespace OpenLR.OsmSharp.Decoding
         /// <param name="lrp"></param>
         /// <param name="forward"></param>
         /// <returns></returns>
-        protected virtual SortedSet<CandidateVertexEdge> FindCandidatesFor(LocationReferencePoint lrp, bool forward)
+        protected virtual SortedSet<CandidateVertexEdge<TEdge>> FindCandidatesFor(LocationReferencePoint lrp, bool forward)
         {
-            var vertexEdgeCandidates = new SortedSet<CandidateVertexEdge>(new CandidateVertexEdgeComparer());
+            var vertexEdgeCandidates = new SortedSet<CandidateVertexEdge<TEdge>>(new CandidateVertexEdgeComparer<TEdge>());
             var vertexCandidates = this.FindCandidateVerticesFor(lrp);
             foreach(var vertexCandidate in vertexCandidates)
             {
                 var edgeCandidates = this.FindCandidateEdgesFor(vertexCandidate.Vertex, forward, lrp.FormOfWay.Value, lrp.FuntionalRoadClass.Value);
                 foreach(var edgeCandidate in edgeCandidates)
                 {
-                    vertexEdgeCandidates.Add(new CandidateVertexEdge()
+                    vertexEdgeCandidates.Add(new CandidateVertexEdge<TEdge>()
                     {
                         Edge = edgeCandidate.Edge,
                         Vertex = vertexCandidate.Vertex,
@@ -260,7 +261,7 @@ namespace OpenLR.OsmSharp.Decoding
         /// <param name="to"></param>
         /// <param name="minimum">The minimum FRC.</param>
         /// <returns></returns>
-        protected virtual CandidateRoute FindCandiateRoute(uint from, uint to, FunctionalRoadClass minimum)
+        protected virtual CandidateRoute<TEdge> FindCandiateRoute(uint from, uint to, FunctionalRoadClass minimum)
         {
             var fromList = new PathSegmentVisitList();
             fromList.UpdateVertex(new PathSegment<long>(from));
@@ -303,7 +304,7 @@ namespace OpenLR.OsmSharp.Decoding
             edges.Reverse();
             vertices.Reverse();
 
-            return new CandidateRoute()
+            return new CandidateRoute<TEdge>()
             {
                 Route = new ReferencedLine<TEdge>()
                 {
@@ -311,6 +312,25 @@ namespace OpenLR.OsmSharp.Decoding
                     Vertices = vertices.ToArray()
                 },
                 Score = 1
+            };
+        }
+
+        /// <summary>
+        /// Returns the coordinate of the given vertex.
+        /// </summary>
+        /// <param name="vertex"></param>
+        /// <returns></returns>
+        public Coordinate GetVertexLocation(long vertex)
+        {
+            float latitude, longitude;
+            if(!_graph.GetVertex((uint)vertex, out latitude, out longitude))
+            { // oeps, vertex does not exist!
+                throw new ArgumentOutOfRangeException("vertex", string.Format("Vertex {0} not found!", vertex));
+            }
+            return new Coordinate()
+            {
+                Latitude = latitude,
+                Longitude = longitude
             };
         }
 
@@ -386,82 +406,6 @@ namespace OpenLR.OsmSharp.Decoding
                 return this.Score.GetHashCode() ^
                     this.Edge.GetHashCode();
             }
-        }
-
-        /// <summary>
-        /// Represents a candidate vertex/edge pair and associated score.
-        /// </summary>
-        public class CandidateVertexEdge
-        {
-            /// <summary>
-            /// The combined score of vertex and edge.
-            /// </summary>
-            public float Score { get; set; }
-
-            /// <summary>
-            /// Gets or sets the candidate vertex.
-            /// </summary>
-            public uint Vertex { get; set; }
-
-            /// <summary>
-            /// Gets or sets the candidate edge.
-            /// </summary>
-            public TEdge Edge { get; set; }
-
-            /// <summary>
-            /// Determines whether this object is equal to the given object.
-            /// </summary>
-            /// <param name="obj"></param>
-            /// <returns></returns>
-            public override bool Equals(object obj)
-            {
-                var other = (obj as CandidateVertexEdge);
-                return other != null && other.Vertex == this.Vertex && other.Edge.Equals(this.Edge) && other.Score == this.Score;
-            }
-
-            /// <summary>
-            /// Serves as a hashfunction.
-            /// </summary>
-            /// <returns></returns>
-            public override int GetHashCode()
-            {
-                return this.Score.GetHashCode() ^
-                    this.Edge.GetHashCode() ^
-                    this.Vertex.GetHashCode();
-            }
-        }
-        
-        /// <summary>
-        /// A comparer for vertex edge candidates.
-        /// </summary>
-        public class CandidateVertexEdgeComparer : IComparer<CandidateVertexEdge>
-        {
-            /// <summary>
-            /// Compares the two given vertex-edge candidates.
-            /// </summary>
-            /// <param name="x"></param>
-            /// <param name="y"></param>
-            /// <returns></returns>
-            public int Compare(CandidateVertexEdge x, CandidateVertexEdge y)
-            {
-                return x.Score.CompareTo(y.Score);
-            }
-        }
-
-        /// <summary>
-        /// Represents a candiate route and associated score.
-        /// </summary>
-        public class CandidateRoute
-        {
-            /// <summary>
-            /// Gets or sets the route.
-            /// </summary>
-            public ReferencedLine<TEdge> Route { get; set; }
-
-            /// <summary>
-            /// Gets or sets the score.
-            /// </summary>
-            public float Score { get; set; }
         }
     }
 }

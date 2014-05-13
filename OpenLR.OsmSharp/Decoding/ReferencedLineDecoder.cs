@@ -1,5 +1,7 @@
 ﻿using OpenLR.Locations;
 using OpenLR.Model;
+using OpenLR.OsmSharp.Decoding.Candidates;
+using OpenLR.OsmSharp.Decoding.Scoring;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Routing.Graph;
@@ -36,7 +38,7 @@ namespace OpenLR.OsmSharp.Decoding
         public override ReferencedLine<TEdge> Decode(LineLocation location)
         {
             // get candidate vertices and edges.
-            var candidates = new List<SortedSet<CandidateVertexEdge>>();
+            var candidates = new List<SortedSet<CandidateVertexEdge<TEdge>>>();
             var lrps = new List<LocationReferencePoint>();
 
             // loop over all lrps.
@@ -65,12 +67,12 @@ namespace OpenLR.OsmSharp.Decoding
                 var currentCandidates = candidates[idx];
 
                 // build a list of combined scores.
-                var combinedScores = new SortedSet<CombinedScore>(new CombinedScoreComparer());
+                var combinedScores = new SortedSet<CombinedScore<TEdge>>(new CombinedScoreComparer<TEdge>());
                 foreach (var previousCandidate in previousCandidates)
                 {
                     foreach (var currentCandidate in currentCandidates)
                     {
-                        combinedScores.Add(new CombinedScore()
+                        combinedScores.Add(new CombinedScore<TEdge>()
                             {
                                 Source = previousCandidate,
                                 Target = currentCandidate
@@ -79,7 +81,7 @@ namespace OpenLR.OsmSharp.Decoding
                 }
 
                 // find the best candidate route.
-                CandidateRoute best = null;
+                CandidateRoute<TEdge> best = null;
                 while(combinedScores.Count > 0)
                 {
                     // get the first pair.
@@ -128,72 +130,6 @@ namespace OpenLR.OsmSharp.Decoding
             }
 
             return lineLocation;
-        }
-
-        /// <summary>
-        /// Represents a combined score.
-        /// </summary>
-        private class CombinedScore
-        {
-            /// <summary>
-            /// Gets or sets the source candidate.
-            /// </summary>
-            public CandidateVertexEdge Source { get; set; }
-
-            /// <summary>
-            /// Gets or sets the target candidate.
-            /// </summary>
-            public CandidateVertexEdge Target { get; set; }
-
-            /// <summary>
-            /// Returns the score.
-            /// </summary>
-            public float Score
-            {
-                get
-                {
-                    return this.Source.Score + this.Target.Score;
-                }
-            }
-
-            /// <summary>
-            /// Determines whether this object is equal to the given object.
-            /// </summary>
-            /// <param name="obj"></param>
-            /// <returns></returns>
-            public override bool Equals(object obj)
-            {
-                var other = (obj as CombinedScore);
-                return other != null && other.Target.Equals(this.Target) && other.Source.Equals(this.Source) && other.Score == this.Score;
-            }
-
-            /// <summary>
-            /// Serves as a hashfunction.
-            /// </summary>
-            /// <returns></returns>
-            public override int GetHashCode()
-            {
-                return this.Score.GetHashCode() ^
-                    this.Target.GetHashCode() ^
-                    this.Source.GetHashCode();
-            }
-        }
-
-        /// <summary>
-        /// A combined score compared.
-        /// </summary>
-        private class CombinedScoreComparer : IComparer<CombinedScore>
-        {
-            /// <summary>
-            /// Compares the two combine scores.
-            /// </summary>
-            /// <param name="x"></param>
-            /// <param name="y"></param>
-            /// <returns></returns>
-            public int Compare(CombinedScore x, CombinedScore y)
-            {
-                return x.Score.CompareTo(y.Score);
-            }
         }
     }
 }

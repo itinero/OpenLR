@@ -60,6 +60,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Decoding\Candidates\CandidateRoute.cs" />
+    <Compile Include="Decoding\Candidates\CandidateVertexEdge.cs" />
+    <Compile Include="Decoding\Candidates\CandidateVertexEdgeComparer.cs" />
     <Compile Include="Decoding\ReferencedCircle.cs" />
     <Compile Include="Decoding\ReferencedCircleDecoder.cs" />
     <Compile Include="Decoding\ReferencedGeoCoordinate.cs" />
@@ -69,10 +72,14 @@
     <Compile Include="Decoding\ReferencedGridDecoder.cs" />
     <Compile Include="Decoding\ReferencedLine.cs" />
     <Compile Include="Decoding\ReferencedLineDecoder.cs" />
+    <Compile Include="Decoding\ReferencedPointAlongLine.cs" />
+    <Compile Include="Decoding\ReferencedPointAlongLineDecoder.cs" />
     <Compile Include="Decoding\ReferencedPolygon.cs" />
     <Compile Include="Decoding\ReferencedPolygonDecoder.cs" />
     <Compile Include="Decoding\ReferencedRectangle.cs" />
     <Compile Include="Decoding\ReferencedRectangleDecoder.cs" />
+    <Compile Include="Decoding\Scoring\CombinedScoreComparer.cs" />
+    <Compile Include="Decoding\Scoring\CombinedScore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

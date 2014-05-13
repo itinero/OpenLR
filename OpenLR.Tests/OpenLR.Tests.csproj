@@ -83,6 +83,7 @@
     <Compile Include="Binary\PolygonLocationTests.cs" />
     <Compile Include="Binary\RectangleLocationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Referenced\ReferencedPointAlongLineDecoderTests.cs" />
     <Compile Include="Referenced\ReferencedPolygonDecoderTests.cs" />
     <Compile Include="Referenced\ReferencedGridDecoderTests.cs" />
     <Compile Include="Referenced\ReferencedCircleDecoderTests.cs" />
