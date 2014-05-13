@@ -10,18 +10,18 @@ using System.Threading.Tasks;
 namespace OpenLR.OsmSharp.Decoding
 {
     /// <summary>
-    /// Represents a referenced geo coordinate location decoder.
+    /// Represents a referenced circle location decoder.
     /// </summary>
     /// <typeparam name="TEdge"></typeparam>
-    public class ReferencedGeoCoordinateDecoder<TEdge> : ReferencedDecoder<ReferencedGeoCoordinate, GeoCoordinateLocation, TEdge>
+    public class ReferencedCircleDecoder<TEdge> : ReferencedDecoder<ReferencedCircle, CircleLocation, TEdge>
         where TEdge : IDynamicGraphEdgeData
     {
         /// <summary>
-        /// Creates a geo coordinate location referenced decoder.
+        /// Creates a circle location graph decoder.
         /// </summary>
         /// <param name="graph"></param>
         /// <param name="router"></param>
-        public ReferencedGeoCoordinateDecoder(OpenLR.Decoding.Decoder rawDecoder, DynamicGraphRouterDataSource<TEdge> graph, IBasicRouter<TEdge> router)
+        public ReferencedCircleDecoder(OpenLR.Decoding.Decoder rawDecoder, DynamicGraphRouterDataSource<TEdge> graph, IBasicRouter<TEdge> router)
             : base(rawDecoder, graph, router)
         {
 
@@ -32,12 +32,13 @@ namespace OpenLR.OsmSharp.Decoding
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
-        public override ReferencedGeoCoordinate Decode(GeoCoordinateLocation location)
+        public override ReferencedCircle Decode(CircleLocation location)
         {
-            return new ReferencedGeoCoordinate()
+            return new ReferencedCircle()
             {
                 Latitude = location.Coordinate.Latitude,
-                Longitude = location.Coordinate.Longitude
+                Longitude = location.Coordinate.Longitude,
+                Radius = location.Radius
             };
         }
     }

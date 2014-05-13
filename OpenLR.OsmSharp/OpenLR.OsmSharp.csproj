@@ -60,6 +60,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Decoding\ReferencedCircle.cs" />
+    <Compile Include="Decoding\ReferencedCircleDecoder.cs" />
     <Compile Include="Decoding\ReferencedGeoCoordinate.cs" />
     <Compile Include="Decoding\ReferencedGeoCoordinateDecoder.cs" />
     <Compile Include="Decoding\ReferencedDecoder.cs" />

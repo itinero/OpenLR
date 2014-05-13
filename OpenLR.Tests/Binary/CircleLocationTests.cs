@@ -30,9 +30,9 @@ namespace OpenLR.Tests.Binary
             var circleLocation = (location as CircleLocation);
 
             // check coordinate.
-            Assert.IsNotNull(circleLocation.Coordinates);
-            Assert.AreEqual(6.12699, circleLocation.Coordinates.Longitude, delta); // 6.12699°
-            Assert.AreEqual(49.60728, circleLocation.Coordinates.Latitude, delta); // 49.60728°
+            Assert.IsNotNull(circleLocation.Coordinate);
+            Assert.AreEqual(6.12699, circleLocation.Coordinate.Longitude, delta); // 6.12699°
+            Assert.AreEqual(49.60728, circleLocation.Coordinate.Latitude, delta); // 49.60728°
             Assert.AreEqual(170, circleLocation.Radius);
         }
     }
