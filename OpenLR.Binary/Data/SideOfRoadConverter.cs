@@ -9,7 +9,7 @@ namespace OpenLR.Binary.Data
     public static class SideOfRoadConverter
     {
         /// <summary>
-        /// Decodes binary OpenLR orientation data into an orientation.
+        /// Decodes binary OpenLR SideOfRoad data into an SideOfRoad.
         /// </summary>
         /// <param name="data"></param>
         /// <param name="byteIndex"></param>
@@ -20,7 +20,7 @@ namespace OpenLR.Binary.Data
         }
 
         /// <summary>
-        /// Decodes binary OpenLR orientation data into an orientation.
+        /// Decodes binary OpenLR SideOfRoad data into an SideOfRoad.
         /// </summary>
         /// <param name="data"></param>
         /// <param name="startIndex"></param>

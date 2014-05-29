@@ -33,7 +33,7 @@ namespace OpenLR.Locations
         public SideOfRoad? SideOfRoad { get; set; }
 
         /// <summary>
-        /// Gets or sets the orientation (ORI).
+        /// Gets or sets the SideOfRoad (ORI).
         /// </summary>
         public Orientation? Orientation { get; set; }
     }
