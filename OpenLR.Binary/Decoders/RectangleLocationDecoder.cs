@@ -20,5 +20,15 @@ namespace OpenLR.Binary.Decoders
             rectangleLocation.UpperRight = CoordinateConverter.DecodeRelative(rectangleLocation.LowerLeft, data, 7);
             return rectangleLocation;
         }
+
+        /// <summary>
+        /// Returns true if the given data can be decoded by this decoder.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        protected override bool CanDecode(byte[] data)
+        {
+            return data != null && (data.Length == 11 || data.Length == 13);
+        }
     }
 }

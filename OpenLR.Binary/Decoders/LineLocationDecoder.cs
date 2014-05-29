@@ -80,5 +80,21 @@ namespace OpenLR.Binary.Decoders
             lineLocation.Last = last;
             return lineLocation;
         }
+
+        /// <summary>
+        /// Returns true if the given data can be decoded but this decoder.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        protected override bool CanDecode(byte[] data)
+        {
+            if(data != null)
+            {
+                int count = data.Length - 16;
+                int mod7 = count % 7;
+                return mod7 == 0 || mod7 == 1 || mod7 == 2;
+            }
+            return false;
+        }
     }
 }

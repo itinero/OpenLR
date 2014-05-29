@@ -52,5 +52,15 @@ namespace OpenLR.Binary.Decoders
             poiWithAccessPointLocation.SideOfRoad = sideOfRoad;
             return poiWithAccessPointLocation;
         }
+
+        /// <summary>
+        /// Returns true if the given data can be decoded by this decoder.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        protected override bool CanDecode(byte[] data)
+        {
+            return data != null && (data.Length == 20 || data.Length == 21);
+        }
     }
 }

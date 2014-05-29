@@ -19,5 +19,15 @@ namespace OpenLR.Binary.Decoders
             geoCoordinate.Coordinate = CoordinateConverter.Decode(data, 1);
             return geoCoordinate;
         }
+
+        /// <summary>
+        /// Returns true if the given data can be decoded by this decoder.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        protected override bool CanDecode(byte[] data)
+        {
+            return data != null && data.Length == 7;
+        }
     }
 }

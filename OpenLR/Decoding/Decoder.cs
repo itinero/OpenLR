@@ -13,6 +13,13 @@ namespace OpenLR.Decoding
         where TLocation : ILocation
     {
         /// <summary>
+        /// Returns true if the given data can be decoded using this decoder.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public abstract bool CanDecode(string data);
+
+        /// <summary>
         /// Decodes a byte array into a location reference.
         /// </summary>
         /// <returns></returns>

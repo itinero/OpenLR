@@ -38,5 +38,20 @@ namespace OpenLR.Binary.Decoders
             polygonLocation.Coordinates = coordinates.ToArray();
             return polygonLocation;
         }
+
+        /// <summary>
+        /// Returns true if the given data can be decoded but this decoder.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        protected override bool CanDecode(byte[] data)
+        {
+            if (data != null)
+            {
+                int count = (data.Length - 15);
+                return count*4 == 0;
+            }
+            return false;
+        }
     }
 }

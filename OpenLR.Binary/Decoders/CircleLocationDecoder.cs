@@ -20,5 +20,15 @@ namespace OpenLR.Binary.Decoders
             circleLocation.Radius = data[7];
             return circleLocation;
         }
+
+        /// <summary>
+        /// Returns true if the given data can be decoded by this decoder.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        protected override bool CanDecode(byte[] data)
+        {
+            return data != null && (data.Length == 8 || data.Length == 9 || data.Length == 10 || data.Length == 11);
+        }
     }
 }

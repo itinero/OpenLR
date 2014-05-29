@@ -71,5 +71,10 @@ namespace OpenLR.Binary.Decoders
             lineLocation.Last = last;
             return lineLocation;
         }
+
+        protected override bool CanDecode(byte[] data)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

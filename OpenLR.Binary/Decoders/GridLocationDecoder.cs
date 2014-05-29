@@ -31,5 +31,15 @@ namespace OpenLR.Binary.Decoders
             grid.Rows = rows;
             return grid;
         }
+
+        /// <summary>
+        /// Returns true if the given data can be decoded by this decoder.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        protected override bool CanDecode(byte[] data)
+        {
+            return data != null && (data.Length == 15 || data.Length == 17);
+        }
     }
 }
