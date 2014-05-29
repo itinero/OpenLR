@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using OpenLR.Binary.Data;
 using OpenLR.Model;
+using System;
 
 namespace OpenLR.Tests.Binary.Data
 {
@@ -16,6 +17,11 @@ namespace OpenLR.Tests.Binary.Data
         [Test]
         public void TestDecoding1()
         {
+            Assert.Catch<ArgumentOutOfRangeException>(() =>
+            {
+                BearingConvertor.Decode(new byte[] { 0 }, 4);
+            });
+
             Assert.AreEqual(0, BearingConvertor.Decode(new byte[] { 0 }, 0, 0));
             Assert.AreEqual(0, BearingConvertor.Decode(new byte[] { 0 }, 0));
             Assert.AreEqual(1, BearingConvertor.Decode(new byte[] { 1 }, 3));
