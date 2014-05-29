@@ -11,14 +11,14 @@ namespace OpenLR.Binary.Decoders
     /// <summary>
     /// A decoder that decodes binary data into a polygon location.
     /// </summary>
-    public class PolygonLocationDecoder : BinaryDecoder
+    public class PolygonLocationDecoder : BinaryDecoder<PolygonLocation>
     {
         /// <summary>
         /// Decodes the given data into a location reference.
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        protected override ILocation Decode(byte[] data)
+        protected override PolygonLocation Decode(byte[] data)
         {
             // just need to decode list of coordinate.
             var coordinates = new List<Coordinate>();

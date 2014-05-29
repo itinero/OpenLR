@@ -7,14 +7,14 @@ namespace OpenLR.Binary.Decoders
     /// <summary>
     /// A decoder that decodes binary data into a point along line.
     /// </summary>
-    public class PointAlongLineDecoder : BinaryDecoder
+    public class PointAlongLineDecoder : BinaryDecoder<PointAlongLineLocation>
     {
         /// <summary>
         /// Decodes the given data into a location reference.
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        protected override ILocation Decode(byte[] data)
+        protected override PointAlongLineLocation Decode(byte[] data)
         {
             var pointAlongLine = new PointAlongLineLocation();
 

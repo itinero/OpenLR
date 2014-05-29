@@ -68,7 +68,7 @@ namespace OpenLR.Tests.Referenced
             }, null);
 
             // decode the location
-            var decoder = new LineLocationDecoder();
+            var decoder = new PointAlongLineDecoder();
             var router = new DykstraRoutingLive();
             var referencedDecoder = new ReferencedPointAlongLineDecoder<LiveEdge>(decoder, graph, router);
             var referencedLocation = referencedDecoder.Decode(location);

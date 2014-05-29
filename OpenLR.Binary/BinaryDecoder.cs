@@ -6,14 +6,15 @@ namespace OpenLR.Binary
     /// <summary>
     /// Abstract representation of a binary decoder.
     /// </summary>
-    public abstract class BinaryDecoder : OpenLR.Decoding.Decoder
+    public abstract class BinaryDecoder<TLocation> : OpenLR.Decoding.Decoder<TLocation>
+        where TLocation : ILocation
     {
         /// <summary>
         /// Decodes the given data into a location reference.
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public override ILocation Decode(string data)
+        public override TLocation Decode(string data)
         {
             if (data == null) { throw new ArgumentNullException("data"); }
 
@@ -37,6 +38,6 @@ namespace OpenLR.Binary
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        protected abstract ILocation Decode(byte[] data);
+        protected abstract TLocation Decode(byte[] data);
     }
 }

@@ -12,13 +12,13 @@ namespace OpenLR.Referenced.Decoding
         /// <summary>
         /// Holds the decoder to decode the raw OpenLR-data.
         /// </summary>
-        private OpenLR.Decoding.Decoder _rawDecoder;
+        private OpenLR.Decoding.Decoder<TLocation> _rawDecoder;
 
         /// <summary>
         /// Creates a new 
         /// </summary>
         /// <param name="rawDecoder"></param>
-        public ReferencedDecoder(OpenLR.Decoding.Decoder rawDecoder)
+        public ReferencedDecoder(OpenLR.Decoding.Decoder<TLocation> rawDecoder)
         {
             _rawDecoder = rawDecoder;
         }

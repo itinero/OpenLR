@@ -9,12 +9,13 @@ namespace OpenLR.Decoding
     /// <summary>
     /// Abstract representation of a decoder.
     /// </summary>
-    public abstract class Decoder
+    public abstract class Decoder<TLocation>
+        where TLocation : ILocation
     {
         /// <summary>
         /// Decodes a byte array into a location reference.
         /// </summary>
         /// <returns></returns>
-        public abstract ILocation Decode(string data);
+        public abstract TLocation Decode(string data);
     }
 }

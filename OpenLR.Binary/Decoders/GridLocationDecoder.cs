@@ -6,14 +6,14 @@ namespace OpenLR.Binary.Decoders
     /// <summary>
     /// A decoder that decodes binary data into a grid location.
     /// </summary>
-    public class GridLocationDecoder : BinaryDecoder
+    public class GridLocationDecoder : BinaryDecoder<GridLocation>
     {
         /// <summary>
         /// Decodes the given data into a location reference.
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        protected override ILocation Decode(byte[] data)
+        protected override GridLocation Decode(byte[] data)
         {
             // decode box.
             var lowerLeft = CoordinateConverter.Decode(data, 1);

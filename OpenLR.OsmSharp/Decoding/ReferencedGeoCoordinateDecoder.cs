@@ -21,7 +21,7 @@ namespace OpenLR.OsmSharp.Decoding
         /// </summary>
         /// <param name="graph"></param>
         /// <param name="router"></param>
-        public ReferencedGeoCoordinateDecoder(OpenLR.Decoding.Decoder rawDecoder, DynamicGraphRouterDataSource<TEdge> graph, IBasicRouter<TEdge> router)
+        public ReferencedGeoCoordinateDecoder(OpenLR.Decoding.Decoder<GeoCoordinateLocation> rawDecoder, DynamicGraphRouterDataSource<TEdge> graph, IBasicRouter<TEdge> router)
             : base(rawDecoder, graph, router)
         {
 
