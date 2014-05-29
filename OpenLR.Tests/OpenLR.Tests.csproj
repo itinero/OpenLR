@@ -69,6 +69,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Binary\BinaryDecoderTests.cs" />
     <Compile Include="Binary\CircleLocationTests.cs" />
     <Compile Include="Binary\ClosedLineLocationTests.cs" />
     <Compile Include="Binary\Data\CoordinateEncodingTests.cs" />
