@@ -39,7 +39,7 @@ namespace OpenLR
         /// </summary>
         /// <param name="base64"></param>
         /// <returns></returns>
-        private static ReferencedLocation DecodeBinary(string base64)
+        public static ReferencedLocation DecodeBinary(string base64)
         {
             foreach(var decoder in _decoders)
             {

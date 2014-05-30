@@ -21,7 +21,7 @@ namespace OpenLR.OsmSharp.Decoding.Scoring
         /// <returns></returns>
         public int Compare(CombinedScore<TEdge> x, CombinedScore<TEdge> y)
         {
-            return x.Score.CompareTo(y.Score);
+            return y.Score.CompareTo(x.Score);
         }
     }
 }

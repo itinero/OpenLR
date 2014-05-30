@@ -32,7 +32,7 @@ namespace OpenLR.OsmSharp.Decoding
         /// <summary>
         /// Holds a dynamic graph.
         /// </summary>
-        private DynamicGraphRouterDataSource<TEdge> _graph;
+        private IBasicRouterDataSource<TEdge> _graph;
 
         /// <summary>
         /// Holds a basic router.
@@ -44,7 +44,7 @@ namespace OpenLR.OsmSharp.Decoding
         /// </summary>
         /// <param name="graph"></param>
         /// <param name="router"></param>
-        public ReferencedDecoder(OpenLR.Decoding.Decoder<TLocation> rawDecoder, DynamicGraphRouterDataSource<TEdge> graph, IBasicRouter<TEdge> router)
+        public ReferencedDecoder(OpenLR.Decoding.Decoder<TLocation> rawDecoder, IBasicRouterDataSource<TEdge> graph, IBasicRouter<TEdge> router)
             : base(rawDecoder)
         {
             _graph = graph;
@@ -306,7 +306,7 @@ namespace OpenLR.OsmSharp.Decoding
 
             return new CandidateRoute<TEdge>()
             {
-                Route = new ReferencedLine<TEdge>()
+                Route = new ReferencedLine<TEdge>(_graph)
                 {
                     Edges = edges.ToArray(),
                     Vertices = vertices.ToArray()

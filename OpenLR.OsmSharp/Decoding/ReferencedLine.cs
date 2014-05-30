@@ -1,5 +1,8 @@
-﻿using OpenLR.Referenced;
+﻿using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
+using OpenLR.Referenced;
 using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.Graph.Router;
 using System;
 
 namespace OpenLR.OsmSharp.Decoding
@@ -10,6 +13,20 @@ namespace OpenLR.OsmSharp.Decoding
     public class ReferencedLine<TEdge> : ReferencedLocation
         where TEdge : IDynamicGraphEdgeData
     {
+        /// <summary>
+        /// Holds the graph.
+        /// </summary>
+        private IBasicRouterDataSource<TEdge> _graph;
+
+        /// <summary>
+        /// Creates a new referenced line.
+        /// </summary>
+        /// <param name="graph"></param>
+        public ReferencedLine(IBasicRouterDataSource<TEdge> graph)
+        {
+            _graph = graph;
+        }
+
         /// <summary>
         /// Gets or sets the vertices.
         /// </summary>
@@ -45,6 +62,26 @@ namespace OpenLR.OsmSharp.Decoding
                 return;
             }
             throw new Exception("Cannot add a location without them having one vertex incommon.");
+        }
+
+        /// <summary>
+        /// Converts this referenced location to a geometry.
+        /// </summary>
+        /// <returns></returns>
+        public IGeometry ToGeometry()
+        {
+            var geometryFactory = new GeometryFactory();
+            
+            // build coordinates list.
+            var coordinates = new Coordinate[this.Vertices.Length];
+            for(int idx = 0; idx < this.Vertices.Length; idx++)
+            {
+                float latitude, longitude;
+                _graph.GetVertex((uint)this.Vertices[idx], out latitude, out longitude);
+                coordinates[idx] = new Coordinate(longitude, latitude);
+            }
+
+            return geometryFactory.CreateLineString(coordinates);
         }
     }
 }
