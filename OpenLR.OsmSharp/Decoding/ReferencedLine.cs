@@ -4,6 +4,7 @@ using OpenLR.Referenced;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using System;
+using System.Collections.Generic;
 
 namespace OpenLR.OsmSharp.Decoding
 {
@@ -73,15 +74,30 @@ namespace OpenLR.OsmSharp.Decoding
             var geometryFactory = new GeometryFactory();
             
             // build coordinates list.
-            var coordinates = new Coordinate[this.Vertices.Length];
+            var coordinates = new List<Coordinate>();
             for(int idx = 0; idx < this.Vertices.Length; idx++)
             {
                 float latitude, longitude;
                 _graph.GetVertex((uint)this.Vertices[idx], out latitude, out longitude);
-                coordinates[idx] = new Coordinate(longitude, latitude);
-            }
+                coordinates.Add(new Coordinate(longitude, latitude));
 
-            return geometryFactory.CreateLineString(coordinates);
+                if(idx < this.Edges.Length)
+                {
+                    var edge = this.Edges[idx];
+                    if (edge.Coordinates != null)
+                    {
+                        foreach(var coordinate in edge.Coordinates)
+                        {
+                            coordinates.Add(new Coordinate()
+                            {
+                                X = coordinate.Longitude,
+                                Y = coordinate.Latitude
+                            });
+                        }
+                    }
+                }
+            }
+            return geometryFactory.CreateLineString(coordinates.ToArray());
         }
     }
 }
