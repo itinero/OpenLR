@@ -94,6 +94,7 @@
     <Compile Include="Decoding\ReferencedRectangleDecoder.cs" />
     <Compile Include="Decoding\Scoring\CombinedScoreComparer.cs" />
     <Compile Include="Decoding\Scoring\CombinedScore.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReferencedDecoderBase.cs" />
     <Compile Include="ReferencedLiveEdgeDecoder.cs" />

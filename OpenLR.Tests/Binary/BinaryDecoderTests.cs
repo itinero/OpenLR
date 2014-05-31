@@ -17,7 +17,7 @@ namespace OpenLR.Tests.Binary
         [Test]
         public void DecodeBase64Test()
         {
-            double delta = 0.0001;
+            // double delta = 0.0001;
 
             var decoder = new CircleLocationDecoder();
 
