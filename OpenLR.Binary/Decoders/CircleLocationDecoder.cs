@@ -6,7 +6,7 @@ namespace OpenLR.Binary.Decoders
     /// <summary>
     /// A decoder that decodes binary data into a circle location.
     /// </summary>
-    public class CircleLocationDecoder : BinaryDecoder<CircleLocation>
+    public class CircleLocationDecoder : BinaryLocationDecoder<CircleLocation>
     {
         /// <summary>
         /// Decodes the given data into a location reference.

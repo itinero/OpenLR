@@ -1,52 +1,45 @@
-﻿using OpenLR.Locations;
+﻿using OpenLR.Decoding;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace OpenLR.Referenced.Decoding
 {
     /// <summary>
-    /// Decodes an OpenLR-encoded location into a Location: References an OpenLR location and decodes this into a Location with a depency on the routing network.
+    /// Abstract class representing a decoder.
     /// </summary>
-    public abstract class ReferencedDecoder<TReferencedLocation, TLocation> : IReferencedDecoder
-        where TReferencedLocation : ReferencedLocation
-        where TLocation : ILocation
+    public abstract class ReferencedDecoder
     {
         /// <summary>
-        /// Holds the decoder to decode the raw OpenLR-data.
+        /// Holds the OpenLR unreferenced location decoder.
         /// </summary>
-        private OpenLR.Decoding.Decoder<TLocation> _rawDecoder;
+        private Decoder _locationDecoder;
 
         /// <summary>
-        /// Creates a new 
+        /// Creates a new referenced decoder.
         /// </summary>
-        /// <param name="rawDecoder"></param>
-        public ReferencedDecoder(OpenLR.Decoding.Decoder<TLocation> rawDecoder)
+        /// <param name="locationDecoder"></param>
+        public ReferencedDecoder(Decoder locationDecoder)
         {
-            _rawDecoder = rawDecoder;
+            _locationDecoder = locationDecoder;
         }
 
         /// <summary>
-        /// Decodes an unreferenced raw OpenLR location into a referenced Location.
+        /// Gets the location decoder.
         /// </summary>
-        /// <param name="location"></param>
-        /// <returns></returns>
-        public abstract TReferencedLocation Decode(TLocation location);
-
-        /// <summary>
-        /// Returns true if the given data can be decoder by this decoder.
-        /// </summary>
-        /// <param name="data"></param>
-        bool IReferencedDecoder.CanDecode(string data)
+        public Decoder LocationDecoder
         {
-            return _rawDecoder.CanDecode(data);
+            get
+            {
+                return _locationDecoder;
+            }
         }
 
         /// <summary>
-        /// Decodes an unreferenced raw OpenLR location into a referenced Location.
+        /// Decodes a the given data into a referenced location.
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        ReferencedLocation IReferencedDecoder.Decode(string data)
-        {
-            return this.Decode(_rawDecoder.Decode(data));
-        }
+        public abstract ReferencedLocation Decode(string data);
     }
 }

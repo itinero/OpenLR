@@ -45,8 +45,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Decoding\Decoder.cs" />
-    <Compile Include="Encoding\Encoder.cs" />
-    <Compile Include="Facade.cs" />
+    <Compile Include="Decoding\LocationDecoder.cs" />
+    <Compile Include="Encoding\LocationEncoder.cs" />
     <Compile Include="ILocationReference.cs" />
     <Compile Include="Locations\CircleLocation.cs" />
     <Compile Include="Locations\ClosedLineLocation.cs" />
@@ -66,8 +66,9 @@
     <Compile Include="Model\Orientation.cs" />
     <Compile Include="Model\SideOfRoad.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Referenced\Decoding\IReferencedDecoder.cs" />
     <Compile Include="Referenced\Decoding\ReferencedDecoder.cs" />
+    <Compile Include="Referenced\Decoding\IReferencedDecoder.cs" />
+    <Compile Include="Referenced\Decoding\ReferencedLocationDecoder.cs" />
     <Compile Include="Referenced\Encoding\ReferencedEncoder.cs" />
     <Compile Include="Referenced\ReferencedLocation.cs" />
   </ItemGroup>

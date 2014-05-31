@@ -11,7 +11,7 @@ namespace OpenLR.Binary.Decoders
     /// <summary>
     /// A decoder that decodes binary data into a line location.
     /// </summary>
-    public class LineLocationDecoder : BinaryDecoder<LineLocation>
+    public class LineLocationDecoder : BinaryLocationDecoder<LineLocation>
     {
         /// <summary>
         /// Decodes the given data into a location reference.

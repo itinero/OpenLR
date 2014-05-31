@@ -21,7 +21,7 @@ namespace OpenLR.OsmSharp.Decoding
         /// </summary>
         /// <param name="graph"></param>
         /// <param name="router"></param>
-        public ReferencedCircleDecoder(OpenLR.Decoding.Decoder<CircleLocation> rawDecoder, IBasicRouterDataSource<TEdge> graph, IBasicRouter<TEdge> router)
+        public ReferencedCircleDecoder(OpenLR.Decoding.LocationDecoder<CircleLocation> rawDecoder, IBasicRouterDataSource<TEdge> graph, IBasicRouter<TEdge> router)
             : base(rawDecoder, graph, router)
         {
 

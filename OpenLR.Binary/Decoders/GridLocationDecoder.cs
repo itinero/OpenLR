@@ -6,7 +6,7 @@ namespace OpenLR.Binary.Decoders
     /// <summary>
     /// A decoder that decodes binary data into a grid location.
     /// </summary>
-    public class GridLocationDecoder : BinaryDecoder<GridLocation>
+    public class GridLocationDecoder : BinaryLocationDecoder<GridLocation>
     {
         /// <summary>
         /// Decodes the given data into a location reference.

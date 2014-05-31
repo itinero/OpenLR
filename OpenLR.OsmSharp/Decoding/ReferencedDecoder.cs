@@ -19,7 +19,7 @@ namespace OpenLR.OsmSharp.Decoding
     /// <summary>
     /// Represents a dynamic graph decoder: Decodes a raw OpenLR location into a location referenced to a dynamic graph.
     /// </summary>
-    public abstract class ReferencedDecoder<TReferencedLocation, TLocation, TEdge> : ReferencedDecoder<TReferencedLocation, TLocation>
+    public abstract class ReferencedDecoder<TReferencedLocation, TLocation, TEdge> : ReferencedLocationDecoder<TReferencedLocation, TLocation>
         where TEdge : IDynamicGraphEdgeData
         where TReferencedLocation : ReferencedLocation
         where TLocation : ILocation
@@ -44,7 +44,7 @@ namespace OpenLR.OsmSharp.Decoding
         /// </summary>
         /// <param name="graph"></param>
         /// <param name="router"></param>
-        public ReferencedDecoder(OpenLR.Decoding.Decoder<TLocation> rawDecoder, IBasicRouterDataSource<TEdge> graph, IBasicRouter<TEdge> router)
+        public ReferencedDecoder(OpenLR.Decoding.LocationDecoder<TLocation> rawDecoder, IBasicRouterDataSource<TEdge> graph, IBasicRouter<TEdge> router)
             : base(rawDecoder)
         {
             _graph = graph;

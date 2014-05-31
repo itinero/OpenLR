@@ -11,7 +11,7 @@ namespace OpenLR.Binary.Decoders
     /// <summary>
     /// A decoder that decodes binary data into a circle location.
     /// </summary>
-    public class ClosedLineLocationDecoder : BinaryDecoder<ClosedLineLocation>
+    public class ClosedLineLocationDecoder : BinaryLocationDecoder<ClosedLineLocation>
     {
         /// <summary>
         /// Decodes the given data into a location reference.
@@ -72,6 +72,11 @@ namespace OpenLR.Binary.Decoders
             return lineLocation;
         }
 
+        /// <summary>
+        /// Returns true if the given data can be decoded by this decoder.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         protected override bool CanDecode(byte[] data)
         {
             throw new NotImplementedException();

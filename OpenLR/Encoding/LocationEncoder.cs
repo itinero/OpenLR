@@ -5,7 +5,7 @@ using System.Text;
 
 namespace OpenLR.Encoding
 {
-    class Encoder
+    class LocationEncoder
     {
     }
 }

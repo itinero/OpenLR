@@ -1,74 +1,92 @@
-﻿using OpenLR.Locations;
-using System;
+﻿using OpenLR.Decoding;
+using OpenLR.Locations;
 
 namespace OpenLR.Binary
 {
     /// <summary>
-    /// Abstract representation of a binary decoder.
+    /// A decoder implementation for the OpenLR binary format.
     /// </summary>
-    public abstract class BinaryDecoder<TLocation> : OpenLR.Decoding.Decoder<TLocation>
-        where TLocation : ILocation
+    public class BinaryDecoder : OpenLR.Decoding.Decoder
     {
         /// <summary>
-        /// Decodes the given data into a location reference.
+        /// Returns a circle location decoder.
         /// </summary>
-        /// <param name="data"></param>
         /// <returns></returns>
-        public override TLocation Decode(string data)
+        public override LocationDecoder<CircleLocation> CreateCircleLocationDecoder()
         {
-            if (data == null) { throw new ArgumentNullException("data"); }
-
-            // the data in a binary decoder should be a base64 string.
-            byte[] binaryData = null;
-            try
-            {
-                binaryData = Convert.FromBase64String(data);
-            }
-            catch(FormatException ex)
-            { // not a base64 string.
-                throw ex;
-            }
-
-            // we have binary data now.
-            return this.Decode(binaryData);
+            return new Decoders.CircleLocationDecoder();
         }
 
         /// <summary>
-        /// Decodes the given data into a location reference.
+        /// Returns a closed line location decoder.
         /// </summary>
-        /// <param name="data"></param>
         /// <returns></returns>
-        protected abstract TLocation Decode(byte[] data);
-
-        /// <summary>
-        /// Returns true if the given data can be decoded using this decoder.
-        /// </summary>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        public override bool CanDecode(string data)
+        public override LocationDecoder<ClosedLineLocation> CreateClosedLineLocationDecoder()
         {
-            if (data == null) { throw new ArgumentNullException("data"); }
-
-            // the data in a binary decoder should be a base64 string.
-            byte[] binaryData = null;
-            try
-            {
-                binaryData = Convert.FromBase64String(data);
-            }
-            catch (FormatException ex)
-            { // not a base64 string.
-                throw ex;
-            }
-
-            // we have binary data now.
-            return this.CanDecode(binaryData);
+            return new Decoders.ClosedLineLocationDecoder();
         }
 
         /// <summary>
-        /// Returns true if the given data can be decoded using this decoder.
+        /// Returns a geo coordinate location decoder.
         /// </summary>
-        /// <param name="data"></param>
         /// <returns></returns>
-        protected abstract bool CanDecode(byte[] data);
+        public override LocationDecoder<GeoCoordinateLocation> CreateGeoCoordinateLocationDecoder()
+        {
+            return new Decoders.GeoCoordinateLocationDecoder();
+        }
+
+        /// <summary>
+        /// Returns a grid location decoder.
+        /// </summary>
+        /// <returns></returns>
+        public override LocationDecoder<GridLocation> CreateGridLocationDecoder()
+        {
+            return new Decoders.GridLocationDecoder();
+        }
+
+        /// <summary>
+        /// Returns a line location decoder.
+        /// </summary>
+        /// <returns></returns>
+        public override LocationDecoder<LineLocation> CreateLineLocationDecoder()
+        {
+            return new Decoders.LineLocationDecoder();
+        }
+
+        /// <summary>
+        /// Returns a point along line location decoder.
+        /// </summary>
+        /// <returns></returns>
+        public override LocationDecoder<PointAlongLineLocation> CreatePointAlongLineLocationDecoder()
+        {
+            return new Decoders.PointAlongLineDecoder();
+        }
+
+        /// <summary>
+        /// Returns a poi with access point location decoder.
+        /// </summary>
+        /// <returns></returns>
+        public override LocationDecoder<PoiWithAccessPointLocation> CreatePoiWithAccessPointLocationDecoder()
+        {
+            return new Decoders.PoiWithAccessPointLocationDecoder();
+        }
+
+        /// <summary>
+        /// Returns a polygon location decoder.
+        /// </summary>
+        /// <returns></returns>
+        public override LocationDecoder<PolygonLocation> CreatePolygonLocationDecoder()
+        {
+            return new Decoders.PolygonLocationDecoder();
+        }
+
+        /// <summary>
+        /// Returns a rectangle location decoder.
+        /// </summary>
+        /// <returns></returns>
+        public override LocationDecoder<RectangleLocation> CreateRectangleLocationDecoder()
+        {
+            return new Decoders.RectangleLocationDecoder();
+        }
     }
 }

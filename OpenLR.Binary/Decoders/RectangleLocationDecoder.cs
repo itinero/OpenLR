@@ -6,7 +6,7 @@ namespace OpenLR.Binary.Decoders
     /// <summary>
     /// A decoder that decodes binary data into a rectangle location.
     /// </summary>
-    public class RectangleLocationDecoder : BinaryDecoder<RectangleLocation>
+    public class RectangleLocationDecoder : BinaryLocationDecoder<RectangleLocation>
     {
         /// <summary>
         /// Decodes the given data into a location reference.

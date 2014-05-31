@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BinaryDecoder.cs" />
+    <Compile Include="BinaryLocationDecoder.cs" />
     <Compile Include="Data\CoordinateConverter.cs" />
     <Compile Include="Data\FormOfWayConvertor.cs" />
     <Compile Include="Data\BearingConvertor.cs" />

@@ -1,28 +1,64 @@
 ﻿using OpenLR.Locations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace OpenLR.Decoding
 {
     /// <summary>
-    /// Abstract representation of a decoder.
+    /// An abstract base class for a binary/xml decoder.
     /// </summary>
-    public abstract class Decoder<TLocation>
-        where TLocation : ILocation
+    public abstract class Decoder
     {
         /// <summary>
-        /// Returns true if the given data can be decoded using this decoder.
+        /// Returns a circle location decoder.
         /// </summary>
-        /// <param name="data"></param>
         /// <returns></returns>
-        public abstract bool CanDecode(string data);
+        public abstract LocationDecoder<CircleLocation> CreateCircleLocationDecoder();
 
         /// <summary>
-        /// Decodes a byte array into a location reference.
+        /// Returns a closed line location decoder.
         /// </summary>
         /// <returns></returns>
-        public abstract TLocation Decode(string data);
+        public abstract LocationDecoder<ClosedLineLocation> CreateClosedLineLocationDecoder();
+
+        /// <summary>
+        /// Returns a geo coordinate location decoder.
+        /// </summary>
+        /// <returns></returns>
+        public abstract LocationDecoder<GeoCoordinateLocation> CreateGeoCoordinateLocationDecoder();
+
+        /// <summary>
+        /// Returns a grid location decoder.
+        /// </summary>
+        /// <returns></returns>
+        public abstract LocationDecoder<GridLocation> CreateGridLocationDecoder();
+
+        /// <summary>
+        /// Returns a line location decoder.
+        /// </summary>
+        /// <returns></returns>
+        public abstract LocationDecoder<LineLocation> CreateLineLocationDecoder();
+
+        /// <summary>
+        /// Returns a point along line location decoder.
+        /// </summary>
+        /// <returns></returns>
+        public abstract LocationDecoder<PointAlongLineLocation> CreatePointAlongLineLocationDecoder();
+
+        /// <summary>
+        /// Returns a poi with access point location decoder.
+        /// </summary>
+        /// <returns></returns>
+        public abstract LocationDecoder<PoiWithAccessPointLocation> CreatePoiWithAccessPointLocationDecoder();
+
+        /// <summary>
+        /// Returns a polygon location decoder.
+        /// </summary>
+        /// <returns></returns>
+        public abstract LocationDecoder<PolygonLocation> CreatePolygonLocationDecoder();
+
+        /// <summary>
+        /// Returns a rectangle location decoder.
+        /// </summary>
+        /// <returns></returns>
+        public abstract LocationDecoder<RectangleLocation> CreateRectangleLocationDecoder();
     }
 }

@@ -6,7 +6,7 @@ namespace OpenLR.Binary.Decoders
     /// <summary>
     /// A decoder that decodes binary data into a geo coordinate.
     /// </summary>
-    public class GeoCoordinateLocationDecoder : BinaryDecoder<GeoCoordinateLocation>
+    public class GeoCoordinateLocationDecoder : BinaryLocationDecoder<GeoCoordinateLocation>
     {
         /// <summary>
         /// Decodes the given data into a location reference.

@@ -11,7 +11,7 @@ namespace OpenLR.Binary.Decoders
     /// <summary>
     /// A decoder that decodes binary data into a polygon location.
     /// </summary>
-    public class PolygonLocationDecoder : BinaryDecoder<PolygonLocation>
+    public class PolygonLocationDecoder : BinaryLocationDecoder<PolygonLocation>
     {
         /// <summary>
         /// Decodes the given data into a location reference.

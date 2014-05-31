@@ -7,7 +7,7 @@ namespace OpenLR.Binary.Decoders
     /// <summary>
     /// A decoder that decodes binary data into a point along line.
     /// </summary>
-    public class PointAlongLineDecoder : BinaryDecoder<PointAlongLineLocation>
+    public class PointAlongLineDecoder : BinaryLocationDecoder<PointAlongLineLocation>
     {
         /// <summary>
         /// Decodes the given data into a location reference.

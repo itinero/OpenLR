@@ -11,7 +11,7 @@ namespace OpenLR.Binary.Decoders
     /// <summary>
     /// A decoder that decodes binary data into a circle location.
     /// </summary>
-    public class PoiWithAccessPointLocationDecoder : BinaryDecoder<PoiWithAccessPointLocation>
+    public class PoiWithAccessPointLocationDecoder : BinaryLocationDecoder<PoiWithAccessPointLocation>
     {
         /// <summary>
         /// Decodes the given data into a location reference.
