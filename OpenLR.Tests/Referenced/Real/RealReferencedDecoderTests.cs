@@ -7,9 +7,12 @@ using OsmSharp.Routing.Graph.Router.Dykstra;
 using OsmSharp.Routing.Osm.Graphs;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace OpenLR.Tests.Referenced.Real
 {
@@ -92,6 +95,61 @@ namespace OpenLR.Tests.Referenced.Real
             var geoJson = geoJsonWriter.Write(lineLocationGeometry);
             Assert.IsNotNull(geoJson);
             AssertGeo.AreEqual(geoJsonActual, geoJson, 1);
+        }
+
+        /// <summary>
+        /// a referenced decoding test with all real data inside the HDF-BEL.XML file.
+        /// </summary>
+        [Test]
+        public void TestAllHDFBEL()
+        {            
+            // create a referenced decoder.
+            var referencedDecoder = new ReferencedLiveEdgeDecoder(RealGraphOsm.GetRoutingGraph(), new BinaryDecoder());
+
+            // get data from the XML stream.
+            var xmlStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("OpenLR.Tests.Data.HDF-BEL.XML");
+            var xmlReader = XmlReader.Create(xmlStream);
+
+            //var outputCsv = new StreamWriter(@"c:\OSM\bin\openlr.txt");
+            var geoJsonWriter = new GeoJsonWriter();
+            while(xmlReader.Read())
+            {
+                if (xmlReader.Name == "binary")
+                {
+                    string innerXml = xmlReader.ReadInnerXml();
+                    string type = string.Empty;
+                    string geoJson = string.Empty;
+                    try
+                    {
+                        var location = referencedDecoder.Decode(innerXml);
+                        if (location == null)
+                        {
+                            // location is null
+                        }
+                        else if (location is ReferencedLine<LiveEdge>)
+                        {
+                            var lineLocation = location as ReferencedLine<LiveEdge>;
+                            var lineLocationGeometry = lineLocation.ToGeometry();
+                            geoJson = geoJsonWriter.Write(lineLocationGeometry);
+                            type = "LineLocation";
+                        }
+                        else if (location is ReferencedGrid)
+                        {
+                            type = "Grid";
+                        }
+                        else
+                        {
+                            Assert.Fail("Unknow or untested type decoded.");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Assert.Fail(string.Format("Cannot decode {0} with exception {1}.", innerXml, ex.ToString()));
+                    }
+                    //outputCsv.WriteLine(string.Format("{0};{1};{2};",innerXml, type, geoJson));
+                }
+            }
+            //outputCsv.Flush();
         }
     }
 }
