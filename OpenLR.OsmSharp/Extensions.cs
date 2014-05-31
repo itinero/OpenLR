@@ -46,9 +46,9 @@ namespace OpenLR.OsmSharp
         /// <summary>
         /// Converts the closed line location to features.
         /// </summary>
-        /// <param name="closeLineLocation"></param>
+        /// <param name="closedLineLocation"></param>
         /// <returns></returns>
-        public static FeatureCollection ToFeatures(this ClosedLineLocation closeLineLocation)
+        public static FeatureCollection ToFeatures(this ClosedLineLocation closedLineLocation)
         {
             // create the geometry factory.
             var geometryFactory = new GeometryFactory();
@@ -58,18 +58,18 @@ namespace OpenLR.OsmSharp
 
             // build the coordinates list and create point features.
             var coordinates = new List<Coordinate>();
-            coordinates.Add(new Coordinate(closeLineLocation.First.Coordinate.Longitude, closeLineLocation.First.Coordinate.Latitude));
-            featureCollection.Add(closeLineLocation.First.ToFeature());
-            if(closeLineLocation.Intermediate != null)
+            coordinates.Add(new Coordinate(closedLineLocation.First.Coordinate.Longitude, closedLineLocation.First.Coordinate.Latitude));
+            featureCollection.Add(closedLineLocation.First.ToFeature());
+            if (closedLineLocation.Intermediate != null)
             { // there are intermediate coordinates.
-                for(int idx = 0; idx < closeLineLocation.Intermediate.Length; idx++)
+                for (int idx = 0; idx < closedLineLocation.Intermediate.Length; idx++)
                 {
-                    coordinates.Add(new Coordinate(closeLineLocation.Intermediate[idx].Coordinate.Longitude, closeLineLocation.Intermediate[idx].Coordinate.Latitude));
-                    featureCollection.Add(closeLineLocation.Intermediate[idx].ToFeature());
+                    coordinates.Add(new Coordinate(closedLineLocation.Intermediate[idx].Coordinate.Longitude, closedLineLocation.Intermediate[idx].Coordinate.Latitude));
+                    featureCollection.Add(closedLineLocation.Intermediate[idx].ToFeature());
                 }
             }
-            coordinates.Add(new Coordinate(closeLineLocation.Last.Coordinate.Longitude, closeLineLocation.Last.Coordinate.Latitude));
-            featureCollection.Add(closeLineLocation.Last.ToFeature());
+            coordinates.Add(new Coordinate(closedLineLocation.Last.Coordinate.Longitude, closedLineLocation.Last.Coordinate.Latitude));
+            featureCollection.Add(closedLineLocation.Last.ToFeature());
 
             // create a line feature.
             var line = geometryFactory.CreateLineString(coordinates.ToArray());
@@ -77,6 +77,203 @@ namespace OpenLR.OsmSharp
             var lineFeature = new Feature(line, lineAttributes);
             featureCollection.Add(lineFeature);
 
+            return featureCollection;
+        }
+
+        /// <summary>
+        /// Converts the geo coordinate line location to features.
+        /// </summary>
+        /// <param name="geoCoordinateLocation"></param>
+        /// <returns></returns>
+        public static FeatureCollection ToFeatures(this GeoCoordinateLocation geoCoordinateLocation)
+        {
+            // create the geometry factory.
+            var geometryFactory = new GeometryFactory();
+
+            // create the feature collection.
+            var featureCollection = new FeatureCollection();
+
+            // create a point feature.
+            var point = geometryFactory.CreatePoint(new Coordinate(geoCoordinateLocation.Coordinate.Longitude, geoCoordinateLocation.Coordinate.Latitude));
+            var pointAttributes = new AttributesTable();
+            featureCollection.Add(new Feature(point, pointAttributes));
+            return featureCollection;
+        }
+
+        /// <summary>
+        /// Converts the grid location to features.
+        /// </summary>
+        /// <param name="gridLocation"></param>
+        /// <returns></returns>
+        public static FeatureCollection ToFeatures(this GridLocation gridLocation)
+        {
+            // create the geometry factory.
+            var geometryFactory = new GeometryFactory();
+
+            // create the feature collection.
+            var featureCollection = new FeatureCollection();
+
+            // create a point feature at each point in the grid.
+            double lonDiff = (gridLocation.LowerLeft.Longitude - gridLocation.UpperRight.Longitude) / gridLocation.Columns;
+            double latDiff = (gridLocation.UpperRight.Latitude - gridLocation.LowerLeft.Latitude) / gridLocation.Rows;
+            for(int column = 0; column < gridLocation.Columns; column++)
+            {
+                double longitude = gridLocation.LowerLeft.Longitude - (column * lonDiff);
+                for (int row = 0; row < gridLocation.Rows; row++)
+                {
+                    double latitude = gridLocation.UpperRight.Latitude - (row * latDiff);
+                    var point = geometryFactory.CreatePoint(new Coordinate(longitude, latitude));
+                    var pointAttributes = new AttributesTable();
+                    featureCollection.Add(new Feature(point, pointAttributes));
+                }
+            }
+
+            // create a lineair ring.
+            var lineairRingAttributes = new AttributesTable();
+            featureCollection.Add(new Feature(geometryFactory.CreateLinearRing(new Coordinate[] {
+                new Coordinate(gridLocation.LowerLeft.Longitude, gridLocation.LowerLeft.Latitude),
+                new Coordinate(gridLocation.LowerLeft.Longitude, gridLocation.UpperRight.Latitude),
+                new Coordinate(gridLocation.UpperRight.Longitude, gridLocation.UpperRight.Latitude),
+                new Coordinate(gridLocation.UpperRight.Longitude, gridLocation.LowerLeft.Latitude)
+            }), lineairRingAttributes));
+            return featureCollection;
+        }
+
+        /// <summary>
+        /// Converts the line location to features.
+        /// </summary>
+        /// <param name="closeLineLocation"></param>
+        /// <returns></returns>
+        public static FeatureCollection ToFeatures(this LineLocation lineLocation)
+        {
+            // create the geometry factory.
+            var geometryFactory = new GeometryFactory();
+
+            // create the feature collection.
+            var featureCollection = new FeatureCollection();
+
+            // build the coordinates list and create point features.
+            var coordinates = new List<Coordinate>();
+            coordinates.Add(new Coordinate(lineLocation.First.Coordinate.Longitude, lineLocation.First.Coordinate.Latitude));
+            featureCollection.Add(lineLocation.First.ToFeature());
+            if (lineLocation.Intermediate != null)
+            { // there are intermediate coordinates.
+                for (int idx = 0; idx < lineLocation.Intermediate.Length; idx++)
+                {
+                    coordinates.Add(new Coordinate(lineLocation.Intermediate[idx].Coordinate.Longitude, lineLocation.Intermediate[idx].Coordinate.Latitude));
+                    featureCollection.Add(lineLocation.Intermediate[idx].ToFeature());
+                }
+            }
+            coordinates.Add(new Coordinate(lineLocation.Last.Coordinate.Longitude, lineLocation.Last.Coordinate.Latitude));
+            featureCollection.Add(lineLocation.Last.ToFeature());
+
+            // create a line feature.
+            var line = geometryFactory.CreateLineString(coordinates.ToArray());
+            var lineAttributes = new AttributesTable();
+            lineAttributes.AddAttribute("negative_offset", lineLocation.NegativeOffset);
+            lineAttributes.AddAttribute("positive_offset", lineLocation.PositiveOffset);
+            var lineFeature = new Feature(line, lineAttributes);
+            featureCollection.Add(lineFeature);
+
+            return featureCollection;
+        }
+
+        /// <summary>
+        /// Converts the point along the line location to features.
+        /// </summary>
+        /// <param name="pointAlongLineLocation"></param>
+        /// <returns></returns>
+        public static FeatureCollection ToFeatures(this PointAlongLineLocation pointAlongLineLocation)
+        {
+            // create the geometry factory.
+            var geometryFactory = new GeometryFactory();
+
+            // create the feature collection.
+            var featureCollection = new FeatureCollection();
+            featureCollection.Add(pointAlongLineLocation.First.ToFeature());
+            featureCollection.Add(pointAlongLineLocation.Last.ToFeature());
+            return featureCollection;
+        }
+
+        /// <summary>
+        /// Converts the poi with access point location.
+        /// </summary>
+        /// <param name="poiWithAccessPointLocation"></param>
+        /// <returns></returns>
+        public static FeatureCollection ToFeatures(this PoiWithAccessPointLocation poiWithAccessPointLocation)
+        {
+            // create the geometry factory.
+            var geometryFactory = new GeometryFactory();
+
+            // create the feature collection.
+            var featureCollection = new FeatureCollection();
+
+            // create a point for the poi.
+            var point = geometryFactory.CreatePoint(new Coordinate(poiWithAccessPointLocation.Coordinate.Longitude, poiWithAccessPointLocation.Coordinate.Latitude));
+            var pointAttributes = new AttributesTable();
+            pointAttributes.AddAttribute("orientation", poiWithAccessPointLocation.Orientation);
+            pointAttributes.AddAttribute("positive_offset", poiWithAccessPointLocation.PositiveOffset);
+            pointAttributes.AddAttribute("side_of_road", poiWithAccessPointLocation.SideOfRoad);
+            var pointFeature = new Feature(point, pointAttributes);
+            featureCollection.Add(pointFeature);
+            featureCollection.Add(poiWithAccessPointLocation.First.ToFeature());
+            featureCollection.Add(poiWithAccessPointLocation.Last.ToFeature());
+            return featureCollection;
+        }
+
+        /// <summary>
+        /// Converts the polygon location.
+        /// </summary>
+        /// <param name="polygonLocation"></param>
+        /// <returns></returns>
+        public static FeatureCollection ToFeatures(this PolygonLocation polygonLocation)
+        {
+            // create the geometry factory.
+            var geometryFactory = new GeometryFactory();
+
+            // create the feature collection.
+            var featureCollection = new FeatureCollection();
+
+            // build the coordinates list and create point features.
+            var coordinates = new List<Coordinate>();
+            if (polygonLocation.Coordinates != null)
+            { // there are intermediate coordinates.
+                for (int idx = 0; idx < polygonLocation.Coordinates.Length; idx++)
+                {
+                    coordinates.Add(new Coordinate(polygonLocation.Coordinates[idx].Longitude, polygonLocation.Coordinates[idx].Latitude));
+                }
+            }
+
+            // create a line feature.
+            var line = geometryFactory.CreateLinearRing(coordinates.ToArray());
+            var lineAttributes = new AttributesTable();
+            var lineFeature = new Feature(line, lineAttributes);
+            featureCollection.Add(lineFeature);
+
+            return featureCollection;
+        }
+
+        /// <summary>
+        /// Converts the rectangle location.
+        /// </summary>
+        /// <param name="rectangleLocation"></param>
+        /// <returns></returns>
+        public static FeatureCollection ToFeatures(this RectangleLocation rectangleLocation)
+        {
+            // create the geometry factory.
+            var geometryFactory = new GeometryFactory();
+
+            // create the feature collection.
+            var featureCollection = new FeatureCollection();
+
+            // create a lineair ring.
+            var lineairRingAttributes = new AttributesTable();
+            featureCollection.Add(new Feature(geometryFactory.CreateLinearRing(new Coordinate[] {
+                new Coordinate(rectangleLocation.LowerLeft.Longitude, rectangleLocation.LowerLeft.Latitude),
+                new Coordinate(rectangleLocation.LowerLeft.Longitude, rectangleLocation.UpperRight.Latitude),
+                new Coordinate(rectangleLocation.UpperRight.Longitude, rectangleLocation.UpperRight.Latitude),
+                new Coordinate(rectangleLocation.UpperRight.Longitude, rectangleLocation.LowerLeft.Latitude)
+            }), lineairRingAttributes));
             return featureCollection;
         }
 
