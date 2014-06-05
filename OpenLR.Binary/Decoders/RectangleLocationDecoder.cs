@@ -28,6 +28,18 @@ namespace OpenLR.Binary.Decoders
         /// <returns></returns>
         protected override bool CanDecode(byte[] data)
         {
+            // decode the header first.
+            var header = HeaderConvertor.Decode(data, 0);
+
+            // check header info.
+            if (header.ArF1 &&
+                !header.IsPoint &&
+                !header.ArF0 &&
+                !header.HasAttributes)
+            { // header is incorrect.
+                return false;
+            }
+
             return data != null && (data.Length == 11 || data.Length == 13);
         }
     }

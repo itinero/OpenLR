@@ -90,6 +90,19 @@ namespace OpenLR.Binary.Decoders
         {
             if(data != null)
             {
+                // decode the header first.
+                var header = HeaderConvertor.Decode(data, 0);
+
+                // check header info.
+                if(!header.ArF1 &&
+                    !header.IsPoint &&
+                    !header.ArF0 &&
+                    header.HasAttributes)
+                { // header is incorrect.
+                    return false;
+                }
+
+                // check size.
                 int count = data.Length - 16;
                 int mod7 = count % 7;
                 return mod7 == 0 || mod7 == 1 || mod7 == 2;

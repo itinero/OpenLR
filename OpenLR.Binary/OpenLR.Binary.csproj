@@ -50,6 +50,7 @@
     <Compile Include="Data\FormOfWayConvertor.cs" />
     <Compile Include="Data\BearingConvertor.cs" />
     <Compile Include="Data\FunctionalRoadClassConvertor.cs" />
+    <Compile Include="Data\HeaderConvertor.cs" />
     <Compile Include="Data\OrientationConvertor.cs" />
     <Compile Include="Data\SideOfRoadConverter.cs" />
     <Compile Include="Decoders\CircleLocationDecoder.cs" />

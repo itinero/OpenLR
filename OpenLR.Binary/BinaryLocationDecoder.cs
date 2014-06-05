@@ -1,4 +1,5 @@
-﻿using OpenLR.Locations;
+﻿using OpenLR.Binary.Data;
+using OpenLR.Locations;
 using System;
 
 namespace OpenLR.Binary

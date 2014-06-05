@@ -79,7 +79,18 @@ namespace OpenLR.Binary.Decoders
         /// <returns></returns>
         protected override bool CanDecode(byte[] data)
         {
-            throw new NotImplementedException();
+            // decode the header first.
+            var header = HeaderConvertor.Decode(data, 0);
+
+            // check header info.
+            if (header.ArF1 &&
+                !header.IsPoint &&
+                header.ArF0 &&
+                header.HasAttributes)
+            { // header is incorrect.
+                return false;
+            }
+            return true;
         }
     }
 }

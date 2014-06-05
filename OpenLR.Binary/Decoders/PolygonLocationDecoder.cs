@@ -48,6 +48,18 @@ namespace OpenLR.Binary.Decoders
         {
             if (data != null)
             {
+                // decode the header first.
+                var header = HeaderConvertor.Decode(data, 0);
+
+                // check header info.
+                if (!header.ArF1 &&
+                    !header.IsPoint &&
+                    header.ArF0 &&
+                    !header.HasAttributes)
+                { // header is incorrect.
+                    return false;
+                }
+
                 int count = (data.Length - 15);
                 return count*4 == 0;
             }
