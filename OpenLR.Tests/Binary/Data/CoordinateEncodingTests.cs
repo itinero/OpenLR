@@ -106,5 +106,88 @@ namespace OpenLR.Tests.Binary.Data
             Assert.AreEqual(6.12838, coordinate.Longitude, delta);
             Assert.AreEqual(49.60398, coordinate.Latitude, delta);
         }
+
+        /// <summary>
+        /// Tests the simple encoding case.
+        /// </summary>
+        [Test]
+        public void TestEncoding1()
+        {
+            // specify coordinate.
+            var coordinate = new Coordinate()
+            {
+                Latitude = 0,
+                Longitude = 0
+            };
+
+            // encode.
+            var data = new byte[6];
+            CoordinateConverter.Encode(coordinate, data, 0);
+            Assert.AreEqual(data[0], 0);
+            Assert.AreEqual(data[1], 0);
+            Assert.AreEqual(data[2], 0);
+            Assert.AreEqual(data[3], 0);
+            Assert.AreEqual(data[4], 0);
+            Assert.AreEqual(data[5], 0);
+
+            // specify coordinate.
+            coordinate = new Coordinate()
+            {
+                Latitude = 0.005460978,
+                Longitude = 0.005460978
+            };
+
+            // encode.
+            CoordinateConverter.Encode(coordinate, data, 0);
+            Assert.AreEqual(data[0], 0);
+            Assert.AreEqual(data[1], 0);
+            Assert.AreEqual(data[2], 255);
+            Assert.AreEqual(data[3], 0);
+            Assert.AreEqual(data[4], 0);
+            Assert.AreEqual(data[5], 255);
+
+            // specify coordinate.
+            coordinate = new Coordinate()
+            {
+                Latitude = 49.60851,
+                Longitude = 6.12683
+            };
+
+            // encode.
+            CoordinateConverter.Encode(coordinate, data, 0);
+            Assert.AreEqual(data[0], 4);
+            Assert.AreEqual(data[1], 91);
+            Assert.AreEqual(data[2], 91);
+            Assert.AreEqual(data[3], 35);
+            Assert.AreEqual(data[4], 70);
+            Assert.AreEqual(data[5], 244);
+        }
+
+        /// <summary>
+        /// Tests the simple simple relative decoding case.
+        /// </summary>
+        [Test]
+        public void TestEncodeRelative1()
+        {
+            // decode the coordinate relative to another coordinate.
+            var reference = new Coordinate()
+            {
+                Latitude = 49.60851,
+                Longitude = 6.12683
+            };
+            var coordinate = new Coordinate()
+            {
+                Latitude = 49.60398,
+                Longitude = 6.12838
+            };
+
+            // encode.
+            byte[] data = new byte[4];
+            CoordinateConverter.EncodeRelative(reference, coordinate, data, 0);
+            Assert.AreEqual(data[0], 0);
+            Assert.AreEqual(data[1], 154);
+            Assert.AreEqual(data[2], 254);
+            Assert.AreEqual(data[3], 59);
+        }
     }
 }

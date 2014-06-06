@@ -97,13 +97,83 @@ namespace OpenLR.Binary.Data
         }
 
         /// <summary>
-        /// Decodes a 24-bit integer-encoded coordinate.
+        /// Decodes an integer-encoded coordinate.
         /// </summary>
         /// <param name="valueInt"></param>
         /// <returns></returns>
         private static double DecodeDegrees(int valueInt)
         {
             return (((valueInt - System.Math.Sign(valueInt) * 0.5) * 360) / 16777216);
+        }
+
+        /// <summary>
+        /// Decodes the given coordinate into a binary OpenLR coordinate.
+        /// </summary>
+        /// <param name="coordinate"></param>
+        /// <param name="data"></param>
+        /// <param name="startIndex"></param>
+        public static void Encode(Coordinate coordinate, byte[] data, int startIndex)
+        {
+            CoordinateConverter.EncodeInt24(CoordinateConverter.EncodeDegree(coordinate.Longitude), data, startIndex + 0);
+            CoordinateConverter.EncodeInt24(CoordinateConverter.EncodeDegree(coordinate.Latitude), data, startIndex + 3);
+        }
+
+        /// <summary>
+        /// Decodes the given coorrdinate into a binary OpenLR coordinate.
+        /// </summary>
+        /// <param name="reference"></param>
+        /// <param name="coordinate"></param>
+        /// <param name="data"></param>
+        /// <param name="startIndex"></param>
+        public static void EncodeRelative(Coordinate reference, Coordinate coordinate, byte[] data, int startIndex)
+        {
+            CoordinateConverter.EncodeInt16((int)((coordinate.Latitude - reference.Latitude) * 100000.0), data, startIndex + 2);
+            CoordinateConverter.EncodeInt16((int)((coordinate.Longitude - reference.Longitude) * 100000.0), data, startIndex + 0);
+        }
+
+        /// <summary>
+        /// Encodes the given degrees into an integer.
+        /// </summary>
+        /// <param name="value"></param>
+        public static int EncodeDegree(double value)
+        {
+            return (int)(((value * 16777216) / 360.0) + System.Math.Sign(value) * 0.5);
+        }
+
+        /// <summary>
+        /// Encodes a 32-bit signed integer into a little-endian 24-bit signed integer into the given byte array.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="data"></param>
+        /// <param name="startIndex"></param>
+        public static void EncodeInt24(int value, byte[] data, int startIndex)
+        {
+            data[startIndex + 0]  = (byte)(value >> 16);
+            if (value < 0)
+            { // the sign bit.
+                data[startIndex + 0] = (byte)(data[startIndex + 0] | (byte)(1 << 8 - 1));
+            }
+            value = value % (1 << 16);
+            data[startIndex + 1] = (byte)(value >> 8);
+            value = value % (1 << 8);
+            data[startIndex + 2] = (byte)value;
+        }
+
+        /// <summary>
+        /// Encodes a 32-bit signed integer into a little-endian 16-bit signed integer into the given byte array.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="data"></param>
+        /// <param name="startIndex"></param>
+        public static void EncodeInt16(int value, byte[] data, int startIndex)
+        {
+            data[startIndex + 0] = (byte)(value >> 8);
+            if (value < 0)
+            { // the sign bit.
+                data[startIndex + 0] = (byte)(data[startIndex + 0] | (byte)(1 << 8 - 1));
+            }
+            value = value % (1 << 8);
+            data[startIndex + 1] = (byte)value;
         }
     }
 }
