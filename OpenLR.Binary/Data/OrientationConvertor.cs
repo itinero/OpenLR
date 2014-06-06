@@ -49,5 +49,36 @@ namespace OpenLR.Binary.Data
             }
             throw new InvalidOperationException("Decoded a value from three bits not in the range of [0-3]?!");
         }
+
+        /// <summary>
+        /// Encodes an OpenLR orientation into a binary representation.
+        /// </summary>
+        /// <param name="orientation"></param>
+        /// <param name="data"></param>
+        /// <param name="startIndex"></param>
+        /// <param name="byteIndex"></param>
+        public static void Encode(Orientation orientation, byte[] data, int startIndex, int byteIndex)
+        {
+            if (byteIndex > 6) { throw new ArgumentOutOfRangeException("byteIndex", "byteIndex has to be a value in the range of [0-6]."); }
+
+            int value = 0;
+            switch (orientation)
+            {
+                case Orientation.NoOrientation:
+                    value = 0;
+                    break;
+                case Orientation.FirstToSecond:
+                    value = 1;
+                    break;
+                case Orientation.SecondToFirst:
+                    value = 2;
+                    break;
+                case Orientation.BothDirections:
+                    value = 3;
+                    break;
+            }
+
+            data[startIndex] = (byte)(value << (6 - byteIndex));
+        }
     }
 }
