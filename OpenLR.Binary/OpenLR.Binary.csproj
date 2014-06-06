@@ -45,7 +45,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BinaryDecoder.cs" />
+    <Compile Include="BinaryEncoder.cs" />
     <Compile Include="BinaryLocationDecoder.cs" />
+    <Compile Include="BinaryLocationEncoder.cs" />
     <Compile Include="Data\CoordinateConverter.cs" />
     <Compile Include="Data\FormOfWayConvertor.cs" />
     <Compile Include="Data\BearingConvertor.cs" />
@@ -62,6 +64,7 @@
     <Compile Include="Decoders\PoiWithAccessPointLocationDecoder.cs" />
     <Compile Include="Decoders\PolygonLocationDecoder.cs" />
     <Compile Include="Decoders\RectangleLocationDecoder.cs" />
+    <Compile Include="Encoders\PointAlongLineLocationEncoder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -73,6 +76,7 @@
       <Name>OpenLR</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

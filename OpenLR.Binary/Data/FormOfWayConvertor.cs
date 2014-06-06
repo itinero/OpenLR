@@ -56,5 +56,10 @@ namespace OpenLR.Binary.Data
             }
             throw new InvalidOperationException("Decoded a value from three bits not in the range of [0-7]?!");
         }
+
+        public static void Encode(FormOfWay formOfWay, byte[] data, int startIndex, int byteIndex)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

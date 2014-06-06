@@ -38,5 +38,11 @@ namespace OpenLR.Binary.Data
             int mask = 31 << (3 - byteIndex);
             return (classData & mask) >> (3 - byteIndex);
         }
+
+
+        public static void Encode(int bearing, byte[] data, int startIndex, int byteIndex)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
