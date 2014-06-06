@@ -67,26 +67,27 @@ namespace OpenLR.OsmSharp.Decoding
                 var currentCandidates = candidates[idx];
 
                 // build a list of combined scores.
-                var combinedScores = new SortedSet<CombinedScore<TEdge>>(new CombinedScoreComparer<TEdge>());
+                var combinedScoresSet = new SortedSet<CombinedScore<TEdge>>(new CombinedScoreComparer<TEdge>());
                 foreach (var previousCandidate in previousCandidates)
                 {
                     foreach (var currentCandidate in currentCandidates)
                     {
-                        combinedScores.Add(new CombinedScore<TEdge>()
+                        combinedScoresSet.Add(new CombinedScore<TEdge>()
                             {
                                 Source = previousCandidate,
                                 Target = currentCandidate
                             });
                     }
                 }
+                var combinedScores = new List<CombinedScore<TEdge>>(combinedScoresSet);
 
                 // find the best candidate route.
                 CandidateRoute<TEdge> best = null;
-                while(combinedScores.Count > 0)
+                while (combinedScores.Count > 0)
                 {
                     // get the first pair.
-                    var combinedScore = combinedScores.First();
-                    combinedScores.Remove(combinedScore);
+                    var combinedScore = combinedScores[0];
+                    combinedScores.RemoveAt(0);
 
                     // find a route.
                     var candidate = this.FindCandiateRoute(combinedScore.Source.Vertex, combinedScore.Target.Vertex,
@@ -97,21 +98,26 @@ namespace OpenLR.OsmSharp.Decoding
 
                     // check candidate.
                     if (best == null)
-                    { // there was no previous candidate.
+                    { // there was no previous candidate or candidate has no route.
                         best = candidate;
                     }
-                    else if(best.Score < candidate.Score)
+                    else if (best.Score < candidate.Score)
                     { // the new candidate is better.
                         best = candidate;
                     }
-                    else if(best.Score > candidate.Score)
+                    else if (best.Score > candidate.Score)
                     { // the current candidate is better.
+                        break;
+                    }
+
+                    if (best.Score == 1)
+                    { // stop search on a perfect scrore!
                         break;
                     }
                 }
 
                 // append the current best.
-                if(best == null)
+                if (best == null || best.Route == null)
                 { // no location reference found between two points.
                     return null;
                 }

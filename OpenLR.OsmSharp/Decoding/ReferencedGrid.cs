@@ -1,4 +1,7 @@
-﻿using OpenLR.Referenced;
+﻿using GeoAPI.Geometries;
+using NetTopologySuite.Features;
+using NetTopologySuite.Geometries;
+using OpenLR.Referenced;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,5 +45,45 @@ namespace OpenLR.OsmSharp.Decoding
         /// Gets or sets the number of columns.
         /// </summary>
         public int Columns { get; set; }
+
+
+        /// <summary>
+        /// Converts this referenced location to a geometry.
+        /// </summary>
+        /// <returns></returns>
+        public FeatureCollection ToFeatures()
+        {
+            // create the geometry factory.
+            var geometryFactory = new GeometryFactory();
+
+            // create the feature collection.
+            var featureCollection = new FeatureCollection();
+
+            //// create a point feature at each point in the grid.
+            //double lonDiff = (this.LowerLeftLongitude - this.UpperRightLongitude) / this.Columns;
+            //double latDiff = (this.UpperRightLatitude - this.LowerLeftLatitude) / this.Rows;
+            //for (int column = 0; column < this.Columns; column++)
+            //{
+            //    double longitude = this.LowerLeftLongitude - (column * lonDiff);
+            //    for (int row = 0; row < this.Rows; row++)
+            //    {
+            //        double latitude = this.UpperRightLatitude - (row * latDiff);
+            //        var point = geometryFactory.CreatePoint(new Coordinate(longitude, latitude));
+            //        var pointAttributes = new AttributesTable();
+            //        featureCollection.Add(new Feature(point, pointAttributes));
+            //    }
+            //}
+
+            // create a lineair ring.
+            var lineairRingAttributes = new AttributesTable();
+            featureCollection.Add(new Feature(geometryFactory.CreateLinearRing(new Coordinate[] {
+                new Coordinate(this.LowerLeftLongitude, this.LowerLeftLatitude),
+                new Coordinate(this.LowerLeftLongitude, this.UpperRightLatitude),
+                new Coordinate(this.UpperRightLongitude, this.UpperRightLatitude),
+                new Coordinate(this.UpperRightLongitude, this.LowerLeftLatitude),
+                new Coordinate(this.LowerLeftLongitude, this.LowerLeftLatitude)
+            }), lineairRingAttributes));
+            return featureCollection;
+        }
     }
 }

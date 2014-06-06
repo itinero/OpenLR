@@ -31,7 +31,7 @@ namespace OpenLR.Binary.Decoders
 
             // calculate the intermediate points count.
             var intermediateList = new List<LocationReferencePoint>();
-            int intermediates = (data.Length - 16) % 7;
+            int intermediates = (data.Length - 16) / 7;
             int location = 10;
             var reference = first.Coordinate; // the reference for the relative coordinates.
             for(int idx = 0; idx < intermediates; idx++)
@@ -102,10 +102,11 @@ namespace OpenLR.Binary.Decoders
                     return false;
                 }
 
-                // check size.
-                int count = data.Length - 16;
-                int mod7 = count % 7;
-                return mod7 == 0 || mod7 == 1 || mod7 == 2;
+                //// check size.
+                //int count = data.Length - 16;
+                //int mod7 = count % 7;
+                //return mod7 == 0 || mod7 == 1 || mod7 == 2;
+                return true;
             }
             return false;
         }

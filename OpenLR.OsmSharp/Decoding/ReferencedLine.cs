@@ -1,4 +1,5 @@
 ﻿using GeoAPI.Geometries;
+using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 using OpenLR.Referenced;
 using OsmSharp.Routing.Graph;
@@ -72,6 +73,41 @@ namespace OpenLR.OsmSharp.Decoding
         public IGeometry ToGeometry()
         {
             var geometryFactory = new GeometryFactory();
+
+            // build coordinates list.
+            var coordinates = new List<Coordinate>();
+            for (int idx = 0; idx < this.Vertices.Length; idx++)
+            {
+                float latitude, longitude;
+                _graph.GetVertex((uint)this.Vertices[idx], out latitude, out longitude);
+                coordinates.Add(new Coordinate(longitude, latitude));
+
+                if (idx < this.Edges.Length)
+                {
+                    var edge = this.Edges[idx];
+                    if (edge.Coordinates != null)
+                    {
+                        foreach (var coordinate in edge.Coordinates)
+                        {
+                            coordinates.Add(new Coordinate()
+                            {
+                                X = coordinate.Longitude,
+                                Y = coordinate.Latitude
+                            });
+                        }
+                    }
+                }
+            }
+            return geometryFactory.CreateLineString(coordinates.ToArray());
+        }
+
+        /// <summary>
+        /// Converts this referenced location to a geometry.
+        /// </summary>
+        /// <returns></returns>
+        public FeatureCollection ToFeatures()
+        {
+            var geometryFactory = new GeometryFactory();
             
             // build coordinates list.
             var coordinates = new List<Coordinate>();
@@ -97,7 +133,10 @@ namespace OpenLR.OsmSharp.Decoding
                     }
                 }
             }
-            return geometryFactory.CreateLineString(coordinates.ToArray());
+
+            var featureCollection = new FeatureCollection();
+            featureCollection.Add(new Feature(geometryFactory.CreateLineString(coordinates.ToArray()), new AttributesTable()));
+            return featureCollection;
         }
     }
 }

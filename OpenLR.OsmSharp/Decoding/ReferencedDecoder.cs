@@ -269,6 +269,17 @@ namespace OpenLR.OsmSharp.Decoding
             toList.UpdateVertex(new PathSegment<long>(to));
 
             var path = _router.Calculate(_graph, new OsmRoutingInterpreter(), Vehicle.Car, fromList, toList, double.MaxValue);
+
+            // if no route is found, score is 0.
+            if(path == null)
+            {
+                return new CandidateRoute<TEdge>()
+                {
+                    Route = null,
+                    Score = 0
+                };
+            }
+
             var edges = new List<TEdge>();
             var vertices = new List<long>();
             vertices.Add(path.VertexId);

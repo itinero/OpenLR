@@ -21,7 +21,12 @@ namespace OpenLR.OsmSharp.Decoding.Candidates
         /// <returns></returns>
         public int Compare(CandidateVertexEdge<TEdge> x, CandidateVertexEdge<TEdge> y)
         {
-            return x.Score.CompareTo(y.Score);
+            var comparison = x.Score.CompareTo(y.Score);
+            if(comparison == 0)
+            {
+                return 1;
+            }
+            return comparison;
         }
     }
 }
