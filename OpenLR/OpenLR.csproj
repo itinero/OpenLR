@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Decoding\Decoder.cs" />
     <Compile Include="Decoding\LocationDecoder.cs" />
+    <Compile Include="Encoding\Encoder.cs" />
     <Compile Include="Encoding\LocationEncoder.cs" />
     <Compile Include="ILocationReference.cs" />
     <Compile Include="Locations\CircleLocation.cs" />

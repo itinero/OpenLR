@@ -1,11 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using OpenLR.Locations;
 
 namespace OpenLR.Encoding
 {
-    class LocationEncoder
+    /// <summary>
+    /// Abstract representation of an encoder.
+    /// </summary>
+    public class LocationEncoder<TLocation>
+        where TLocation : ILocation
     {
+
     }
 }
