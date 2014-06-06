@@ -27,5 +27,27 @@ namespace OpenLR.Tests.Binary.Data
             Assert.AreEqual(SideOfRoad.Left, SideOfRoadConverter.Decode(new byte[] { 2 }, 0, 6));
             Assert.AreEqual(SideOfRoad.Both, SideOfRoadConverter.Decode(new byte[] { 3 }, 0, 6));
         }
+
+        /// <summary>
+        /// Tests simple encoding.
+        /// </summary>
+        [Test]
+        public void TestEncoding1()
+        {
+            var data = new byte[1];
+            Assert.Catch<ArgumentOutOfRangeException>(() =>
+            {
+                SideOfRoadConverter.Encode(SideOfRoad.OnOrAbove, data, 0, 10);
+            });
+
+            SideOfRoadConverter.Encode(SideOfRoad.OnOrAbove, data, 0, 6);
+            Assert.AreEqual(0, data[0]);
+            SideOfRoadConverter.Encode(SideOfRoad.Right, data, 0, 6);
+            Assert.AreEqual(1, data[0]);
+            SideOfRoadConverter.Encode(SideOfRoad.Left, data, 0, 6);
+            Assert.AreEqual(2, data[0]);
+            SideOfRoadConverter.Encode(SideOfRoad.Both, data, 0, 6);
+            Assert.AreEqual(3, data[0]);
+        }
     }
 }

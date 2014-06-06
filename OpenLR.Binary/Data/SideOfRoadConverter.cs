@@ -49,5 +49,36 @@ namespace OpenLR.Binary.Data
             }
             throw new InvalidOperationException("Decoded a value from three bits not in the range of [0-3]?!");
         }
+
+        /// <summary>
+        /// Encodes OpenLR SideOfRoad data into a binary SideOfRoad.
+        /// </summary>
+        /// <param name="sideOfRoad"></param>
+        /// <param name="data"></param>
+        /// <param name="startIndex"></param>
+        /// <param name="byteIndex"></param>
+        public static void Encode(SideOfRoad sideOfRoad, byte[] data, int startIndex, int byteIndex)
+        {
+            if (byteIndex > 6) { throw new ArgumentOutOfRangeException("byteIndex", "byteIndex has to be a value in the range of [0-6]."); }
+
+            int value = 0;
+            switch(sideOfRoad)
+            {
+                case SideOfRoad.OnOrAbove:
+                    value = 0;
+                    break;
+                case SideOfRoad.Right:
+                    value = 1;
+                    break;
+                case SideOfRoad.Left:
+                    value = 2;
+                    break;
+                case SideOfRoad.Both:
+                    value = 3;
+                    break;
+            }
+
+            data[startIndex] = (byte)(value << (6 - byteIndex));
+        }
     }
 }
