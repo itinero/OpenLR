@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>OpenLR</id>
+        <version>$version$</version>
+        <title>OpenLR - OpenLR Encoding/decoding library.</title>
+        <authors>Ben Abelshausen, VIA</authors>
+        <owners>Ben Abelshausen</owners>
+        <licenseUrl></licenseUrl>
+        <projectUrl>https://github.com/OsmSharp/OpenLR</projectUrl>
+        <iconUrl>http://www.osmsharp.com/sites/default/files/OpenLR_logo64.png</iconUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>OpenLR Encoding/decoding library.</description>
+        <summary>OpenLR Encoding/decoding library using OsmSharp.</summary>
+        <copyright>Ben Abelshausen</copyright>
+        <tags>routing, openlr</tags>
+      <dependencies>
+        <dependency id="OsmSharp" version="4.0.5.667" />
+        <dependency id="NetTopologySuite" version="1.13.2" />
+        <dependency id="NetTopologySuite.IO.GeoTools" version="1.13.2" />
+      </dependencies>
+    </metadata>
+    <files>
+      <file src="Output\OpenLR.dll" target="lib\net45\OpenLR.dll" />
+      <file src="Output\OpenLR.Binary.dll" target="lib\net45\OpenLR.Binary.dll" />
+      <file src="Output\OpenLR.XML.dll" target="lib\net45\OpenLR.XML.dll" />
+      <file src="Output\OpenLR.OsmSharp.dll" target="lib\net45\OpenLR.OsmSharp.dll" />
+    </files>
+</package>
