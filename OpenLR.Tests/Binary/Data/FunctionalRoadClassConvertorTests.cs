@@ -41,5 +41,35 @@ namespace OpenLR.Tests.Binary.Data
             Assert.AreEqual(FunctionalRoadClass.Frc6, FunctionalRoadClassConvertor.Decode(new byte[] { 12 }, 4));
             Assert.AreEqual(FunctionalRoadClass.Frc7, FunctionalRoadClassConvertor.Decode(new byte[] { 14 }, 4));
         }
+
+        /// <summary>
+        /// Tests simple encoding.
+        /// </summary>
+        [Test]
+        public void TestEncoding1()
+        {
+            var data = new byte[1];
+            Assert.Catch<ArgumentOutOfRangeException>(() =>
+            {
+                FunctionalRoadClassConvertor.Encode(FunctionalRoadClass.Frc0, data, 0, 10);
+            });
+
+            FunctionalRoadClassConvertor.Encode(FunctionalRoadClass.Frc0, data, 0, 5);
+            Assert.AreEqual(0, data[0]);
+            FunctionalRoadClassConvertor.Encode(FunctionalRoadClass.Frc1, data, 0, 5);
+            Assert.AreEqual(1, data[0]);
+            FunctionalRoadClassConvertor.Encode(FunctionalRoadClass.Frc2, data, 0, 5);
+            Assert.AreEqual(2, data[0]);
+            FunctionalRoadClassConvertor.Encode(FunctionalRoadClass.Frc3, data, 0, 5);
+            Assert.AreEqual(3, data[0]);
+            FunctionalRoadClassConvertor.Encode(FunctionalRoadClass.Frc4, data, 0, 5);
+            Assert.AreEqual(4, data[0]);
+            FunctionalRoadClassConvertor.Encode(FunctionalRoadClass.Frc5, data, 0, 5);
+            Assert.AreEqual(5, data[0]);
+            FunctionalRoadClassConvertor.Encode(FunctionalRoadClass.Frc6, data, 0, 5);
+            Assert.AreEqual(6, data[0]);
+            FunctionalRoadClassConvertor.Encode(FunctionalRoadClass.Frc7, data, 0, 5);
+            Assert.AreEqual(7, data[0]);
+        }
     }
 }

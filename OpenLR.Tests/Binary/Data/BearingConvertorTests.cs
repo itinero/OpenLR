@@ -32,5 +32,34 @@ namespace OpenLR.Tests.Binary.Data
             Assert.AreEqual(5, BearingConvertor.Decode(new byte[] { 20 }, 1));
             Assert.AreEqual(9, BearingConvertor.Decode(new byte[] { 36 }, 1));
         }
+
+        /// <summary>
+        /// Tests simple encoding.
+        /// </summary>
+        [Test]
+        public void TestEncoding1()
+        {
+            var data = new byte[1];
+            Assert.Catch<ArgumentOutOfRangeException>(() =>
+            {
+                BearingConvertor.Encode(0, data, 0, 10);
+            });
+
+            BearingConvertor.Encode(0, data, 0, 0);
+            Assert.AreEqual(0, data[0]);
+            BearingConvertor.Encode(1, data, 0, 3);
+            Assert.AreEqual(1, data[0]);
+            BearingConvertor.Encode(5, data, 0, 3);
+            Assert.AreEqual(5, data[0]);
+            BearingConvertor.Encode(9, data, 0, 3);
+            Assert.AreEqual(9, data[0]);
+
+            BearingConvertor.Encode(4, data, 0, 3);
+            Assert.AreEqual(4, data[0]);
+            BearingConvertor.Encode(20, data, 0, 3);
+            Assert.AreEqual(20, data[0]);
+            BearingConvertor.Encode(36, data, 0, 3);
+            Assert.AreEqual(36, data[0]);
+        }
     }
 }

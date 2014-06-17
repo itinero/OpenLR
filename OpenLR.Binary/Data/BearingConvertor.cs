@@ -39,10 +39,33 @@ namespace OpenLR.Binary.Data
             return (classData & mask) >> (3 - byteIndex);
         }
 
-
+        /// <summary>
+        /// Encodes a bearing into binary data.
+        /// </summary>
+        /// <param name="bearing"></param>
+        /// <param name="data"></param>
+        /// <param name="startIndex"></param>
+        /// <param name="byteIndex"></param>
         public static void Encode(int bearing, byte[] data, int startIndex, int byteIndex)
         {
-            throw new NotImplementedException();
+            if (byteIndex > 3) { throw new ArgumentOutOfRangeException("byteIndex", "byteIndex has to be a value in the range of [0-3]."); }
+
+            byte dataByte = data[startIndex];
+
+            // create mask.
+            byte mask = (byte)(31 << (3 - byteIndex));
+
+            // apply mask, reset existing data.
+            dataByte = (byte)((~mask) & dataByte);
+
+            // create byte containing bearing.
+            byte bearingByte = (byte)(bearing << (3 - byteIndex));
+
+            // add bearing.
+            dataByte = (byte)(bearingByte | dataByte);
+
+            // encode.
+            data[startIndex] = dataByte;
         }
     }
 }

@@ -1,8 +1,5 @@
 ﻿using OpenLR.Model;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace OpenLR.Binary.Data
 {
@@ -60,9 +57,47 @@ namespace OpenLR.Binary.Data
             throw new InvalidOperationException("Decoded a value from three bits not in the range of [0-7]?!");
         }
 
-        internal static void Encode(FunctionalRoadClass functionalRoadClass, byte[] data, int startIndex, int byteIndex)
+        /// <summary>
+        /// Encodes a functional road class into binary data.
+        /// </summary>
+        /// <param name="functionalRoadClass"></param>
+        /// <param name="data"></param>
+        /// <param name="startIndex"></param>
+        /// <param name="byteIndex"></param>
+        public static void Encode(FunctionalRoadClass functionalRoadClass, byte[] data, int startIndex, int byteIndex)
         {
-            throw new NotImplementedException();
+            if (byteIndex > 5) { throw new ArgumentOutOfRangeException("byteIndex", "byteIndex has to be a value in the range of [0-5]."); }
+
+            int value = 0;
+            switch (functionalRoadClass)
+            {
+                case FunctionalRoadClass.Frc0:
+                    value = 0;
+                    break;
+                case FunctionalRoadClass.Frc1:
+                    value = 1;
+                    break;
+                case FunctionalRoadClass.Frc2:
+                    value = 2;
+                    break;
+                case FunctionalRoadClass.Frc3:
+                    value = 3;
+                    break;
+                case FunctionalRoadClass.Frc4:
+                    value = 4;
+                    break;
+                case FunctionalRoadClass.Frc5:
+                    value = 5;
+                    break;
+                case FunctionalRoadClass.Frc6:
+                    value = 6;
+                    break;
+                case FunctionalRoadClass.Frc7:
+                    value = 7;
+                    break;
+            }
+
+            data[startIndex] = (byte)(value << (5 - byteIndex));
         }
     }
 }

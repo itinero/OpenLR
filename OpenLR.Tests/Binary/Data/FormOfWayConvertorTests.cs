@@ -41,5 +41,35 @@ namespace OpenLR.Tests.Binary.Data
             Assert.AreEqual(FormOfWay.SlipRoad, FormOfWayConvertor.Decode(new byte[] { 12 }, 4));
             Assert.AreEqual(FormOfWay.Other, FormOfWayConvertor.Decode(new byte[] { 14 }, 4));
         }
+
+        /// <summary>
+        /// Tests simple encoding.
+        /// </summary>
+        [Test]
+        public void TestEncoding1()
+        {
+            var data = new byte[1];
+            Assert.Catch<ArgumentOutOfRangeException>(() =>
+            {
+                FormOfWayConvertor.Encode(FormOfWay.Undefined, data, 0, 10);
+            });
+
+            FormOfWayConvertor.Encode(FormOfWay.Undefined, data, 0, 5);
+            Assert.AreEqual(0, data[0]);
+            FormOfWayConvertor.Encode(FormOfWay.Motorway, data, 0, 5);
+            Assert.AreEqual(1, data[0]);
+            FormOfWayConvertor.Encode(FormOfWay.MultipleCarriageWay, data, 0, 5);
+            Assert.AreEqual(2, data[0]);
+            FormOfWayConvertor.Encode(FormOfWay.SingleCarriageWay, data, 0, 5);
+            Assert.AreEqual(3, data[0]);
+            FormOfWayConvertor.Encode(FormOfWay.Roundabout, data, 0, 5);
+            Assert.AreEqual(4, data[0]);
+            FormOfWayConvertor.Encode(FormOfWay.TrafficSquare, data, 0, 5);
+            Assert.AreEqual(5, data[0]);
+            FormOfWayConvertor.Encode(FormOfWay.SlipRoad, data, 0, 5);
+            Assert.AreEqual(6, data[0]);
+            FormOfWayConvertor.Encode(FormOfWay.Other, data, 0, 5);
+            Assert.AreEqual(7, data[0]);
+        }
     }
 }

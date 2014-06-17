@@ -1,4 +1,5 @@
-﻿namespace OpenLR.Binary.Data
+﻿using System;
+namespace OpenLR.Binary.Data
 {
     /// <summary>
     /// Represents a header convertor that encodes/decodes header information from/to the binary OpenLR format.
@@ -13,6 +14,8 @@
         /// <returns></returns>
         public static Header Decode(byte[] data, int startIndex)
         {
+            if (startIndex > data.Length) { throw new ArgumentOutOfRangeException("startIndex"); }
+
             return HeaderConvertor.Decode(data[startIndex]);
         }
 
@@ -25,10 +28,10 @@
         {
             return new Header()
             {
-                ArF1 = (data & (1 << 6 - 1)) != 0,
-                IsPoint = (data & (1 << 5 - 1)) != 0,
-                ArF0 = (data & (1 << 4 - 1)) != 0,
-                HasAttributes = (data & (1 << 3 - 1)) != 0,
+                ArF1 = (data & (1 << 6)) != 0,
+                IsPoint = (data & (1 << 5)) != 0,
+                ArF0 = (data & (1 << 4)) != 0,
+                HasAttributes = (data & (1 << 3)) != 0,
                 Version = HeaderConvertor.DecodeVersion(data)
             };
         }
@@ -39,8 +42,30 @@
         /// <param name="data"></param>
         /// <returns></returns>
         private static ushort DecodeVersion(byte data)
+        {            
+            // create mask.
+            int mask = 7;
+            int value = (data & mask);
+            return (ushort)value;
+        }
+
+        /// <summary>
+        /// Encodes an header 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="startIndex"></param>
+        /// <param name="header"></param>
+        public static void Encode(byte[] data, int startIndex, Header header)
         {
-            return (ushort)(data >> 5);
+            if (startIndex > data.Length) { throw new ArgumentOutOfRangeException("startIndex"); }
+
+            var headerByte = (byte)header.Version;
+            headerByte = (byte)(headerByte + (header.HasAttributes ? 8 : 0));
+            headerByte = (byte)(headerByte + (header.ArF0 ? 16 : 0));
+            headerByte = (byte)(headerByte + (header.IsPoint ? 32 : 0));
+            headerByte = (byte)(headerByte + (header.ArF1 ? 64 : 0));
+
+            data[startIndex] = headerByte;
         }
     }
 

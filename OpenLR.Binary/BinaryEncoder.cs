@@ -60,7 +60,7 @@ namespace OpenLR.Binary
         /// <returns></returns>
         public override LocationEncoder<PointAlongLineLocation> CreatePointAlongLineLocationEncoder()
         {
-            return new PointAlongLineLocationEncoder();
+            return new PointAlongLineEncoder();
         }
 
         /// <summary>

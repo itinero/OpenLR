@@ -29,6 +29,7 @@ namespace OpenLR.Tests.Binary
 
             // decode.
             var decoder = new PoiWithAccessPointLocationDecoder();
+            Assert.IsTrue(decoder.CanDecode(stringData));
             var location = decoder.Decode(stringData);
 
             Assert.IsNotNull(location);

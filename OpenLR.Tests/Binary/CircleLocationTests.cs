@@ -23,6 +23,7 @@ namespace OpenLR.Tests.Binary
 
             // decode.
             var decoder = new CircleLocationDecoder();
+            Assert.IsTrue(decoder.CanDecode(stringData));
             var location = decoder.Decode(stringData);
 
             Assert.IsNotNull(location);

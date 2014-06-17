@@ -144,7 +144,7 @@ namespace OpenLR.Tests.Referenced.Real
 
             // decodes a location.
             var location = referencedDecoder.Decode(data);
-            Assert.IsNull(location);
+            Assert.IsNotNull(location);
         }
 
         /// <summary>
@@ -173,7 +173,7 @@ namespace OpenLR.Tests.Referenced.Real
         /// </summary>
         [Test]
         public void TestAllHDFBEL()
-        {            
+        {
             // create a referenced decoder.
             var referencedDecoder = new ReferencedLiveEdgeDecoder(RealGraphOsm.GetRoutingGraph(), new BinaryDecoder());
 
@@ -182,7 +182,7 @@ namespace OpenLR.Tests.Referenced.Real
             var xmlReader = XmlReader.Create(xmlStream);
 
             var featureCollection = new FeatureCollection();
-            while(xmlReader.Read())
+            while (xmlReader.Read())
             {
                 if (xmlReader.Name == "binary")
                 {
@@ -197,7 +197,7 @@ namespace OpenLR.Tests.Referenced.Real
                         else if (location is ReferencedLine<LiveEdge>)
                         {
                             var lineLocation = location as ReferencedLine<LiveEdge>;
-                            foreach(var feature in lineLocation.ToFeatures().Features)
+                            foreach (var feature in lineLocation.ToFeatures().Features)
                             {
                                 featureCollection.Add(feature);
                             }

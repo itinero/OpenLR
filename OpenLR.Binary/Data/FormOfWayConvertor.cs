@@ -57,9 +57,47 @@ namespace OpenLR.Binary.Data
             throw new InvalidOperationException("Decoded a value from three bits not in the range of [0-7]?!");
         }
 
+        /// <summary>
+        /// Encodes a form of way into binary data.
+        /// </summary>
+        /// <param name="formOfWay"></param>
+        /// <param name="data"></param>
+        /// <param name="startIndex"></param>
+        /// <param name="byteIndex"></param>
         public static void Encode(FormOfWay formOfWay, byte[] data, int startIndex, int byteIndex)
         {
-            throw new NotImplementedException();
+            if (byteIndex > 5) { throw new ArgumentOutOfRangeException("byteIndex", "byteIndex has to be a value in the range of [0-5]."); }
+
+            int value = 0;
+            switch (formOfWay)
+            {
+                case FormOfWay.Undefined:
+                    value = 0;
+                    break;
+                case FormOfWay.Motorway:
+                    value = 1;
+                    break;
+                case FormOfWay.MultipleCarriageWay:
+                    value = 2;
+                    break;
+                case FormOfWay.SingleCarriageWay:
+                    value = 3;
+                    break;
+                case FormOfWay.Roundabout:
+                    value = 4;
+                    break;
+                case FormOfWay.TrafficSquare:
+                    value = 5;
+                    break;
+                case FormOfWay.SlipRoad:
+                    value = 6;
+                    break;
+                case FormOfWay.Other:
+                    value = 7;
+                    break;
+            }
+
+            data[startIndex] = (byte)(value << (5 - byteIndex));
         }
     }
 }
