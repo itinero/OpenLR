@@ -54,11 +54,14 @@ namespace OpenLR.Tests.Binary.Data
             BearingConvertor.Encode(9, data, 0, 3);
             Assert.AreEqual(9, data[0]);
 
-            BearingConvertor.Encode(4, data, 0, 3);
+            data[0] = 0;
+            BearingConvertor.Encode(1, data, 0, 1);
             Assert.AreEqual(4, data[0]);
-            BearingConvertor.Encode(20, data, 0, 3);
+            data[0] = 0;
+            BearingConvertor.Encode(5, data, 0, 1);
             Assert.AreEqual(20, data[0]);
-            BearingConvertor.Encode(36, data, 0, 3);
+            data[0] = 0;
+            BearingConvertor.Encode(9, data, 0, 1);
             Assert.AreEqual(36, data[0]);
         }
     }

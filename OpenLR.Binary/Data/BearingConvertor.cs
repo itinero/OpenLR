@@ -50,22 +50,14 @@ namespace OpenLR.Binary.Data
         {
             if (byteIndex > 3) { throw new ArgumentOutOfRangeException("byteIndex", "byteIndex has to be a value in the range of [0-3]."); }
 
-            byte dataByte = data[startIndex];
+            byte target = data[startIndex];
 
-            // create mask.
             byte mask = (byte)(31 << (3 - byteIndex));
+            target = (byte)(target & ~mask); // set to zero.
+            byte value = (byte)(bearing << (3 - byteIndex)); // move value to correct position.
+            target = (byte)(target | value); // add to byte.
 
-            // apply mask, reset existing data.
-            dataByte = (byte)((~mask) & dataByte);
-
-            // create byte containing bearing.
-            byte bearingByte = (byte)(bearing << (3 - byteIndex));
-
-            // add bearing.
-            dataByte = (byte)(bearingByte | dataByte);
-
-            // encode.
-            data[startIndex] = dataByte;
+            data[startIndex] = target;
         }
     }
 }

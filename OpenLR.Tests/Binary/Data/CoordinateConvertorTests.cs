@@ -8,7 +8,7 @@ namespace OpenLR.Tests.Binary.Data
     /// Holds some coordinate encoding/decoding tests.
     /// </summary>
     [TestFixture]
-    public class CoordinateEncodingTests
+    public class CoordinateConvertorTests
     {
         /// <summary>
         /// Tests the simple decoding case.

@@ -18,6 +18,13 @@ namespace OpenLR.Binary.Encoders
         {
             byte[] data = new byte[17];
 
+            var header = new Header();
+            header.Version = 3;
+            header.HasAttributes = true;
+            header.ArF0 = false;
+            header.IsPoint = true;
+            header.ArF1 = false;
+            HeaderConvertor.Encode(data, 0, header);
             CoordinateConverter.Encode(location.First.Coordinate, data, 1);
             FunctionalRoadClassConvertor.Encode(location.First.FuntionalRoadClass.Value, data, 7, 2);
             FormOfWayConvertor.Encode(location.First.FormOfWay.Value, data, 7, 5);

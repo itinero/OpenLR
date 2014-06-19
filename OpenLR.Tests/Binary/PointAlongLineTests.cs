@@ -61,6 +61,8 @@ namespace OpenLR.Tests.Binary
         [Test]
         public void EncodeBase64Test()
         {
+            double delta = 0.0001;
+
             // create a location.
             var location = new PointAlongLineLocation();
             location.First = new LocationReferencePoint();
@@ -91,6 +93,37 @@ namespace OpenLR.Tests.Binary
             // encode.
             var encoder = new PointAlongLineEncoder();
             var stringData = encoder.Encode(location);
+
+            // decode again (decoding was tested above).
+            var decoder = new PointAlongLineDecoder();
+            var decodedLocation = decoder.Decode(stringData);
+
+            Assert.IsNotNull(decodedLocation);
+            Assert.IsInstanceOf<PointAlongLineLocation>(decodedLocation);
+            var pointAlongLineLocation = (decodedLocation as PointAlongLineLocation);
+
+            // check first reference.
+            Assert.IsNotNull(pointAlongLineLocation.First);
+            Assert.AreEqual(location.First.Coordinate.Longitude, pointAlongLineLocation.First.Coordinate.Longitude, delta); // 6.12829°
+            Assert.AreEqual(location.First.Coordinate.Latitude, pointAlongLineLocation.First.Coordinate.Latitude, delta); // 49.60597°
+            Assert.AreEqual(location.First.FuntionalRoadClass, pointAlongLineLocation.First.FuntionalRoadClass);
+            Assert.AreEqual(location.First.FormOfWay, pointAlongLineLocation.First.FormOfWay);
+            Assert.AreEqual(location.First.LowestFunctionalRoadClassToNext, pointAlongLineLocation.First.LowestFunctionalRoadClassToNext);
+            Assert.AreEqual(location.First.BearingDistance, pointAlongLineLocation.First.BearingDistance);
+
+            // check second reference.
+            Assert.IsNotNull(pointAlongLineLocation.Last);
+            Assert.AreEqual(location.Last.Coordinate.Longitude, pointAlongLineLocation.Last.Coordinate.Longitude, delta); // 6.12779°
+            Assert.AreEqual(location.Last.Coordinate.Latitude, pointAlongLineLocation.Last.Coordinate.Latitude, delta); // 49.60521°
+            Assert.AreEqual(location.Last.FuntionalRoadClass, pointAlongLineLocation.Last.FuntionalRoadClass);
+            Assert.AreEqual(location.Last.FormOfWay, pointAlongLineLocation.Last.FormOfWay);
+            Assert.AreEqual(location.Last.BearingDistance, pointAlongLineLocation.Last.BearingDistance);
+
+            // check other properties.
+            Assert.AreEqual(location.Orientation, pointAlongLineLocation.Orientation);
+            Assert.AreEqual(location.SideOfRoad, pointAlongLineLocation.SideOfRoad);
+            Assert.AreEqual(location.PositiveOffset, pointAlongLineLocation.PositiveOffset);
+
         }
     }
 }

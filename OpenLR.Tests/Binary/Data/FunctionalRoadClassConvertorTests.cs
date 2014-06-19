@@ -70,6 +70,13 @@ namespace OpenLR.Tests.Binary.Data
             Assert.AreEqual(6, data[0]);
             FunctionalRoadClassConvertor.Encode(FunctionalRoadClass.Frc7, data, 0, 5);
             Assert.AreEqual(7, data[0]);
+
+            data[0] = 0;
+            FunctionalRoadClassConvertor.Encode(FunctionalRoadClass.Frc7, data, 0, 2);
+            Assert.AreEqual(56, data[0]);
+            data[0] = 0;
+            FunctionalRoadClassConvertor.Encode(FunctionalRoadClass.Frc4, data, 0, 2);
+            Assert.AreEqual(32, data[0]);
         }
     }
 }

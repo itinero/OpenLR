@@ -68,7 +68,7 @@ namespace OpenLR.Binary.Data
         {
             if (byteIndex > 5) { throw new ArgumentOutOfRangeException("byteIndex", "byteIndex has to be a value in the range of [0-5]."); }
 
-            int value = 0;
+            byte value = 0;
             switch (functionalRoadClass)
             {
                 case FunctionalRoadClass.Frc0:
@@ -97,7 +97,14 @@ namespace OpenLR.Binary.Data
                     break;
             }
 
-            data[startIndex] = (byte)(value << (5 - byteIndex));
+            byte target = data[startIndex];
+
+            byte mask = (byte)(7 << (5 - byteIndex));
+            target = (byte)(target & ~mask); // set to zero.
+            value = (byte)(value << (5 - byteIndex)); // move value to correct position.
+            target = (byte)(target | value); // add to byte.
+
+            data[startIndex] = target;
         }
     }
 }
