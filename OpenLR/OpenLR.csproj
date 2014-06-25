@@ -70,6 +70,7 @@
     <Compile Include="Referenced\Decoding\ReferencedDecoder.cs" />
     <Compile Include="Referenced\Decoding\ReferencedLocationDecoder.cs" />
     <Compile Include="Referenced\Encoding\ReferencedEncoder.cs" />
+    <Compile Include="Referenced\Encoding\ReferencedLocationEncoder.cs" />
     <Compile Include="Referenced\ReferencedLocation.cs" />
   </ItemGroup>
   <ItemGroup />

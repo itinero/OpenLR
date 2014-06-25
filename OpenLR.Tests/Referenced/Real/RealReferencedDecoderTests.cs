@@ -4,6 +4,7 @@ using NUnit.Framework;
 using OpenLR.Binary;
 using OpenLR.OsmSharp;
 using OpenLR.OsmSharp.Decoding;
+using OpenLR.OsmSharp.Locations;
 using OsmSharp.Routing.Graph.Router.Dykstra;
 using OsmSharp.Routing.Osm.Graphs;
 using System;

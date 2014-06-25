@@ -2,6 +2,7 @@
 using OpenLR.Model;
 using OpenLR.OsmSharp.Decoding.Candidates;
 using OpenLR.OsmSharp.Decoding.Scoring;
+using OpenLR.OsmSharp.Locations;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Routing.Graph;

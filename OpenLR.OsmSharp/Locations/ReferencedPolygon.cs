@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OpenLR.OsmSharp.Decoding
+namespace OpenLR.OsmSharp.Locations
 {
     /// <summary>
     /// Represents a referenced polygon location with a graph as a reference.

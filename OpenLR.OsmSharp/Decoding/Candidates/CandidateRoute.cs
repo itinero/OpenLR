@@ -1,4 +1,5 @@
-﻿using OsmSharp.Routing.Graph;
+﻿using OpenLR.OsmSharp.Locations;
+using OsmSharp.Routing.Graph;
 using System;
 using System.Collections.Generic;
 using System.Linq;

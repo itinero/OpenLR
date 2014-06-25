@@ -1,5 +1,6 @@
 ﻿using OpenLR.Locations;
 using OpenLR.Model;
+using OpenLR.OsmSharp.Locations;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using System;

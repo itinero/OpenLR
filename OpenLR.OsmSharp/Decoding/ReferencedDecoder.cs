@@ -1,6 +1,7 @@
 ﻿using OpenLR.Locations;
 using OpenLR.Model;
 using OpenLR.OsmSharp.Decoding.Candidates;
+using OpenLR.OsmSharp.Locations;
 using OpenLR.Referenced;
 using OpenLR.Referenced.Decoding;
 using OsmSharp.Collections.Tags;

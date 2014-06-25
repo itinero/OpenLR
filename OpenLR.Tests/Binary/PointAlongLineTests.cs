@@ -124,6 +124,34 @@ namespace OpenLR.Tests.Binary
             Assert.AreEqual(location.SideOfRoad, pointAlongLineLocation.SideOfRoad);
             Assert.AreEqual(location.PositiveOffset, pointAlongLineLocation.PositiveOffset);
 
+            // compare again with reference encoded string.
+            string referenceStringData = "KwRboCNGfhJRAf/O/7SSQ00=";
+            var referenceDecodedLocation = decoder.Decode(referenceStringData);
+
+            var referenceBinary = System.Convert.FromBase64String(referenceStringData);
+            var encodedBinary = System.Convert.FromBase64String(stringData);
+
+            // check first reference.
+            Assert.IsNotNull(pointAlongLineLocation.First);
+            Assert.AreEqual(referenceDecodedLocation.First.Coordinate.Longitude, pointAlongLineLocation.First.Coordinate.Longitude, delta); // 6.12829°
+            Assert.AreEqual(referenceDecodedLocation.First.Coordinate.Latitude, pointAlongLineLocation.First.Coordinate.Latitude, delta); // 49.60597°
+            Assert.AreEqual(referenceDecodedLocation.First.FuntionalRoadClass, pointAlongLineLocation.First.FuntionalRoadClass);
+            Assert.AreEqual(referenceDecodedLocation.First.FormOfWay, pointAlongLineLocation.First.FormOfWay);
+            Assert.AreEqual(referenceDecodedLocation.First.LowestFunctionalRoadClassToNext, pointAlongLineLocation.First.LowestFunctionalRoadClassToNext);
+            Assert.AreEqual(referenceDecodedLocation.First.BearingDistance, pointAlongLineLocation.First.BearingDistance);
+
+            // check second reference.
+            Assert.IsNotNull(pointAlongLineLocation.Last);
+            Assert.AreEqual(referenceDecodedLocation.Last.Coordinate.Longitude, pointAlongLineLocation.Last.Coordinate.Longitude, delta); // 6.12779°
+            Assert.AreEqual(referenceDecodedLocation.Last.Coordinate.Latitude, pointAlongLineLocation.Last.Coordinate.Latitude, delta); // 49.60521°
+            Assert.AreEqual(referenceDecodedLocation.Last.FuntionalRoadClass, pointAlongLineLocation.Last.FuntionalRoadClass);
+            Assert.AreEqual(referenceDecodedLocation.Last.FormOfWay, pointAlongLineLocation.Last.FormOfWay);
+            Assert.AreEqual(referenceDecodedLocation.Last.BearingDistance, pointAlongLineLocation.Last.BearingDistance);
+
+            // check other properties.
+            Assert.AreEqual(referenceDecodedLocation.Orientation, pointAlongLineLocation.Orientation);
+            Assert.AreEqual(referenceDecodedLocation.SideOfRoad, pointAlongLineLocation.SideOfRoad);
+            Assert.AreEqual(referenceDecodedLocation.PositiveOffset, pointAlongLineLocation.PositiveOffset);
         }
     }
 }

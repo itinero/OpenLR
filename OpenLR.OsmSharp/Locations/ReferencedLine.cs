@@ -7,7 +7,7 @@ using OsmSharp.Routing.Graph.Router;
 using System;
 using System.Collections.Generic;
 
-namespace OpenLR.OsmSharp.Decoding
+namespace OpenLR.OsmSharp.Locations
 {
     /// <summary>
     /// Represents a referenced line location with a graph as a reference.

@@ -115,6 +115,7 @@
     <Compile Include="Referenced\Real\RealGraphOsm.cs" />
     <Compile Include="Referenced\Real\RealReferencedDecoderTests.cs" />
     <Compile Include="Referenced\ReferencedPointAlongLineDecoderTests.cs" />
+    <Compile Include="Referenced\ReferencedPointAlongLineEncoderTests.cs" />
     <Compile Include="Referenced\ReferencedPolygonDecoderTests.cs" />
     <Compile Include="Referenced\ReferencedGridDecoderTests.cs" />
     <Compile Include="Referenced\ReferencedCircleDecoderTests.cs" />
