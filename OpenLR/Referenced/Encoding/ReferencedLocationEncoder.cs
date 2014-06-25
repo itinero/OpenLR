@@ -30,11 +30,11 @@ namespace OpenLR.Referenced.Encoding
         /// <summary>
         /// Encodes an OpenLR location.
         /// </summary>
-        /// <param name="data"></param>
+        /// <param name="location"></param>
         /// <returns></returns>
-        public string Decode(TReferencedLocation location)
+        public string Encode(TReferencedLocation location)
         {
-            return _rawEncoder.Encode(this.Encode(location));
+            return _rawEncoder.Encode(this.EncodeReferenced(location));
         }
 
         /// <summary>
@@ -42,6 +42,6 @@ namespace OpenLR.Referenced.Encoding
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
-        public abstract TLocation Encode(TReferencedLocation location);
+        public abstract TLocation EncodeReferenced(TReferencedLocation location);
     }
 }

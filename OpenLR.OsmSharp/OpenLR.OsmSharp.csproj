@@ -77,6 +77,8 @@
     <Compile Include="Decoding\Candidates\CandidateRoute.cs" />
     <Compile Include="Decoding\Candidates\CandidateVertexEdge.cs" />
     <Compile Include="Decoding\Candidates\CandidateVertexEdgeComparer.cs" />
+    <Compile Include="Encoding\ReferencedEncoder.cs" />
+    <Compile Include="Encoding\ReferencedPointAlongLineEncoder.cs" />
     <Compile Include="Locations\ReferencedCircle.cs" />
     <Compile Include="Decoding\ReferencedCircleDecoder.cs" />
     <Compile Include="Locations\ReferencedGeoCoordinate.cs" />
@@ -97,7 +99,9 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReferencedDecoderBase.cs" />
+    <Compile Include="ReferencedEncoderBase.cs" />
     <Compile Include="ReferencedLiveEdgeDecoder.cs" />
+    <Compile Include="ReferencedLiveEdgeEncoder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -108,9 +112,7 @@
       <Name>OpenLR</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Encoding\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
