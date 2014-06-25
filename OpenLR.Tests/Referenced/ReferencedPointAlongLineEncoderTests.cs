@@ -4,6 +4,7 @@ using OpenLR.Model;
 using OpenLR.OsmSharp;
 using OpenLR.OsmSharp.Encoding;
 using OpenLR.OsmSharp.Locations;
+using OpenLR.OsmSharp.Osm;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Routing.Graph;

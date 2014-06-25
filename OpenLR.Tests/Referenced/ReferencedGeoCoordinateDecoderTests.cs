@@ -25,7 +25,7 @@ namespace OpenLR.Tests.Referenced
 
             // decode the location
             //var decoder = new GeoCoordinateLocationDecoder();
-            var referencedDecoder = new ReferencedGeoCoordinateDecoder<LiveEdge>(null, null, null);
+            var referencedDecoder = new ReferencedGeoCoordinateDecoder<LiveEdge>(null, null, null, null);
             var referencedLocation = referencedDecoder.Decode(location);
 
             // confirm result.

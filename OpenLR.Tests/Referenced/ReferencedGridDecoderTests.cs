@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using OpenLR.Locations;
 using OpenLR.OsmSharp.Decoding;
+using OpenLR.OsmSharp.Osm;
 using OsmSharp.Routing.Osm.Graphs;
 
 namespace OpenLR.Tests.Referenced
@@ -29,8 +30,7 @@ namespace OpenLR.Tests.Referenced
             location.Columns = 5;
 
             // decode the location
-            //var decoder = new GeoCoordinateLocationDecoder();
-            var referencedDecoder = new ReferencedGridDecoder<LiveEdge>(null, null, null);
+            var referencedDecoder = new ReferencedGridDecoder<LiveEdge>(null, null, null, null);
             var referencedLocation = referencedDecoder.Decode(location);
 
             // confirm result.

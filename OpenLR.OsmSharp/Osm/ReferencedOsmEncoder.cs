@@ -6,10 +6,10 @@ using OsmSharp.Routing.Graph.Router.Dykstra;
 using OsmSharp.Routing.Osm.Graphs;
 using System;
 
-namespace OpenLR.OsmSharp
+namespace OpenLR.OsmSharp.Osm
 {
     /// <summary>
-    /// Represents an implementation of a referenced live edge encoder. 
+    /// An implementation of a referenced encoder based on OSM. 
     /// </summary>
     public class ReferencedLiveEdgeEncoder : ReferencedEncoderBase<LiveEdge>
     {

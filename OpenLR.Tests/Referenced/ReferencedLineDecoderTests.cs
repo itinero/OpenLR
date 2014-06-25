@@ -1,8 +1,10 @@
 ﻿using NUnit.Framework;
+using OpenLR.Binary;
 using OpenLR.Binary.Decoders;
 using OpenLR.Locations;
 using OpenLR.Model;
 using OpenLR.OsmSharp.Decoding;
+using OpenLR.OsmSharp.Osm;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Routing.Graph;
@@ -86,7 +88,8 @@ namespace OpenLR.Tests.Referenced
             // decode the location
             var decoder = new LineLocationDecoder();
             var router = new DykstraRoutingLive();
-            var referencedDecoder = new ReferencedLineDecoder<LiveEdge>(decoder, graph, router);
+            var mainDecoder = new ReferencedOsmDecoder(graph, new BinaryDecoder());
+            var referencedDecoder = new ReferencedLineDecoder<LiveEdge>(mainDecoder, decoder, graph, router);
             var referencedLocation = referencedDecoder.Decode(location);
 
             // confirm result.

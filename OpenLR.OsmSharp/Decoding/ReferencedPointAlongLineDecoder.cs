@@ -27,8 +27,8 @@ namespace OpenLR.OsmSharp.Decoding
         /// </summary>
         /// <param name="graph"></param>
         /// <param name="router"></param>
-        public ReferencedPointAlongLineDecoder(OpenLR.Decoding.LocationDecoder<PointAlongLineLocation> rawDecoder, IBasicRouterDataSource<TEdge> graph, IBasicRouter<TEdge> router)
-            : base(rawDecoder, graph, router)
+        public ReferencedPointAlongLineDecoder(ReferencedDecoderBase<TEdge> mainDecoder, OpenLR.Decoding.LocationDecoder<PointAlongLineLocation> rawDecoder, IBasicRouterDataSource<TEdge> graph, IBasicRouter<TEdge> router)
+            : base(mainDecoder, rawDecoder, graph, router)
         {
 
         }
