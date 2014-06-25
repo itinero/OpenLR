@@ -44,6 +44,9 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SharedAssemblyVersion.cs">
+      <Link>Properties\SharedAssemblyVersion.cs</Link>
+    </Compile>
     <Compile Include="Decoding\Decoder.cs" />
     <Compile Include="Decoding\LocationDecoder.cs" />
     <Compile Include="Encoding\Encoder.cs" />

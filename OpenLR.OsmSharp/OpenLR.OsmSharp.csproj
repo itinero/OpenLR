@@ -89,6 +89,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SharedAssemblyVersion.cs">
+      <Link>Properties\SharedAssemblyVersion.cs</Link>
+    </Compile>
     <Compile Include="Decoding\Candidates\CandidateRoute.cs" />
     <Compile Include="Decoding\Candidates\CandidateVertexEdge.cs" />
     <Compile Include="Decoding\Candidates\CandidateVertexEdgeComparer.cs" />
