@@ -19,8 +19,8 @@ namespace OpenLR.OsmSharp.Encoding
         /// </summary>
         /// <param name="graph"></param>
         /// <param name="router"></param>
-        public ReferencedPointAlongLineEncoder(OpenLR.Encoding.LocationEncoder<PointAlongLineLocation> rawEncoder, IBasicRouterDataSource<TEdge> graph, IBasicRouter<TEdge> router)
-            : base(rawEncoder, graph, router)
+        public ReferencedPointAlongLineEncoder(ReferencedEncoderBase<TEdge> mainEncoder, OpenLR.Encoding.LocationEncoder<PointAlongLineLocation> rawEncoder, IBasicRouterDataSource<TEdge> graph, IBasicRouter<TEdge> router)
+            : base(mainEncoder, rawEncoder, graph, router)
         {
 
         }

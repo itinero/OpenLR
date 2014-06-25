@@ -1,7 +1,9 @@
 ﻿using OpenLR.Decoding;
 using OpenLR.Encoding;
+using OpenLR.Model;
 using OpenLR.OsmSharp.Decoding;
 using OpenLR.Referenced;
+using OsmSharp.Collections.Tags;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Graph.Router.Dykstra;
@@ -79,6 +81,17 @@ namespace OpenLR.OsmSharp
         /// </summary>
         /// <returns></returns>
         protected abstract IBasicRouter<TEdge> GetRouter();
+
+        /// <summary>
+        /// Returns the reference graph.
+        /// </summary>
+        protected IBasicRouterDataSource<TEdge> Graph
+        {
+            get
+            {
+                return _graph;
+            }
+        }
 
         ///// <summary>
         ///// Holds the referenced circle decoder.
@@ -181,5 +194,33 @@ namespace OpenLR.OsmSharp
         {
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// Returns the location of the given vertex.
+        /// </summary>
+        /// <param name="vertex"></param>
+        /// <returns></returns>
+        public abstract Coordinate GetVertexLocation(long vertex);
+
+        /// <summary>
+        /// Returns the tags associated with the given tags id.
+        /// </summary>
+        /// <param name="tagsId"></param>
+        /// <returns></returns>
+        public abstract TagsCollectionBase GetTags(uint tagsId);
+
+        /// <summary>
+        /// Returns the functional road class for the the given collections of tags.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <returns></returns>
+        public abstract FunctionalRoadClass GetFunctionalRoadClassFor(TagsCollectionBase tags);
+
+        /// <summary>
+        /// Returns the form of way for the given collection of tags.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <returns></returns>
+        public abstract FormOfWay GetFormOfWayFor(TagsCollectionBase tags);
     }
 }

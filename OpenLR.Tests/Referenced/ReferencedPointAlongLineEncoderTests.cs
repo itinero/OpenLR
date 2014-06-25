@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using OpenLR.Binary.Encoders;
 using OpenLR.Model;
+using OpenLR.OsmSharp;
 using OpenLR.OsmSharp.Encoding;
 using OpenLR.OsmSharp.Locations;
 using OsmSharp.Collections.Tags;
@@ -57,7 +58,8 @@ namespace OpenLR.Tests.Referenced
             // encode location.
             var encoder = new PointAlongLineEncoder();
             var router = new DykstraRoutingLive();
-            var referencedEncoder = new ReferencedPointAlongLineEncoder<LiveEdge>(encoder, graph, router);
+            var mainEncoder = new ReferencedLiveEdgeEncoder(graph, null);
+            var referencedEncoder = new ReferencedPointAlongLineEncoder<LiveEdge>(mainEncoder, encoder, graph, router);
             var location = referencedEncoder.EncodeReferenced(referencedPointAlongLineLocation);
 
             // test result.
