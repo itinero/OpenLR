@@ -43,11 +43,13 @@ namespace OpenLR.OsmSharp.Encoding
             location.First.FormOfWay = this.GetFormOfWayFor(tags);
             location.First.FuntionalRoadClass = this.GetFunctionalRoadClassFor(tags);
             location.First.LowestFunctionalRoadClassToNext = location.First.FuntionalRoadClass;
+            location.First.BearingDistance = 0;
 
             location.Last = new Model.LocationReferencePoint();
             location.Last.Coordinate = this.GetVertexLocation(referencedLocation.VertexTo);
             location.Last.FormOfWay = this.GetFormOfWayFor(tags);
             location.Last.FuntionalRoadClass = this.GetFunctionalRoadClassFor(tags);
+            location.Last.BearingDistance = 0;
 
             // calculate side of road, orientation, ...
             // create line between two poins.
