@@ -94,6 +94,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\OpenLR.Binary\OpenLR.Binary.csproj">
+      <Project>{252d884c-8bed-4711-a2da-21f8dc05d697}</Project>
+      <Name>OpenLR.Binary</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OpenLR.OsmSharp\OpenLR.OsmSharp.csproj">
       <Project>{61c1f8e2-9afb-4eda-8465-b0ecb20296d7}</Project>
       <Name>OpenLR.OsmSharp</Name>

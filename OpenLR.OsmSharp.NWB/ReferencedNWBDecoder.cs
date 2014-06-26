@@ -7,6 +7,7 @@ using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Graph.Router.Dykstra;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Shape;
+using OsmSharp.Routing.Shape.Readers;
 using OsmSharp.Units.Distance;
 using System;
 using System.Collections.Generic;
@@ -192,6 +193,34 @@ namespace OpenLR.OsmSharp.NWB
                 Latitude = latitude,
                 Longitude = longitude
             };
+        }
+
+        /// <summary>
+        /// Creates a new referenced NWB decoder.
+        /// </summary>
+        /// <param name="folder">The folder containing the shapefile(s).</param>
+        /// <param name="searchPattern">The search pattern to identify the relevant shapefiles.</param>
+        /// <returns></returns>
+        public static ReferencedNWBDecoder CreateBinary(string folder, string searchPattern)
+        {
+            return ReferencedNWBDecoder.Create(folder, searchPattern, new OpenLR.Binary.BinaryDecoder());
+        }
+
+        /// <summary>
+        /// Creates a new referenced NWB decoder.
+        /// </summary>
+        /// <param name="folder">The folder containing the shapefile(s).</param>
+        /// <param name="searchPattern">The search pattern to identify the relevant shapefiles.</param>
+        /// <param name="rawLocationDecoder">The raw location decoder.</param>
+        /// <returns></returns>
+        public static ReferencedNWBDecoder Create(string folder, string searchPattern, Decoder rawLocationDecoder)
+        {
+            // create an instance of the graph reader and define the columns that contain the 'node-ids'.
+            var graphReader = new ShapefileLiveGraphReader("JTE_ID_BEG", "JTE_ID_END");
+            // read the graph from the folder where the shapefiles are placed.
+            var graph = graphReader.Read(folder, searchPattern, new ShapefileRoutingInterpreter());
+
+            return new ReferencedNWBDecoder(graph, rawLocationDecoder);
         }
     }
 }
