@@ -307,13 +307,17 @@ namespace OpenLR.OsmSharp
         /// <typeparam name="TEdge"></typeparam>
         /// <param name="graph"></param>
         /// <param name="location"></param>
-        /// <returns></returns>
+        /// <returns>Returns an edge or an edge from 0 to 0 if none is found.</returns>
         public static KeyValuePair<uint, KeyValuePair<uint, TEdge>> GetClosestEdge<TEdge>(IBasicRouterDataSource<TEdge> graph, GeoCoordinate location)
             where TEdge : IDynamicGraphEdgeData
-        {
-            var arcs = graph.GetArcs(new GeoCoordinateBox(
-                new GeoCoordinate(51.66018, 5.29179),
-                new GeoCoordinate(51.66018 + 0.1, 5.29179 + 0.1)));
+        {     
+            // create the search box.
+            var searchBoxSize = 0.1;
+            var searchBox = new GeoCoordinateBox(new GeoCoordinate(
+                location.Latitude - searchBoxSize, location.Longitude - searchBoxSize),
+                                                               new GeoCoordinate(
+                location.Latitude + searchBoxSize, location.Longitude + searchBoxSize));
+            var arcs = graph.GetArcs(searchBox);
 
             float latitude, longitude;
             double bestDistance = double.MaxValue;
