@@ -3,6 +3,9 @@ using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Utilities;
 using OpenLR.Locations;
+using OsmSharp.Math.Geo;
+using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.Graph.Router;
 using System.Collections.Generic;
 
 namespace OpenLR.OsmSharp
@@ -296,6 +299,42 @@ namespace OpenLR.OsmSharp
             pointAttributes.AddAttribute("functional_road_class", locationReferencePoint.FuntionalRoadClass);
             pointAttributes.AddAttribute("lowest_functional_road_class_to_next", locationReferencePoint.LowestFunctionalRoadClassToNext);
             return new Feature(point, pointAttributes);
+        }
+
+        /// <summary>
+        /// Returns the edge that is closest to the given location.
+        /// </summary>
+        /// <typeparam name="TEdge"></typeparam>
+        /// <param name="graph"></param>
+        /// <param name="location"></param>
+        /// <returns></returns>
+        public static KeyValuePair<uint, KeyValuePair<uint, TEdge>> GetClosestEdge<TEdge>(IBasicRouterDataSource<TEdge> graph, GeoCoordinate location)
+            where TEdge : IDynamicGraphEdgeData
+        {
+            var arcs = graph.GetArcs(new GeoCoordinateBox(
+                new GeoCoordinate(51.66018, 5.29179),
+                new GeoCoordinate(51.66018 + 0.1, 5.29179 + 0.1)));
+
+            float latitude, longitude;
+            double bestDistance = double.MaxValue;
+            var bestEdge = new KeyValuePair<uint,KeyValuePair<uint,TEdge>>(0, new KeyValuePair<uint,TEdge>(0, default(TEdge)));
+            foreach(var arc in arcs)
+            {
+                graph.GetVertex(arc.Key, out latitude, out longitude);
+                var from = new GeoCoordinate(latitude, longitude);
+                graph.GetVertex(arc.Value.Key, out latitude, out longitude);
+                var to = new GeoCoordinate(latitude, longitude);
+
+                var line = new GeoCoordinateLine(from, to, true, true);
+
+                var distance = line.Distance(location);
+                if(distance <  bestDistance)
+                {
+                    bestEdge = arc;
+                    bestDistance = distance;
+                }
+            }
+            return bestEdge;
         }
     }
 }
