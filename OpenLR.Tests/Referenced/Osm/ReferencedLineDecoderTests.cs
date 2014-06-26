@@ -10,13 +10,8 @@ using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router.Dykstra;
 using OsmSharp.Routing.Osm.Graphs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace OpenLR.Tests.Referenced
+namespace OpenLR.Tests.Referenced.Osm
 {
     /// <summary>
     /// Contains tests for decoding/encoding a OpenLR line location to a referenced line location.

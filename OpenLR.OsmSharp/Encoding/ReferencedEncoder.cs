@@ -30,6 +30,8 @@ namespace OpenLR.OsmSharp.Encoding
         /// <summary>
         /// Creates a new dynamic graph encoder.
         /// </summary>
+        /// <param name="mainEncoder"></param>
+        /// <param name="rawEncoder"></param>
         /// <param name="graph"></param>
         /// <param name="router"></param>
         public ReferencedEncoder(ReferencedEncoderBase<TEdge> mainEncoder, OpenLR.Encoding.LocationEncoder<TLocation> rawEncoder, IBasicRouterDataSource<TEdge> graph, IBasicRouter<TEdge> router)

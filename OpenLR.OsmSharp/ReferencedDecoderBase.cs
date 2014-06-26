@@ -64,6 +64,7 @@ namespace OpenLR.OsmSharp
         /// <summary>
         /// Creates a new referenced decoder.
         /// </summary>
+        /// <param name="graph"></param>
         /// <param name="locationDecoder"></param>
         public ReferencedDecoderBase(IBasicRouterDataSource<TEdge> graph, Decoder locationDecoder)
             :base(locationDecoder)
@@ -223,6 +224,7 @@ namespace OpenLR.OsmSharp
         /// Finds candidate vertices for a location reference point.
         /// </summary>
         /// <param name="lrp"></param>
+        /// <param name="maxVertexDistance"></param>
         /// <returns></returns>
         public virtual IEnumerable<CandidateVertex> FindCandidateVerticesFor(LocationReferencePoint lrp, Meter maxVertexDistance)
         {

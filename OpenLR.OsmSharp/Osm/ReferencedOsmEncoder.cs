@@ -11,14 +11,14 @@ namespace OpenLR.OsmSharp.Osm
     /// <summary>
     /// An implementation of a referenced encoder based on OSM. 
     /// </summary>
-    public class ReferencedLiveEdgeEncoder : ReferencedEncoderBase<LiveEdge>
+    public class ReferencedOsmEncoder : ReferencedEncoderBase<LiveEdge>
     {
         /// <summary>
         /// Creates a new referenced live edge decoder.
         /// </summary>
         /// <param name="graph"></param>
         /// <param name="locationEncoder"></param>
-        public ReferencedLiveEdgeEncoder(IBasicRouterDataSource<LiveEdge> graph, Encoder locationEncoder)
+        public ReferencedOsmEncoder(IBasicRouterDataSource<LiveEdge> graph, Encoder locationEncoder)
             : base(graph, locationEncoder)
         {
 
@@ -69,8 +69,6 @@ namespace OpenLR.OsmSharp.Osm
         /// <returns></returns>
         public override FunctionalRoadClass GetFunctionalRoadClassFor(TagsCollectionBase tags)
         {
-            // TODO: move this stuff to a more general class that can be changed for other networks!
-            // use osm-schema for now.
             string highway;
             if (tags.TryGetValue("highway", out highway))
             {
@@ -112,8 +110,6 @@ namespace OpenLR.OsmSharp.Osm
         /// <returns></returns>
         public override FormOfWay GetFormOfWayFor(TagsCollectionBase tags)
         {
-            // TODO: move this stuff to a more general class that can be changed for other networks!
-            // use osm-schema for now.
             string highway;
             if (tags.TryGetValue("highway", out highway))
             {

@@ -25,6 +25,8 @@ namespace OpenLR.OsmSharp.Decoding
         /// <summary>
         /// Creates a point along line location graph decoder.
         /// </summary>
+        /// <param name="mainDecoder"></param>
+        /// <param name="rawDecoder"></param>
         /// <param name="graph"></param>
         /// <param name="router"></param>
         public ReferencedPointAlongLineDecoder(ReferencedDecoderBase<TEdge> mainDecoder, OpenLR.Decoding.LocationDecoder<PointAlongLineLocation> rawDecoder, IBasicRouterDataSource<TEdge> graph, IBasicRouter<TEdge> router)

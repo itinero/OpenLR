@@ -4,19 +4,14 @@ using OpenLR.Binary.Decoders;
 using OpenLR.Locations;
 using OpenLR.Model;
 using OpenLR.OsmSharp.Decoding;
-using OpenLR.OsmSharp.Osm;
+using OpenLR.OsmSharp.NWB;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router.Dykstra;
 using OsmSharp.Routing.Osm.Graphs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace OpenLR.Tests.Referenced
+namespace OpenLR.Tests.Referenced.NWB
 {
     /// <summary>
     /// Contains tests for decoding/encoding a OpenLR line location to a referenced line location.
@@ -30,7 +25,7 @@ namespace OpenLR.Tests.Referenced
         [Test]
         public void DecodeReferencedPointAlongLineLocation()
         {
-            double delta = 0.0001;
+            var delta = 0.0001;
 
             // build the location to decode.
             var location = new PointAlongLineLocation();
@@ -52,27 +47,27 @@ namespace OpenLR.Tests.Referenced
             // build a graph to decode onto.
             var tags = new TagsTableCollectionIndex();
             var graph = new DynamicGraphRouterDataSource<LiveEdge>(tags);
-            uint vertex1 = graph.AddVertex(49.60597f, 6.12829f);
-            uint vertex2 = graph.AddVertex(49.60521f, 6.12779f);
+            var vertex1 = graph.AddVertex(49.60597f, 6.12829f);
+            var vertex2 = graph.AddVertex(49.60521f, 6.12779f);
             graph.AddArc(vertex1, vertex2, new LiveEdge()
             {
                 Coordinates = null,
                 Distance = 10,
                 Forward = true,
-                Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
+                Tags = tags.Add(new TagsCollection(Tag.Create("BAANSUBSRT", "VBD")))
             }, null);
             graph.AddArc(vertex2, vertex1, new LiveEdge()
             {
                 Coordinates = null,
                 Distance = 10,
                 Forward = true,
-                Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
+                Tags = tags.Add(new TagsCollection(Tag.Create("BAANSUBSRT", "VBD")))
             }, null);
 
             // decode the location
             var decoder = new PointAlongLineDecoder();
             var router = new DykstraRoutingLive();
-            var mainDecoder = new ReferencedOsmDecoder(graph, new BinaryDecoder());
+            var mainDecoder = new ReferencedNWBDecoder(graph, new BinaryDecoder());
             var referencedDecoder = new ReferencedPointAlongLineDecoder<LiveEdge>(mainDecoder, decoder, graph, router);
             var referencedLocation = referencedDecoder.Decode(location);
 

@@ -24,6 +24,7 @@ namespace OpenLR.OsmSharp
         /// <summary>
         /// Creates a new referenced encoder.
         /// </summary>
+        /// <param name="graph"></param>
         /// <param name="locationEncoder"></param>
         public ReferencedEncoderBase(IBasicRouterDataSource<TEdge> graph, Encoder locationEncoder)
             : base(locationEncoder)

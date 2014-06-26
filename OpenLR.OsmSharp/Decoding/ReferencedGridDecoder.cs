@@ -20,6 +20,8 @@ namespace OpenLR.OsmSharp.Decoding
         /// <summary>
         /// Creates a grid location graph decoder.
         /// </summary>
+        /// <param name="mainDecoder"></param>
+        /// <param name="rawDecoder"></param>
         /// <param name="graph"></param>
         /// <param name="router"></param>
         public ReferencedGridDecoder(ReferencedDecoderBase<TEdge> mainDecoder, OpenLR.Decoding.LocationDecoder<GridLocation> rawDecoder, IBasicRouterDataSource<TEdge> graph, IBasicRouter<TEdge> router)

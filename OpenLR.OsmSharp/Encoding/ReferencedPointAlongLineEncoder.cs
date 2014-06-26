@@ -17,6 +17,8 @@ namespace OpenLR.OsmSharp.Encoding
         /// <summary>
         /// Creates a point along line referenced encoder.
         /// </summary>
+        /// <param name="mainEncoder"></param>
+        /// <param name="rawEncoder"></param>
         /// <param name="graph"></param>
         /// <param name="router"></param>
         public ReferencedPointAlongLineEncoder(ReferencedEncoderBase<TEdge> mainEncoder, OpenLR.Encoding.LocationEncoder<PointAlongLineLocation> rawEncoder, IBasicRouterDataSource<TEdge> graph, IBasicRouter<TEdge> router)

@@ -21,6 +21,8 @@ namespace OpenLR.OsmSharp.Decoding
         /// <summary>
         /// Creates a polygon location graph decoder.
         /// </summary>
+        /// <param name="mainDecoder"></param>
+        /// <param name="rawDecoder"></param>
         /// <param name="graph"></param>
         /// <param name="router"></param>
         public ReferencedPolygonDecoder(ReferencedDecoderBase<TEdge> mainDecoder, OpenLR.Decoding.LocationDecoder<PolygonLocation> rawDecoder, IBasicRouterDataSource<TEdge> graph, IBasicRouter<TEdge> router)

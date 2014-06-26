@@ -1,17 +1,16 @@
 ﻿using NUnit.Framework;
 using OpenLR.Binary.Encoders;
 using OpenLR.Model;
-using OpenLR.OsmSharp;
 using OpenLR.OsmSharp.Encoding;
 using OpenLR.OsmSharp.Locations;
-using OpenLR.OsmSharp.Osm;
+using OpenLR.OsmSharp.NWB;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router.Dykstra;
 using OsmSharp.Routing.Osm.Graphs;
 
-namespace OpenLR.Tests.Referenced
+namespace OpenLR.Tests.Referenced.NWB
 {
     [TestFixture]
     public class ReferencedPointAlongLineEncoderTests
@@ -32,14 +31,14 @@ namespace OpenLR.Tests.Referenced
                 Coordinates = null,
                 Distance = 10,
                 Forward = true,
-                Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
+                Tags = tags.Add(new TagsCollection(Tag.Create("BAANSUBSRT", "VBD")))
             }, null);
             graph.AddArc(vertex2, vertex1, new LiveEdge()
             {
                 Coordinates = null,
                 Distance = 10,
                 Forward = true,
-                Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
+                Tags = tags.Add(new TagsCollection(Tag.Create("BAANSUBSRT", "VBD")))
             }, null);
 
             // create a referenced location and encode it.
@@ -49,7 +48,7 @@ namespace OpenLR.Tests.Referenced
                 Coordinates = null,
                 Distance = 10,
                 Forward = true,
-                Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
+                Tags = tags.Add(new TagsCollection(Tag.Create("BAANSUBSRT", "VBD")))
             };
             referencedPointAlongLineLocation.VertexFrom = vertex1;
             referencedPointAlongLineLocation.VertexTo = vertex2;
@@ -59,7 +58,7 @@ namespace OpenLR.Tests.Referenced
             // encode location.
             var encoder = new PointAlongLineEncoder();
             var router = new DykstraRoutingLive();
-            var mainEncoder = new ReferencedLiveEdgeEncoder(graph, null);
+            var mainEncoder = new ReferencedNWBEncoder(graph, null);
             var referencedEncoder = new ReferencedPointAlongLineEncoder<LiveEdge>(mainEncoder, encoder, graph, router);
             var location = referencedEncoder.EncodeReferenced(referencedPointAlongLineLocation);
 
@@ -73,8 +72,8 @@ namespace OpenLR.Tests.Referenced
             Assert.AreEqual(6.12829f, location.First.Coordinate.Longitude);
             Assert.AreEqual(91, location.First.DistanceToNext);
             Assert.AreEqual(FormOfWay.SingleCarriageWay, location.First.FormOfWay);
-            Assert.AreEqual(FunctionalRoadClass.Frc3, location.First.FuntionalRoadClass);
-            Assert.AreEqual(FunctionalRoadClass.Frc3, location.First.LowestFunctionalRoadClassToNext);
+            Assert.AreEqual(FunctionalRoadClass.Frc2, location.First.FuntionalRoadClass);
+            Assert.AreEqual(FunctionalRoadClass.Frc2, location.First.LowestFunctionalRoadClassToNext);
 
             Assert.AreEqual(49.60521f, location.Last.Coordinate.Latitude);
             Assert.AreEqual(6.12779f, location.Last.Coordinate.Longitude);

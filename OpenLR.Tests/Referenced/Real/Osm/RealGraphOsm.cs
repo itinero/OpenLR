@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OpenLR.Tests.Referenced.Real
+namespace OpenLR.Tests.Referenced.Real.Osm
 {
     /// <summary>
     /// Class resposible for loading a real graph.

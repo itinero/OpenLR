@@ -20,6 +20,8 @@ namespace OpenLR.OsmSharp.Decoding
         /// <summary>
         /// Creates a geo coordinate location referenced decoder.
         /// </summary>
+        /// <param name="mainDecoder"></param>
+        /// <param name="rawDecoder"></param>
         /// <param name="graph"></param>
         /// <param name="router"></param>
         public ReferencedGeoCoordinateDecoder(ReferencedDecoderBase<TEdge> mainDecoder, OpenLR.Decoding.LocationDecoder<GeoCoordinateLocation> rawDecoder, IBasicRouterDataSource<TEdge> graph, IBasicRouter<TEdge> router)

@@ -1,23 +1,12 @@
-﻿using NetTopologySuite.Features;
-using NetTopologySuite.IO;
+﻿using NetTopologySuite.IO;
 using NUnit.Framework;
 using OpenLR.Binary;
 using OpenLR.OsmSharp;
-using OpenLR.OsmSharp.Decoding;
 using OpenLR.OsmSharp.Locations;
 using OpenLR.OsmSharp.Osm;
-using OsmSharp.Routing.Graph.Router.Dykstra;
 using OsmSharp.Routing.Osm.Graphs;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
 
-namespace OpenLR.Tests.Referenced.Real
+namespace OpenLR.Tests.Referenced.Real.Osm
 {
     /// <summary>
     /// Contains tests for decoding/encoding an OpenLR circle location to a referenced circle location.

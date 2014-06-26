@@ -142,7 +142,7 @@ namespace OpenLR.OsmSharp
         /// <summary>
         /// Converts the line location to features.
         /// </summary>
-        /// <param name="closeLineLocation"></param>
+        /// <param name="lineLocation"></param>
         /// <returns></returns>
         public static FeatureCollection ToFeatures(this LineLocation lineLocation)
         {

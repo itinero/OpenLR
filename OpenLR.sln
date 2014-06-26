@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenLR.XML", "OpenLR.XML\Op
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenLR.OsmSharp", "OpenLR.OsmSharp\OpenLR.OsmSharp.csproj", "{61C1F8E2-9AFB-4EDA-8465-B0ECB20296D7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenLR.OsmSharp.NWB", "OpenLR.OsmSharp.NWB\OpenLR.OsmSharp.NWB.csproj", "{E14B6468-C422-4811-828E-BCF522266EFF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenLR.OsmSharp.MultiNet", "OpenLR.OsmSharp.MultiNet\OpenLR.OsmSharp.MultiNet.csproj", "{1130C7F7-C993-4669-9B93-010C9BBADE1C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{61C1F8E2-9AFB-4EDA-8465-B0ECB20296D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61C1F8E2-9AFB-4EDA-8465-B0ECB20296D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{61C1F8E2-9AFB-4EDA-8465-B0ECB20296D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E14B6468-C422-4811-828E-BCF522266EFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E14B6468-C422-4811-828E-BCF522266EFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E14B6468-C422-4811-828E-BCF522266EFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E14B6468-C422-4811-828E-BCF522266EFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1130C7F7-C993-4669-9B93-010C9BBADE1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1130C7F7-C993-4669-9B93-010C9BBADE1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1130C7F7-C993-4669-9B93-010C9BBADE1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1130C7F7-C993-4669-9B93-010C9BBADE1C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
