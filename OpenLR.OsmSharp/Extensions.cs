@@ -308,7 +308,7 @@ namespace OpenLR.OsmSharp
         /// <param name="graph"></param>
         /// <param name="location"></param>
         /// <returns>Returns an edge or an edge from 0 to 0 if none is found.</returns>
-        public static KeyValuePair<uint, KeyValuePair<uint, TEdge>> GetClosestEdge<TEdge>(IBasicRouterDataSource<TEdge> graph, GeoCoordinate location)
+        public static KeyValuePair<uint, KeyValuePair<uint, TEdge>> GetClosestEdge<TEdge>(this IBasicRouterDataSource<TEdge> graph, GeoCoordinate location)
             where TEdge : IDynamicGraphEdgeData
         {     
             // create the search box.
