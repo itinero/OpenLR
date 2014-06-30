@@ -7,6 +7,7 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Units.Angle;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,6 +46,8 @@ namespace OpenLR.OsmSharp.Decoding
             // get candidate vertices and edges.
             var candidates = new List<SortedSet<CandidateVertexEdge<TEdge>>>();
             var lrps = new List<LocationReferencePoint>();
+            var fromBearingReference = (Degree)location.First.Bearing;
+            var toBearingReference = (Degree)location.Last.Bearing;
 
             // loop over all lrps.
             lrps.Add(location.First);
@@ -75,11 +78,25 @@ namespace OpenLR.OsmSharp.Decoding
                 combinedScores.Remove(combinedScore);
 
                 // find a route.
-                var candidate = this.FindCandiateRoute(combinedScore.Source.Vertex, combinedScore.Target.Vertex,
+                var candidate = this.FindCandidateRoute(combinedScore.Source.Vertex, combinedScore.Target.Vertex,
                     lrps[0].LowestFunctionalRoadClassToNext.Value);
 
-                // confirm first/last edge.
-                // TODO: this part.
+                // verify bearing by adding it to the score.
+                if (candidate != null)
+                { // calculate bearing and compare with reference bearing.
+                    var fromBearing = this.GetBearing(candidate.Route.Vertices[0],
+                        candidate.Route.Edges[0],
+                        candidate.Route.Vertices[1],
+                        true);
+                    var fromBearingDiff = System.Math.Abs(fromBearing.SmallestDifference(fromBearingReference));
+                    var toBearing = this.GetBearing(candidate.Route.Vertices[candidate.Route.Vertices.Length - 1],
+                        candidate.Route.Edges[candidate.Route.Edges.Length - 1],
+                        candidate.Route.Vertices[candidate.Route.Vertices.Length - 2],
+                        false);
+                    var toBearingDiff = System.Math.Abs(toBearing.SmallestDifference(toBearingReference));
+                    var diffScore = 1.0 - (fromBearingDiff / 360.0) - (toBearingDiff / 360.0);
+                    candidate.Score = candidate.Score * (float)diffScore;
+                }
 
                 // check candidate.
                 if (best == null)

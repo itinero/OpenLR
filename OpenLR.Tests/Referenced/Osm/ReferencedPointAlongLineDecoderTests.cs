@@ -40,11 +40,13 @@ namespace OpenLR.Tests.Referenced.Osm
             location.First.FuntionalRoadClass = FunctionalRoadClass.Frc2;
             location.First.FormOfWay = FormOfWay.MultipleCarriageWay;
             location.First.LowestFunctionalRoadClassToNext = FunctionalRoadClass.Frc2;
+            location.First.Bearing = 203;
             location.Last = new LocationReferencePoint();
             location.Last.Coordinate = new Coordinate() { Latitude = 49.60521, Longitude = 6.12779 };
             location.Last.DistanceToNext = 10;
             location.Last.FuntionalRoadClass = FunctionalRoadClass.Frc2;
             location.Last.FormOfWay = FormOfWay.MultipleCarriageWay;
+            location.Last.Bearing = 23;
             location.PositiveOffset = 28;
             location.Orientation = Orientation.FirstToSecond;
             location.SideOfRoad = SideOfRoad.Left;

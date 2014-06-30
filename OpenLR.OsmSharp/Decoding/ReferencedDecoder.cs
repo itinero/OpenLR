@@ -10,6 +10,7 @@ using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Osm.Interpreter;
+using OsmSharp.Units.Angle;
 using OsmSharp.Units.Distance;
 using System;
 using System.Collections.Generic;
@@ -115,7 +116,7 @@ namespace OpenLR.OsmSharp.Decoding
         /// <param name="to"></param>
         /// <param name="minimum">The minimum FRC.</param>
         /// <returns></returns>
-        protected CandidateRoute<TEdge> FindCandiateRoute(uint from, uint to, FunctionalRoadClass minimum)
+        protected CandidateRoute<TEdge> FindCandidateRoute(uint from, uint to, FunctionalRoadClass minimum)
         {
             return _mainDecoder.FindCandiateRoute(from, to, minimum);
         }
@@ -139,6 +140,19 @@ namespace OpenLR.OsmSharp.Decoding
         protected bool? IsOneway(TagsCollectionBase tags)
         {
             return _mainDecoder.IsOneway(tags);
+        }
+
+        /// <summary>
+        /// Returns the bearing calculate between two given vertices along the given edge.
+        /// </summary>
+        /// <param name="vertexFrom"></param>
+        /// <param name="edge"></param>
+        /// <param name="vertexTo"></param>
+        /// <param name="forward">When true the edge is forward relative to the vertices, false the edge is backward.</param>
+        /// <returns></returns>
+        protected Degree GetBearing(long vertexFrom, TEdge edge, long vertexTo, bool forward)
+        {
+            return _mainDecoder.GetBearing(vertexFrom, edge, vertexTo, forward);
         }
     }
 }

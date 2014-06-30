@@ -93,7 +93,7 @@ namespace OpenLR.OsmSharp.Decoding
                     combinedScores.RemoveAt(0);
 
                     // find a route.
-                    var candidate = this.FindCandiateRoute(combinedScore.Source.Vertex, combinedScore.Target.Vertex,
+                    var candidate = this.FindCandidateRoute(combinedScore.Source.Vertex, combinedScore.Target.Vertex,
                         previous.LowestFunctionalRoadClassToNext.Value);
 
                     // confirm first/last edge.
