@@ -5,6 +5,7 @@ using OpenLR.Referenced.Encoding;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Units.Angle;
 using System;
 
 namespace OpenLR.OsmSharp.Encoding
@@ -91,6 +92,19 @@ namespace OpenLR.OsmSharp.Encoding
         protected bool? IsOneway(TagsCollectionBase tags)
         {
             return _mainEncoder.IsOneway(tags);
+        }
+
+        /// <summary>
+        /// Returns the bearing calculate between two given vertices along the given edge.
+        /// </summary>
+        /// <param name="vertexFrom"></param>
+        /// <param name="edge"></param>
+        /// <param name="vertexTo"></param>
+        /// <param name="forward">When true the edge is forward relative to the vertices, false the edge is backward.</param>
+        /// <returns></returns>
+        protected Degree GetBearing(long vertexFrom, TEdge edge, long vertexTo, bool forward)
+        {
+            return _mainEncoder.GetBearing(vertexFrom, edge, vertexTo, forward);
         }
     }
 }

@@ -24,14 +24,14 @@ namespace OpenLR.Binary.Decoders
             first.FuntionalRoadClass = FunctionalRoadClassConvertor.Decode(data, 7, 2);
             first.FormOfWay = FormOfWayConvertor.Decode(data, 7, 5);
             first.LowestFunctionalRoadClassToNext = FunctionalRoadClassConvertor.Decode(data, 8, 0);
-            first.BearingDistance = BearingConvertor.Decode(data, 8, 3);
+            first.Bearing = BearingConvertor.Decode(data, 8, 3);
 
             // decode second location reference point.
             var last = new LocationReferencePoint();
             last.Coordinate = CoordinateConverter.DecodeRelative(first.Coordinate, data, 10);
             last.FuntionalRoadClass = FunctionalRoadClassConvertor.Decode(data, 14, 2);
             last.FormOfWay = FormOfWayConvertor.Decode(data, 14, 5);
-            last.BearingDistance = BearingConvertor.Decode(data, 15, 3);
+            last.Bearing = BearingConvertor.Decode(data, 15, 3);
 
             pointAlongLine.First = first;
             pointAlongLine.Orientation = OrientationConverter.Decode(data, 7, 0);

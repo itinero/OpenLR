@@ -43,23 +43,21 @@ namespace OpenLR.OsmSharp.Encoding
             location.First.FormOfWay = this.GetFormOfWayFor(tags);
             location.First.FuntionalRoadClass = this.GetFunctionalRoadClassFor(tags);
             location.First.LowestFunctionalRoadClassToNext = location.First.FuntionalRoadClass;
-            location.First.BearingDistance = 0;
 
             location.Last = new Model.LocationReferencePoint();
             location.Last.Coordinate = this.GetVertexLocation(referencedLocation.VertexTo);
             location.Last.FormOfWay = this.GetFormOfWayFor(tags);
             location.Last.FuntionalRoadClass = this.GetFunctionalRoadClassFor(tags);
-            location.Last.BearingDistance = 0;
 
             // calculate side of road, orientation, ...
             // create line between two poins.
+            location.First.Bearing = (int)this.GetBearing(referencedLocation.VertexFrom, referencedLocation.Edge, referencedLocation.VertexTo, false).Value;
+            location.Last.Bearing = (int)this.GetBearing(referencedLocation.VertexTo, referencedLocation.Edge, referencedLocation.VertexFrom, true).Value;
             var line = new GeoCoordinateLine(
                 new GeoCoordinate(location.First.Coordinate.Latitude, location.First.Coordinate.Longitude),
                 new GeoCoordinate(location.Last.Coordinate.Latitude, location.Last.Coordinate.Longitude),
                 true, true);
-            location.First.BearingDistance = 0;
             location.First.DistanceToNext = (int)line.LengthReal.Value;
-            // location.Last.BearingDistance = 0;
             var projectedPoint = line.ProjectOn(new global::OsmSharp.Math.Primitives.PointF2D(referencedLocation.Longitude, referencedLocation.Latitude));
             location.PositiveOffset = (int)new GeoCoordinate(projectedPoint).DistanceReal(new GeoCoordinate(location.First.Coordinate.Latitude, location.First.Coordinate.Longitude)).Value;
             location.Orientation = referencedLocation.Orientation;

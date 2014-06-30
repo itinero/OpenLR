@@ -1,7 +1,6 @@
 ﻿using NUnit.Framework;
 using OpenLR.Binary.Encoders;
 using OpenLR.Model;
-using OpenLR.OsmSharp;
 using OpenLR.OsmSharp.Encoding;
 using OpenLR.OsmSharp.Locations;
 using OpenLR.OsmSharp.Osm;
@@ -72,12 +71,14 @@ namespace OpenLR.Tests.Referenced.Osm
             Assert.AreEqual(49.60597f, location.First.Coordinate.Latitude);
             Assert.AreEqual(6.12829f, location.First.Coordinate.Longitude);
             Assert.AreEqual(91, location.First.DistanceToNext);
+            Assert.AreEqual(203, location.First.Bearing);
             Assert.AreEqual(FormOfWay.SingleCarriageWay, location.First.FormOfWay);
             Assert.AreEqual(FunctionalRoadClass.Frc3, location.First.FuntionalRoadClass);
             Assert.AreEqual(FunctionalRoadClass.Frc3, location.First.LowestFunctionalRoadClassToNext);
 
             Assert.AreEqual(49.60521f, location.Last.Coordinate.Latitude);
             Assert.AreEqual(6.12779f, location.Last.Coordinate.Longitude);
+            Assert.AreEqual(23, location.Last.Bearing);
 
             // encode location with a point on the first point.
             referencedPointAlongLineLocation = new ReferencedPointAlongLine<LiveEdge>();

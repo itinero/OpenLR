@@ -293,7 +293,7 @@ namespace OpenLR.OsmSharp
             // create a point feature.
             var point = geometryFactory.CreatePoint(new Coordinate(locationReferencePoint.Coordinate.Longitude, locationReferencePoint.Coordinate.Latitude));
             var pointAttributes = new AttributesTable();
-            pointAttributes.AddAttribute("bearing_distance", locationReferencePoint.BearingDistance);
+            pointAttributes.AddAttribute("bearing_distance", locationReferencePoint.Bearing);
             pointAttributes.AddAttribute("distance_to_next", locationReferencePoint.DistanceToNext);
             pointAttributes.AddAttribute("form_of_way", locationReferencePoint.FormOfWay);
             pointAttributes.AddAttribute("functional_road_class", locationReferencePoint.FuntionalRoadClass);

@@ -11,9 +11,10 @@
         public Coordinate Coordinate { get; set; }
 
         /// <summary>
-        /// Gets or sets the bearing distances.
+        /// Gets or sets the bearing.
         /// </summary>
-        public int? BearingDistance { get; set; }
+        /// <remarks>Bearing is an angle in the range [0, 360[.</remarks>
+        public int? Bearing { get; set; }
 
         /// <summary>
         /// Gets or sets the functional road class.

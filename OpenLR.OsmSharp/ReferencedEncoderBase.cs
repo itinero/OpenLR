@@ -4,9 +4,16 @@ using OpenLR.OsmSharp.Encoding;
 using OpenLR.OsmSharp.Locations;
 using OpenLR.Referenced;
 using OsmSharp.Collections.Tags;
+using OsmSharp.Math;
+using OsmSharp.Math.Geo;
+using OsmSharp.Math.Geo.Simple;
+using OsmSharp.Math.Primitives;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Units.Angle;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace OpenLR.OsmSharp
 {
@@ -120,5 +127,38 @@ namespace OpenLR.OsmSharp
         /// <returns>null: no restrictions, true: forward restriction, false: backward restriction.</returns>
         /// <returns></returns>
         public abstract bool? IsOneway(TagsCollectionBase tags);
+
+        /// <summary>
+        /// Returns the bearing calculate between two given vertices along the given edge.
+        /// </summary>
+        /// <param name="vertexFrom"></param>
+        /// <param name="edge"></param>
+        /// <param name="vertexTo"></param>
+        /// <param name="forward">When true the edge is forward relative to the vertices, false the edge is backward.</param>
+        /// <returns></returns>
+        public virtual Degree GetBearing(long vertexFrom, TEdge edge, long vertexTo, bool forward)
+        {
+            var coordinates = new List<GeoCoordinate>();
+            float latitude, longitude;
+            this.Graph.GetVertex((uint)vertexFrom, out latitude, out longitude);
+            coordinates.Add(new GeoCoordinate(latitude, longitude));
+
+            if (edge.Coordinates != null)
+            { // there are intermediates, add them in the correct order.
+                if (forward)
+                {
+                    coordinates.AddRange(edge.Coordinates.Select<GeoCoordinateSimple, GeoCoordinate>(x => {return new GeoCoordinate(x.Latitude, x.Longitude);}));
+                }
+                else
+                {
+                    coordinates.AddRange(edge.Coordinates.Reverse().Select<GeoCoordinateSimple, GeoCoordinate>(x => { return new GeoCoordinate(x.Latitude, x.Longitude); }));
+                }
+            }
+
+            this.Graph.GetVertex((uint)vertexTo, out latitude, out longitude);
+            coordinates.Add(new GeoCoordinate(latitude, longitude));
+
+            return BearingEncoder.EncodeBearing(coordinates);
+        }
     }
 }

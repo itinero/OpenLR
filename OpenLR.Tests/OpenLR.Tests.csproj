@@ -107,6 +107,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssertGeo.cs" />
+    <Compile Include="BearingTests.cs" />
     <Compile Include="Binary\BinaryDecoderTests.cs" />
     <Compile Include="Binary\CircleLocationTests.cs" />
     <Compile Include="Binary\ClosedLineLocationTests.cs" />

@@ -39,7 +39,7 @@ namespace OpenLR.Tests.Binary
             Assert.AreEqual(FunctionalRoadClass.Frc2, pointAlongLineLocation.First.FuntionalRoadClass);
             Assert.AreEqual(FormOfWay.MultipleCarriageWay, pointAlongLineLocation.First.FormOfWay);
             Assert.AreEqual(FunctionalRoadClass.Frc2, pointAlongLineLocation.First.LowestFunctionalRoadClassToNext);
-            Assert.AreEqual(17, pointAlongLineLocation.First.BearingDistance);
+            Assert.AreEqual(17, pointAlongLineLocation.First.Bearing);
 
             // check second reference.
             Assert.IsNotNull(pointAlongLineLocation.Last);
@@ -47,7 +47,7 @@ namespace OpenLR.Tests.Binary
             Assert.AreEqual(49.60521, pointAlongLineLocation.Last.Coordinate.Latitude, delta); // 49.60521°
             Assert.AreEqual(FunctionalRoadClass.Frc2, pointAlongLineLocation.Last.FuntionalRoadClass);
             Assert.AreEqual(FormOfWay.MultipleCarriageWay, pointAlongLineLocation.Last.FormOfWay);
-            Assert.AreEqual(3, pointAlongLineLocation.Last.BearingDistance);
+            Assert.AreEqual(3, pointAlongLineLocation.Last.Bearing);
 
             // check other properties.
             Assert.AreEqual(Orientation.NoOrientation, pointAlongLineLocation.Orientation);
@@ -74,7 +74,7 @@ namespace OpenLR.Tests.Binary
             location.First.FuntionalRoadClass = FunctionalRoadClass.Frc2;
             location.First.FormOfWay = FormOfWay.MultipleCarriageWay;
             location.First.LowestFunctionalRoadClassToNext = FunctionalRoadClass.Frc2;
-            location.First.BearingDistance = 17;
+            location.First.Bearing = 17;
 
             location.Last = new LocationReferencePoint();
             location.Last.Coordinate = new Coordinate()
@@ -84,7 +84,7 @@ namespace OpenLR.Tests.Binary
             };
             location.Last.FuntionalRoadClass = FunctionalRoadClass.Frc2;
             location.Last.FormOfWay = FormOfWay.MultipleCarriageWay;
-            location.Last.BearingDistance = 3;
+            location.Last.Bearing = 3;
 
             location.Orientation = Orientation.NoOrientation;
             location.SideOfRoad = SideOfRoad.Left;
@@ -109,7 +109,7 @@ namespace OpenLR.Tests.Binary
             Assert.AreEqual(location.First.FuntionalRoadClass, pointAlongLineLocation.First.FuntionalRoadClass);
             Assert.AreEqual(location.First.FormOfWay, pointAlongLineLocation.First.FormOfWay);
             Assert.AreEqual(location.First.LowestFunctionalRoadClassToNext, pointAlongLineLocation.First.LowestFunctionalRoadClassToNext);
-            Assert.AreEqual(location.First.BearingDistance, pointAlongLineLocation.First.BearingDistance);
+            Assert.AreEqual(location.First.Bearing, pointAlongLineLocation.First.Bearing);
 
             // check second reference.
             Assert.IsNotNull(pointAlongLineLocation.Last);
@@ -117,7 +117,7 @@ namespace OpenLR.Tests.Binary
             Assert.AreEqual(location.Last.Coordinate.Latitude, pointAlongLineLocation.Last.Coordinate.Latitude, delta); // 49.60521°
             Assert.AreEqual(location.Last.FuntionalRoadClass, pointAlongLineLocation.Last.FuntionalRoadClass);
             Assert.AreEqual(location.Last.FormOfWay, pointAlongLineLocation.Last.FormOfWay);
-            Assert.AreEqual(location.Last.BearingDistance, pointAlongLineLocation.Last.BearingDistance);
+            Assert.AreEqual(location.Last.Bearing, pointAlongLineLocation.Last.Bearing);
 
             // check other properties.
             Assert.AreEqual(location.Orientation, pointAlongLineLocation.Orientation);
@@ -138,7 +138,7 @@ namespace OpenLR.Tests.Binary
             Assert.AreEqual(referenceDecodedLocation.First.FuntionalRoadClass, pointAlongLineLocation.First.FuntionalRoadClass);
             Assert.AreEqual(referenceDecodedLocation.First.FormOfWay, pointAlongLineLocation.First.FormOfWay);
             Assert.AreEqual(referenceDecodedLocation.First.LowestFunctionalRoadClassToNext, pointAlongLineLocation.First.LowestFunctionalRoadClassToNext);
-            Assert.AreEqual(referenceDecodedLocation.First.BearingDistance, pointAlongLineLocation.First.BearingDistance);
+            Assert.AreEqual(referenceDecodedLocation.First.Bearing, pointAlongLineLocation.First.Bearing);
 
             // check second reference.
             Assert.IsNotNull(pointAlongLineLocation.Last);
@@ -146,7 +146,7 @@ namespace OpenLR.Tests.Binary
             Assert.AreEqual(referenceDecodedLocation.Last.Coordinate.Latitude, pointAlongLineLocation.Last.Coordinate.Latitude, delta); // 49.60521°
             Assert.AreEqual(referenceDecodedLocation.Last.FuntionalRoadClass, pointAlongLineLocation.Last.FuntionalRoadClass);
             Assert.AreEqual(referenceDecodedLocation.Last.FormOfWay, pointAlongLineLocation.Last.FormOfWay);
-            Assert.AreEqual(referenceDecodedLocation.Last.BearingDistance, pointAlongLineLocation.Last.BearingDistance);
+            Assert.AreEqual(referenceDecodedLocation.Last.Bearing, pointAlongLineLocation.Last.Bearing);
 
             // check other properties.
             Assert.AreEqual(referenceDecodedLocation.Orientation, pointAlongLineLocation.Orientation);

@@ -69,6 +69,7 @@
     <Compile Include="Model\LocationReferencePoint.cs" />
     <Compile Include="Model\Orientation.cs" />
     <Compile Include="Model\SideOfRoad.cs" />
+    <Compile Include="Parameters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Referenced\Decoding\ReferencedDecoder.cs" />
     <Compile Include="Referenced\Decoding\ReferencedLocationDecoder.cs" />
