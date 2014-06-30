@@ -35,11 +35,13 @@ namespace OpenLR.Tests.Referenced.MultiNet
             location.First.FuntionalRoadClass = FunctionalRoadClass.Frc2;
             location.First.FormOfWay = FormOfWay.SingleCarriageWay;
             location.First.LowestFunctionalRoadClassToNext = FunctionalRoadClass.Frc2;
+            location.First.Bearing = 203;
             location.Last = new LocationReferencePoint();
             location.Last.Coordinate = new Coordinate() { Latitude = 49.60521, Longitude = 6.12779 };
             location.Last.DistanceToNext = 10;
             location.Last.FuntionalRoadClass = FunctionalRoadClass.Frc2;
             location.Last.FormOfWay = FormOfWay.SingleCarriageWay;
+            location.Last.Bearing = 23;
             location.PositiveOffset = 28;
             location.Orientation = Orientation.NoOrientation;
             location.SideOfRoad = SideOfRoad.Left;
