@@ -182,5 +182,17 @@ namespace OpenLR.OsmSharp.MultiNet
         {
             return new ReferencedMultiNetEncoder(graph, rawLocationEncoder);
         }
+
+        /// <summary>
+        /// Returns a value if a oneway restriction is found.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <returns>null: no restrictions, true: forward restriction, false: backward restriction.</returns>
+        /// <returns></returns>
+        public override bool? IsOneway(TagsCollectionBase tags)
+        {
+            var vehicle = new global::OsmSharp.Routing.Shape.Vehicles.Car("ONEWAY", "FT", "TF", string.Empty);
+            return vehicle.IsOneWay(tags);
+        }
     }
 }

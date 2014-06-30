@@ -60,6 +60,7 @@ namespace OpenLR.Tests.Referenced.MultiNet
             referencedPointAlongLineLocation.VertexTo = vertex2;
             referencedPointAlongLineLocation.Latitude = (49.60597f + 49.60521f) / 2f;
             referencedPointAlongLineLocation.Longitude = (6.12829f + 6.12779f) / 2f;
+            referencedPointAlongLineLocation.Orientation = Orientation.FirstToSecond;
 
             // encode location.
             var encoder = new PointAlongLineEncoder();
@@ -71,7 +72,7 @@ namespace OpenLR.Tests.Referenced.MultiNet
             // test result.
             Assert.IsNotNull(location);
             Assert.AreEqual(SideOfRoad.OnOrAbove, location.SideOfRoad);
-            Assert.AreEqual(Orientation.NoOrientation, location.Orientation);
+            Assert.AreEqual(Orientation.FirstToSecond, location.Orientation);
             Assert.AreEqual(45, location.PositiveOffset);
 
             Assert.AreEqual(49.60597f, location.First.Coordinate.Latitude);

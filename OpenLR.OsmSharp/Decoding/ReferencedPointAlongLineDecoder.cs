@@ -110,6 +110,14 @@ namespace OpenLR.OsmSharp.Decoding
             pointAlongLineLocation.VertexTo = best.Route.Vertices[1];
             pointAlongLineLocation.Latitude = latitudeReference;
             pointAlongLineLocation.Longitude = longitudeReference;
+            if(location.Orientation.HasValue)
+            {
+                pointAlongLineLocation.Orientation = location.Orientation.Value;
+            }
+            else
+            {
+                pointAlongLineLocation.Orientation = Orientation.NoOrientation;
+            }
             return pointAlongLineLocation;
         }
     }

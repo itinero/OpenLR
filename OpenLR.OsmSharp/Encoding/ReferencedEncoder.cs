@@ -81,5 +81,16 @@ namespace OpenLR.OsmSharp.Encoding
         {
             return _mainEncoder.GetFormOfWayFor(tags);
         }
+
+        /// <summary>
+        /// Returns a value if a oneway restriction is found.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <returns>null: no restrictions, true: forward restriction, false: backward restriction.</returns>
+        /// <returns></returns>
+        protected bool? IsOneway(TagsCollectionBase tags)
+        {
+            return _mainEncoder.IsOneway(tags);
+        }
     }
 }

@@ -46,7 +46,7 @@ namespace OpenLR.Tests.Referenced.Osm
             location.Last.FuntionalRoadClass = FunctionalRoadClass.Frc2;
             location.Last.FormOfWay = FormOfWay.MultipleCarriageWay;
             location.PositiveOffset = 28;
-            location.Orientation = Orientation.NoOrientation;
+            location.Orientation = Orientation.FirstToSecond;
             location.SideOfRoad = SideOfRoad.Left;
 
             // build a graph to decode onto.
@@ -85,6 +85,7 @@ namespace OpenLR.Tests.Referenced.Osm
             var latitudeReference = (location.First.Coordinate.Latitude - location.Last.Coordinate.Latitude) * ((double)location.PositiveOffset / (double)location.First.DistanceToNext) + location.Last.Coordinate.Latitude;
             Assert.AreEqual(longitudeReference, referencedLocation.Longitude, delta);
             Assert.AreEqual(latitudeReference, referencedLocation.Latitude, delta);
+            Assert.AreEqual(Orientation.FirstToSecond, referencedLocation.Orientation);
         }
     }
 }

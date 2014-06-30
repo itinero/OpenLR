@@ -62,7 +62,7 @@ namespace OpenLR.OsmSharp.Encoding
             // location.Last.BearingDistance = 0;
             var projectedPoint = line.ProjectOn(new global::OsmSharp.Math.Primitives.PointF2D(referencedLocation.Longitude, referencedLocation.Latitude));
             location.PositiveOffset = (int)new GeoCoordinate(projectedPoint).DistanceReal(new GeoCoordinate(location.First.Coordinate.Latitude, location.First.Coordinate.Longitude)).Value;
-            location.Orientation = Orientation.NoOrientation;
+            location.Orientation = referencedLocation.Orientation;
             switch(line.PositionOfPoint(new global::OsmSharp.Math.Primitives.PointF2D(referencedLocation.Longitude, referencedLocation.Latitude)))
             {
                 case global::OsmSharp.Math.Primitives.LinePointPosition.Left:

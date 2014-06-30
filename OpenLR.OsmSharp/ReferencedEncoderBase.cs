@@ -112,5 +112,13 @@ namespace OpenLR.OsmSharp
         /// <param name="tags"></param>
         /// <returns></returns>
         public abstract FormOfWay GetFormOfWayFor(TagsCollectionBase tags);
+
+        /// <summary>
+        /// Returns a value if a oneway restriction is found.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <returns>null: no restrictions, true: forward restriction, false: backward restriction.</returns>
+        /// <returns></returns>
+        public abstract bool? IsOneway(TagsCollectionBase tags);
     }
 }

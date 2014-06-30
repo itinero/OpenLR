@@ -138,6 +138,17 @@ namespace OpenLR.OsmSharp.Osm
         }
 
         /// <summary>
+        /// Returns a value if a oneway restriction is found.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <returns>null: no restrictions, true: forward restriction, false: backward restriction.</returns>
+        /// <returns></returns>
+        public override bool? IsOneway(TagsCollectionBase tags)
+        {
+            return Vehicle.Car.IsOneWay(tags);
+        }
+
+        /// <summary>
         /// Calculates a route between the two given vertices.
         /// </summary>
         /// <param name="from"></param>

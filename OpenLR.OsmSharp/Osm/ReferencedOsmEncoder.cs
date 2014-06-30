@@ -1,6 +1,7 @@
 ﻿using OpenLR.Encoding;
 using OpenLR.Model;
 using OsmSharp.Collections.Tags;
+using OsmSharp.Routing;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Graph.Router.Dykstra;
 using OsmSharp.Routing.Osm.Graphs;
@@ -129,6 +130,17 @@ namespace OpenLR.OsmSharp.Osm
                 }
             }
             return FormOfWay.SingleCarriageWay;
+        }
+
+        /// <summary>
+        /// Returns a value if a oneway restriction is found.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <returns>null: no restrictions, true: forward restriction, false: backward restriction.</returns>
+        /// <returns></returns>
+        public override bool? IsOneway(TagsCollectionBase tags)
+        {
+            return Vehicle.Car.IsOneWay(tags);
         }
     }
 }

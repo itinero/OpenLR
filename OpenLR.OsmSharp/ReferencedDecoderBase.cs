@@ -326,6 +326,13 @@ namespace OpenLR.OsmSharp
         public abstract float MatchArc(TagsCollectionBase tags, FormOfWay fow, FunctionalRoadClass frc);
 
         /// <summary>
+        /// Returns a value if a oneway restriction is found.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <returns>null: no restrictions, true: forward restriction, false: backward restriction.</returns>
+        public abstract bool? IsOneway(TagsCollectionBase tags);
+
+        /// <summary>
         /// Calculates a route between the two given vertices.
         /// </summary>
         /// <param name="from"></param>

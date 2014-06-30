@@ -1,4 +1,5 @@
-﻿using OpenLR.Referenced;
+﻿using OpenLR.Model;
+using OpenLR.Referenced;
 using OsmSharp.Routing.Graph;
 using System;
 using System.Collections.Generic;
@@ -38,5 +39,10 @@ namespace OpenLR.OsmSharp.Locations
         /// Gets or sets the edge.
         /// </summary>
         public TEdge Edge { get; set; }
+
+        /// <summary>
+        /// Gets or sets the orientation.
+        /// </summary>
+        public Orientation Orientation { get; set; }
     }
 }
