@@ -52,6 +52,7 @@
     <Compile Include="BinaryLocationDecoder.cs" />
     <Compile Include="BinaryLocationEncoder.cs" />
     <Compile Include="Data\CoordinateConverter.cs" />
+    <Compile Include="Data\DistanceToNextConvertor.cs" />
     <Compile Include="Data\FormOfWayConvertor.cs" />
     <Compile Include="Data\BearingConvertor.cs" />
     <Compile Include="Data\FunctionalRoadClassConvertor.cs" />

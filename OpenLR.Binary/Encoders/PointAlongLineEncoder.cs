@@ -30,6 +30,7 @@ namespace OpenLR.Binary.Encoders
             FormOfWayConvertor.Encode(location.First.FormOfWay.Value, data, 7, 5);
             FunctionalRoadClassConvertor.Encode(location.First.LowestFunctionalRoadClassToNext.Value, data, 8, 0);
             BearingConvertor.Encode(location.First.Bearing.Value, data, 8, 3);
+            data[9] = DistanceToNextConvertor.Encode(location.First.DistanceToNext);
 
             CoordinateConverter.EncodeRelative(location.First.Coordinate, location.Last.Coordinate, data, 10);
             FunctionalRoadClassConvertor.Encode(location.Last.FuntionalRoadClass.Value, data, 14, 2);

@@ -28,7 +28,7 @@ namespace OpenLR.Binary.Decoders
             first.FormOfWay = FormOfWayConvertor.Decode(data, 7, 5);
             first.LowestFunctionalRoadClassToNext = FunctionalRoadClassConvertor.Decode(data, 8, 0);
             first.Bearing = BearingConvertor.Decode(data, 8, 3);
-            first.DistanceToNext = data[9];
+            first.DistanceToNext = DistanceToNextConvertor.Decode(data[9]);
 
             // decode last location reference point.
             var last = new LocationReferencePoint();

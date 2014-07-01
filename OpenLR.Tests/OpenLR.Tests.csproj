@@ -114,6 +114,7 @@
     <Compile Include="Binary\Data\CombinedConversionTests.cs" />
     <Compile Include="Binary\Data\CoordinateConvertorTests.cs" />
     <Compile Include="Binary\Data\BearingConvertorTests.cs" />
+    <Compile Include="Binary\Data\DistanceToNextConvertorTests.cs" />
     <Compile Include="Binary\Data\FormOfWayConvertorTests.cs" />
     <Compile Include="Binary\Data\FunctionalRoadClassConvertorTests.cs" />
     <Compile Include="Binary\Data\HeaderConvertorTests.cs" />

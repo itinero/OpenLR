@@ -75,6 +75,7 @@ namespace OpenLR.Tests.Binary
             location.First.FormOfWay = FormOfWay.MultipleCarriageWay;
             location.First.LowestFunctionalRoadClassToNext = FunctionalRoadClass.Frc2;
             location.First.Bearing = 17;
+            location.First.DistanceToNext = (int)(58.6 * 2) + 1;
 
             location.Last = new LocationReferencePoint();
             location.Last.Coordinate = new Coordinate()
@@ -85,6 +86,7 @@ namespace OpenLR.Tests.Binary
             location.Last.FuntionalRoadClass = FunctionalRoadClass.Frc2;
             location.Last.FormOfWay = FormOfWay.MultipleCarriageWay;
             location.Last.Bearing = 3;
+            location.Last.DistanceToNext = 0;
 
             location.Orientation = Orientation.NoOrientation;
             location.SideOfRoad = SideOfRoad.Left;
@@ -110,6 +112,7 @@ namespace OpenLR.Tests.Binary
             Assert.AreEqual(location.First.FormOfWay, pointAlongLineLocation.First.FormOfWay);
             Assert.AreEqual(location.First.LowestFunctionalRoadClassToNext, pointAlongLineLocation.First.LowestFunctionalRoadClassToNext);
             Assert.AreEqual(location.First.Bearing, pointAlongLineLocation.First.Bearing);
+            Assert.AreEqual(location.First.DistanceToNext, pointAlongLineLocation.First.DistanceToNext);
 
             // check second reference.
             Assert.IsNotNull(pointAlongLineLocation.Last);
@@ -118,6 +121,7 @@ namespace OpenLR.Tests.Binary
             Assert.AreEqual(location.Last.FuntionalRoadClass, pointAlongLineLocation.Last.FuntionalRoadClass);
             Assert.AreEqual(location.Last.FormOfWay, pointAlongLineLocation.Last.FormOfWay);
             Assert.AreEqual(location.Last.Bearing, pointAlongLineLocation.Last.Bearing);
+            Assert.AreEqual(location.Last.DistanceToNext, pointAlongLineLocation.Last.DistanceToNext);
 
             // check other properties.
             Assert.AreEqual(location.Orientation, pointAlongLineLocation.Orientation);
