@@ -23,7 +23,7 @@ namespace OpenLR.OsmSharp.MultiNet
         /// <summary>
         /// Holds the maximum vertex distance.
         /// </summary>
-        private Meter _maxVertexDistance = 20;
+        private Meter _maxVertexDistance = 40;
 
         /// <summary>
         /// Creates a new referenced live edge decoder.
@@ -34,6 +34,18 @@ namespace OpenLR.OsmSharp.MultiNet
             : base(graph, locationDecoder)
         {
 
+        }
+
+        /// <summary>
+        /// Creates a new referenced live edge decoder.
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <param name="locationDecoder"></param>
+        /// <param name="maxVertexDistance"></param>
+        public ReferencedMultiNetDecoder(IBasicRouterDataSource<LiveEdge> graph, Decoder locationDecoder, Meter maxVertexDistance)
+            : base(graph, locationDecoder)
+        {
+            _maxVertexDistance = maxVertexDistance;
         }
 
         /// <summary>
