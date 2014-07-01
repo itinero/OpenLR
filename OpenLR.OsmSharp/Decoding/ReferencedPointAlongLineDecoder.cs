@@ -56,12 +56,12 @@ namespace OpenLR.OsmSharp.Decoding
             candidates.Add(this.FindCandidatesFor(location.Last, true));
 
             // build a list of combined scores.
-            var combinedScores = new SortedSet<CombinedScore<TEdge>>(new CombinedScoreComparer<TEdge>());
+            var combinedScoresSet = new SortedSet<CombinedScore<TEdge>>(new CombinedScoreComparer<TEdge>());
             foreach (var previousCandidate in candidates[0])
             {
                 foreach (var currentCandidate in candidates[1])
                 {
-                    combinedScores.Add(new CombinedScore<TEdge>()
+                    combinedScoresSet.Add(new CombinedScore<TEdge>()
                     {
                         Source = previousCandidate,
                         Target = currentCandidate
@@ -71,6 +71,7 @@ namespace OpenLR.OsmSharp.Decoding
 
             // find the best candidate route.
             CandidateRoute<TEdge> best = null;
+            var combinedScores = new List<CombinedScore<TEdge>>(combinedScoresSet);
             while (combinedScores.Count > 0)
             {
                 // get the first pair.

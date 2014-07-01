@@ -82,6 +82,10 @@ namespace OpenLR.OsmSharp.MultiNet
                 return 0;
             }
 
+            float frcOneDifferent = 0.8f;
+            float frcTwoDifferent = 0.8f;
+            float frcMoreDifferent = 0.2f;
+
             switch (frcString)
             {
                 case "0": // main road.
@@ -89,49 +93,147 @@ namespace OpenLR.OsmSharp.MultiNet
                     {
                         return 1;
                     }
-                    break;
+                    else if(frc == FunctionalRoadClass.Frc1)
+                    {
+                        return frcOneDifferent;
+                    }
+                    else if(frc == FunctionalRoadClass.Frc2)
+                    {
+                        return frcTwoDifferent;
+                    }
+                    else
+                    {
+                        return frcMoreDifferent;
+                    }
                 case "1": // first class road.
                     if (frc == FunctionalRoadClass.Frc1)
                     {
                         return 1;
                     }
-                    break;
+                    else if(frc == FunctionalRoadClass.Frc0 || 
+                        frc == FunctionalRoadClass.Frc2)
+                    {
+                        return frcOneDifferent;
+                    }
+                    else if(frc == FunctionalRoadClass.Frc3)
+                    {
+                        return frcTwoDifferent;
+                    }
+                    else
+                    {
+                        return frcMoreDifferent;
+                    }
                 case "2": // second class road.
                     if (frc == FunctionalRoadClass.Frc2)
                     {
                         return 1;
                     }
-                    break;
+                    else if (frc == FunctionalRoadClass.Frc1 ||
+                        frc == FunctionalRoadClass.Frc3)
+                    {
+                        return frcOneDifferent;
+                    }
+                    else if (frc == FunctionalRoadClass.Frc4 ||
+                        frc == FunctionalRoadClass.Frc0)
+                    {
+                        return frcTwoDifferent;
+                    }
+                    else
+                    {
+                        return frcMoreDifferent;
+                    }
                 case "3":
                     if (frc == FunctionalRoadClass.Frc3)
                     {
                         return 1;
                     }
-                    break;
+                    else if (frc == FunctionalRoadClass.Frc2 ||
+                        frc == FunctionalRoadClass.Frc4)
+                    {
+                        return frcOneDifferent;
+                    }
+                    else if (frc == FunctionalRoadClass.Frc1 ||
+                        frc == FunctionalRoadClass.Frc5)
+                    {
+                        return frcTwoDifferent;
+                    }
+                    else
+                    {
+                        return frcMoreDifferent;
+                    }
                 case "4":
                     if (frc == FunctionalRoadClass.Frc4)
                     {
                         return 1;
                     }
-                    break;
+                    else if (frc == FunctionalRoadClass.Frc3 ||
+                        frc == FunctionalRoadClass.Frc5)
+                    {
+                        return frcOneDifferent;
+                    }
+                    else if (frc == FunctionalRoadClass.Frc2 ||
+                        frc == FunctionalRoadClass.Frc6)
+                    {
+                        return frcTwoDifferent;
+                    }
+                    else
+                    {
+                        return frcMoreDifferent;
+                    }
                 case "5":
                     if (frc == FunctionalRoadClass.Frc5)
                     {
                         return 1;
                     }
-                    break;
+                    else if (frc == FunctionalRoadClass.Frc4 ||
+                        frc == FunctionalRoadClass.Frc6)
+                    {
+                        return frcOneDifferent;
+                    }
+                    else if (frc == FunctionalRoadClass.Frc3 ||
+                        frc == FunctionalRoadClass.Frc7)
+                    {
+                        return frcTwoDifferent;
+                    }
+                    else
+                    {
+                        return frcMoreDifferent;
+                    }
                 case "6":
                     if (frc == FunctionalRoadClass.Frc6)
                     {
                         return 1;
                     }
-                    break;
+                    else if (frc == FunctionalRoadClass.Frc5 ||
+                        frc == FunctionalRoadClass.Frc7)
+                    {
+                        return frcOneDifferent;
+                    }
+                    else if (frc == FunctionalRoadClass.Frc4)
+                    {
+                        return frcTwoDifferent;
+                    }
+                    else
+                    {
+                        return frcMoreDifferent;
+                    }
                 case "7":
                     if (frc == FunctionalRoadClass.Frc7)
                     {
                         return 1;
                     }
-                    break;
+                    else if (frc == FunctionalRoadClass.Frc6)
+                    {
+                        return frcOneDifferent;
+                    }
+                    else if (frc == FunctionalRoadClass.Frc5)
+                    {
+                        return frcTwoDifferent;
+                    }
+                    else
+                    {
+                        return frcMoreDifferent;
+                    }
             }
             return 0;
         }
