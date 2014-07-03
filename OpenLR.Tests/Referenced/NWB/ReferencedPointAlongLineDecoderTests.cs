@@ -78,8 +78,8 @@ namespace OpenLR.Tests.Referenced.NWB
             Assert.IsNotNull(referencedLocation.Edge);
             Assert.AreEqual(vertex1, referencedLocation.VertexFrom);
             Assert.AreEqual(vertex2, referencedLocation.VertexTo);
-            var longitudeReference = (location.First.Coordinate.Longitude - location.Last.Coordinate.Longitude) * location.PositiveOffsetPercentage.Value + location.Last.Coordinate.Longitude;
-            var latitudeReference = (location.First.Coordinate.Latitude - location.Last.Coordinate.Latitude) * location.PositiveOffsetPercentage.Value + location.Last.Coordinate.Latitude;
+            var longitudeReference = (location.First.Coordinate.Longitude - location.Last.Coordinate.Longitude) * (location.PositiveOffsetPercentage.Value / 100.0) + location.Last.Coordinate.Longitude;
+            var latitudeReference = (location.First.Coordinate.Latitude - location.Last.Coordinate.Latitude) * (location.PositiveOffsetPercentage.Value / 100.0) + location.Last.Coordinate.Latitude;
             Assert.AreEqual(longitudeReference, referencedLocation.Longitude, delta);
             Assert.AreEqual(latitudeReference, referencedLocation.Latitude, delta);
         }

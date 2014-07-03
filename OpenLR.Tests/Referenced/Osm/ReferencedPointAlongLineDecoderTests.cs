@@ -54,8 +54,8 @@ namespace OpenLR.Tests.Referenced.Osm
             // build a graph to decode onto.
             var tags = new TagsTableCollectionIndex();
             var graph = new DynamicGraphRouterDataSource<LiveEdge>(tags);
-            uint vertex1 = graph.AddVertex(49.60597f, 6.12829f);
-            uint vertex2 = graph.AddVertex(49.60521f, 6.12779f);
+            var vertex1 = graph.AddVertex(49.60597f, 6.12829f);
+            var vertex2 = graph.AddVertex(49.60521f, 6.12779f);
             graph.AddArc(vertex1, vertex2, new LiveEdge()
             {
                 Coordinates = null,
