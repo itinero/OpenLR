@@ -39,7 +39,10 @@ namespace OpenLR.Binary.Encoders
 
             OrientationConverter.Encode(location.Orientation.Value, data, 7, 0);
             SideOfRoadConverter.Encode(location.SideOfRoad.Value, data, 14, 0);
-            data[16] = (byte)(location.PositiveOffset.Value);
+            if (location.PositiveOffsetPercentage.HasValue)
+            { // positive offset percentage is present.
+                OffsetConvertor.Encode(location.PositiveOffsetPercentage.Value, data, 16);
+            }
 
             return data;
         }

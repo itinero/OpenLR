@@ -47,7 +47,7 @@ namespace OpenLR.Tests.Referenced.Osm
             location.Last.FuntionalRoadClass = FunctionalRoadClass.Frc2;
             location.Last.FormOfWay = FormOfWay.MultipleCarriageWay;
             location.Last.Bearing = 23;
-            location.PositiveOffset = 28;
+            location.PositiveOffsetPercentage = (float)((28.0 / 92.0) * 100.0);
             location.Orientation = Orientation.FirstToSecond;
             location.SideOfRoad = SideOfRoad.Left;
 
@@ -83,8 +83,8 @@ namespace OpenLR.Tests.Referenced.Osm
             Assert.IsNotNull(referencedLocation.Edge);
             Assert.AreEqual(vertex1, referencedLocation.VertexFrom);
             Assert.AreEqual(vertex2, referencedLocation.VertexTo);
-            var longitudeReference = (location.First.Coordinate.Longitude - location.Last.Coordinate.Longitude) * ((double)location.PositiveOffset / (double)location.First.DistanceToNext) + location.Last.Coordinate.Longitude;
-            var latitudeReference = (location.First.Coordinate.Latitude - location.Last.Coordinate.Latitude) * ((double)location.PositiveOffset / (double)location.First.DistanceToNext) + location.Last.Coordinate.Latitude;
+            var longitudeReference = (location.First.Coordinate.Longitude - location.Last.Coordinate.Longitude) * location.PositiveOffsetPercentage.Value + location.Last.Coordinate.Longitude;
+            var latitudeReference = (location.First.Coordinate.Latitude - location.Last.Coordinate.Latitude) * location.PositiveOffsetPercentage.Value + location.Last.Coordinate.Latitude;
             Assert.AreEqual(longitudeReference, referencedLocation.Longitude, delta);
             Assert.AreEqual(latitudeReference, referencedLocation.Latitude, delta);
             Assert.AreEqual(Orientation.FirstToSecond, referencedLocation.Orientation);

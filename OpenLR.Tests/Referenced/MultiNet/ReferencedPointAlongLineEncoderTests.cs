@@ -24,8 +24,8 @@ namespace OpenLR.Tests.Referenced.MultiNet
             // build a graph to encode from.
             var tags = new TagsTableCollectionIndex();
             var graph = new DynamicGraphRouterDataSource<LiveEdge>(tags);
-            uint vertex1 = graph.AddVertex(49.60597f, 6.12829f);
-            uint vertex2 = graph.AddVertex(49.60521f, 6.12779f);
+            var vertex1 = graph.AddVertex(49.60597f, 6.12829f);
+            var vertex2 = graph.AddVertex(49.60521f, 6.12779f);
             graph.AddArc(vertex1, vertex2, new LiveEdge()
             {
                 Coordinates = null,
@@ -73,7 +73,7 @@ namespace OpenLR.Tests.Referenced.MultiNet
             Assert.IsNotNull(location);
             Assert.AreEqual(SideOfRoad.OnOrAbove, location.SideOfRoad);
             Assert.AreEqual(Orientation.FirstToSecond, location.Orientation);
-            Assert.AreEqual(45, location.PositiveOffset);
+            Assert.AreEqual(50, location.PositiveOffsetPercentage.Value, 0.5f);
 
             Assert.AreEqual(49.60597f, location.First.Coordinate.Latitude);
             Assert.AreEqual(6.12829f, location.First.Coordinate.Longitude);

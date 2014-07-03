@@ -66,7 +66,7 @@ namespace OpenLR.Tests.Referenced.Osm
             Assert.IsNotNull(location);
             Assert.AreEqual(SideOfRoad.OnOrAbove, location.SideOfRoad);
             Assert.AreEqual(Orientation.NoOrientation, location.Orientation);
-            Assert.AreEqual(45, location.PositiveOffset);
+            Assert.AreEqual(50, location.PositiveOffsetPercentage.Value, 0.5f);
 
             Assert.AreEqual(49.60597f, location.First.Coordinate.Latitude);
             Assert.AreEqual(6.12829f, location.First.Coordinate.Longitude);
@@ -101,7 +101,7 @@ namespace OpenLR.Tests.Referenced.Osm
             Assert.IsNotNull(location);
             Assert.AreEqual(SideOfRoad.OnOrAbove, location.SideOfRoad);
             Assert.AreEqual(Orientation.NoOrientation, location.Orientation);
-            Assert.AreEqual(0, location.PositiveOffset);
+            Assert.AreEqual(0, location.PositiveOffsetPercentage);
 
             Assert.AreEqual(49.60597f, location.First.Coordinate.Latitude);
             Assert.AreEqual(6.12829f, location.First.Coordinate.Longitude);
@@ -134,7 +134,7 @@ namespace OpenLR.Tests.Referenced.Osm
             Assert.IsNotNull(location);
             Assert.AreEqual(SideOfRoad.OnOrAbove, location.SideOfRoad);
             Assert.AreEqual(Orientation.NoOrientation, location.Orientation);
-            Assert.AreEqual(91, location.PositiveOffset);
+            Assert.AreEqual(100, location.PositiveOffsetPercentage.Value, 0.5f);
 
             Assert.AreEqual(49.60597f, location.First.Coordinate.Latitude);
             Assert.AreEqual(6.12829f, location.First.Coordinate.Longitude);

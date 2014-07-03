@@ -105,21 +105,21 @@ namespace OpenLR.Tests.Binary.Data
             data[0] = 0;
 
             // poff-noff-bearing.
-            OffsetConvertor.Encode(true, data, 0, 1);
-            OffsetConvertor.Encode(true, data, 0, 2);
+            OffsetConvertor.EncodeFlag(true, data, 0, 1);
+            OffsetConvertor.EncodeFlag(true, data, 0, 2);
             BearingConvertor.Encode(17, data, 0, 3);
             Assert.AreEqual(113, data[0]);
 
             // poff-bearing-noff.
-            OffsetConvertor.Encode(true, data, 0, 1);
+            OffsetConvertor.EncodeFlag(true, data, 0, 1);
             BearingConvertor.Encode(17, data, 0, 3);
-            OffsetConvertor.Encode(true, data, 0, 2);
+            OffsetConvertor.EncodeFlag(true, data, 0, 2);
             Assert.AreEqual(113, data[0]);
 
             // bearing-poff-noff.
             BearingConvertor.Encode(17, data, 0, 3);
-            OffsetConvertor.Encode(true, data, 0, 1);
-            OffsetConvertor.Encode(true, data, 0, 2);
+            OffsetConvertor.EncodeFlag(true, data, 0, 1);
+            OffsetConvertor.EncodeFlag(true, data, 0, 2);
             Assert.AreEqual(113, data[0]);
         }
     }

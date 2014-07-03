@@ -18,9 +18,9 @@ namespace OpenLR.Locations
         public LocationReferencePoint Last { get; set; }
 
         /// <summary>
-        /// Gets or sets the positive offset (POFF).
+        /// Gets or sets the positive offset percentage value (POFF).
         /// </summary>
-        public int? PositiveOffset { get; set; }
+        public float? PositiveOffsetPercentage { get; set; }
 
         /// <summary>
         /// Gets or sets the side of road information (SOR).

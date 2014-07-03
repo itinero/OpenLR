@@ -115,7 +115,11 @@ namespace OpenLR.OsmSharp.Decoding
             }
 
             // calculate the percentage value.
-            var percentage = (double)location.PositiveOffset.Value / (double)location.First.DistanceToNext;
+            var percentage = 0.0;
+            if(location.PositiveOffsetPercentage.HasValue)
+            { // there is a percentage set.
+                percentage = location.PositiveOffsetPercentage.Value;
+            }
 
             // calculate the actual location.
             var longitudeReference = (location.First.Coordinate.Longitude - location.Last.Coordinate.Longitude) * percentage + location.Last.Coordinate.Longitude;

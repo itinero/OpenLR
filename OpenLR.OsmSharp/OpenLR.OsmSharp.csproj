@@ -120,9 +120,11 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReferencedDecoderBase.cs" />
+    <Compile Include="ReferencedDecodingException.cs" />
     <Compile Include="ReferencedEncoderBase.cs" />
     <Compile Include="Osm\ReferencedOsmDecoder.cs" />
     <Compile Include="Osm\ReferencedOsmEncoder.cs" />
+    <Compile Include="ReferencedEncodingException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

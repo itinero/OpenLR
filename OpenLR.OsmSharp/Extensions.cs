@@ -4,8 +4,10 @@ using NetTopologySuite.Geometries;
 using NetTopologySuite.Utilities;
 using OpenLR.Locations;
 using OsmSharp.Math.Geo;
+using OsmSharp.Math.Primitives;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Units.Distance;
 using System.Collections.Generic;
 
 namespace OpenLR.OsmSharp
@@ -339,6 +341,97 @@ namespace OpenLR.OsmSharp
                 }
             }
             return bestEdge;
+        }
+
+        /// <summary>
+        /// Returns a list of coordinates representing the geometry of the edge.
+        /// </summary>
+        /// <typeparam name="TEdge"></typeparam>
+        /// <param name="edge"></param>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="edgeInverted"></param>
+        /// <returns></returns>
+        public static List<GeoCoordinate> GetCoordinates<TEdge>(this TEdge edge, GeoCoordinate from, GeoCoordinate to, bool edgeInverted)
+            where TEdge : IDynamicGraphEdgeData
+        {
+            var coordinates = new List<GeoCoordinate>();
+            coordinates.Add(from);
+            if (edge.Coordinates != null)
+            {
+                if (edgeInverted)
+                {
+                    for (int idx = 0; idx < edge.Coordinates.Length; idx++)
+                    {
+                        coordinates.Add(new GeoCoordinate(edge.Coordinates[idx].Longitude, edge.Coordinates[idx].Latitude));
+                    }
+                }
+                else
+                {
+                    for (int idx = edge.Coordinates.Length - 1; idx >=0; idx--)
+                    {
+                        coordinates.Add(new GeoCoordinate(edge.Coordinates[idx].Longitude, edge.Coordinates[idx].Latitude));
+                    }
+                }
+            }
+            coordinates.Add(to);
+            return coordinates;
+        }
+
+        /// <summary>
+        /// Calculates the real length in meters.
+        /// </summary>
+        /// <param name="coordinates"></param>
+        /// <returns></returns>
+        public static Meter Length(this List<GeoCoordinate> coordinates)
+        {
+            Meter length = 0;
+            for (int idx = 0; idx < coordinates.Count - 1; idx++)
+            {
+                length = length + coordinates[idx].DistanceReal(coordinates[idx + 1]);
+            }
+            return length;
+        }
+
+        /// <summary>
+        /// Projects the given point on the line represented by the coordinates.
+        /// </summary>
+        /// <param name="coordinates"></param>
+        /// <param name="point"></param>
+        /// <param name="bestProjected"></param>
+        /// <param name="bestPosition"></param>
+        /// <param name="bestOffset"></param>
+        /// <returns></returns>
+        public static bool ProjectOn(this List<GeoCoordinate> coordinates, PointF2D point, out PointF2D bestProjected, out LinePointPosition bestPosition, out Meter bestOffset)
+        {
+            bestProjected = null;
+            bestPosition = LinePointPosition.On;
+            bestOffset = 0;
+
+            var bestDistance = double.MaxValue;
+            var currentOffset = 0.0;
+            var found = false;
+            for (int idx = 0; idx < coordinates.Count - 1; idx++)
+            {
+                var line = new GeoCoordinateLine(coordinates[idx], coordinates[idx + 1], true, true);
+                var projected = line.ProjectOn(point);
+                var position = line.PositionOfPoint(point);
+
+                if(projected != null)
+                { // there is a valid projected point.
+                    var offset = coordinates[idx].DistanceReal(new GeoCoordinate(projected)).Value;
+                    var distance = projected.Distance(point);
+                    if(distance < bestDistance)
+                    { // this point is closer.
+                        bestDistance = distance;
+                        bestProjected = projected;
+                        bestOffset = currentOffset + offset;
+                        found = true;
+                    }
+                }
+                currentOffset = currentOffset + line.LengthReal.Value;
+            }
+            return found;
         }
     }
 }

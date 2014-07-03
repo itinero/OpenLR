@@ -52,7 +52,7 @@ namespace OpenLR.Tests.Binary
             // check other properties.
             Assert.AreEqual(Orientation.NoOrientation, pointAlongLineLocation.Orientation);
             Assert.AreEqual(SideOfRoad.Left, pointAlongLineLocation.SideOfRoad);
-            Assert.AreEqual(77, pointAlongLineLocation.PositiveOffset);
+            Assert.AreEqual(30.19, pointAlongLineLocation.PositiveOffsetPercentage, 0.1);
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace OpenLR.Tests.Binary
 
             location.Orientation = Orientation.NoOrientation;
             location.SideOfRoad = SideOfRoad.Left;
-            location.PositiveOffset = 77;
+            location.PositiveOffsetPercentage = 30.19f;
 
             // encode.
             var encoder = new PointAlongLineEncoder();
@@ -126,7 +126,7 @@ namespace OpenLR.Tests.Binary
             // check other properties.
             Assert.AreEqual(location.Orientation, pointAlongLineLocation.Orientation);
             Assert.AreEqual(location.SideOfRoad, pointAlongLineLocation.SideOfRoad);
-            Assert.AreEqual(location.PositiveOffset, pointAlongLineLocation.PositiveOffset);
+            Assert.AreEqual(location.PositiveOffsetPercentage.Value, pointAlongLineLocation.PositiveOffsetPercentage.Value, 0.4f);
 
             // compare again with reference encoded string.
             string referenceStringData = "KwRboCNGfhJRAf/O/7SSQ00=";
@@ -155,7 +155,7 @@ namespace OpenLR.Tests.Binary
             // check other properties.
             Assert.AreEqual(referenceDecodedLocation.Orientation, pointAlongLineLocation.Orientation);
             Assert.AreEqual(referenceDecodedLocation.SideOfRoad, pointAlongLineLocation.SideOfRoad);
-            Assert.AreEqual(referenceDecodedLocation.PositiveOffset, pointAlongLineLocation.PositiveOffset);
+            Assert.AreEqual(referenceDecodedLocation.PositiveOffsetPercentage.Value, pointAlongLineLocation.PositiveOffsetPercentage.Value, 0.4f);
         }
     }
 }
