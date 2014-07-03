@@ -83,7 +83,7 @@ namespace OpenLR.OsmSharp.Decoding
                     lrps[0].LowestFunctionalRoadClassToNext.Value);
 
                 // verify bearing by adding it to the score.
-                if (candidate != null)
+                if (candidate != null && candidate.Route != null)
                 { // calculate bearing and compare with reference bearing.
                     var fromBearing = this.GetBearing(candidate.Route.Vertices[0],
                         candidate.Route.Edges[0],
@@ -112,6 +112,12 @@ namespace OpenLR.OsmSharp.Decoding
                 { // the current candidate is better.
                     break;
                 }
+            }
+
+            // check if a location was found or not.
+            if(best == null || best.Route == null)
+            { // no location could be found.
+                throw new ReferencedDecodingException(location, "No valid location was found.");
             }
 
             // calculate the percentage value.
