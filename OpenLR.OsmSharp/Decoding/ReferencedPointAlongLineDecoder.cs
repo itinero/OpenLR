@@ -115,15 +115,15 @@ namespace OpenLR.OsmSharp.Decoding
             }
 
             // calculate the percentage value.
-            var percentage = 0.0;
+            var offsetRatio = 0.0;
             if(location.PositiveOffsetPercentage.HasValue)
             { // there is a percentage set.
-                percentage = location.PositiveOffsetPercentage.Value;
+                offsetRatio = location.PositiveOffsetPercentage.Value / 100.0;
             }
 
             // calculate the actual location.
-            var longitudeReference = (location.First.Coordinate.Longitude - location.Last.Coordinate.Longitude) * percentage + location.Last.Coordinate.Longitude;
-            var latitudeReference = (location.First.Coordinate.Latitude - location.Last.Coordinate.Latitude) * percentage + location.Last.Coordinate.Latitude;
+            var longitudeReference = (location.First.Coordinate.Longitude - location.Last.Coordinate.Longitude) * offsetRatio + location.Last.Coordinate.Longitude;
+            var latitudeReference = (location.First.Coordinate.Latitude - location.Last.Coordinate.Latitude) * offsetRatio + location.Last.Coordinate.Latitude;
 
             // create the referenced location.
             var pointAlongLineLocation = new ReferencedPointAlongLine<TEdge>();
