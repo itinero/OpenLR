@@ -353,14 +353,14 @@ namespace OpenLR.OsmSharp
         /// <param name="to"></param>
         /// <param name="edgeInverted"></param>
         /// <returns></returns>
-        public static List<GeoCoordinate> GetCoordinates<TEdge>(this TEdge edge, GeoCoordinate from, GeoCoordinate to, bool edgeInverted)
+        public static List<GeoCoordinate> GetCoordinates<TEdge>(this TEdge edge, GeoCoordinate from, GeoCoordinate to)
             where TEdge : IDynamicGraphEdgeData
         {
             var coordinates = new List<GeoCoordinate>();
             coordinates.Add(from);
             if (edge.Coordinates != null)
             {
-                if (!edgeInverted)
+                if (edge.Forward)
                 {
                     for (int idx = 0; idx < edge.Coordinates.Length; idx++)
                     {

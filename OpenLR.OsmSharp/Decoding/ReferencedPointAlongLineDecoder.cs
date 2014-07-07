@@ -85,18 +85,18 @@ namespace OpenLR.OsmSharp.Decoding
                 // verify bearing by adding it to the score.
                 if (candidate != null && candidate.Route != null)
                 { // calculate bearing and compare with reference bearing.
-                    var fromBearing = this.GetBearing(candidate.Route.Vertices[0],
-                        candidate.Route.Edges[0],
-                        candidate.Route.Vertices[1],
-                        true);
-                    var fromBearingDiff = System.Math.Abs(fromBearing.SmallestDifference(fromBearingReference));
-                    var toBearing = this.GetBearing(candidate.Route.Vertices[candidate.Route.Vertices.Length - 1],
-                        candidate.Route.Edges[candidate.Route.Edges.Length - 1],
-                        candidate.Route.Vertices[candidate.Route.Vertices.Length - 2],
-                        false);
-                    var toBearingDiff = System.Math.Abs(toBearing.SmallestDifference(toBearingReference));
-                    var diffScore = 1.0 - (fromBearingDiff / 360.0) - (toBearingDiff / 360.0);
-                    candidate.Score = candidate.Score * (float)diffScore;
+                    //var fromBearing = this.GetBearing(candidate.Route.Vertices[0],
+                    //    candidate.Route.Edges[0],
+                    //    candidate.Route.Vertices[1],
+                    //    true);
+                    //var fromBearingDiff = System.Math.Abs(fromBearing.SmallestDifference(fromBearingReference));
+                    //var toBearing = this.GetBearing(candidate.Route.Vertices[candidate.Route.Vertices.Length - 1],
+                    //    candidate.Route.Edges[candidate.Route.Edges.Length - 1],
+                    //    candidate.Route.Vertices[candidate.Route.Vertices.Length - 2],
+                    //    false);
+                    //var toBearingDiff = System.Math.Abs(toBearing.SmallestDifference(toBearingReference));
+                    //var diffScore = 1.0 - (fromBearingDiff / 360.0) - (toBearingDiff / 360.0);
+                    //candidate.Score = candidate.Score * (float)diffScore;
                 }
 
                 // check candidate.
@@ -128,8 +128,8 @@ namespace OpenLR.OsmSharp.Decoding
             }
 
             // calculate the actual location and take into account the shape.
-            var referenceLocation = best.Route.Edges[0].GetCoordinates(location.First.Coordinate.ToGeoCoordinate(), location.Last.Coordinate.ToGeoCoordinate(), false)
-                .GetPositionLocation(offsetRatio);
+            var coordinates = best.Route.Edges[0].GetCoordinates(location.First.Coordinate.ToGeoCoordinate(), location.Last.Coordinate.ToGeoCoordinate());
+            var referenceLocation = coordinates.GetPositionLocation(offsetRatio);
 
             var longitudeReference = referenceLocation.Longitude;
             var latitudeReference = referenceLocation.Latitude;

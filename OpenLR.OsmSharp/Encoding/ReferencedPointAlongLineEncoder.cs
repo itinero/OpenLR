@@ -59,7 +59,7 @@ namespace OpenLR.OsmSharp.Encoding
                 // initialize from point, to point and create the coordinate list.
                 var from = new GeoCoordinate(location.First.Coordinate.Latitude, location.First.Coordinate.Longitude);
                 var to = new GeoCoordinate(location.Last.Coordinate.Latitude, location.Last.Coordinate.Longitude);
-                var coordinates = referencedLocation.Edge.GetCoordinates(from, to, false);
+                var coordinates = referencedLocation.Edge.GetCoordinates(from, to);
 
                 // calculate bearing.
                 location.First.Bearing = (int)this.GetBearing(referencedLocation.VertexFrom, referencedLocation.Edge, referencedLocation.VertexTo, false).Value;
