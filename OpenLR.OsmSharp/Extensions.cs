@@ -8,6 +8,7 @@ using OsmSharp.Math.Primitives;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Units.Distance;
+using System;
 using System.Collections.Generic;
 
 namespace OpenLR.OsmSharp
@@ -359,7 +360,7 @@ namespace OpenLR.OsmSharp
             coordinates.Add(from);
             if (edge.Coordinates != null)
             {
-                if (edgeInverted)
+                if (!edgeInverted)
                 {
                     for (int idx = 0; idx < edge.Coordinates.Length; idx++)
                     {
@@ -432,6 +433,52 @@ namespace OpenLR.OsmSharp
                 currentOffset = currentOffset + line.LengthReal.Value;
             }
             return found;
+        }
+
+        /// <summary>
+        /// Returns the location of the given position using the given coordinates as the polyline.
+        /// </summary>
+        /// <param name="coordinates">The polyline coordinates.</param>
+        /// <param name="position">The position parameter [0-1].</param>
+        /// <returns></returns>
+        public static GeoCoordinate GetPositionLocation(this List<GeoCoordinate> coordinates, double position)
+        {
+            if (coordinates == null || coordinates.Count == 0) { throw new ArgumentOutOfRangeException("coordinates","List of coordinates cannot be empty!"); }
+            if (position < 0 || position > 1) { throw new ArgumentOutOfRangeException("position", "Position has to be in range [0-1]."); }
+
+            if(coordinates.Count == 1)
+            { // only one point, location is always the point itself.
+                return coordinates[0];
+            }
+
+            var lengthAtPosition = coordinates.Length().Value * position;
+            var lengthAtPrevious = 0.0;
+            var previous = coordinates[0];
+            for(int idx = 1; idx < coordinates.Count; idx++)
+            {
+                var current = coordinates[idx];
+                var segmentLength = current.DistanceReal(previous).Value;
+                if(lengthAtPrevious + segmentLength > lengthAtPosition)
+                { // the point is in this segment.
+                    var localPosition = (lengthAtPosition - lengthAtPrevious) / segmentLength;
+                    var direction = current - previous;
+                    var location = previous + (direction * localPosition);
+                    return new GeoCoordinate(location);
+                }
+                lengthAtPrevious = lengthAtPrevious + segmentLength;
+                previous = current;
+            }
+            return coordinates[coordinates.Count - 1];
+        }
+
+        /// <summary>
+        /// Converts the given coordinate to a geocoordinate.
+        /// </summary>
+        /// <param name="coordinate"></param>
+        /// <returns></returns>
+        public static GeoCoordinate ToGeoCoordinate(this OpenLR.Model.Coordinate coordinate)
+        {
+            return new GeoCoordinate(coordinate.Latitude, coordinate.Longitude);
         }
     }
 }

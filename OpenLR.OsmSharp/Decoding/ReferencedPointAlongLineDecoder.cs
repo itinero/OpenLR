@@ -127,9 +127,12 @@ namespace OpenLR.OsmSharp.Decoding
                 offsetRatio = location.PositiveOffsetPercentage.Value / 100.0;
             }
 
-            // calculate the actual location.
-            var longitudeReference = (location.First.Coordinate.Longitude - location.Last.Coordinate.Longitude) * offsetRatio + location.Last.Coordinate.Longitude;
-            var latitudeReference = (location.First.Coordinate.Latitude - location.Last.Coordinate.Latitude) * offsetRatio + location.Last.Coordinate.Latitude;
+            // calculate the actual location and take into account the shape.
+            var referenceLocation = best.Route.Edges[0].GetCoordinates(location.First.Coordinate.ToGeoCoordinate(), location.Last.Coordinate.ToGeoCoordinate(), false)
+                .GetPositionLocation(offsetRatio);
+
+            var longitudeReference = referenceLocation.Longitude;
+            var latitudeReference = referenceLocation.Latitude;
 
             // create the referenced location.
             var pointAlongLineLocation = new ReferencedPointAlongLine<TEdge>();
