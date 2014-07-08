@@ -222,6 +222,33 @@ namespace OpenLR.OsmSharp
         /// <param name="referencedPointALongLineLocation"></param>
         /// <param name="baseDecoder"></param>
         /// <returns></returns>
+        public static FeatureCollection ToFeatures<TEdge>(this OpenLR.OsmSharp.Locations.ReferencedPointAlongLine<TEdge> referencedPointALongLineLocation, ReferencedEncoderBase<TEdge> baseEncoder)
+            where TEdge : IDynamicGraphEdgeData
+        {
+            // create the geometry factory.
+            var geometryFactory = new GeometryFactory();
+
+            // create the feature collection.
+            var featureCollection = referencedPointALongLineLocation.Route.ToFeatures();
+
+            // create the coordinates.
+            featureCollection.Add(baseEncoder.GetVertexLocation(referencedPointALongLineLocation.Route.Vertices[0]).ToFeature());
+            featureCollection.Add(baseEncoder.GetVertexLocation(referencedPointALongLineLocation.Route.Vertices[referencedPointALongLineLocation.Route.Vertices.Length - 1]).ToFeature());
+
+            // create a feature for the actual location.
+            var locationCoordinate = new Coordinate(referencedPointALongLineLocation.Longitude, referencedPointALongLineLocation.Latitude);
+            var locationCoordinateFeature = new Feature(new Point(locationCoordinate), new AttributesTable());
+            featureCollection.Add(locationCoordinateFeature);
+
+            return featureCollection;
+        }
+
+        /// <summary>
+        /// Converts the referenced point along the line location to features.
+        /// </summary>
+        /// <param name="referencedPointALongLineLocation"></param>
+        /// <param name="baseDecoder"></param>
+        /// <returns></returns>
         public static FeatureCollection ToFeatures<TEdge>(this OpenLR.OsmSharp.Locations.ReferencedPointAlongLine<TEdge> referencedPointALongLineLocation, ReferencedDecoderBase<TEdge> baseDecoder)
             where TEdge : IDynamicGraphEdgeData
         {
