@@ -1,4 +1,5 @@
 ﻿using OpenLR.Encoding;
+using OpenLR.Locations;
 using OpenLR.Model;
 using OpenLR.OsmSharp.Encoding;
 using OpenLR.OsmSharp.Locations;
@@ -62,6 +63,16 @@ namespace OpenLR.OsmSharp
         protected virtual ReferencedPointAlongLineEncoder<TEdge> GetReferencedPointAlongLineEncoder()
         {
             return new ReferencedPointAlongLineEncoder<TEdge>(this, this.LocationEncoder.CreatePointAlongLineLocationEncoder(), _graph, this.GetRouter());
+        }
+
+        /// <summary>
+        /// Encodes a referenced point along line location into an unreferenced location.
+        /// </summary>
+        /// <param name="pointAlongLineLocation"></param>
+        /// <returns></returns>
+        public virtual PointAlongLineLocation EncodeReferenced(ReferencedPointAlongLine<TEdge> pointAlongLineLocation)
+        {
+            return this.GetReferencedPointAlongLineEncoder().EncodeReferenced(pointAlongLineLocation);
         }
 
         /// <summary>

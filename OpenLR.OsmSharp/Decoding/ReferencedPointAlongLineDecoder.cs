@@ -61,11 +61,14 @@ namespace OpenLR.OsmSharp.Decoding
             {
                 foreach (var currentCandidate in candidates[1])
                 {
-                    combinedScoresSet.Add(new CombinedScore<TEdge>()
-                    {
-                        Source = previousCandidate,
-                        Target = currentCandidate
-                    });
+                    if (previousCandidate.Vertex != currentCandidate.Vertex)
+                    { // make sure vertices are different.
+                        combinedScoresSet.Add(new CombinedScore<TEdge>()
+                        {
+                            Source = previousCandidate,
+                            Target = currentCandidate
+                        });
+                    }
                 }
             }
 
@@ -128,7 +131,7 @@ namespace OpenLR.OsmSharp.Decoding
             }
 
             // calculate the actual location and take into account the shape.
-            var coordinates = best.Route.Edges[0].GetCoordinates(location.First.Coordinate.ToGeoCoordinate(), location.Last.Coordinate.ToGeoCoordinate());
+            var coordinates = this.GetCoordinates(best.Route);
             var referenceLocation = coordinates.GetPositionLocation(offsetRatio);
 
             var longitudeReference = referenceLocation.Longitude;

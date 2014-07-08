@@ -363,6 +363,45 @@ namespace OpenLR.OsmSharp
         }
 
         /// <summary>
+        /// Returns the list of coordinates for the given route.
+        /// </summary>
+        /// <param name="route"></param>
+        /// <returns></returns>
+        public virtual List<GeoCoordinate> GetCoordinates(Locations.ReferencedLine<TEdge> route)
+        {
+            if (route == null) { throw new ArgumentNullException("route"); }
+            if (route.Edges == null || route.Edges.Length == 0) { throw new ArgumentOutOfRangeException("route", "Route has no edges."); }
+            if (route.Vertices == null || route.Vertices.Length == 0) { throw new ArgumentOutOfRangeException("route", "Route has no vertices."); }
+            if (route.Vertices.Length != route.Edges.Length + 1) { throw new ArgumentOutOfRangeException("route", "Route is invalid: there should be n vertices and n-1 edges."); }
+
+            var coordinates = new List<GeoCoordinate>();
+            coordinates.Add(this.GetVertexLocation(route.Vertices[0]).ToGeoCoordinate());
+            for (int edgeIdx = 0; edgeIdx < route.Edges.Length; edgeIdx++)
+            {
+                var edge = route.Edges[edgeIdx];
+                if (edge.Coordinates != null)
+                { // there are intermediate coordinates.
+                    if (edge.Forward)
+                    { // the edge is forward.
+                        for (int idx = 0; idx < edge.Coordinates.Length; idx++)
+                        {
+                            coordinates.Add(new GeoCoordinate(edge.Coordinates[idx].Latitude, edge.Coordinates[idx].Longitude));
+                        }
+                    }
+                    else
+                    { // the edge is backward.
+                        for (int idx = edge.Coordinates.Length - 1; idx >= 0; idx--)
+                        {
+                            coordinates.Add(new GeoCoordinate(edge.Coordinates[idx].Latitude, edge.Coordinates[idx].Longitude));
+                        }
+                    }
+                }
+                coordinates.Add(this.GetVertexLocation(route.Vertices[edgeIdx + 1]).ToGeoCoordinate());
+            }
+            return coordinates;
+        }
+
+        /// <summary>
         /// Returns the bearing calculate between two given vertices along the given edge.
         /// </summary>
         /// <param name="vertexFrom"></param>

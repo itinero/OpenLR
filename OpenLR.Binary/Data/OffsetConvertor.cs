@@ -52,8 +52,7 @@ namespace OpenLR.Binary.Data
         /// <summary>
         /// Encodes the offset in meter as a value relative to the length in meter.
         /// </summary>
-        /// <param name="lenghtInMeter"></param>
-        /// <param name="offsetInMeter"></param>
+        /// <param name="positiveOffsetPercentage"></param>
         /// <param name="data"></param>
         /// <param name="startIndex"></param>
         public static void Encode(float positiveOffsetPercentage, byte[] data, int startIndex)
@@ -70,7 +69,6 @@ namespace OpenLR.Binary.Data
         /// <summary>
         /// Decodes the offset in meter.
         /// </summary>
-        /// <param name="lengthInMeter"></param>
         /// <param name="data"></param>
         /// <param name="startIndex"></param>
         /// <returns></returns>

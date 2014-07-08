@@ -356,6 +356,17 @@ namespace OpenLR.OsmSharp.MultiNet
         /// <summary>
         /// Creates a new referenced multinet decoder.
         /// </summary>
+        /// <param name="graph">The graph containing the multinet network.</param>
+        /// <param name="maxVertexDistance">The maximum vertex distance.</param>
+        /// <returns></returns>
+        public static ReferencedMultiNetDecoder CreateBinary(IBasicRouterDataSource<LiveEdge> graph, Meter maxVertexDistance)
+        {
+            return ReferencedMultiNetDecoder.Create(graph, new OpenLR.Binary.BinaryDecoder(), maxVertexDistance);
+        }
+
+        /// <summary>
+        /// Creates a new referenced multinet decoder.
+        /// </summary>
         /// <param name="folder">The folder containing the shapefile(s).</param>
         /// <param name="searchPattern">The search pattern to identify the relevant shapefiles.</param>
         /// <param name="rawLocationDecoder">The raw location decoder.</param>
@@ -373,12 +384,42 @@ namespace OpenLR.OsmSharp.MultiNet
         /// <summary>
         /// Creates a new referenced multinet decoder.
         /// </summary>
+        /// <param name="folder">The folder containing the shapefile(s).</param>
+        /// <param name="searchPattern">The search pattern to identify the relevant shapefiles.</param>
+        /// <param name="rawLocationDecoder">The raw location decoder.</param>
+        /// <param name="maxVertexDistance">The maximum vertex distance.</param>
+        /// <returns></returns>
+        public static ReferencedMultiNetDecoder Create(string folder, string searchPattern, Decoder rawLocationDecoder, Meter maxVertexDistance)
+        {
+            // create an instance of the graph reader and define the columns that contain the 'node-ids'.
+            var graphReader = new ShapefileLiveGraphReader("F_JNCTID", "T_JNCTID");
+            // read the graph from the folder where the shapefiles are placed.
+            var graph = graphReader.Read(folder, searchPattern, new ShapefileRoutingInterpreter());
+
+            return new ReferencedMultiNetDecoder(graph, rawLocationDecoder, maxVertexDistance);
+        }
+
+        /// <summary>
+        /// Creates a new referenced multinet decoder.
+        /// </summary>
         /// <param name="graph">The graph containing the multinet network.</param>
         /// <param name="rawLocationDecoder">The raw location decoder.</param>
         /// <returns></returns>
         public static ReferencedMultiNetDecoder Create(IBasicRouterDataSource<LiveEdge> graph, Decoder rawLocationDecoder)
         {
             return new ReferencedMultiNetDecoder(graph, rawLocationDecoder);
+        }
+
+        /// <summary>
+        /// Creates a new referenced multinet decoder.
+        /// </summary>
+        /// <param name="graph">The graph containing the multinet network.</param>
+        /// <param name="rawLocationDecoder">The raw location decoder.</param>
+        /// <param name="maxVertexDistance">The maximum vertex distance.</param>
+        /// <returns></returns>
+        public static ReferencedMultiNetDecoder Create(IBasicRouterDataSource<LiveEdge> graph, Decoder rawLocationDecoder, Meter maxVertexDistance)
+        {
+            return new ReferencedMultiNetDecoder(graph, rawLocationDecoder, maxVertexDistance);
         }
 
         /// <summary>

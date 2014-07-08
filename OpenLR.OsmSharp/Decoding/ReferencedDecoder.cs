@@ -132,6 +132,16 @@ namespace OpenLR.OsmSharp.Decoding
         }
 
         /// <summary>
+        /// Returns the list of coordinates the represent the given route.
+        /// </summary>
+        /// <param name="route"></param>
+        /// <returns></returns>
+        protected List<GeoCoordinate> GetCoordinates(ReferencedLine<TEdge> route)
+        {
+            return _mainDecoder.GetCoordinates(route);
+        }
+
+        /// <summary>
         /// Returns a value if a oneway restriction is found.
         /// </summary>
         /// <param name="tags"></param>

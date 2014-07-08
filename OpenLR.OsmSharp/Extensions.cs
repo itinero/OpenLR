@@ -3,6 +3,7 @@ using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Utilities;
 using OpenLR.Locations;
+using OpenLR.OsmSharp.Locations;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Routing.Graph;
@@ -196,8 +197,23 @@ namespace OpenLR.OsmSharp
 
             // create the feature collection.
             var featureCollection = new FeatureCollection();
+
+            // create the coordinates.
+            var coordinates = new List<Coordinate>();
+            coordinates.Add(new Coordinate(pointAlongLineLocation.First.Coordinate.Longitude, pointAlongLineLocation.First.Coordinate.Latitude));
             featureCollection.Add(pointAlongLineLocation.First.ToFeature());
+            coordinates.Add(new Coordinate(pointAlongLineLocation.Last.Coordinate.Longitude, pointAlongLineLocation.Last.Coordinate.Latitude));
             featureCollection.Add(pointAlongLineLocation.Last.ToFeature());
+
+            // create a line feature.
+            var line = geometryFactory.CreateLineString(coordinates.ToArray());
+            var lineAttributes = new AttributesTable();
+            lineAttributes.AddAttribute("orientation", pointAlongLineLocation.Orientation.ToString());
+            lineAttributes.AddAttribute("positive_offset_percentage", pointAlongLineLocation.PositiveOffsetPercentage);
+            lineAttributes.AddAttribute("side_of_road", pointAlongLineLocation.SideOfRoad.ToString());
+            var lineFeature = new Feature(line, lineAttributes);
+            featureCollection.Add(lineFeature);
+
             return featureCollection;
         }
 
@@ -351,7 +367,6 @@ namespace OpenLR.OsmSharp
         /// <param name="edge"></param>
         /// <param name="from"></param>
         /// <param name="to"></param>
-        /// <param name="edgeInverted"></param>
         /// <returns></returns>
         public static List<GeoCoordinate> GetCoordinates<TEdge>(this TEdge edge, GeoCoordinate from, GeoCoordinate to)
             where TEdge : IDynamicGraphEdgeData
