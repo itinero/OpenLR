@@ -21,19 +21,9 @@ namespace OpenLR.OsmSharp.Locations
         public double Longitude { get; set; }
 
         /// <summary>
-        /// Gets or sets the from vertex.
+        /// Gets or sets the route (vertex->edge->vertex->edge->vertex) associated with this location.
         /// </summary>
-        public long VertexFrom { get; set; }
-
-        /// <summary>
-        /// Gets or sets the to vertex.
-        /// </summary>
-        public long VertexTo { get; set; }
-
-        /// <summary>
-        /// Gets or sets the edge.
-        /// </summary>
-        public TEdge Edge { get; set; }
+        public ReferencedLine<TEdge> Route { get; set; }
 
         /// <summary>
         /// Gets or sets the orientation.

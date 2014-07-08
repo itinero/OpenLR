@@ -47,7 +47,9 @@ namespace OpenLR.Tests.Referenced.MultiNet
 
             // create a referenced location and encode it.
             var referencedPointAlongLineLocation = new ReferencedPointAlongLine<LiveEdge>();
-            referencedPointAlongLineLocation.Edge = new LiveEdge()
+            referencedPointAlongLineLocation.Route = new ReferencedLine<LiveEdge>(graph);
+            referencedPointAlongLineLocation.Route.Edges = new LiveEdge[1];
+            referencedPointAlongLineLocation.Route.Edges[0] = new LiveEdge()
             {
                 Coordinates = null,
                 Distance = 10,
@@ -56,8 +58,9 @@ namespace OpenLR.Tests.Referenced.MultiNet
                     Tag.Create("FRC", "2"),
                     Tag.Create("FOW", "3")))
             };
-            referencedPointAlongLineLocation.VertexFrom = vertex1;
-            referencedPointAlongLineLocation.VertexTo = vertex2;
+            referencedPointAlongLineLocation.Route.Vertices = new long[2];
+            referencedPointAlongLineLocation.Route.Vertices[0] = vertex1;
+            referencedPointAlongLineLocation.Route.Vertices[1] = vertex2;
             referencedPointAlongLineLocation.Latitude = (49.60597f + 49.60521f) / 2f;
             referencedPointAlongLineLocation.Longitude = (6.12829f + 6.12779f) / 2f;
             referencedPointAlongLineLocation.Orientation = Orientation.FirstToSecond;

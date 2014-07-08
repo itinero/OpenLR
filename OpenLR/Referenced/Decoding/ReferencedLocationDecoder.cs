@@ -35,6 +35,16 @@ namespace OpenLR.Referenced.Decoding
         }
 
         /// <summary>
+        /// Decodes an encoded OpenLR location into a raw location.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public TLocation DecodeRaw(string data)
+        {
+            return _rawDecoder.Decode(data);
+        }
+
+        /// <summary>
         /// Decodes an encoded OpenLR location into a referenced Location.
         /// </summary>
         /// <param name="data"></param>

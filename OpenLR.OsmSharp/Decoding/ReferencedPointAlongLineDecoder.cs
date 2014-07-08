@@ -139,9 +139,7 @@ namespace OpenLR.OsmSharp.Decoding
 
             // create the referenced location.
             var pointAlongLineLocation = new ReferencedPointAlongLine<TEdge>();
-            pointAlongLineLocation.Edge = best.Route.Edges[0];
-            pointAlongLineLocation.VertexFrom = best.Route.Vertices[0];
-            pointAlongLineLocation.VertexTo = best.Route.Vertices[1];
+            pointAlongLineLocation.Route = best.Route;
             pointAlongLineLocation.Latitude = latitudeReference;
             pointAlongLineLocation.Longitude = longitudeReference;
             if(location.Orientation.HasValue)

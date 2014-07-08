@@ -3,7 +3,6 @@ using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Utilities;
 using OpenLR.Locations;
-using OpenLR.OsmSharp.Locations;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Routing.Graph;
@@ -213,6 +212,46 @@ namespace OpenLR.OsmSharp
             lineAttributes.AddAttribute("side_of_road", pointAlongLineLocation.SideOfRoad.ToString());
             var lineFeature = new Feature(line, lineAttributes);
             featureCollection.Add(lineFeature);
+
+            return featureCollection;
+        }
+
+        /// <summary>
+        /// Converts the referenced point along the line location to features.
+        /// </summary>
+        /// <param name="referencedPointALongLineLocation"></param>
+        /// <param name="baseDecoder"></param>
+        /// <returns></returns>
+        public static FeatureCollection ToFeatures<TEdge>(this OpenLR.OsmSharp.Locations.ReferencedPointAlongLine<TEdge> referencedPointALongLineLocation, ReferencedDecoderBase<TEdge> baseDecoder)
+            where TEdge : IDynamicGraphEdgeData
+        {
+            // create the geometry factory.
+            var geometryFactory = new GeometryFactory();
+
+            // create the feature collection.
+            var featureCollection = new FeatureCollection();
+
+            // create the coordinates.
+            var geoCoordinates = baseDecoder.GetCoordinates(referencedPointALongLineLocation.Route);
+            featureCollection.Add(baseDecoder.GetVertexLocation(referencedPointALongLineLocation.Route.Vertices[0]).ToFeature());
+            featureCollection.Add(baseDecoder.GetVertexLocation(referencedPointALongLineLocation.Route.Vertices[referencedPointALongLineLocation.Route.Vertices.Length - 1]).ToFeature());
+            var coordinates = new List<Coordinate>(geoCoordinates.Count);
+            for(int idx = 0; idx < geoCoordinates.Count; idx++)
+            {
+                coordinates.Add(new Coordinate(geoCoordinates[idx].Longitude, geoCoordinates[idx].Latitude));
+            }
+
+            // create a line feature.
+            var line = geometryFactory.CreateLineString(coordinates.ToArray());
+            var lineAttributes = new AttributesTable();
+            lineAttributes.AddAttribute("orientation", referencedPointALongLineLocation.Orientation.ToString());
+            var lineFeature = new Feature(line, lineAttributes);
+            featureCollection.Add(lineFeature);
+
+            // create a feature for the actual location.
+            var locationCoordinate = new Coordinate(referencedPointALongLineLocation.Longitude, referencedPointALongLineLocation.Latitude);
+            var locationCoordinateFeature = new Feature(new Point(locationCoordinate), new AttributesTable());
+            featureCollection.Add(locationCoordinateFeature);
 
             return featureCollection;
         }
@@ -494,6 +533,26 @@ namespace OpenLR.OsmSharp
         public static GeoCoordinate ToGeoCoordinate(this OpenLR.Model.Coordinate coordinate)
         {
             return new GeoCoordinate(coordinate.Latitude, coordinate.Longitude);
+        }
+
+        /// <summary>
+        /// Converts the given coordinate to a GeoAPI coordinate.
+        /// </summary>
+        /// <param name="coordinate"></param>
+        /// <returns></returns>
+        public static Coordinate ToGeoAPICoordinate(this OpenLR.Model.Coordinate coordinate)
+        {
+            return new Coordinate(coordinate.Longitude, coordinate.Latitude);
+        }
+
+        /// <summary>
+        /// Converts the given coordinate to an NTS feature.
+        /// </summary>
+        /// <param name="coordinate"></param>
+        /// <returns></returns>
+        public static Feature ToFeature(this OpenLR.Model.Coordinate coordinate)
+        {
+            return new Feature(new Point(coordinate.ToGeoAPICoordinate()), new AttributesTable());
         }
     }
 }

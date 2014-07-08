@@ -80,9 +80,10 @@ namespace OpenLR.Tests.Referenced.Osm
 
             // confirm result.
             Assert.IsNotNull(referencedLocation);
-            Assert.IsNotNull(referencedLocation.Edge);
-            Assert.AreEqual(vertex1, referencedLocation.VertexFrom);
-            Assert.AreEqual(vertex2, referencedLocation.VertexTo);
+            Assert.IsNotNull(referencedLocation.Route);
+            Assert.IsNotNull(referencedLocation.Route.Edges);
+            Assert.AreEqual(vertex1, referencedLocation.Route.Vertices[0]);
+            Assert.AreEqual(vertex2, referencedLocation.Route.Vertices[1]);
             var longitudeReference = (location.Last.Coordinate.Longitude - location.First.Coordinate.Longitude) * (location.PositiveOffsetPercentage.Value / 100.0) + location.First.Coordinate.Longitude;
             var latitudeReference = (location.Last.Coordinate.Latitude - location.First.Coordinate.Latitude) * (location.PositiveOffsetPercentage.Value / 100.0) + location.First.Coordinate.Latitude;
             Assert.AreEqual(longitudeReference, referencedLocation.Longitude, delta);

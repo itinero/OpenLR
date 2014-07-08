@@ -1,4 +1,5 @@
 ﻿using OpenLR.Decoding;
+using OpenLR.Locations;
 using OpenLR.Model;
 using OpenLR.OsmSharp.Decoding;
 using OpenLR.OsmSharp.Decoding.Candidates;
@@ -155,6 +156,45 @@ namespace OpenLR.OsmSharp
         protected virtual ReferencedRectangleDecoder<TEdge> GetReferencedRectangleDecoder(IBasicRouterDataSource<TEdge> graph)
         {
             return new ReferencedRectangleDecoder<TEdge>(this, this.LocationDecoder.CreateRectangleLocationDecoder(), graph, this.GetRouter());
+        }
+
+        /// <summary>
+        /// Decodes the given data into a raw location.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public virtual ILocation DecodeRaw(string data)
+        {
+            if (_referencedCircleDecoder.CanDecode(data))
+            {
+                return _referencedCircleDecoder.DecodeRaw(data);
+            }
+            if (_referencedGeoCoordinateDecoder.CanDecode(data))
+            {
+                return _referencedGeoCoordinateDecoder.DecodeRaw(data);
+            }
+            if (_referencedGridDecoder.CanDecode(data))
+            {
+                return _referencedGridDecoder.DecodeRaw(data);
+            }
+            if (_referencedLineDecoder.CanDecode(data))
+            {
+                return _referencedLineDecoder.DecodeRaw(data);
+            }
+            if (_referencedPointAlongLineDecoder.CanDecode(data))
+            {
+                return _referencedPointAlongLineDecoder.DecodeRaw(data);
+            }
+            if (_referencedPolygonDecoder.CanDecode(data))
+            {
+                return _referencedPolygonDecoder.DecodeRaw(data);
+            }
+            if (_referencedRectangleDecoder.CanDecode(data))
+            {
+                return _referencedRectangleDecoder.DecodeRaw(data);
+            }
+            throw new ArgumentOutOfRangeException("data",
+                string.Format("Data cannot be decode by any of the registered decoders: {0}", data));
         }
 
         /// <summary>
