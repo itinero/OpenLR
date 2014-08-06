@@ -220,7 +220,7 @@ namespace OpenLR.OsmSharp
         /// Converts the referenced point along the line location to features.
         /// </summary>
         /// <param name="referencedPointALongLineLocation"></param>
-        /// <param name="baseDecoder"></param>
+        /// <param name="baseEncoder"></param>
         /// <returns></returns>
         public static FeatureCollection ToFeatures<TEdge>(this OpenLR.OsmSharp.Locations.ReferencedPointAlongLine<TEdge> referencedPointALongLineLocation, ReferencedEncoderBase<TEdge> baseEncoder)
             where TEdge : IDynamicGraphEdgeData

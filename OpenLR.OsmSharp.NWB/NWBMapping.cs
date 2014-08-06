@@ -84,9 +84,9 @@ namespace OpenLR.OsmSharp.NWB
                 }
                 else if(baansubsrt.StartsWith("vb"))
                 {
-                    fow = FormOfWay.SlipRoad;
                     if (!string.IsNullOrWhiteSpace(rijrichting))
                     {
+                        fow = FormOfWay.SlipRoad;
                         frc = FunctionalRoadClass.Frc0;
                     }
                 }

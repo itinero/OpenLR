@@ -31,14 +31,22 @@ namespace OpenLR.Tests.Referenced.NWB
                 Coordinates = null,
                 Distance = 10,
                 Forward = true,
-                Tags = tags.Add(new TagsCollection(Tag.Create("BAANSUBSRT", "VBD")))
+                Tags = tags.Add(new TagsCollection(
+                    Tag.Create("BAANSUBSRT", "VBD"),
+                    Tag.Create("WEGBEHSRT", "R"),
+                    Tag.Create("WEGNUMMER", string.Empty),
+                    Tag.Create("RIJRICHTING", "N")))
             }, null);
             graph.AddArc(vertex2, vertex1, new LiveEdge()
             {
                 Coordinates = null,
                 Distance = 10,
                 Forward = true,
-                Tags = tags.Add(new TagsCollection(Tag.Create("BAANSUBSRT", "VBD")))
+                Tags = tags.Add(new TagsCollection(
+                    Tag.Create("BAANSUBSRT", "VBD"),
+                    Tag.Create("WEGBEHSRT", "R"),
+                    Tag.Create("WEGNUMMER", string.Empty),
+                    Tag.Create("RIJRICHTING", "N")))
             }, null);
 
             // create a referenced location and encode it.
@@ -50,7 +58,11 @@ namespace OpenLR.Tests.Referenced.NWB
                 Coordinates = null,
                 Distance = 10,
                 Forward = true,
-                Tags = tags.Add(new TagsCollection(Tag.Create("BAANSUBSRT", "VBD")))
+                Tags = tags.Add(new TagsCollection(
+                    Tag.Create("BAANSUBSRT", "VBD"),
+                    Tag.Create("WEGBEHSRT", "R"),
+                    Tag.Create("WEGNUMMER", string.Empty),
+                    Tag.Create("RIJRICHTING", "N")))
             };
             referencedPointAlongLineLocation.Route.Vertices = new long[2];
             referencedPointAlongLineLocation.Route.Vertices[0] = vertex1;
@@ -74,9 +86,9 @@ namespace OpenLR.Tests.Referenced.NWB
             Assert.AreEqual(49.60597f, location.First.Coordinate.Latitude);
             Assert.AreEqual(6.12829f, location.First.Coordinate.Longitude);
             Assert.AreEqual(91, location.First.DistanceToNext);
-            Assert.AreEqual(FormOfWay.SingleCarriageWay, location.First.FormOfWay);
-            Assert.AreEqual(FunctionalRoadClass.Frc2, location.First.FuntionalRoadClass);
-            Assert.AreEqual(FunctionalRoadClass.Frc2, location.First.LowestFunctionalRoadClassToNext);
+            Assert.AreEqual(FormOfWay.SlipRoad, location.First.FormOfWay);
+            Assert.AreEqual(FunctionalRoadClass.Frc0, location.First.FuntionalRoadClass);
+            Assert.AreEqual(FunctionalRoadClass.Frc0, location.First.LowestFunctionalRoadClassToNext);
 
             Assert.AreEqual(49.60521f, location.Last.Coordinate.Latitude);
             Assert.AreEqual(6.12779f, location.Last.Coordinate.Longitude);
