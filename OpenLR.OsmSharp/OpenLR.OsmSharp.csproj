@@ -119,6 +119,7 @@
     <Compile Include="Decoding\Scoring\CombinedScoreComparer.cs" />
     <Compile Include="Decoding\Scoring\CombinedScore.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="Matching\MatchScoring.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReferencedDecoderBase.cs" />
     <Compile Include="ReferencedDecodingException.cs" />
