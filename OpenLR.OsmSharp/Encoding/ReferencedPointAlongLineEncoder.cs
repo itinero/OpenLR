@@ -46,17 +46,25 @@ namespace OpenLR.OsmSharp.Encoding
                 // get the tags collection.
                 var tags = this.GetTags(referencedLocation.Route.Edges[0].Tags);
 
+                // match fow/frc.
+                FormOfWay fow;
+                FunctionalRoadClass frc;
+                if(!this.TryMatching(tags, out frc, out fow))
+                {
+                    throw new ReferencedEncodingException(referencedLocation, "Could not find frc and/or fow for the given tags.");
+                }
+
                 // initialize location.
                 var location = new PointAlongLineLocation();
                 location.First = new Model.LocationReferencePoint();
                 location.First.Coordinate = this.GetVertexLocation(referencedLocation.Route.Vertices[0]);
-                location.First.FormOfWay = this.GetFormOfWayFor(tags);
-                location.First.FuntionalRoadClass = this.GetFunctionalRoadClassFor(tags);
+                location.First.FormOfWay = fow;
+                location.First.FuntionalRoadClass = frc;
                 location.First.LowestFunctionalRoadClassToNext = location.First.FuntionalRoadClass;
                 location.Last = new Model.LocationReferencePoint();
                 location.Last.Coordinate = this.GetVertexLocation(referencedLocation.Route.Vertices[1]);
-                location.Last.FormOfWay = this.GetFormOfWayFor(tags);
-                location.Last.FuntionalRoadClass = this.GetFunctionalRoadClassFor(tags);
+                location.Last.FormOfWay = fow;
+                location.Last.FuntionalRoadClass = frc;
 
                 // initialize from point, to point and create the coordinate list.
                 var from = new GeoCoordinate(location.First.Coordinate.Latitude, location.First.Coordinate.Longitude);

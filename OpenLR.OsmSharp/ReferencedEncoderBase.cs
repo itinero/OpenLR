@@ -5,10 +5,8 @@ using OpenLR.OsmSharp.Encoding;
 using OpenLR.OsmSharp.Locations;
 using OpenLR.Referenced;
 using OsmSharp.Collections.Tags;
-using OsmSharp.Math;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Simple;
-using OsmSharp.Math.Primitives;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Units.Angle;
@@ -118,18 +116,13 @@ namespace OpenLR.OsmSharp
         public abstract TagsCollectionBase GetTags(uint tagsId);
 
         /// <summary>
-        /// Returns the functional road class for the the given collections of tags.
+        /// Tries to match the given tags and figure out a corresponding frc and fow.
         /// </summary>
         /// <param name="tags"></param>
-        /// <returns></returns>
-        public abstract FunctionalRoadClass GetFunctionalRoadClassFor(TagsCollectionBase tags);
-
-        /// <summary>
-        /// Returns the form of way for the given collection of tags.
-        /// </summary>
-        /// <param name="tags"></param>
-        /// <returns></returns>
-        public abstract FormOfWay GetFormOfWayFor(TagsCollectionBase tags);
+        /// <param name="frc"></param>
+        /// <param name="fow"></param>
+        /// <returns>False if no matching was found.</returns>
+        public abstract bool TryMatching(TagsCollectionBase tags, out FunctionalRoadClass frc, out FormOfWay fow);
 
         /// <summary>
         /// Returns a value if a oneway restriction is found.

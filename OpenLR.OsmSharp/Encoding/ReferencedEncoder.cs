@@ -64,23 +64,15 @@ namespace OpenLR.OsmSharp.Encoding
         }
 
         /// <summary>
-        /// Returns a corresponding functional road class for the given edge properties.
+        /// Tries to match the given tags and figure out a corresponding frc and fow.
         /// </summary>
         /// <param name="tags"></param>
-        /// <returns></returns>
-        protected FunctionalRoadClass GetFunctionalRoadClassFor(TagsCollectionBase tags)
+        /// <param name="frc"></param>
+        /// <param name="fow"></param>
+        /// <returns>False if no matching was found.</returns>
+        protected bool TryMatching(TagsCollectionBase tags, out FunctionalRoadClass frc, out FormOfWay fow)
         {
-            return _mainEncoder.GetFunctionalRoadClassFor(tags);
-        }
-
-        /// <summary>
-        /// Returns a corresponding form of way for the given edge properties.
-        /// </summary>
-        /// <param name="tags"></param>
-        /// <returns></returns>
-        protected FormOfWay GetFormOfWayFor(TagsCollectionBase tags)
-        {
-            return _mainEncoder.GetFormOfWayFor(tags);
+            return _mainEncoder.TryMatching(tags, out frc, out fow);
         }
 
         /// <summary>

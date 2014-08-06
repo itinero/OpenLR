@@ -65,55 +65,15 @@ namespace OpenLR.OsmSharp.NWB
         }
 
         /// <summary>
-        /// Returns the functional road class for the the given collections of tags.
+        /// Tries to match the given tags and figure out a corresponding frc and fow.
         /// </summary>
         /// <param name="tags"></param>
-        /// <returns></returns>
-        public override FunctionalRoadClass GetFunctionalRoadClassFor(TagsCollectionBase tags)
+        /// <param name="frc"></param>
+        /// <param name="fow"></param>
+        /// <returns>False if no matching was found.</returns>
+        public override bool TryMatching(TagsCollectionBase tags, out FunctionalRoadClass frc, out FormOfWay fow)
         {
-            string baansubsrt;
-            if (tags.TryGetValue("BAANSUBSRT", out baansubsrt))
-            {
-                switch (baansubsrt)
-                { // check there reference values against OSM: http://wiki.openstreetmap.org/wiki/Highway
-                    case "HR": // main road.
-                        return FunctionalRoadClass.Frc0;
-                    case "AF":
-                    case "OP":
-                        return FunctionalRoadClass.Frc1;
-                    case "VBD":
-                        return FunctionalRoadClass.Frc2;
-
-                    // all other road classes are unknown for now.
-                }
-            }
-            return FunctionalRoadClass.Frc7;
-        }
-
-        /// <summary>
-        /// Returns the form of way for the given collection of tags.
-        /// </summary>
-        /// <param name="tags"></param>
-        /// <returns></returns>
-        public override FormOfWay GetFormOfWayFor(TagsCollectionBase tags)
-        {
-            string baansubsrt;
-            if (tags.TryGetValue("BAANSUBSRT", out baansubsrt))
-            {
-                switch (baansubsrt)
-                { // check there reference values against OSM: http://wiki.openstreetmap.org/wiki/Highway
-                    case "HR": // main road.
-                        return FormOfWay.Motorway;
-                    case "AF":
-                    case "OP":
-                        return FormOfWay.MultipleCarriageWay;
-                    case "VBD":
-                        return FormOfWay.SingleCarriageWay;
-
-                    // all other road classes are unknown for now.
-                }
-            }
-            return FormOfWay.Undefined;
+            return NWBMapping.ToOpenLR(tags, out fow, out frc);
         }
 
         /// <summary>

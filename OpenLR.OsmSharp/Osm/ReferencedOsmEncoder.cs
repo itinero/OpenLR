@@ -64,12 +64,16 @@ namespace OpenLR.OsmSharp.Osm
         }
 
         /// <summary>
-        /// Returns the functional road class for the the given collections of tags.
+        /// Tries to match the given tags and figure out a corresponding frc and fow.
         /// </summary>
         /// <param name="tags"></param>
-        /// <returns></returns>
-        public override FunctionalRoadClass GetFunctionalRoadClassFor(TagsCollectionBase tags)
+        /// <param name="frc"></param>
+        /// <param name="fow"></param>
+        /// <returns>False if no matching was found.</returns>
+        public override bool TryMatching(TagsCollectionBase tags, out FunctionalRoadClass frc, out FormOfWay fow)
         {
+            frc = FunctionalRoadClass.Frc7;
+            fow = FormOfWay.Undefined;
             string highway;
             if (tags.TryGetValue("highway", out highway))
             {
@@ -77,59 +81,56 @@ namespace OpenLR.OsmSharp.Osm
                 { // check there reference values against OSM: http://wiki.openstreetmap.org/wiki/Highway
                     case "motorway":
                     case "trunk":
-                        return FunctionalRoadClass.Frc0;
+                        frc = FunctionalRoadClass.Frc0;
+                        break;
                     case "primary":
                     case "primary_link":
-                        return FunctionalRoadClass.Frc1;
+                        frc = FunctionalRoadClass.Frc1;
+                        break;
                     case "secondary":
                     case "secondary_link":
-                        return FunctionalRoadClass.Frc2;
+                        frc = FunctionalRoadClass.Frc2;
+                        break;
                     case "tertiary":
                     case "tertiary_link":
-                        return FunctionalRoadClass.Frc3;
+                        frc = FunctionalRoadClass.Frc3;
+                        break;
                     case "road":
                     case "road_link":
                     case "unclassified":
                     case "residential":
-                        return FunctionalRoadClass.Frc4;
+                        frc = FunctionalRoadClass.Frc4;
+                        break;
                     case "living_street":
-                        return FunctionalRoadClass.Frc5;
-                    case "footway":
-                    case "bridleway":
-                    case "steps":
-                    case "path":
-                        return FunctionalRoadClass.Frc7;
+                        frc = FunctionalRoadClass.Frc5;
+                        break;
+                    default:
+                        frc = FunctionalRoadClass.Frc7;
+                        break;
                 }
-            }
-            return FunctionalRoadClass.Frc7;
-        }
-
-        /// <summary>
-        /// Returns the form of way for the given collection of tags.
-        /// </summary>
-        /// <param name="tags"></param>
-        /// <returns></returns>
-        public override FormOfWay GetFormOfWayFor(TagsCollectionBase tags)
-        {
-            string highway;
-            if (tags.TryGetValue("highway", out highway))
-            {
                 switch (highway)
                 { // check there reference values against OSM: http://wiki.openstreetmap.org/wiki/Highway
                     case "motorway":
                     case "trunk":
-                        return FormOfWay.Motorway;
+                        fow = FormOfWay.Motorway;
+                        break;
                     case "primary":
                     case "primary_link":
-                        return FormOfWay.MultipleCarriageWay;
+                        fow = FormOfWay.MultipleCarriageWay;
+                        break;
                     case "secondary":
                     case "secondary_link":
                     case "tertiary":
                     case "tertiary_link":
-                        return FormOfWay.SingleCarriageWay;
+                        fow = FormOfWay.SingleCarriageWay;
+                        break;
+                    default:
+                        fow = FormOfWay.SingleCarriageWay;
+                        break;
                 }
+                return true; // should never fail on a highway tag.
             }
-            return FormOfWay.SingleCarriageWay;
+            return false;
         }
 
         /// <summary>

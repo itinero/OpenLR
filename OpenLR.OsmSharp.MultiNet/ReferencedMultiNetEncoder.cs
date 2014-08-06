@@ -65,73 +65,83 @@ namespace OpenLR.OsmSharp.MultiNet
         }
 
         /// <summary>
-        /// Returns the functional road class for the the given collections of tags.
+        /// Tries to match the given tags and figure out a corresponding frc and fow.
         /// </summary>
         /// <param name="tags"></param>
-        /// <returns></returns>
-        public override FunctionalRoadClass GetFunctionalRoadClassFor(TagsCollectionBase tags)
+        /// <param name="frc"></param>
+        /// <param name="fow"></param>
+        /// <returns>False if no matching was found.</returns>
+        public override bool TryMatching(TagsCollectionBase tags, out FunctionalRoadClass frc, out FormOfWay fow)
         {
-            string frc;
-            if (tags.TryGetValue("FRC", out frc))
+            frc = FunctionalRoadClass.Frc7;
+            fow = FormOfWay.Undefined;
+            string frcValue;
+            if (tags.TryGetValue("FRC", out frcValue))
             {
-                switch (frc)
+                switch (frcValue)
                 {
                     case "0": // main road.
-                        return FunctionalRoadClass.Frc0;
+                        frc = FunctionalRoadClass.Frc0;
+                        break;
                     case "1": // main road.
-                        return FunctionalRoadClass.Frc1;
+                        frc = FunctionalRoadClass.Frc1;
+                        break;
                     case "2": // main road.
-                        return FunctionalRoadClass.Frc2;
+                        frc = FunctionalRoadClass.Frc2;
+                        break;
                     case "3": // main road.
-                        return FunctionalRoadClass.Frc3;
+                        frc = FunctionalRoadClass.Frc3;
+                        break;
                     case "4": // main road.
-                        return FunctionalRoadClass.Frc4;
+                        frc = FunctionalRoadClass.Frc4;
+                        break;
                     case "5": // main road.
-                        return FunctionalRoadClass.Frc5;
+                        frc = FunctionalRoadClass.Frc5;
+                        break;
                     case "6": // main road.
-                        return FunctionalRoadClass.Frc6;
+                        frc = FunctionalRoadClass.Frc6;
+                        break;
                     case "7": // main road.
-                        return FunctionalRoadClass.Frc7;
+                        frc = FunctionalRoadClass.Frc7;
+                        break;
                 }
             }
-            return FunctionalRoadClass.Frc7;
-        }
-
-        /// <summary>
-        /// Returns the form of way for the given collection of tags.
-        /// </summary>
-        /// <param name="tags"></param>
-        /// <returns></returns>
-        public override FormOfWay GetFormOfWayFor(TagsCollectionBase tags)
-        {
-            string fow;
-            if (tags.TryGetValue("FOW", out fow))
+            string fowValue;
+            if (tags.TryGetValue("FOW", out fowValue))
             {
-                switch (fow)
+                switch (fowValue)
                 {
                     case "1": // main road.
-                        return FormOfWay.Motorway;
+                        fow = FormOfWay.Motorway;
+                        break;
                     case "2":
-                        return FormOfWay.MultipleCarriageWay;
+                        fow = FormOfWay.MultipleCarriageWay;
+                        break;
                     case "3":
-                        return FormOfWay.SingleCarriageWay;
+                        fow = FormOfWay.SingleCarriageWay;
+                        break;
                     case "4":
-                        return FormOfWay.Roundabout;
+                        fow = FormOfWay.Roundabout;
+                        break;
                     case "5":
-                        return FormOfWay.Undefined;
+                        fow = FormOfWay.Undefined;
+                        break;
                     case "6":
                     case "7":
                     case "8":
-                        return FormOfWay.Other;
+                        fow = FormOfWay.Other;
+                        break;
                     case "9":
-                        return FormOfWay.SlipRoad;
+                        fow = FormOfWay.SlipRoad;
+                        break;
                     case "10":
                     case "11":
                     case "12":
-                        return FormOfWay.Other;
+                        fow = FormOfWay.Other;
+                        break;
                 }
             }
-            return FormOfWay.Other;
+            return true;
         }
 
         /// <summary>
