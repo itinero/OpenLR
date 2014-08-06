@@ -132,6 +132,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Referenced\MultiNet\ReferencedPointAlongLineDecoderTests.cs" />
     <Compile Include="Referenced\MultiNet\ReferencedPointAlongLineEncoderTests.cs" />
+    <Compile Include="Referenced\NWB\NWBMappingTests.cs" />
     <Compile Include="Referenced\NWB\ReferencedPointAlongLineDecoderTests.cs" />
     <Compile Include="Referenced\NWB\ReferencedPointAlongLineEncoderTests.cs" />
     <Compile Include="Referenced\Real\Osm\RealGraphOsm.cs" />
