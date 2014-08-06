@@ -2,6 +2,7 @@
 using OpenLR.Model;
 using OpenLR.OsmSharp.Decoding.Candidates;
 using OpenLR.OsmSharp.Locations;
+using OpenLR.OsmSharp.Matching;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Graph.Router.Dykstra;
@@ -75,40 +76,11 @@ namespace OpenLR.OsmSharp.NWB
         /// <returns></returns>
         public override float MatchArc(TagsCollectionBase tags, FormOfWay fow, FunctionalRoadClass frc)
         {
-            string baansubsrt;
-            if (!tags.TryGetValue("BAANSUBSRT", out baansubsrt))
-            { // not even a highway tag!
-                return 0;
-            }
-
-            // TODO: take into account form of way? Maybe not for OSM-data?
-            switch (frc)
-            { // check there reference values against OSM: http://wiki.openstreetmap.org/wiki/Highway
-                case FunctionalRoadClass.Frc0: // main road.
-                    if (baansubsrt == "HR")
-                    {
-                        return 1;
-                    }
-                    break;
-                case FunctionalRoadClass.Frc1: // first class road.
-                    if (baansubsrt == "AF" || baansubsrt == "OP")
-                    {
-                        return 1;
-                    }
-                    break;
-                case FunctionalRoadClass.Frc2: // second class road.
-                    if (baansubsrt == "VBD")
-                    {
-                        return 1;
-                    }
-                    break;
-
-                    // all other road classes are unknown for now.
-            }
-
-            if (baansubsrt != null && baansubsrt.Length > 0)
-            { // for any other highway return a low match.
-                return 0.2f;
+            FormOfWay actualFow;
+            FunctionalRoadClass actualFrc;
+            if(NWBMapping.ToOpenLR(tags, out actualFow, out actualFrc))
+            { // a mapping was found. match and score.
+                return MatchScoring.MatchAndScore(frc, fow, actualFrc, actualFow);
             }
             return 0;
         }

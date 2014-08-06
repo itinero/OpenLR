@@ -8,7 +8,6 @@ using OsmSharp.Routing.Graph.Router.Dykstra;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Shape;
 using OsmSharp.Routing.Shape.Readers;
-using OsmSharp.Routing.Shape.Vehicles;
 using OsmSharp.Units.Distance;
 using System;
 using System.Collections.Generic;

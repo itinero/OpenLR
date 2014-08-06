@@ -15,7 +15,7 @@ namespace OpenLR.OsmSharp.NWB
         /// <param name="fow"></param>
         /// <param name="frc"></param>
         /// <returns>False if no valid mapping was found.</returns>
-        public static bool ToOpenLR(this TagsCollection tags, out FormOfWay fow, out FunctionalRoadClass frc)
+        public static bool ToOpenLR(this TagsCollectionBase tags, out FormOfWay fow, out FunctionalRoadClass frc)
         {
             fow = FormOfWay.Undefined;
             frc = FunctionalRoadClass.Frc7;
