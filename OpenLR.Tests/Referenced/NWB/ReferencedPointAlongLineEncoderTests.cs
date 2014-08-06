@@ -35,7 +35,7 @@ namespace OpenLR.Tests.Referenced.NWB
                     Tag.Create("BAANSUBSRT", "VBD"),
                     Tag.Create("WEGBEHSRT", "R"),
                     Tag.Create("WEGNUMMER", string.Empty),
-                    Tag.Create("RIJRICHTING", "N")))
+                    Tag.Create("RIJRICHTNG", "N")))
             }, null);
             graph.AddArc(vertex2, vertex1, new LiveEdge()
             {
@@ -46,7 +46,7 @@ namespace OpenLR.Tests.Referenced.NWB
                     Tag.Create("BAANSUBSRT", "VBD"),
                     Tag.Create("WEGBEHSRT", "R"),
                     Tag.Create("WEGNUMMER", string.Empty),
-                    Tag.Create("RIJRICHTING", "N")))
+                    Tag.Create("RIJRICHTNG", "N")))
             }, null);
 
             // create a referenced location and encode it.
@@ -62,7 +62,7 @@ namespace OpenLR.Tests.Referenced.NWB
                     Tag.Create("BAANSUBSRT", "VBD"),
                     Tag.Create("WEGBEHSRT", "R"),
                     Tag.Create("WEGNUMMER", string.Empty),
-                    Tag.Create("RIJRICHTING", "N")))
+                    Tag.Create("RIJRICHTNG", "N")))
             };
             referencedPointAlongLineLocation.Route.Vertices = new long[2];
             referencedPointAlongLineLocation.Route.Vertices[0] = vertex1;

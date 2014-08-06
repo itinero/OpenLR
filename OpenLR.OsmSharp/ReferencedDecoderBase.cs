@@ -255,7 +255,7 @@ namespace OpenLR.OsmSharp
                     {
                         Edge = edgeCandidate.Edge,
                         Vertex = vertexCandidate.Vertex,
-                        Score = vertexCandidate.Score = edgeCandidate.Score
+                        Score = vertexCandidate.Score * edgeCandidate.Score
                     });
                 }
             }
@@ -341,18 +341,15 @@ namespace OpenLR.OsmSharp
             var relevantEdges = new List<CandidateEdge>();
             foreach (var arc in this.Graph.GetArcs(vertex))
             {
-                if (arc.Value.Forward == forward)
-                {
-                    var tags = this.Graph.TagsIndex.Get(arc.Value.Tags);
-                    var score = this.MatchArc(tags, fow, frc);
-                    if (score > 0)
-                    { // ok, there is a match.
-                        relevantEdges.Add(new CandidateEdge()
-                        {
-                            Score = score,
-                            Edge = arc.Value
-                        });
-                    }
+                var tags = this.Graph.TagsIndex.Get(arc.Value.Tags);
+                var score = this.MatchArc(tags, fow, frc);
+                if (score > 0)
+                { // ok, there is a match.
+                    relevantEdges.Add(new CandidateEdge()
+                    {
+                        Score = score,
+                        Edge = arc.Value
+                    });
                 }
             }
             return relevantEdges;

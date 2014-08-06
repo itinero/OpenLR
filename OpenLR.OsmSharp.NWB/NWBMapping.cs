@@ -23,7 +23,7 @@ namespace OpenLR.OsmSharp.NWB
             if (!tags.TryGetValue("BAANSUBSRT", out baansubsrt) ||
                 !tags.TryGetValue("WEGBEHSRT", out wegbeerder) ||
                 !tags.TryGetValue("WEGNUMMER", out wegnummer) ||
-                !tags.TryGetValue("RIJRICHTING", out rijrichting))
+                !tags.TryGetValue("RIJRICHTNG", out rijrichting))
             { // not even a BAANSUBSRT tag!
                 return false;
             }
