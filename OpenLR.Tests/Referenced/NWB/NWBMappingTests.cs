@@ -26,7 +26,7 @@ namespace OpenLR.Tests.Referenced.NWB
             // R HR => FRC0/MOTORWAY
             tags.Add("WEGBEHSRT", "R");
             tags.Add("BAANSUBSRT", "HR");
-            tags.Add("RIJRICHTING", string.Empty);
+            tags.Add("RIJRICHTNG", string.Empty);
             tags.Add("WEGNUMMER", string.Empty);
             Assert.IsTrue(tags.ToOpenLR(out fow, out frc));
             Assert.AreEqual(FunctionalRoadClass.Frc0, frc);
@@ -36,7 +36,7 @@ namespace OpenLR.Tests.Referenced.NWB
             // R NRB => FRC0/ROUNDABOUT
             tags.Add("WEGBEHSRT", "R");
             tags.Add("BAANSUBSRT", "NRB");
-            tags.Add("RIJRICHTING", string.Empty);
+            tags.Add("RIJRICHTNG", string.Empty);
             tags.Add("WEGNUMMER", string.Empty);
             Assert.IsTrue(tags.ToOpenLR(out fow, out frc));
             Assert.AreEqual(FunctionalRoadClass.Frc0, frc);
@@ -46,7 +46,7 @@ namespace OpenLR.Tests.Referenced.NWB
             // R MRB => FRC0/ROUNDABOUT
             tags.Add("WEGBEHSRT", "R");
             tags.Add("BAANSUBSRT", "MRB");
-            tags.Add("RIJRICHTING", string.Empty);
+            tags.Add("RIJRICHTNG", string.Empty);
             tags.Add("WEGNUMMER", string.Empty);
             Assert.IsTrue(tags.ToOpenLR(out fow, out frc));
             Assert.AreEqual(FunctionalRoadClass.Frc0, frc);
@@ -56,7 +56,7 @@ namespace OpenLR.Tests.Referenced.NWB
             // R PST DKV!=(a|b|c|d) => FRC0/SLIPROAD
             tags.Add("WEGBEHSRT", "R");
             tags.Add("BAANSUBSRT", "PST");
-            tags.Add("RIJRICHTING", string.Empty);
+            tags.Add("RIJRICHTNG", string.Empty);
             tags.Add("WEGNUMMER", "A1");
             Assert.IsTrue(tags.ToOpenLR(out fow, out frc));
             Assert.AreEqual(FunctionalRoadClass.Frc0, frc);
@@ -66,7 +66,7 @@ namespace OpenLR.Tests.Referenced.NWB
             // R PST DKV!=(a|b|c|d| ) => FRC5/OTHER
             tags.Add("WEGBEHSRT", "R");
             tags.Add("BAANSUBSRT", "PST");
-            tags.Add("RIJRICHTING", string.Empty);
+            tags.Add("RIJRICHTNG", string.Empty);
             tags.Add("WEGNUMMER", string.Empty);
             Assert.IsTrue(tags.ToOpenLR(out fow, out frc));
             Assert.AreEqual(FunctionalRoadClass.Frc5, frc);
@@ -76,7 +76,7 @@ namespace OpenLR.Tests.Referenced.NWB
             // R OPR => FRC3/SLIPROAD
             tags.Add("WEGBEHSRT", "R");
             tags.Add("BAANSUBSRT", "OPR");
-            tags.Add("RIJRICHTING", string.Empty);
+            tags.Add("RIJRICHTNG", string.Empty);
             tags.Add("WEGNUMMER", "A1");
             Assert.IsTrue(tags.ToOpenLR(out fow, out frc));
             Assert.AreEqual(FunctionalRoadClass.Frc3, frc);
@@ -86,7 +86,7 @@ namespace OpenLR.Tests.Referenced.NWB
             // R AFR => FRC3/SLIPROAD
             tags.Add("WEGBEHSRT", "R");
             tags.Add("BAANSUBSRT", "AFR");
-            tags.Add("RIJRICHTING", string.Empty);
+            tags.Add("RIJRICHTNG", string.Empty);
             tags.Add("WEGNUMMER", "A1");
             Assert.IsTrue(tags.ToOpenLR(out fow, out frc));
             Assert.AreEqual(FunctionalRoadClass.Frc3, frc);
@@ -96,7 +96,7 @@ namespace OpenLR.Tests.Referenced.NWB
             // R AFR => FRC3/SLIPROAD
             tags.Add("WEGBEHSRT", "R");
             tags.Add("BAANSUBSRT", "AFR");
-            tags.Add("RIJRICHTING", string.Empty);
+            tags.Add("RIJRICHTNG", string.Empty);
             tags.Add("WEGNUMMER", "A1");
             Assert.IsTrue(tags.ToOpenLR(out fow, out frc));
             Assert.AreEqual(FunctionalRoadClass.Frc3, frc);
@@ -106,7 +106,7 @@ namespace OpenLR.Tests.Referenced.NWB
             // R PST DKV=(a|b|c|d) => FRC3/SLIPROAD
             tags.Add("WEGBEHSRT", "R");
             tags.Add("BAANSUBSRT", "PST");
-            tags.Add("RIJRICHTING", string.Empty);
+            tags.Add("RIJRICHTNG", string.Empty);
             tags.Add("WEGNUMMER", "A1a");
             Assert.IsTrue(tags.ToOpenLR(out fow, out frc));
             Assert.AreEqual(FunctionalRoadClass.Frc3, frc);
@@ -114,7 +114,7 @@ namespace OpenLR.Tests.Referenced.NWB
             tags.Clear();
             tags.Add("WEGBEHSRT", "R");
             tags.Add("BAANSUBSRT", "PST");
-            tags.Add("RIJRICHTING", string.Empty);
+            tags.Add("RIJRICHTNG", string.Empty);
             tags.Add("WEGNUMMER", "A1b");
             Assert.IsTrue(tags.ToOpenLR(out fow, out frc));
             Assert.AreEqual(FunctionalRoadClass.Frc3, frc);
@@ -122,7 +122,7 @@ namespace OpenLR.Tests.Referenced.NWB
             tags.Clear();
             tags.Add("WEGBEHSRT", "R");
             tags.Add("BAANSUBSRT", "PST");
-            tags.Add("RIJRICHTING", string.Empty);
+            tags.Add("RIJRICHTNG", string.Empty);
             tags.Add("WEGNUMMER", "A1c");
             Assert.IsTrue(tags.ToOpenLR(out fow, out frc));
             Assert.AreEqual(FunctionalRoadClass.Frc3, frc);
@@ -130,7 +130,7 @@ namespace OpenLR.Tests.Referenced.NWB
             tags.Clear();
             tags.Add("WEGBEHSRT", "R");
             tags.Add("BAANSUBSRT", "PST");
-            tags.Add("RIJRICHTING", string.Empty);
+            tags.Add("RIJRICHTNG", string.Empty);
             tags.Add("WEGNUMMER", "A1d");
             Assert.IsTrue(tags.ToOpenLR(out fow, out frc));
             Assert.AreEqual(FunctionalRoadClass.Frc3, frc);
@@ -140,7 +140,7 @@ namespace OpenLR.Tests.Referenced.NWB
             // R PST RIJRICHTING!=null => FRC0/SLIPROAD
             tags.Add("WEGBEHSRT", "R");
             tags.Add("BAANSUBSRT", "PST");
-            tags.Add("RIJRICHTING", "N");
+            tags.Add("RIJRICHTNG", "N");
             tags.Add("WEGNUMMER", string.Empty);
             Assert.IsTrue(tags.ToOpenLR(out fow, out frc));
             Assert.AreEqual(FunctionalRoadClass.Frc0, frc);
@@ -150,7 +150,7 @@ namespace OpenLR.Tests.Referenced.NWB
             // R VB? RIJRICHTING!=null => FRC0/SLIPROAD
             tags.Add("WEGBEHSRT", "R");
             tags.Add("BAANSUBSRT", "VB2");
-            tags.Add("RIJRICHTING", "N");
+            tags.Add("RIJRICHTNG", "N");
             tags.Add("WEGNUMMER", string.Empty);
             Assert.IsTrue(tags.ToOpenLR(out fow, out frc));
             Assert.AreEqual(FunctionalRoadClass.Frc0, frc);
@@ -160,7 +160,7 @@ namespace OpenLR.Tests.Referenced.NWB
             // P HR RIJRICHTING==null => FRC2/SINGLE_CARRIAGEWAY
             tags.Add("WEGBEHSRT", "P");
             tags.Add("BAANSUBSRT", "HR");
-            tags.Add("RIJRICHTING", string.Empty);
+            tags.Add("RIJRICHTNG", string.Empty);
             tags.Add("WEGNUMMER", string.Empty);
             Assert.IsTrue(tags.ToOpenLR(out fow, out frc));
             Assert.AreEqual(FunctionalRoadClass.Frc2, frc);
@@ -170,7 +170,7 @@ namespace OpenLR.Tests.Referenced.NWB
             // P HR RIJRICHTING!=null => FRC2/MULTIPLE_CARRIAGEWAY
             tags.Add("WEGBEHSRT", "P");
             tags.Add("BAANSUBSRT", "HR");
-            tags.Add("RIJRICHTING", "N");
+            tags.Add("RIJRICHTNG", "N");
             tags.Add("WEGNUMMER", string.Empty);
             Assert.IsTrue(tags.ToOpenLR(out fow, out frc));
             Assert.AreEqual(FunctionalRoadClass.Frc3, frc);
@@ -180,7 +180,7 @@ namespace OpenLR.Tests.Referenced.NWB
             // P NRB => FRC3/ROUNDABOUT
             tags.Add("WEGBEHSRT", "P");
             tags.Add("BAANSUBSRT", "NRB");
-            tags.Add("RIJRICHTING", string.Empty);
+            tags.Add("RIJRICHTNG", string.Empty);
             tags.Add("WEGNUMMER", string.Empty);
             Assert.IsTrue(tags.ToOpenLR(out fow, out frc));
             Assert.AreEqual(FunctionalRoadClass.Frc3, frc);
@@ -190,7 +190,7 @@ namespace OpenLR.Tests.Referenced.NWB
             // P MRB => FRC3/ROUNDABOUT
             tags.Add("WEGBEHSRT", "P");
             tags.Add("BAANSUBSRT", "MRB");
-            tags.Add("RIJRICHTING", string.Empty);
+            tags.Add("RIJRICHTNG", string.Empty);
             tags.Add("WEGNUMMER", string.Empty);
             Assert.IsTrue(tags.ToOpenLR(out fow, out frc));
             Assert.AreEqual(FunctionalRoadClass.Frc3, frc);
@@ -200,7 +200,7 @@ namespace OpenLR.Tests.Referenced.NWB
             // P OPR => FRC3/SLIPROAD
             tags.Add("WEGBEHSRT", "P");
             tags.Add("BAANSUBSRT", "OPR");
-            tags.Add("RIJRICHTING", string.Empty);
+            tags.Add("RIJRICHTNG", string.Empty);
             tags.Add("WEGNUMMER", string.Empty);
             Assert.IsTrue(tags.ToOpenLR(out fow, out frc));
             Assert.AreEqual(FunctionalRoadClass.Frc3, frc);
@@ -210,7 +210,7 @@ namespace OpenLR.Tests.Referenced.NWB
             // P AFR => FRC3/SLIPROAD
             tags.Add("WEGBEHSRT", "P");
             tags.Add("BAANSUBSRT", "AFR");
-            tags.Add("RIJRICHTING", string.Empty);
+            tags.Add("RIJRICHTNG", string.Empty);
             tags.Add("WEGNUMMER", string.Empty);
             Assert.IsTrue(tags.ToOpenLR(out fow, out frc));
             Assert.AreEqual(FunctionalRoadClass.Frc3, frc);
@@ -220,7 +220,7 @@ namespace OpenLR.Tests.Referenced.NWB
             // P PST => FRC3/SLIPROAD
             tags.Add("WEGBEHSRT", "P");
             tags.Add("BAANSUBSRT", "AFR");
-            tags.Add("RIJRICHTING", string.Empty);
+            tags.Add("RIJRICHTNG", string.Empty);
             tags.Add("WEGNUMMER", string.Empty);
             Assert.IsTrue(tags.ToOpenLR(out fow, out frc));
             Assert.AreEqual(FunctionalRoadClass.Frc3, frc);
@@ -230,7 +230,7 @@ namespace OpenLR.Tests.Referenced.NWB
             // P VB? => FRC3/SLIPROAD
             tags.Add("WEGBEHSRT", "P");
             tags.Add("BAANSUBSRT", "VB2");
-            tags.Add("RIJRICHTING", string.Empty);
+            tags.Add("RIJRICHTNG", string.Empty);
             tags.Add("WEGNUMMER", string.Empty);
             Assert.IsTrue(tags.ToOpenLR(out fow, out frc));
             Assert.AreEqual(FunctionalRoadClass.Frc3, frc);
@@ -240,7 +240,7 @@ namespace OpenLR.Tests.Referenced.NWB
             // (empty) => FRC5/OTHER
             tags.Add("WEGBEHSRT", string.Empty);
             tags.Add("BAANSUBSRT", string.Empty);
-            tags.Add("RIJRICHTING", string.Empty);
+            tags.Add("RIJRICHTNG", string.Empty);
             tags.Add("WEGNUMMER", string.Empty);
             Assert.IsTrue(tags.ToOpenLR(out fow, out frc));
             Assert.AreEqual(FunctionalRoadClass.Frc5, frc);
