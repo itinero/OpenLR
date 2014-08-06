@@ -56,14 +56,22 @@ namespace OpenLR.Tests.Referenced.NWB
                 Coordinates = null,
                 Distance = 10,
                 Forward = true,
-                Tags = tags.Add(new TagsCollection(Tag.Create("BAANSUBSRT", "VBD")))
+                Tags = tags.Add(new TagsCollection(
+                    Tag.Create("BAANSUBSRT", "VBD"), 
+                    Tag.Create("WEGBEHSRT", "R"), 
+                    Tag.Create("WEGNUMMER", string.Empty),
+                    Tag.Create("RIJRICHTING", string.Empty)))
             }, null);
             graph.AddArc(vertex2, vertex1, new LiveEdge()
             {
                 Coordinates = null,
                 Distance = 10,
                 Forward = true,
-                Tags = tags.Add(new TagsCollection(Tag.Create("BAANSUBSRT", "VBD")))
+                Tags = tags.Add(new TagsCollection(
+                    Tag.Create("BAANSUBSRT", "VBD"),
+                    Tag.Create("WEGBEHSRT", "R"),
+                    Tag.Create("WEGNUMMER", string.Empty),
+                    Tag.Create("RIJRICHTING", string.Empty)))
             }, null);
 
             // decode the location
