@@ -4,11 +4,14 @@ using OpenLR.Model;
 using OpenLR.OsmSharp.Encoding;
 using OpenLR.OsmSharp.Locations;
 using OpenLR.Referenced;
+using OsmSharp;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Simple;
+using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Units.Angle;
 using System;
 using System.Collections.Generic;
@@ -47,7 +50,7 @@ namespace OpenLR.OsmSharp
         /// <summary>
         /// Returns the reference graph.
         /// </summary>
-        protected IBasicRouterDataSource<TEdge> Graph
+        public IBasicRouterDataSource<TEdge> Graph
         {
             get
             {
@@ -102,6 +105,14 @@ namespace OpenLR.OsmSharp
         }
 
         /// <summary>
+        /// Returns the encoder vehicle profile.
+        /// </summary>
+        public abstract Vehicle Vehicle
+        {
+            get;
+        }
+
+        /// <summary>
         /// Returns the location of the given vertex.
         /// </summary>
         /// <param name="vertex"></param>
@@ -151,7 +162,7 @@ namespace OpenLR.OsmSharp
             { // there are intermediates, add them in the correct order.
                 if (forward)
                 {
-                    coordinates.AddRange(edge.Coordinates.Select<GeoCoordinateSimple, GeoCoordinate>(x => {return new GeoCoordinate(x.Latitude, x.Longitude);}));
+                    coordinates.AddRange(edge.Coordinates.Select<GeoCoordinateSimple, GeoCoordinate>(x => { return new GeoCoordinate(x.Latitude, x.Longitude); }));
                 }
                 else
                 {
@@ -163,6 +174,82 @@ namespace OpenLR.OsmSharp
             coordinates.Add(new GeoCoordinate(latitude, longitude));
 
             return BearingEncoder.EncodeBearing(coordinates);
+        }
+    }
+
+    public static class ReferencedEncoderBaseExtensions
+    {
+        /// <summary>
+        /// Builds a point along line location for the given encoder.
+        /// </summary>
+        /// <param name="encoder"></param>
+        /// <param name="location"></param>
+        /// <returns></returns>
+        public static ReferencedPointAlongLine<LiveEdge> BuildPointAlongLine(this ReferencedEncoderBase<LiveEdge> encoder, GeoCoordinate location)
+        {
+            var closest = encoder.Graph.GetClosestEdge<LiveEdge>(location);
+
+            // check oneway.
+            var oneway = encoder.Vehicle.IsOneWay(encoder.Graph.TagsIndex.Get(closest.Value.Value.Tags));
+            var useForward = (oneway == null) || (oneway.Value == closest.Value.Value.Forward);
+
+            // build location.
+            ReferencedPointAlongLine<LiveEdge> referencedPointAlongLineLocation = null;
+            LiveEdge edge;
+            uint from, to;
+            if (useForward)
+            { // encode first point to last point.
+                edge = closest.Value.Value;
+                if (!closest.Value.Value.Forward)
+                { // use reverse edge.
+                    var reverseEdge = new LiveEdge();
+                    reverseEdge.Tags = closest.Value.Value.Tags;
+                    reverseEdge.Forward = !closest.Value.Value.Forward;
+                    reverseEdge.Distance = closest.Value.Value.Distance;
+                    reverseEdge.Coordinates = null;
+                    if (closest.Value.Value.Coordinates != null)
+                    {
+                        var reverse = new GeoCoordinateSimple[closest.Value.Value.Coordinates.Length];
+                        closest.Value.Value.Coordinates.CopyToReverse(reverse, 0);
+                        reverseEdge.Coordinates = reverse;
+                    }
+                    edge = reverseEdge;
+                }
+                from = closest.Key;
+                to = closest.Value.Key;
+            }
+            else
+            { // encode last point to first point.
+                edge = closest.Value.Value;
+                if (closest.Value.Value.Forward)
+                { // reverse edge if needed.
+                    // Next OsmSharp version: use closest.Value.Value.Reverse();
+                    var reverseEdge = new LiveEdge();
+                    reverseEdge.Tags = closest.Value.Value.Tags;
+                    reverseEdge.Forward = !closest.Value.Value.Forward;
+                    reverseEdge.Distance = closest.Value.Value.Distance;
+                    reverseEdge.Coordinates = null;
+                    if (closest.Value.Value.Coordinates != null)
+                    {
+                        var reverse = new GeoCoordinateSimple[closest.Value.Value.Coordinates.Length];
+                        closest.Value.Value.Coordinates.CopyToReverse(reverse, 0);
+                        reverseEdge.Coordinates = reverse;
+                    }
+                }
+                from = closest.Value.Key;
+                to = closest.Key;
+            }
+
+            return new OpenLR.OsmSharp.Locations.ReferencedPointAlongLine<LiveEdge>()
+            {
+                Route = new ReferencedLine<LiveEdge>(encoder.Graph)
+                {
+                    Edges = new LiveEdge[] { edge },
+                    Vertices = new long[] { from, to }
+                },
+                Latitude = location.Latitude,
+                Longitude = location.Longitude
+            };
         }
     }
 }

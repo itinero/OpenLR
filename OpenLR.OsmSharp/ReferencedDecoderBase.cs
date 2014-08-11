@@ -128,6 +128,17 @@ namespace OpenLR.OsmSharp
         }
 
         /// <summary>
+        /// Returns the max vertex distance.
+        /// </summary>
+        public Meter MaxVertexDistance
+        {
+            get
+            {
+                return _maxVertexDistance;
+            }
+        }
+
+        /// <summary>
         /// Holds the referenced circle decoder.
         /// </summary>
         protected virtual ReferencedCircleDecoder<TEdge> GetReferencedCircleDecoder(IBasicRouterDataSource<TEdge> graph)

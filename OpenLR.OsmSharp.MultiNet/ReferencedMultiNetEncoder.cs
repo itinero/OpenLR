@@ -1,6 +1,7 @@
 ﻿using OpenLR.Encoding;
 using OpenLR.Model;
 using OsmSharp.Collections.Tags;
+using OsmSharp.Routing;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Graph.Router.Dykstra;
 using OsmSharp.Routing.Osm.Graphs;
@@ -201,8 +202,20 @@ namespace OpenLR.OsmSharp.MultiNet
         /// <returns></returns>
         public override bool? IsOneway(TagsCollectionBase tags)
         {
-            var vehicle = new global::OsmSharp.Routing.Shape.Vehicles.Car("ONEWAY", "FT", "TF", string.Empty);
-            return vehicle.IsOneWay(tags);
+            return this.Vehicle.IsOneWay(tags);
+        }
+
+        /// <summary>
+        /// Holds the encoder vehicle.
+        /// </summary>
+        private Vehicle _vehicle = new global::OsmSharp.Routing.Shape.Vehicles.Car("ONEWAY", "FT", "TF", string.Empty);
+
+        /// <summary>
+        /// Returns the encoder vehicle profile.
+        /// </summary>
+        public override global::OsmSharp.Routing.Vehicle Vehicle
+        {
+            get { return _vehicle; }
         }
     }
 }

@@ -64,6 +64,17 @@ namespace OpenLR.OsmSharp.Decoding
         public override abstract TReferencedLocation Decode(TLocation location);
 
         /// <summary>
+        /// Returns the max vertex distance.
+        /// </summary>
+        protected Meter MaxVertexDistance
+        {
+            get
+            {
+                return _mainDecoder.MaxVertexDistance;
+            }
+        }
+
+        /// <summary>
         /// Finds all candidate vertex/edge pairs for a given location reference point.
         /// </summary>
         /// <param name="lrp"></param>
@@ -72,6 +83,18 @@ namespace OpenLR.OsmSharp.Decoding
         protected SortedSet<CandidateVertexEdge<TEdge>> FindCandidatesFor(LocationReferencePoint lrp, bool forward)
         {
             return _mainDecoder.FindCandidatesFor(lrp, forward);
+        }
+
+        /// <summary>
+        /// Finds all candidate vertex/edge pairs for a given location reference point.
+        /// </summary>
+        /// <param name="lrp"></param>
+        /// <param name="forward"></param>
+        /// <param name="maxVertexDistance"></param>
+        /// <returns></returns>
+        protected SortedSet<CandidateVertexEdge<TEdge>> FindCandidatesFor(LocationReferencePoint lrp, bool forward, Meter maxVertexDistance)
+        {
+            return _mainDecoder.FindCandidatesFor(lrp, forward, maxVertexDistance);
         }
 
         /// <summary>

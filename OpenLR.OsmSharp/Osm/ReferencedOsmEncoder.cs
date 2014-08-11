@@ -141,7 +141,15 @@ namespace OpenLR.OsmSharp.Osm
         /// <returns></returns>
         public override bool? IsOneway(TagsCollectionBase tags)
         {
-            return Vehicle.Car.IsOneWay(tags);
+            return this.Vehicle.IsOneWay(tags);
+        }
+
+        /// <summary>
+        /// Returns the encoder vehicle profile.
+        /// </summary>
+        public override Vehicle Vehicle
+        {
+            get { return Vehicle.Car; }
         }
     }
 }
