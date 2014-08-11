@@ -385,7 +385,7 @@ namespace OpenLR.OsmSharp
         /// </summary>
         /// <param name="vertex"></param>
         /// <returns></returns>
-        public virtual Coordinate GetVertexLocation(long vertex)
+        public virtual Coordinate GetCoordinate(long vertex)
         {
             float latitude, longitude;
             if (!this.Graph.GetVertex((uint)vertex, out latitude, out longitude))
@@ -412,7 +412,7 @@ namespace OpenLR.OsmSharp
             if (route.Vertices.Length != route.Edges.Length + 1) { throw new ArgumentOutOfRangeException("route", "Route is invalid: there should be n vertices and n-1 edges."); }
 
             var coordinates = new List<GeoCoordinate>();
-            coordinates.Add(this.GetVertexLocation(route.Vertices[0]).ToGeoCoordinate());
+            coordinates.Add(this.GetCoordinate(route.Vertices[0]).ToGeoCoordinate());
             for (int edgeIdx = 0; edgeIdx < route.Edges.Length; edgeIdx++)
             {
                 var edge = route.Edges[edgeIdx];
@@ -433,9 +433,28 @@ namespace OpenLR.OsmSharp
                         }
                     }
                 }
-                coordinates.Add(this.GetVertexLocation(route.Vertices[edgeIdx + 1]).ToGeoCoordinate());
+                coordinates.Add(this.GetCoordinate(route.Vertices[edgeIdx + 1]).ToGeoCoordinate());
             }
             return coordinates;
+        }
+
+        /// <summary>
+        /// Returns the distance for the given route.
+        /// </summary>
+        /// <param name="route"></param>
+        /// <returns></returns>
+        public virtual Meter GetDistance(Locations.ReferencedLine<TEdge> route)
+        {
+            var coordinates = this.GetCoordinates(route);
+            Meter distance = 0;
+            if(coordinates != null && coordinates.Count > 1)
+            {
+                for(int idx = 1; idx < coordinates.Count; idx++)
+                {
+                    distance = distance + coordinates[idx - 1].DistanceReal(coordinates[idx]);
+                }
+            }
+            return distance;
         }
 
         /// <summary>

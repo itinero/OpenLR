@@ -237,7 +237,7 @@ namespace OpenLR.OsmSharp.Osm
         /// </summary>
         /// <param name="vertex"></param>
         /// <returns></returns>
-        public override Coordinate GetVertexLocation(long vertex)
+        public override Coordinate GetCoordinate(long vertex)
         {
             float latitude, longitude;
             if (!this.Graph.GetVertex((uint)vertex, out latitude, out longitude))

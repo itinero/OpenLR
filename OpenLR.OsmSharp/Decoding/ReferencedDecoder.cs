@@ -126,9 +126,9 @@ namespace OpenLR.OsmSharp.Decoding
         /// </summary>
         /// <param name="vertex"></param>
         /// <returns></returns>
-        protected Coordinate GetVertexLocation(long vertex)
+        protected Coordinate GetCoordinate(long vertex)
         {
-            return _mainDecoder.GetVertexLocation(vertex);
+            return _mainDecoder.GetCoordinate(vertex);
         }
 
         /// <summary>
@@ -139,6 +139,16 @@ namespace OpenLR.OsmSharp.Decoding
         protected List<GeoCoordinate> GetCoordinates(ReferencedLine<TEdge> route)
         {
             return _mainDecoder.GetCoordinates(route);
+        }
+
+        /// <summary>
+        /// Returns the distance for the given route.
+        /// </summary>
+        /// <param name="route"></param>
+        /// <returns></returns>
+        protected Meter GetDistance(ReferencedLine<TEdge> route)
+        {
+            return _mainDecoder.GetDistance(route);
         }
 
         /// <summary>

@@ -260,8 +260,8 @@ namespace OpenLR.OsmSharp
 
             // create the coordinates.
             var geoCoordinates = baseDecoder.GetCoordinates(referencedPointALongLineLocation.Route);
-            featureCollection.Add(baseDecoder.GetVertexLocation(referencedPointALongLineLocation.Route.Vertices[0]).ToFeature());
-            featureCollection.Add(baseDecoder.GetVertexLocation(referencedPointALongLineLocation.Route.Vertices[referencedPointALongLineLocation.Route.Vertices.Length - 1]).ToFeature());
+            featureCollection.Add(baseDecoder.GetCoordinate(referencedPointALongLineLocation.Route.Vertices[0]).ToFeature());
+            featureCollection.Add(baseDecoder.GetCoordinate(referencedPointALongLineLocation.Route.Vertices[referencedPointALongLineLocation.Route.Vertices.Length - 1]).ToFeature());
             var coordinates = new List<Coordinate>(geoCoordinates.Count);
             for(int idx = 0; idx < geoCoordinates.Count; idx++)
             {

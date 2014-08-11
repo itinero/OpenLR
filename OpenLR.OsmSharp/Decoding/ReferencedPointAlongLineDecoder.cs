@@ -100,6 +100,13 @@ namespace OpenLR.OsmSharp.Decoding
                     //var toBearingDiff = System.Math.Abs(toBearing.SmallestDifference(toBearingReference));
                     //var diffScore = 1.0 - (fromBearingDiff / 360.0) - (toBearingDiff / 360.0);
                     //candidate.Score = candidate.Score * (float)diffScore;
+
+                    // calculate distance and compare with distancetonext.
+                    var distance = this.GetDistance(candidate.Route).Value;
+                    var expectedDistance = location.First.DistanceToNext;
+                    var distanceDiff = System.Math.Abs(distance - expectedDistance);
+                    var deviation = 1 - System.Math.Min(System.Math.Max(distanceDiff / expectedDistance, 0), 1);
+                    candidate.Score = (float)(candidate.Score * deviation);
                 }
 
                 // check candidate.
