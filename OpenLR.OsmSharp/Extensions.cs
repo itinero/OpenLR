@@ -441,19 +441,9 @@ namespace OpenLR.OsmSharp
             coordinates.Add(from);
             if (edge.Coordinates != null)
             {
-                if (edge.Forward)
+                for (int idx = 0; idx < edge.Coordinates.Length; idx++)
                 {
-                    for (int idx = 0; idx < edge.Coordinates.Length; idx++)
-                    {
-                        coordinates.Add(new GeoCoordinate(edge.Coordinates[idx].Latitude, edge.Coordinates[idx].Longitude));
-                    }
-                }
-                else
-                {
-                    for (int idx = edge.Coordinates.Length - 1; idx >=0; idx--)
-                    {
-                        coordinates.Add(new GeoCoordinate(edge.Coordinates[idx].Latitude, edge.Coordinates[idx].Longitude));
-                    }
+                    coordinates.Add(new GeoCoordinate(edge.Coordinates[idx].Latitude, edge.Coordinates[idx].Longitude));
                 }
             }
             coordinates.Add(to);
