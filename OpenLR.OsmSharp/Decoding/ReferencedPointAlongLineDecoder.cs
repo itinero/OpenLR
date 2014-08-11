@@ -43,6 +43,8 @@ namespace OpenLR.OsmSharp.Decoding
         /// <returns></returns>
         public override ReferencedPointAlongLine<TEdge> Decode(PointAlongLineLocation location)
         {
+            CandidateRoute<TEdge> best = null;
+
             // get candidate vertices and edges.
             var candidates = new List<SortedSet<CandidateVertexEdge<TEdge>>>();
             var lrps = new List<LocationReferencePoint>();
@@ -73,7 +75,6 @@ namespace OpenLR.OsmSharp.Decoding
             }
 
             // find the best candidate route.
-            CandidateRoute<TEdge> best = null;
             var combinedScores = new List<CombinedScore<TEdge>>(combinedScoresSet);
             while (combinedScores.Count > 0)
             {

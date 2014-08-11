@@ -20,11 +20,6 @@ namespace OpenLR.OsmSharp.MultiNet
     public class ReferencedMultiNetDecoder : ReferencedDecoderBase<LiveEdge>
     {
         /// <summary>
-        /// Holds the maximum vertex distance.
-        /// </summary>
-        private Meter _maxVertexDistance = 40;
-
-        /// <summary>
         /// Creates a new referenced live edge decoder.
         /// </summary>
         /// <param name="graph"></param>
@@ -42,9 +37,9 @@ namespace OpenLR.OsmSharp.MultiNet
         /// <param name="locationDecoder"></param>
         /// <param name="maxVertexDistance"></param>
         public ReferencedMultiNetDecoder(IBasicRouterDataSource<LiveEdge> graph, Decoder locationDecoder, Meter maxVertexDistance)
-            : base(graph, locationDecoder)
+            : base(graph, locationDecoder, maxVertexDistance)
         {
-            _maxVertexDistance = maxVertexDistance;
+
         }
 
         /// <summary>
@@ -54,16 +49,6 @@ namespace OpenLR.OsmSharp.MultiNet
         protected override IBasicRouter<LiveEdge> GetRouter()
         {
             return new DykstraRoutingLive();
-        }
-
-        /// <summary>
-        /// Finds candidate vertices for a location reference point.
-        /// </summary>
-        /// <param name="lrp"></param>
-        /// <returns></returns>
-        public override IEnumerable<CandidateVertex> FindCandidateVerticesFor(LocationReferencePoint lrp)
-        {
-            return this.FindCandidateVerticesFor(lrp, _maxVertexDistance);
         }
 
         /// <summary>
@@ -285,6 +270,7 @@ namespace OpenLR.OsmSharp.MultiNet
                     { // there is a candidate arc.
                         found = true;
                         edges.Add(arc.Value);
+                        break;
                     }
                 }
 

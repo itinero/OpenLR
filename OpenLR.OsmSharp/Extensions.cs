@@ -4,6 +4,7 @@ using NetTopologySuite.Geometries;
 using NetTopologySuite.Utilities;
 using OpenLR.Locations;
 using OsmSharp.Math.Geo;
+using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
@@ -414,13 +415,28 @@ namespace OpenLR.OsmSharp
                 graph.GetVertex(arc.Value.Key, out latitude, out longitude);
                 var to = new GeoCoordinate(latitude, longitude);
 
-                var line = new GeoCoordinateLine(from, to, true, true);
-
-                var distance = line.Distance(location);
-                if(distance <  bestDistance)
+                List<GeoCoordinate> coordinates = null;
+                if (arc.Value.Value.Forward)
                 {
-                    bestEdge = arc;
-                    bestDistance = distance;
+                    coordinates = arc.Value.Value.GetCoordinates(from, to);
+                }
+                else
+                {
+                    coordinates = arc.Value.Value.GetCoordinates(to, from);
+                }
+
+                if(coordinates != null && coordinates.Count > 0)
+                {
+                    for(int idx = 1; idx < coordinates.Count; idx++)
+                    {
+                        var line = new GeoCoordinateLine(coordinates[idx - 1], coordinates[idx], true, true);
+                        var distance = line.Distance(location);
+                        if (distance < bestDistance)
+                        {
+                            bestEdge = arc;
+                            bestDistance = distance;
+                        }
+                    }
                 }
             }
             return bestEdge;
