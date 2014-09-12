@@ -60,7 +60,8 @@ namespace OpenLR.Tests.Referenced.NWB
                     Tag.Create("BAANSUBSRT", "VBD"), 
                     Tag.Create("WEGBEHSRT", "R"), 
                     Tag.Create("WEGNUMMER", string.Empty),
-                    Tag.Create("RIJRICHTNG", string.Empty)))
+                    Tag.Create("RIJRICHTNG", string.Empty),
+                    Tag.Create("HECTOLTTR", string.Empty)))
             }, null);
             graph.AddArc(vertex2, vertex1, new LiveEdge()
             {
@@ -71,7 +72,8 @@ namespace OpenLR.Tests.Referenced.NWB
                     Tag.Create("BAANSUBSRT", "VBD"),
                     Tag.Create("WEGBEHSRT", "R"),
                     Tag.Create("WEGNUMMER", string.Empty),
-                    Tag.Create("RIJRICHTNG", string.Empty)))
+                    Tag.Create("RIJRICHTNG", string.Empty),
+                    Tag.Create("HECTOLTTR", string.Empty)))
             }, null);
 
             // decode the location

@@ -46,7 +46,8 @@ namespace OpenLR.Tests.Referenced.NWB
                     Tag.Create("BAANSUBSRT", "VBD"),
                     Tag.Create("WEGBEHSRT", "R"),
                     Tag.Create("WEGNUMMER", string.Empty),
-                    Tag.Create("RIJRICHTNG", "N")))
+                    Tag.Create("RIJRICHTNG", "N"),
+                    Tag.Create("HECTOLTTR", string.Empty)))
             }, null);
 
             // create a referenced location and encode it.
@@ -62,7 +63,8 @@ namespace OpenLR.Tests.Referenced.NWB
                     Tag.Create("BAANSUBSRT", "VBD"),
                     Tag.Create("WEGBEHSRT", "R"),
                     Tag.Create("WEGNUMMER", string.Empty),
-                    Tag.Create("RIJRICHTNG", "N")))
+                    Tag.Create("RIJRICHTNG", "N"),
+                    Tag.Create("HECTOLTTR", string.Empty)))
             };
             referencedPointAlongLineLocation.Route.Vertices = new long[2];
             referencedPointAlongLineLocation.Route.Vertices[0] = vertex1;
