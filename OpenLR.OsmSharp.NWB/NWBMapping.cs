@@ -19,10 +19,11 @@ namespace OpenLR.OsmSharp.NWB
         {
             fow = FormOfWay.Undefined;
             frc = FunctionalRoadClass.Frc7;
-            string baansubsrt, wegbeerder, wegnummer, rijrichting;
+            string baansubsrt, wegbeerder, wegnummer, rijrichting, dvkletter_;
             if (!tags.TryGetValue("BAANSUBSRT", out baansubsrt) ||
                 !tags.TryGetValue("WEGBEHSRT", out wegbeerder) ||
                 !tags.TryGetValue("WEGNUMMER", out wegnummer) ||
+                !tags.TryGetValue("HECTOLTTR", out dvkletter_) ||
                 !tags.TryGetValue("RIJRICHTNG", out rijrichting))
             { // not even a BAANSUBSRT tag!
                 return false;
@@ -32,7 +33,7 @@ namespace OpenLR.OsmSharp.NWB
             char? dvkletter = null; // assume dkv letter is the suffix use for exists etc. see: http://www.wegenwiki.nl/Hectometerpaal#Suffix
             if (!string.IsNullOrWhiteSpace(wegbeerder)) { wegbeerder = wegbeerder.ToLowerInvariant(); }
             if (!string.IsNullOrWhiteSpace(baansubsrt)) { baansubsrt = baansubsrt.ToLowerInvariant(); }
-            if (!string.IsNullOrWhiteSpace(wegnummer)) { wegnummer = wegnummer.ToLowerInvariant(); dvkletter = wegnummer[wegnummer.Length - 1]; }
+            if (!string.IsNullOrWhiteSpace(wegnummer)) { wegnummer = wegnummer.ToLowerInvariant(); if (!string.IsNullOrEmpty(dvkletter_)) dvkletter = dvkletter_[0]; }
             if (!string.IsNullOrWhiteSpace(wegnummer)) { rijrichting = rijrichting.ToLowerInvariant(); }
 
             fow = FormOfWay.Other;
