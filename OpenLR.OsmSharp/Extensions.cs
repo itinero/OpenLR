@@ -492,13 +492,15 @@ namespace OpenLR.OsmSharp
         /// <returns></returns>
         public static bool ProjectOn(this List<GeoCoordinate> coordinates, PointF2D point, out PointF2D bestProjected, out LinePointPosition bestPosition, out Meter bestOffset)
         {
-            bestProjected = null;
-            bestPosition = LinePointPosition.On;
+            // check first point.
+            var distance = coordinates[0].Distance(point);
+            bestProjected = coordinates[0];
             bestOffset = 0;
+            bestPosition = LinePointPosition.On;
 
-            var bestDistance = double.MaxValue;
+            // check intermediate points.
+            var bestDistance = distance;
             var currentOffset = 0.0;
-            var found = false;
             for (int idx = 0; idx < coordinates.Count - 1; idx++)
             {
                 var line = new GeoCoordinateLine(coordinates[idx], coordinates[idx + 1], true, true);
@@ -508,18 +510,27 @@ namespace OpenLR.OsmSharp
                 if(projected != null)
                 { // there is a valid projected point.
                     var offset = coordinates[idx].DistanceReal(new GeoCoordinate(projected)).Value;
-                    var distance = projected.Distance(point);
+                    distance = projected.Distance(point);
                     if(distance < bestDistance)
                     { // this point is closer.
                         bestDistance = distance;
                         bestProjected = projected;
                         bestOffset = currentOffset + offset;
-                        found = true;
                     }
                 }
                 currentOffset = currentOffset + line.LengthReal.Value;
             }
-            return found;
+
+            // check last point.
+            distance = coordinates[coordinates.Count - 1].Distance(point);
+            if (distance < bestDistance)
+            {
+                bestProjected = coordinates[coordinates.Count - 1];
+                bestOffset = currentOffset;
+                bestPosition = LinePointPosition.On;
+            }
+
+            return true;
         }
 
         /// <summary>
