@@ -1,5 +1,6 @@
 ﻿using OpenLR.Locations;
 using OpenLR.OsmSharp.Locations;
+using OpenLR.OsmSharp.Router;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using System;
@@ -24,7 +25,8 @@ namespace OpenLR.OsmSharp.Decoding
         /// <param name="rawDecoder"></param>
         /// <param name="graph"></param>
         /// <param name="router"></param>
-        public ReferencedRectangleDecoder(ReferencedDecoderBase<TEdge> mainDecoder, OpenLR.Decoding.LocationDecoder<RectangleLocation> rawDecoder, IBasicRouterDataSource<TEdge> graph, IBasicRouter<TEdge> router)
+        public ReferencedRectangleDecoder(ReferencedDecoderBase<TEdge> mainDecoder, OpenLR.Decoding.LocationDecoder<RectangleLocation> rawDecoder, IBasicRouterDataSource<TEdge> graph,
+            BasicRouter router)
             : base(mainDecoder, rawDecoder, graph, router)
         {
 

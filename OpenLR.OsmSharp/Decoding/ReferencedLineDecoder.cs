@@ -3,6 +3,7 @@ using OpenLR.Model;
 using OpenLR.OsmSharp.Decoding.Candidates;
 using OpenLR.OsmSharp.Decoding.Scoring;
 using OpenLR.OsmSharp.Locations;
+using OpenLR.OsmSharp.Router;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Routing.Graph;
@@ -27,7 +28,8 @@ namespace OpenLR.OsmSharp.Decoding
         /// <param name="rawDecoder"></param>
         /// <param name="graph"></param>
         /// <param name="router"></param>
-        public ReferencedLineDecoder(ReferencedDecoderBase<TEdge> mainDecoder, OpenLR.Decoding.LocationDecoder<LineLocation> rawDecoder, IBasicRouterDataSource<TEdge> graph, IBasicRouter<TEdge> router)
+        public ReferencedLineDecoder(ReferencedDecoderBase<TEdge> mainDecoder, OpenLR.Decoding.LocationDecoder<LineLocation> rawDecoder, IBasicRouterDataSource<TEdge> graph,
+            BasicRouter router)
             : base(mainDecoder, rawDecoder, graph, router)
         {
 
@@ -93,7 +95,7 @@ namespace OpenLR.OsmSharp.Decoding
                     combinedScores.RemoveAt(0);
 
                     // find a route.
-                    var candidate = this.FindCandidateRoute(combinedScore.Source.Vertex, combinedScore.Target.Vertex,
+                    var candidate = this.FindCandidateRoute(combinedScore.Source, combinedScore.Target,
                         previous.LowestFunctionalRoadClassToNext.Value);
 
                     // confirm first/last edge.

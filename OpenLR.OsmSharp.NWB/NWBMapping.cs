@@ -53,28 +53,25 @@ namespace OpenLR.OsmSharp.NWB
                 }
                 else if(baansubsrt == "pst")
                 {
-                    if (!string.IsNullOrWhiteSpace(rijrichting))
+                    if (dvkletter.HasValue)
                     {
                         fow = FormOfWay.SlipRoad;
-                        frc = FunctionalRoadClass.Frc0;
-                    }
-                    else
-                    {
-                        if (dvkletter.HasValue)
-                        {
-                            fow = FormOfWay.SlipRoad;
-                            if (dvkletter == 'a' ||
-                                dvkletter == 'b' ||
-                                dvkletter == 'c' ||
-                                dvkletter == 'd')
-                            {
-                                frc = FunctionalRoadClass.Frc3;
-                            }
-                            else
-                            {
-                                frc = FunctionalRoadClass.Frc0;
-                            }
+                        if (dvkletter == 'a' ||
+                            dvkletter == 'b' ||
+                            dvkletter == 'c' ||
+                            dvkletter == 'd')
+                        { // r  pst (a|b|c|d)
+                            frc = FunctionalRoadClass.Frc3;
                         }
+                        else
+                        { // r  pst !(a|b|c|d)
+                            frc = FunctionalRoadClass.Frc0;
+                        }
+                    }
+                    else if (!string.IsNullOrWhiteSpace(rijrichting))
+                    { // r  pst !(a|b|c|d)
+                        fow = FormOfWay.SlipRoad;
+                        frc = FunctionalRoadClass.Frc0;
                     }
                 }
                 else if(baansubsrt == "opr" ||

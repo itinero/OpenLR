@@ -4,6 +4,7 @@ using OpenLR.Model;
 using OpenLR.OsmSharp.Decoding;
 using OpenLR.OsmSharp.Decoding.Candidates;
 using OpenLR.OsmSharp.Encoding;
+using OpenLR.OsmSharp.Router;
 using OpenLR.Referenced;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
@@ -74,7 +75,6 @@ namespace OpenLR.OsmSharp
         /// </summary>
         /// <param name="graph"></param>
         /// <param name="locationDecoder"></param>
-        /// <param name="?"></param>
         /// <param name="maxVertexDistance"></param>
         public ReferencedDecoderBase(IBasicRouterDataSource<TEdge> graph, Decoder locationDecoder, Meter maxVertexDistance)
             :base(locationDecoder)
@@ -111,10 +111,13 @@ namespace OpenLR.OsmSharp
         }
 
         /// <summary>
-        /// Returns the router.
+        /// Gets a new router.
         /// </summary>
         /// <returns></returns>
-        protected abstract IBasicRouter<TEdge> GetRouter();
+        protected virtual BasicRouter GetRouter()
+        {
+            return new BasicRouter();
+        }
         
         /// <summary>
         /// Returns the graph.
@@ -305,6 +308,7 @@ namespace OpenLR.OsmSharp
                     {
                         Edge = edgeCandidate.Edge,
                         Vertex = vertexCandidate.Vertex,
+                        TargetVertex = edgeCandidate.TargetVertex,
                         Score = vertexCandidate.Score * edgeCandidate.Score
                     });
                 }
@@ -400,6 +404,7 @@ namespace OpenLR.OsmSharp
                 { // ok, there is a match.
                     relevantEdges.Add(new CandidateEdge()
                     {
+                        TargetVertex = arc.Key,
                         Score = score,
                         Edge = arc.Value
                     });
@@ -431,7 +436,7 @@ namespace OpenLR.OsmSharp
         /// <param name="to"></param>
         /// <param name="minimum">The minimum FRC.</param>
         /// <returns></returns>
-        public abstract CandidateRoute<TEdge> FindCandiateRoute(uint from, uint to, FunctionalRoadClass minimum);
+        public abstract CandidateRoute<TEdge> FindCandiateRoute(CandidateVertexEdge<TEdge> from, CandidateVertexEdge<TEdge> to, FunctionalRoadClass minimum);
 
         /// <summary>
         /// Returns the coordinate of the given vertex.
@@ -596,6 +601,11 @@ namespace OpenLR.OsmSharp
             public TEdge Edge { get; set; }
 
             /// <summary>
+            /// Gets or sets the target vertex.
+            /// </summary>
+            public uint TargetVertex { get; set; }
+
+            /// <summary>
             /// Determines whether this object is equal to the given object.
             /// </summary>
             /// <param name="obj"></param>
@@ -603,7 +613,7 @@ namespace OpenLR.OsmSharp
             public override bool Equals(object obj)
             {
                 var other = (obj as CandidateEdge);
-                return other != null && other.Edge.Equals(this.Edge) && other.Score == this.Score;
+                return other != null && other.Edge.Equals(this.Edge) && other.Score == this.Score && other.TargetVertex == this.TargetVertex;
             }
 
             /// <summary>
@@ -613,7 +623,8 @@ namespace OpenLR.OsmSharp
             public override int GetHashCode()
             {
                 return this.Score.GetHashCode() ^
-                    this.Edge.GetHashCode();
+                    this.Edge.GetHashCode() ^
+                    this.TargetVertex.GetHashCode();
             }
         }
     }

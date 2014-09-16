@@ -32,6 +32,9 @@ public partial class D2LogicalModel {
     
     private string modelBaseVersionField;
     
+    /// <summary>
+    /// Creates a new D2 logical model.
+    /// </summary>
     public D2LogicalModel() {
         this.modelBaseVersionField = "1.0";
     }

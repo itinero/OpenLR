@@ -931,6 +931,9 @@ namespace OpenLR.XML
 
         private Orientation_Type orientationField;
 
+        /// <summary>
+        /// Creates a new poi with access point.
+        /// </summary>
         public PoiWithAccessPoint()
         {
             this.sideOfRoadField = SideOfRoad_Type.ON_ROAD_OR_UNKNOWN;
@@ -1159,6 +1162,9 @@ namespace OpenLR.XML
 
         private Orientation_Type orientationField;
 
+        /// <summary>
+        /// Creates a new point along line.
+        /// </summary>
         public PointAlongLine()
         {
             this.sideOfRoadField = SideOfRoad_Type.ON_ROAD_OR_UNKNOWN;

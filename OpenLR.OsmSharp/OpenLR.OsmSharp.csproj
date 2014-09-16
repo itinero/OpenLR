@@ -122,6 +122,7 @@
     <Compile Include="Osm\ReferencedOsmDecoder.cs" />
     <Compile Include="Osm\ReferencedOsmEncoder.cs" />
     <Compile Include="ReferencedEncodingException.cs" />
+    <Compile Include="Router\BasicRouter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

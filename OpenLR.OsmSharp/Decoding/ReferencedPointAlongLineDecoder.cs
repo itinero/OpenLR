@@ -3,6 +3,7 @@ using OpenLR.Model;
 using OpenLR.OsmSharp.Decoding.Candidates;
 using OpenLR.OsmSharp.Decoding.Scoring;
 using OpenLR.OsmSharp.Locations;
+using OpenLR.OsmSharp.Router;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Routing.Graph;
@@ -30,7 +31,8 @@ namespace OpenLR.OsmSharp.Decoding
         /// <param name="rawDecoder"></param>
         /// <param name="graph"></param>
         /// <param name="router"></param>
-        public ReferencedPointAlongLineDecoder(ReferencedDecoderBase<TEdge> mainDecoder, OpenLR.Decoding.LocationDecoder<PointAlongLineLocation> rawDecoder, IBasicRouterDataSource<TEdge> graph, IBasicRouter<TEdge> router)
+        public ReferencedPointAlongLineDecoder(ReferencedDecoderBase<TEdge> mainDecoder, OpenLR.Decoding.LocationDecoder<PointAlongLineLocation> rawDecoder, IBasicRouterDataSource<TEdge> graph,
+            BasicRouter router)
             : base(mainDecoder, rawDecoder, graph, router)
         {
 
@@ -85,7 +87,7 @@ namespace OpenLR.OsmSharp.Decoding
                     combinedScores.Remove(combinedScore);
 
                     // find a route.
-                    var candidate = this.FindCandidateRoute(combinedScore.Source.Vertex, combinedScore.Target.Vertex,
+                    var candidate = this.FindCandidateRoute(combinedScore.Source, combinedScore.Target,
                         lrps[0].LowestFunctionalRoadClassToNext.Value);
 
                     // verify bearing by adding it to the score.

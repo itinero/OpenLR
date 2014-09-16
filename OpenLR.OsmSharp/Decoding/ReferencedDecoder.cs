@@ -2,6 +2,7 @@
 using OpenLR.Model;
 using OpenLR.OsmSharp.Decoding.Candidates;
 using OpenLR.OsmSharp.Locations;
+using OpenLR.OsmSharp.Router;
 using OpenLR.Referenced;
 using OpenLR.Referenced.Decoding;
 using OsmSharp.Collections.Tags;
@@ -39,7 +40,7 @@ namespace OpenLR.OsmSharp.Decoding
         /// <summary>
         /// Holds a basic router.
         /// </summary>
-        private IBasicRouter<TEdge> _router;
+        private BasicRouter _router;
 
         /// <summary>
         /// Creates a new dynamic graph decoder.
@@ -48,7 +49,8 @@ namespace OpenLR.OsmSharp.Decoding
         /// <param name="rawDecoder"></param>
         /// <param name="graph"></param>
         /// <param name="router"></param>
-        public ReferencedDecoder(ReferencedDecoderBase<TEdge> mainDecoder, OpenLR.Decoding.LocationDecoder<TLocation> rawDecoder, IBasicRouterDataSource<TEdge> graph, IBasicRouter<TEdge> router)
+        public ReferencedDecoder(ReferencedDecoderBase<TEdge> mainDecoder, OpenLR.Decoding.LocationDecoder<TLocation> rawDecoder, IBasicRouterDataSource<TEdge> graph,
+            BasicRouter router)
             : base(rawDecoder)
         {
             _mainDecoder = mainDecoder;
@@ -139,7 +141,7 @@ namespace OpenLR.OsmSharp.Decoding
         /// <param name="to"></param>
         /// <param name="minimum">The minimum FRC.</param>
         /// <returns></returns>
-        protected CandidateRoute<TEdge> FindCandidateRoute(uint from, uint to, FunctionalRoadClass minimum)
+        protected CandidateRoute<TEdge> FindCandidateRoute(CandidateVertexEdge<TEdge> from, CandidateVertexEdge<TEdge> to, FunctionalRoadClass minimum)
         {
             return _mainDecoder.FindCandiateRoute(from, to, minimum);
         }

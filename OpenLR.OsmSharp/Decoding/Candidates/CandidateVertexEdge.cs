@@ -29,6 +29,11 @@ namespace OpenLR.OsmSharp.Decoding.Candidates
         public TEdge Edge { get; set; }
 
         /// <summary>
+        /// Gets or sets the vertex this edge leads to.
+        /// </summary>
+        public uint TargetVertex { get; set; }
+
+        /// <summary>
         /// Determines whether this object is equal to the given object.
         /// </summary>
         /// <param name="obj"></param>
@@ -36,7 +41,7 @@ namespace OpenLR.OsmSharp.Decoding.Candidates
         public override bool Equals(object obj)
         {
             var other = (obj as CandidateVertexEdge<TEdge>);
-            return other != null && other.Vertex == this.Vertex && other.Edge.Equals(this.Edge) && other.Score == this.Score;
+            return other != null && other.Vertex == this.Vertex && other.TargetVertex == this.TargetVertex && other.Edge.Equals(this.Edge) && other.Score == this.Score;
         }
 
         /// <summary>
@@ -47,7 +52,8 @@ namespace OpenLR.OsmSharp.Decoding.Candidates
         {
             return this.Score.GetHashCode() ^
                 this.Edge.GetHashCode() ^
-                this.Vertex.GetHashCode();
+                this.Vertex.GetHashCode() ^
+                this.TargetVertex.GetHashCode();
         }
     }
 }

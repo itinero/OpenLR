@@ -5,6 +5,7 @@ using OpenLR.Locations;
 using OpenLR.Model;
 using OpenLR.OsmSharp.Decoding;
 using OpenLR.OsmSharp.Osm;
+using OpenLR.OsmSharp.Router;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Routing.Graph;
@@ -73,7 +74,7 @@ namespace OpenLR.Tests.Referenced.Osm
 
             // decode the location
             var decoder = new PointAlongLineDecoder();
-            var router = new DykstraRoutingLive();
+            var router = new BasicRouter();
             var mainDecoder = new ReferencedOsmDecoder(graph, new BinaryDecoder());
             var referencedDecoder = new ReferencedPointAlongLineDecoder<LiveEdge>(mainDecoder, decoder, graph, router);
             var referencedLocation = referencedDecoder.Decode(location);

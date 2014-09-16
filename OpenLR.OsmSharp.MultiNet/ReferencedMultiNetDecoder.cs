@@ -43,15 +43,6 @@ namespace OpenLR.OsmSharp.MultiNet
         }
 
         /// <summary>
-        /// Gets a new router.
-        /// </summary>
-        /// <returns></returns>
-        protected override IBasicRouter<LiveEdge> GetRouter()
-        {
-            return new DykstraRoutingLive();
-        }
-
-        /// <summary>
         /// Calculates a match between the tags collection and the properties of the OpenLR location reference.
         /// </summary>
         /// <param name="tags"></param>
@@ -229,17 +220,12 @@ namespace OpenLR.OsmSharp.MultiNet
         /// <param name="to"></param>
         /// <param name="minimum">The minimum FRC.</param>
         /// <returns></returns>
-        public override CandidateRoute<LiveEdge> FindCandiateRoute(uint from, uint to, FunctionalRoadClass minimum)
+        public override CandidateRoute<LiveEdge> FindCandiateRoute(CandidateVertexEdge<LiveEdge> from, CandidateVertexEdge<LiveEdge> to, FunctionalRoadClass minimum)
         {
-            var fromList = new PathSegmentVisitList();
-            fromList.UpdateVertex(new PathSegment<long>(from));
-            var toList = new PathSegmentVisitList();
-            toList.UpdateVertex(new PathSegment<long>(to));
-
             var vehicle = new global::OsmSharp.Routing.Shape.Vehicles.Car("ONEWAY", "FT", "TF", string.Empty); // define vehicle with the column and values that define the onway restrictions and (optional) the speed in KPH.
             var edgeInterpreter = new ShapefileEdgeInterpreter();
             var interpreter = new ShapefileRoutingInterpreter();
-            var path = this.GetRouter().Calculate(this.Graph, interpreter, vehicle, fromList, toList, double.MaxValue, null);
+            var path = this.GetRouter().Calculate(this.Graph, interpreter, vehicle, from, to, minimum);
 
             // if no route is found, score is 0.
             if (path == null)

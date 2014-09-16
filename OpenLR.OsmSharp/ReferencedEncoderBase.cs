@@ -177,6 +177,9 @@ namespace OpenLR.OsmSharp
         }
     }
 
+    /// <summary>
+    /// Contains encoder extensions.
+    /// </summary>
     public static class ReferencedEncoderBaseExtensions
     {
         /// <summary>

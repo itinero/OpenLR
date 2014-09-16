@@ -2,6 +2,7 @@
 using OpenLR.Model;
 using OpenLR.OsmSharp.Decoding.Candidates;
 using OpenLR.OsmSharp.Locations;
+using OpenLR.OsmSharp.Router;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Routing;
@@ -49,12 +50,12 @@ namespace OpenLR.OsmSharp.Osm
         }
 
         /// <summary>
-        /// Gets a new router.
+        /// Returns the router.
         /// </summary>
         /// <returns></returns>
-        protected override global::OsmSharp.Routing.Graph.Router.IBasicRouter<LiveEdge> GetRouter()
+        protected override BasicRouter GetRouter()
         {
-            return new DykstraRoutingLive();
+            return new BasicRouter();
         }
 
         /// <summary>
@@ -167,14 +168,9 @@ namespace OpenLR.OsmSharp.Osm
         /// <param name="to"></param>
         /// <param name="minimum">The minimum FRC.</param>
         /// <returns></returns>
-        public override CandidateRoute<LiveEdge> FindCandiateRoute(uint from, uint to, FunctionalRoadClass minimum)
+        public override CandidateRoute<LiveEdge> FindCandiateRoute(CandidateVertexEdge<LiveEdge> from, CandidateVertexEdge<LiveEdge> to, FunctionalRoadClass minimum)
         {
-            var fromList = new PathSegmentVisitList();
-            fromList.UpdateVertex(new PathSegment<long>(from));
-            var toList = new PathSegmentVisitList();
-            toList.UpdateVertex(new PathSegment<long>(to));
-
-            var path = this.GetRouter().Calculate(this.Graph, new OsmRoutingInterpreter(), Vehicle.Car, fromList, toList, double.MaxValue, null);
+            var path = this.GetRouter().Calculate(this.Graph, new OsmRoutingInterpreter(), Vehicle.Car, from, to, minimum);
 
             // if no route is found, score is 0.
             if (path == null)
