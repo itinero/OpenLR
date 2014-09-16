@@ -194,7 +194,6 @@ namespace OpenLR.OsmSharp
             var useForward = (oneway == null) || (oneway.Value == closest.Value.Value.Forward);
 
             // build location.
-            ReferencedPointAlongLine<LiveEdge> referencedPointAlongLineLocation = null;
             LiveEdge edge;
             uint from, to;
             if (useForward)
@@ -235,6 +234,7 @@ namespace OpenLR.OsmSharp
                         closest.Value.Value.Coordinates.CopyToReverse(reverse, 0);
                         reverseEdge.Coordinates = reverse;
                     }
+                    edge = reverseEdge;
                 }
                 from = closest.Value.Key;
                 to = closest.Key;
