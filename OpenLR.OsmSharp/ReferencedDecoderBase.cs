@@ -11,6 +11,7 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Units.Angle;
 using OsmSharp.Units.Distance;
 using System;
@@ -314,6 +315,111 @@ namespace OpenLR.OsmSharp
                 }
             }
             return vertexEdgeCandidates;
+        }
+
+        /// <summary>
+        /// Finds the closest candidate by finding the closest point on the network.
+        /// </summary>
+        /// <param name="lrp"></param>
+        /// <returns></returns>
+        public virtual CandidateVertexEdge<TEdge> FindClosestCandidateFor(LocationReferencePoint lrp)
+        {
+            return this.FindClosestCandidateFor(lrp, _maxVertexDistance);
+        }
+
+        /// <summary>
+        /// Finds the closest candidate by finding the closest point on the network.
+        /// </summary>
+        /// <param name="lrp"></param>
+        /// <param name="maxVertexDistance"></param>
+        /// <returns></returns>
+        public virtual CandidateVertexEdge<TEdge> FindClosestCandidateFor(LocationReferencePoint lrp, Meter maxVertexDistance)
+        {
+            // convert to geo coordinate.
+            var coordinate = new GeoCoordinate(lrp.Coordinate.Latitude, lrp.Coordinate.Longitude);
+
+            // get arcs.
+            var box = new GeoCoordinateBox(coordinate, coordinate);
+            box = box.Resize(0.1);
+            var arcs = this.Graph.GetArcs(box);
+
+            // loop over all arcs.
+            var minimumDistance = double.MaxValue;
+            foreach (var arc in arcs)
+            {
+                float fromLatitude, fromLongitude;
+                float toLatitude, toLongitude;
+                double distance;
+                if (this.Graph.GetVertex(arc.Key, out fromLatitude, out fromLongitude) &&
+                    this.Graph.GetVertex(arc.Value.Key, out toLatitude, out toLongitude))
+                {
+                    var fromCoordinates = new GeoCoordinate(fromLatitude, fromLongitude);
+                    var toCoordinates = new GeoCoordinate(toLatitude, toLongitude);
+                    var coordinates = arc.Value.Value.Coordinates;
+                    double distanceTotal = 0;
+                    var previous = fromCoordinates;
+                    for (int idx = 0; idx < coordinates.Length; idx++)
+                    {
+                        var current = new GeoCoordinate(coordinates[idx].Latitude, coordinates[idx].Longitude);
+                        distanceTotal = distanceTotal + current.DistanceReal(previous).Value;
+                        previous = current;
+                    }
+                    distanceTotal = distanceTotal + toCoordinates.DistanceReal(previous).Value;
+                    if (distanceTotal > 0)
+                    { // the from/to are not the same location.
+                        // loop over all edges that are represented by this arc (counting intermediate coordinates).
+                        previous = fromCoordinates;
+                        GeoCoordinateLine line;
+                        double distanceToSegment = 0;
+                        for (int idx = 0; idx < coordinates.Length; idx++)
+                        {
+                            var current = new GeoCoordinate(coordinates[idx].Latitude, coordinates[idx].Longitude);
+                            line = new GeoCoordinateLine(previous, current, true, true);
+
+                            distance = line.DistanceReal(coordinate).Value;
+
+                            if (distance < closestMatch.Distance)
+                            { // the distance is smaller.
+                                var projectedPoint = line.ProjectOn(coordinate);
+
+                                // calculate the position.
+                                if (projectedPoint != null)
+                                { // calculate the distance
+                                    double distancePoint = previous.DistanceReal(new GeoCoordinate(projectedPoint)).Value + distanceToSegment;
+                                    double position = distancePoint / distanceTotal;
+                                    
+                                    closestMatch = new SearchClosestResult<TEdge>(
+                                        distance, arc.Key, arc.Value.Key, position, arc.Value.Value);
+                                }
+                            }
+
+                            // add current segment distance to distanceToSegment for the next segment.
+                            distanceToSegment = distanceToSegment + line.LengthReal.Value;
+
+                            // set previous.
+                            previous = current;
+                        }
+
+                        // check the last segment.
+                        line = new GeoCoordinateLine(previous, toCoordinates, true, true);
+                        distance = line.DistanceReal(coordinate).Value;
+                        if (distance < closestMatch.Distance)
+                        { // the distance is smaller.
+                            var projectedPoint = line.ProjectOn(coordinate);
+
+                            // calculate the position.
+                            if (projectedPoint != null)
+                            { // calculate the distance
+                                double distancePoint = previous.DistanceReal(new GeoCoordinate(projectedPoint)).Value + distanceToSegment;
+                                double position = distancePoint / distanceTotal;
+
+                                closestMatch = new SearchClosestResult<TEdge>(
+                                    distance, arc.Key, arc.Value.Key, position, arc.Value.Value);
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         /// <summary>

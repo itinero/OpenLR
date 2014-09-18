@@ -49,17 +49,39 @@ namespace OpenLR.OsmSharp.Decoding
             var vertexDistance = this.MaxVertexDistance.Value / 8;
             while ((best == null || best.Route == null) && vertexDistance <= this.MaxVertexDistance.Value)
             {
+                var candidateScoreLimit = 0.5;
+
                 // get candidate vertices and edges.
                 var candidates = new List<SortedSet<CandidateVertexEdge<TEdge>>>();
                 var lrps = new List<LocationReferencePoint>();
                 var fromBearingReference = (Degree)location.First.Bearing;
                 var toBearingReference = (Degree)location.Last.Bearing;
 
-                // loop over all lrps.
+                // get first candidates.
                 lrps.Add(location.First);
-                candidates.Add(this.FindCandidatesFor(location.First, true, vertexDistance));
+                var firstCandidates = this.FindCandidatesFor(location.First, true, vertexDistance);
+                var bestFirstCandidate = firstCandidates.First();
+                if(bestFirstCandidate != null)
+                { // there is a best first candidate.
+                    if(bestFirstCandidate.Score < candidateScoreLimit)
+                    { // the score is too low, try to find another vertex.
+                        firstCandidates.Add(this.FindClosestCandidateFor(location.First));
+                    }
+                }
+                candidates.Add(firstCandidates);
+
+                // get last candidates.
                 lrps.Add(location.Last);
-                candidates.Add(this.FindCandidatesFor(location.Last, true, vertexDistance));
+                var lastCandidates = this.FindCandidatesFor(location.Last, true, vertexDistance);
+                var bestLastCandidate = firstCandidates.First();
+                if (bestLastCandidate != null)
+                { // there is a best first candidate.
+                    if (bestLastCandidate.Score < candidateScoreLimit)
+                    { // the score is too low, try to find another vertex.
+                        lastCandidates.Add(this.FindClosestCandidateFor(location.Last));
+                    }
+                }
+                candidates.Add(lastCandidates);
 
                 // build a list of combined scores.
                 var combinedScoresSet = new SortedSet<CombinedScore<TEdge>>(new CombinedScoreComparer<TEdge>());

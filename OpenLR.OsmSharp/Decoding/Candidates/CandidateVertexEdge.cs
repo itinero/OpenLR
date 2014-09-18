@@ -1,4 +1,5 @@
-﻿using OsmSharp.Routing.Graph;
+﻿using OsmSharp.Math.Geo;
+using OsmSharp.Routing.Graph;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,11 @@ namespace OpenLR.OsmSharp.Decoding.Candidates
         public uint Vertex { get; set; }
 
         /// <summary>
+        /// Gets or sets the candidate vertex coordinate.
+        /// </summary>
+        public GeoCoordinate VertexCoordinate { get; set; }
+
+        /// <summary>
         /// Gets or sets the candidate edge.
         /// </summary>
         public TEdge Edge { get; set; }
@@ -32,6 +38,11 @@ namespace OpenLR.OsmSharp.Decoding.Candidates
         /// Gets or sets the vertex this edge leads to.
         /// </summary>
         public uint TargetVertex { get; set; }
+
+        /// <summary>
+        /// Gets or sets the coordinate of the vertex this edge leads to.
+        /// </summary>
+        public GeoCoordinate TargetVertexCoordinate { get; set; }
 
         /// <summary>
         /// Determines whether this object is equal to the given object.

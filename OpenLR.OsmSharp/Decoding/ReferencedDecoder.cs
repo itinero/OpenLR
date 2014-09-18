@@ -100,6 +100,16 @@ namespace OpenLR.OsmSharp.Decoding
         }
 
         /// <summary>
+        /// Finds the closest candidate by finding the closest point on the network.
+        /// </summary>
+        /// <param name="locationReferencePoint"></param>
+        /// <returns></returns>
+        protected CandidateVertexEdge<TEdge> FindClosestCandidateFor(LocationReferencePoint locationReferencePoint)
+        {
+            return _mainDecoder.FindClosestCandidateFor(locationReferencePoint);
+        }
+
+        /// <summary>
         /// Finds candidate vertices for a location reference point.
         /// </summary>
         /// <param name="lrp"></param>
