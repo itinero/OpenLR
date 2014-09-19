@@ -248,6 +248,25 @@ namespace OpenLR.OsmSharp
         /// Converts the referenced point along the line location to features.
         /// </summary>
         /// <param name="referencedPointALongLineLocation"></param>
+        /// <param name="baseEncoder"></param>
+        /// <returns></returns>
+        public static Meter Length<TEdge>(this OpenLR.OsmSharp.Locations.ReferencedPointAlongLine<TEdge> referencedPointALongLineLocation, ReferencedEncoderBase<TEdge> baseEncoder)
+            where TEdge : IDynamicGraphEdgeData
+        {
+            var length = 0.0;
+            for(int idx = 0; idx < referencedPointALongLineLocation.Route.Edges.Length; idx++)
+            {
+                var from = baseEncoder.GetVertexLocation(referencedPointALongLineLocation.Route.Vertices[idx]).ToGeoCoordinate();
+                var to = baseEncoder.GetVertexLocation(referencedPointALongLineLocation.Route.Vertices[idx + 1]).ToGeoCoordinate();
+                length = length + referencedPointALongLineLocation.Route.Edges[idx].Length(from, to).Value;
+            }
+            return length;
+        }
+
+        /// <summary>
+        /// Converts the referenced point along the line location to features.
+        /// </summary>
+        /// <param name="referencedPointALongLineLocation"></param>
         /// <param name="baseDecoder"></param>
         /// <returns></returns>
         public static FeatureCollection ToFeatures<TEdge>(this OpenLR.OsmSharp.Locations.ReferencedPointAlongLine<TEdge> referencedPointALongLineLocation, ReferencedDecoderBase<TEdge> baseDecoder)
@@ -464,6 +483,21 @@ namespace OpenLR.OsmSharp
             }
             coordinates.Add(to);
             return coordinates;
+        }
+
+        /// <summary>
+        /// Returns a list of coordinates representing the geometry of the edge.
+        /// </summary>
+        /// <typeparam name="TEdge"></typeparam>
+        /// <param name="edge"></param>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
+        public static Meter Length<TEdge>(this TEdge edge, GeoCoordinate from, GeoCoordinate to)
+            where TEdge : IDynamicGraphEdgeData
+        {
+            var coordinates = edge.GetCoordinates(from, to);
+            return coordinates.Length();
         }
 
         /// <summary>

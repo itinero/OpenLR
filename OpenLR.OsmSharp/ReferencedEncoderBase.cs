@@ -5,6 +5,7 @@ using OpenLR.OsmSharp.Encoding;
 using OpenLR.OsmSharp.Locations;
 using OpenLR.Referenced;
 using OsmSharp;
+using OsmSharp.Collections.PriorityQueues;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Simple;
@@ -180,16 +181,15 @@ namespace OpenLR.OsmSharp
         /// Returns true if the given vertex is a valid candidate to use as a location reference point.
         /// </summary>
         /// <param name="vertex"></param>
-        /// <param name="vehicle"></param>
         /// <returns></returns>
-        public bool IsVertexValid(Vehicle vehicle, long vertex)
+        public bool IsVertexValid(long vertex)
         {
             var arcs = this.Graph.GetArcs((uint)vertex);
 
             // filter out non-traversable arcs.
             var traversableArcs = arcs.Where((arc) =>
             {
-                return vehicle.CanTraverse(this.Graph.TagsIndex.Get(arc.Value.Tags));
+                return this.Vehicle.CanTraverse(this.Graph.TagsIndex.Get(arc.Value.Tags));
             }).ToList();
 
             if (traversableArcs.Count > 1)
@@ -198,7 +198,7 @@ namespace OpenLR.OsmSharp
                 {
                     // check if this neighbour is incoming.
                     var incomingTags = this.Graph.TagsIndex.Get(incoming.Value.Tags);
-                    var incomingOneway = vehicle.IsOneWay(incomingTags);
+                    var incomingOneway = this.Vehicle.IsOneWay(incomingTags);
                     if (incomingOneway == null &&
                         incomingOneway.Value != incoming.Value.Forward)
                     { // ok, is not oneway or oneway is in incoming direction.
@@ -208,7 +208,7 @@ namespace OpenLR.OsmSharp
                             if (outgoing.Key != incoming.Key)
                             { // don't take the same edge.
                                 var outgoingTags = this.Graph.TagsIndex.Get(outgoing.Value.Tags);
-                                var oneway = vehicle.IsOneWay(outgoingTags);
+                                var oneway = this.Vehicle.IsOneWay(outgoingTags);
                                 if (oneway == null &&
                                     oneway.Value == outgoing.Value.Forward)
                                 { // ok, is not oneway or oneway is outgoing direction.
@@ -229,6 +229,14 @@ namespace OpenLR.OsmSharp
                 return true;
             }
         }
+
+        /// <summary>
+        /// Finds a valid vertex for the given vertex but does not search in the direction of the target neighbour.
+        /// </summary>
+        /// <param name="vertex">The invalid vertex.</param>
+        /// <param name="targetNeighbour">The neighbour of this vertex that is part of the location.</param>
+        /// <param name="searchForward">When true, the search is forward, otherwise backward.</param>
+        public abstract PathSegment<uint> FindValidVertexFor(long vertex, long targetNeighbour, bool searchForward);
     }
 
     /// <summary>
@@ -244,13 +252,14 @@ namespace OpenLR.OsmSharp
         /// <returns></returns>
         public static ReferencedPointAlongLine<LiveEdge> BuildPointAlongLine(this ReferencedEncoderBase<LiveEdge> encoder, GeoCoordinate location)
         {
+            // get the closest edge that can be traversed to the given location.
             var closest = encoder.Graph.GetClosestEdge<LiveEdge>(location);
 
             // check oneway.
             var oneway = encoder.Vehicle.IsOneWay(encoder.Graph.TagsIndex.Get(closest.Value.Value.Tags));
             var useForward = (oneway == null) || (oneway.Value == closest.Value.Value.Forward);
 
-            // build location.
+            // build location and make sure the vehicle can travel from from location to to location.
             LiveEdge edge;
             uint from, to;
             if (useForward)
@@ -297,20 +306,94 @@ namespace OpenLR.OsmSharp
                 to = closest.Key;
             }
 
-            // an edge was found, validate the from/to points.
-            bool fromIsValid = encoder.IsVertexValid(from);
-            bool toIsValid = encoder.IsVertexValid(to);
-
-            return new OpenLR.OsmSharp.Locations.ReferencedPointAlongLine<LiveEdge>()
-            {
-                Route = new ReferencedLine<LiveEdge>(encoder.Graph)
+            // OK, now we have a naive location, we need to check if it's valid.
+            // see: §C section 6 @ http://www.tomtom.com/lib/OpenLR/OpenLR-whitepaper.pdf
+            var referencedPointAlongLine = new OpenLR.OsmSharp.Locations.ReferencedPointAlongLine<LiveEdge>()
                 {
-                    Edges = new LiveEdge[] { edge },
-                    Vertices = new long[] { from, to }
-                },
-                Latitude = location.Latitude,
-                Longitude = location.Longitude
-            };
+                    Route = new ReferencedLine<LiveEdge>(encoder.Graph)
+                    {
+                        Edges = new LiveEdge[] { edge },
+                        Vertices = new long[] { from, to }
+                    },
+                    Latitude = location.Latitude,
+                    Longitude = location.Longitude
+                };
+
+            bool rule1 = false, rule4 = false;
+            while(!rule1 || !rule4)
+            { // keep looping until rules are valid or building fails.
+                // RULE1: distance should not exceed 15km.
+                var length = referencedPointAlongLine.Length(encoder);
+                rule1 = length.Value > 15000;
+
+                // RULE2: no need to check, will be rounded.
+
+                // RULE3: ok, there are two points.
+
+                // RULE4: choosen points should be valid network points.
+                bool fromIsValid = encoder.IsVertexValid(from);
+                bool toIsValid = encoder.IsVertexValid(to);
+
+                if (fromIsValid && toIsValid)
+                { // ok, this is good, the location is already valid.
+                    if (!rule1)
+                    { // no implented this.
+                        throw new NotImplementedException("Distance between the two closest valid points is too big, should insert intermediate point.");
+                    }
+                }
+                else
+                { // try to find valid points.
+                    if(!fromIsValid)
+                    { // from is not valid, try to find a valid point.
+                        var pathToValid = encoder.FindValidVertexFor(referencedPointAlongLine.Route.Vertices[0], referencedPointAlongLine.Route.Vertices[1], false);
+
+                        // build edges list.
+                        var vertices = pathToValid.ToArray().ToList();
+                        var edges = new List<LiveEdge>();
+                        for (int idx = 0; idx < vertices.Count - 1; idx++)
+                        { // loop over edges.
+                            edges.Add(encoder.Graph.GetArcs(vertices[idx + 1]).Where(x => x.Key == vertices[idx]).First().Value);
+                        }
+
+                        // create new location.
+                        var edgesArray = new LiveEdge[edges.Count + referencedPointAlongLine.Route.Edges.Length];
+                        edges.CopyTo(0, edgesArray, 0, edges.Count);
+                        referencedPointAlongLine.Route.Edges.CopyTo(0, edgesArray, edges.Count, referencedPointAlongLine.Route.Edges.Length);
+                        var vertexArray = new long[vertices.Count - 1 + referencedPointAlongLine.Route.Vertices.Length];
+                        vertices.ConvertAll(x => (long)x).CopyTo(0, vertexArray, 0, vertices.Count - 1);
+                        referencedPointAlongLine.Route.Vertices.CopyTo(0, vertexArray, vertices.Count - 1, referencedPointAlongLine.Route.Vertices.Length);
+
+                        referencedPointAlongLine.Route.Edges = edgesArray;
+                        referencedPointAlongLine.Route.Vertices = vertexArray;
+                    }
+
+                    if (!toIsValid)
+                    { // from is not valid, try to find a valid point.
+                        var vertexCount = referencedPointAlongLine.Route.Vertices.Length;
+                        var pathToValid = encoder.FindValidVertexFor(referencedPointAlongLine.Route.Vertices[vertexCount - 1], referencedPointAlongLine.Route.Vertices[vertexCount - 2], true);
+
+                        // build edges list.
+                        var vertices = pathToValid.ToArray().ToList();
+                        var edges = new List<LiveEdge>();
+                        for (int idx = 0; idx < vertices.Count - 1; idx++)
+                        { // loop over edges.
+                            edges.Add(encoder.Graph.GetArcs(vertices[idx]).Where(x => x.Key == vertices[idx + 1]).First().Value);
+                        }
+
+                        // create new location.
+                        var edgesArray = new LiveEdge[edges.Count + referencedPointAlongLine.Route.Edges.Length];
+                        referencedPointAlongLine.Route.Edges.CopyTo(0, edgesArray, 0, referencedPointAlongLine.Route.Edges.Length);
+                        edges.CopyTo(0, edgesArray, referencedPointAlongLine.Route.Edges.Length, edges.Count);
+                        var vertexArray = new long[vertices.Count - 1 + referencedPointAlongLine.Route.Vertices.Length];
+                        referencedPointAlongLine.Route.Vertices.CopyTo(0, vertexArray, 0, referencedPointAlongLine.Route.Vertices.Length);
+                        vertices.ConvertAll(x => (long)x).CopyTo(1, vertexArray, referencedPointAlongLine.Route.Vertices.Length, vertices.Count - 1);
+
+                        referencedPointAlongLine.Route.Edges = edgesArray;
+                        referencedPointAlongLine.Route.Vertices = vertexArray;
+                    }
+                }
+            }
+            return null;
         }
     }
 }

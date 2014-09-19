@@ -14,7 +14,7 @@ namespace OpenLR.OsmSharp.MultiNet
     /// <summary>
     /// An implementation of a referenced encoder based on TomTom MultiNet.
     /// </summary>
-    public class ReferencedMultiNetEncoder : ReferencedEncoderBase<LiveEdge>
+    public class ReferencedMultiNetEncoder : ReferencedEncoderBaseLiveEdge
     {
         /// <summary>
         /// Creates a new referenced live edge decoder.

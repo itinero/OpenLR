@@ -1,18 +1,19 @@
 ﻿using OpenLR.Encoding;
 using OpenLR.Model;
+using OsmSharp.Collections.PriorityQueues;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Graph.Router.Dykstra;
 using OsmSharp.Routing.Osm.Graphs;
-using System;
+using System.Collections.Generic;
 
 namespace OpenLR.OsmSharp.Osm
 {
     /// <summary>
     /// An implementation of a referenced encoder based on OSM. 
     /// </summary>
-    public class ReferencedOsmEncoder : ReferencedEncoderBase<LiveEdge>
+    public class ReferencedOsmEncoder : ReferencedEncoderBaseLiveEdge
     {
         /// <summary>
         /// Creates a new referenced live edge decoder.
@@ -44,7 +45,7 @@ namespace OpenLR.OsmSharp.Osm
             float latitude, longitude;
             if (!this.Graph.GetVertex((uint)vertex, out latitude, out longitude))
             { // oeps, vertex does not exist!
-                throw new ArgumentOutOfRangeException("vertex", string.Format("Vertex {0} not found!", vertex));
+                throw new System.ArgumentOutOfRangeException("vertex", string.Format("Vertex {0} not found!", vertex));
             }
             return new Coordinate()
             {
