@@ -65,7 +65,7 @@ namespace OpenLR.OsmSharp
                     var arcs = this.Graph.GetArcs(current.VertexId);
                     foreach (var arc in arcs)
                     {
-                        if (settled.Contains(arc.Key))
+                        if (!settled.Contains(arc.Key))
                         { // ok, new neighbour!
                             var tags = this.Graph.TagsIndex.Get(arc.Value.Tags);
                             if (this.Vehicle.CanTraverse(tags))

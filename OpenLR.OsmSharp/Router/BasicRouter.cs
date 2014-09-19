@@ -87,18 +87,28 @@ namespace OpenLR.OsmSharp.Router
                 var neighbours = graph.GetArcs(current.VertexId);
                 if (neighbours != null)
                 { // neighbours exist.
-                    foreach(var neighbour in neighbours)
+                    foreach (var neighbour in neighbours)
                     {
                         // check if the neighbour was settled before.
-                        if(visited.Contains(neighbour.Key))
+                        if (visited.Contains(neighbour.Key))
                         { // move to the next neighbour.
                             continue;
                         }
 
-                        // create path to neighbour and queue it.
-                        var weight = vehicle.Weight(graph.TagsIndex.Get(neighbour.Value.Tags), neighbour.Value.Distance);
-                        var path = new PathSegment<uint>(neighbour.Key, current.Weight + weight, current);
-                        heap.Push(path, (float)path.Weight);
+                        // get tags and check traversability and oneway.
+                        var tags = graph.TagsIndex.Get(neighbour.Value.Tags);
+                        if (vehicle.CanTraverse(tags))
+                        { // yay! can traverse.
+                            var oneway = vehicle.IsOneWay(tags);
+                            if (oneway == null ||
+                                oneway.Value == neighbour.Value.Forward)
+                            {
+                                // create path to neighbour and queue it.
+                                var weight = vehicle.Weight(graph.TagsIndex.Get(neighbour.Value.Tags), neighbour.Value.Distance);
+                                var path = new PathSegment<uint>(neighbour.Key, current.Weight + weight, current);
+                                heap.Push(path, (float)path.Weight);
+                            }
+                        }
                     }
                 }
             }

@@ -267,6 +267,31 @@ namespace OpenLR.OsmSharp
         /// Converts the referenced point along the line location to features.
         /// </summary>
         /// <param name="referencedPointALongLineLocation"></param>
+        /// <param name="baseEncoder"></param>
+        /// <returns></returns>
+        public static List<GeoCoordinate> GetCoordinates<TEdge>(this OpenLR.OsmSharp.Locations.ReferencedPointAlongLine<TEdge> referencedPointALongLineLocation, ReferencedEncoderBase<TEdge> baseEncoder)
+            where TEdge : IDynamicGraphEdgeData
+        {
+            var coordinates = new List<GeoCoordinate>();
+            for (int idx = 0; idx < referencedPointALongLineLocation.Route.Edges.Length; idx++)
+            {
+                var from = baseEncoder.GetVertexLocation(referencedPointALongLineLocation.Route.Vertices[idx]).ToGeoCoordinate();
+                var to = baseEncoder.GetVertexLocation(referencedPointALongLineLocation.Route.Vertices[idx + 1]).ToGeoCoordinate();
+                var edgeCoordinates = referencedPointALongLineLocation.Route.Edges[idx].GetCoordinates(from, to);
+                if (coordinates.Count > 0)
+                {
+                    coordinates.RemoveAt(coordinates.Count - 1);
+
+                }
+                coordinates.AddRange(edgeCoordinates);
+            }
+            return coordinates;
+        }
+
+        /// <summary>
+        /// Converts the referenced point along the line location to features.
+        /// </summary>
+        /// <param name="referencedPointALongLineLocation"></param>
         /// <param name="baseDecoder"></param>
         /// <returns></returns>
         public static FeatureCollection ToFeatures<TEdge>(this OpenLR.OsmSharp.Locations.ReferencedPointAlongLine<TEdge> referencedPointALongLineLocation, ReferencedDecoderBase<TEdge> baseDecoder)

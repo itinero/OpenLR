@@ -39,41 +39,44 @@ namespace OpenLR.OsmSharp.Encoding
         /// <returns></returns>
         public override PointAlongLineLocation EncodeReferenced(ReferencedPointAlongLine<TEdge> referencedLocation)
         {
-            if (referencedLocation.Route.Edges.Length != 1) { throw new ArgumentOutOfRangeException("Can only encode reference location with one edge, no need to create on with more."); }
-
             try
             {
-                // get the tags collection.
-                var tags = this.GetTags(referencedLocation.Route.Edges[0].Tags);
+                // initialize location.
+                var location = new PointAlongLineLocation();
 
-                // match fow/frc.
+                // match fow/frc for first edge.
                 FormOfWay fow;
                 FunctionalRoadClass frc;
+                var tags = this.GetTags(referencedLocation.Route.Edges[0].Tags);
                 if(!this.TryMatching(tags, out frc, out fow))
                 {
                     throw new ReferencedEncodingException(referencedLocation, "Could not find frc and/or fow for the given tags.");
                 }
-
-                // initialize location.
-                var location = new PointAlongLineLocation();
                 location.First = new Model.LocationReferencePoint();
                 location.First.Coordinate = this.GetVertexLocation(referencedLocation.Route.Vertices[0]);
                 location.First.FormOfWay = fow;
                 location.First.FuntionalRoadClass = frc;
                 location.First.LowestFunctionalRoadClassToNext = location.First.FuntionalRoadClass;
+
+                // match for last edge.
+                tags = this.GetTags(referencedLocation.Route.Edges[referencedLocation.Route.Edges.Length - 1].Tags);
+                if (!this.TryMatching(tags, out frc, out fow))
+                {
+                    throw new ReferencedEncodingException(referencedLocation, "Could not find frc and/or fow for the given tags.");
+                }
                 location.Last = new Model.LocationReferencePoint();
-                location.Last.Coordinate = this.GetVertexLocation(referencedLocation.Route.Vertices[1]);
+                location.Last.Coordinate = this.GetVertexLocation(referencedLocation.Route.Vertices[referencedLocation.Route.Vertices.Length - 1]);
                 location.Last.FormOfWay = fow;
                 location.Last.FuntionalRoadClass = frc;
 
                 // initialize from point, to point and create the coordinate list.
                 var from = new GeoCoordinate(location.First.Coordinate.Latitude, location.First.Coordinate.Longitude);
                 var to = new GeoCoordinate(location.Last.Coordinate.Latitude, location.Last.Coordinate.Longitude);
-                var coordinates = referencedLocation.Route.Edges[0].GetCoordinates(from, to);
+                var coordinates = referencedLocation.GetCoordinates(this.MainEncoder);
 
                 // calculate bearing.
                 location.First.Bearing = (int)this.GetBearing(referencedLocation.Route.Vertices[0], referencedLocation.Route.Edges[0], referencedLocation.Route.Vertices[1], false).Value;
-                location.Last.Bearing = (int)this.GetBearing(referencedLocation.Route.Vertices[1], referencedLocation.Route.Edges[0], referencedLocation.Route.Vertices[0], true).Value;
+                location.Last.Bearing = (int)this.GetBearing(referencedLocation.Route.Vertices[referencedLocation.Route.Vertices.Length - 2], referencedLocation.Route.Edges[referencedLocation.Route.Edges.Length - 1], referencedLocation.Route.Vertices[referencedLocation.Route.Vertices.Length - 1], true).Value;
 
                 // calculate length.
                 var lengthInMeter = coordinates.Length();

@@ -44,6 +44,17 @@ namespace OpenLR.OsmSharp.Encoding
         }
 
         /// <summary>
+        /// Returns the main encoder.
+        /// </summary>
+        public ReferencedEncoderBase<TEdge> MainEncoder
+        {
+            get
+            {
+                return _mainEncoder;
+            }
+        }
+
+        /// <summary>
         /// Returns the coordinate of the given vertex.
         /// </summary>
         /// <param name="vertex"></param>

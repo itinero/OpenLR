@@ -59,7 +59,7 @@ namespace OpenLR.OsmSharp.Decoding
                 lrps.Add(location.First);
                 candidates.Add(this.FindCandidatesFor(location.First, true, vertexDistance));
                 lrps.Add(location.Last);
-                candidates.Add(this.FindCandidatesFor(location.Last, true, vertexDistance));
+                candidates.Add(this.FindCandidatesFor(location.Last, false, vertexDistance));
 
                 // build a list of combined scores.
                 var combinedScoresSet = new SortedSet<CombinedScore<TEdge>>(new CombinedScoreComparer<TEdge>());

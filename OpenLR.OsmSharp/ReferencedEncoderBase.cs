@@ -199,7 +199,7 @@ namespace OpenLR.OsmSharp
                     // check if this neighbour is incoming.
                     var incomingTags = this.Graph.TagsIndex.Get(incoming.Value.Tags);
                     var incomingOneway = this.Vehicle.IsOneWay(incomingTags);
-                    if (incomingOneway == null &&
+                    if (incomingOneway == null ||
                         incomingOneway.Value != incoming.Value.Forward)
                     { // ok, is not oneway or oneway is in incoming direction.
                         var outgoingCount = 0;
@@ -209,10 +209,14 @@ namespace OpenLR.OsmSharp
                             { // don't take the same edge.
                                 var outgoingTags = this.Graph.TagsIndex.Get(outgoing.Value.Tags);
                                 var oneway = this.Vehicle.IsOneWay(outgoingTags);
-                                if (oneway == null &&
+                                if (oneway == null ||
                                     oneway.Value == outgoing.Value.Forward)
                                 { // ok, is not oneway or oneway is outgoing direction.
                                     outgoingCount++;
+                                    if (outgoingCount > 1)
+                                    { // it's not going down again, stop the search.
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -324,15 +328,15 @@ namespace OpenLR.OsmSharp
             { // keep looping until rules are valid or building fails.
                 // RULE1: distance should not exceed 15km.
                 var length = referencedPointAlongLine.Length(encoder);
-                rule1 = length.Value > 15000;
+                rule1 = length.Value < 15000;
 
                 // RULE2: no need to check, will be rounded.
 
                 // RULE3: ok, there are two points.
 
                 // RULE4: choosen points should be valid network points.
-                bool fromIsValid = encoder.IsVertexValid(from);
-                bool toIsValid = encoder.IsVertexValid(to);
+                bool fromIsValid = encoder.IsVertexValid(referencedPointAlongLine.Route.Vertices[0]);
+                bool toIsValid = encoder.IsVertexValid(referencedPointAlongLine.Route.Vertices[referencedPointAlongLine.Route.Vertices.Length - 1]);
 
                 if (fromIsValid && toIsValid)
                 { // ok, this is good, the location is already valid.
@@ -340,6 +344,7 @@ namespace OpenLR.OsmSharp
                     { // no implented this.
                         throw new NotImplementedException("Distance between the two closest valid points is too big, should insert intermediate point.");
                     }
+                    rule4 = true;
                 }
                 else
                 { // try to find valid points.
@@ -348,11 +353,27 @@ namespace OpenLR.OsmSharp
                         var pathToValid = encoder.FindValidVertexFor(referencedPointAlongLine.Route.Vertices[0], referencedPointAlongLine.Route.Vertices[1], false);
 
                         // build edges list.
-                        var vertices = pathToValid.ToArray().ToList();
+                        var vertices = pathToValid.ToArray().Reverse().ToList();
                         var edges = new List<LiveEdge>();
                         for (int idx = 0; idx < vertices.Count - 1; idx++)
                         { // loop over edges.
-                            edges.Add(encoder.Graph.GetArcs(vertices[idx + 1]).Where(x => x.Key == vertices[idx]).First().Value);
+                            edge = encoder.Graph.GetArcs(vertices[idx + 1]).Where(x => x.Key == vertices[idx]).First().Value;
+                            if (!edge.Forward)
+                            { // use reverse edge.
+                                var reverseEdge = new LiveEdge();
+                                reverseEdge.Tags = edge.Tags;
+                                reverseEdge.Forward = !edge.Forward;
+                                reverseEdge.Distance = edge.Distance;
+                                reverseEdge.Coordinates = null;
+                                if (edge.Coordinates != null)
+                                {
+                                    var reverse = new GeoCoordinateSimple[edge.Coordinates.Length];
+                                    edge.Coordinates.CopyToReverse(reverse, 0);
+                                    reverseEdge.Coordinates = reverse;
+                                }
+                                edge = reverseEdge;
+                            }
+                            edges.Add(edge);
                         }
 
                         // create new location.
@@ -377,7 +398,23 @@ namespace OpenLR.OsmSharp
                         var edges = new List<LiveEdge>();
                         for (int idx = 0; idx < vertices.Count - 1; idx++)
                         { // loop over edges.
-                            edges.Add(encoder.Graph.GetArcs(vertices[idx]).Where(x => x.Key == vertices[idx + 1]).First().Value);
+                            edge = encoder.Graph.GetArcs(vertices[idx]).Where(x => x.Key == vertices[idx + 1]).First().Value;
+                            if (!edge.Forward)
+                            { // use reverse edge.
+                                var reverseEdge = new LiveEdge();
+                                reverseEdge.Tags = edge.Tags;
+                                reverseEdge.Forward = !edge.Forward;
+                                reverseEdge.Distance = edge.Distance;
+                                reverseEdge.Coordinates = null;
+                                if (edge.Coordinates != null)
+                                {
+                                    var reverse = new GeoCoordinateSimple[edge.Coordinates.Length];
+                                    edge.Coordinates.CopyToReverse(reverse, 0);
+                                    reverseEdge.Coordinates = reverse;
+                                }
+                                edge = reverseEdge;
+                            }
+                            edges.Add(edge);
                         }
 
                         // create new location.
@@ -393,7 +430,7 @@ namespace OpenLR.OsmSharp
                     }
                 }
             }
-            return null;
+            return referencedPointAlongLine;
         }
     }
 }
