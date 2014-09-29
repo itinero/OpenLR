@@ -552,7 +552,8 @@ namespace OpenLR.OsmSharp
         public static bool ProjectOn(this List<GeoCoordinate> coordinates, PointF2D point, out PointF2D bestProjected, out LinePointPosition bestPosition, out Meter bestOffset)
         {
             // check first point.
-            var distance = coordinates[0].Distance(point);
+            var pointGeo = new GeoCoordinate(point);
+            var distance = coordinates[0].DistanceReal(pointGeo).Value;
             bestProjected = coordinates[0];
             bestOffset = 0;
             bestPosition = LinePointPosition.On;
@@ -578,15 +579,16 @@ namespace OpenLR.OsmSharp
                     }
                 }
                 currentOffset = currentOffset + line.LengthReal.Value;
-            }
 
-            // check last point.
-            distance = coordinates[coordinates.Count - 1].Distance(point);
-            if (distance < bestDistance)
-            {
-                bestProjected = coordinates[coordinates.Count - 1];
-                bestOffset = currentOffset;
-                bestPosition = LinePointPosition.On;
+                // check point at idx + 1 (point at idx already done).
+                distance = coordinates[idx + 1].DistanceReal(pointGeo).Value;
+                if (distance < bestDistance)
+                {
+                    bestDistance = distance;
+                    bestProjected = coordinates[idx + 1];
+                    bestOffset = currentOffset;
+                    bestPosition = LinePointPosition.On;
+                }
             }
 
             return true;

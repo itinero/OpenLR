@@ -9,6 +9,7 @@ using OpenLR.Referenced;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Simple;
+using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Units.Angle;
@@ -71,16 +72,22 @@ namespace OpenLR.OsmSharp
         private readonly ReferencedRectangleDecoder<TEdge> _referencedRectangleDecoder;
 
         /// <summary>
+        /// The vehicle profile to use for decoding.
+        /// </summary>
+        private readonly Vehicle _vehicle;
+
+        /// <summary>
         /// Creates a new referenced decoder.
         /// </summary>
         /// <param name="graph"></param>
         /// <param name="locationDecoder"></param>
         /// <param name="maxVertexDistance"></param>
-        public ReferencedDecoderBase(IBasicRouterDataSource<TEdge> graph, Decoder locationDecoder, Meter maxVertexDistance)
+        public ReferencedDecoderBase(IBasicRouterDataSource<TEdge> graph, Vehicle vehicle, Decoder locationDecoder, Meter maxVertexDistance)
             :base(locationDecoder)
         {
             _graph = graph;
             _maxVertexDistance = maxVertexDistance;
+            _vehicle = vehicle;
 
             _referencedCircleDecoder = this.GetReferencedCircleDecoder(_graph);
             _referencedGeoCoordinateDecoder = this.GetReferencedGeoCoordinateDecoder(_graph);
@@ -96,10 +103,11 @@ namespace OpenLR.OsmSharp
         /// </summary>
         /// <param name="graph"></param>
         /// <param name="locationDecoder"></param>
-        public ReferencedDecoderBase(IBasicRouterDataSource<TEdge> graph, Decoder locationDecoder)
+        public ReferencedDecoderBase(IBasicRouterDataSource<TEdge> graph, Vehicle vehicle, Decoder locationDecoder)
             :base(locationDecoder)
         {
             _graph = graph;
+            _vehicle = vehicle;
 
             _referencedCircleDecoder = this.GetReferencedCircleDecoder(_graph);
             _referencedGeoCoordinateDecoder = this.GetReferencedGeoCoordinateDecoder(_graph);
@@ -127,6 +135,17 @@ namespace OpenLR.OsmSharp
             get
             {
                 return _graph;
+            }
+        }
+
+        /// <summary>
+        /// Returns the vehicle.
+        /// </summary>
+        protected Vehicle Vehicle
+        {
+            get
+            {
+                return _vehicle;
             }
         }
 
@@ -399,15 +418,27 @@ namespace OpenLR.OsmSharp
             foreach (var arc in this.Graph.GetArcs(vertex))
             {
                 var tags = this.Graph.TagsIndex.Get(arc.Value.Tags);
-                var score = this.MatchArc(tags, fow, frc);
-                if (score > 0)
-                { // ok, there is a match.
-                    relevantEdges.Add(new CandidateEdge()
+
+                // check one-way.
+                if (_vehicle.CanTraverse(tags))
+                { // yay! can traverse.
+                    var oneway = _vehicle.IsOneWay(tags);
+                    if (oneway == null ||
+                        (forward && oneway.Value == arc.Value.Forward) ||
+                        (!forward && oneway.Value != arc.Value.Forward))
                     {
-                        TargetVertex = arc.Key,
-                        Score = score,
-                        Edge = arc.Value
-                    });
+                        var score = this.MatchArc(tags, fow, frc);
+                        if (score > 0)
+                        { // ok, there is a match.
+                            relevantEdges.Add(new CandidateEdge()
+                            {
+                                TargetVertex = arc.Key,
+                                Score = score,
+                                Edge = arc.Value
+                            });
+                        }
+
+                    }
                 }
             }
             return relevantEdges;

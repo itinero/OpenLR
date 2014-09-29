@@ -31,7 +31,7 @@ namespace OpenLR.OsmSharp.NWB
         /// <param name="graph"></param>
         /// <param name="locationDecoder"></param>
         public ReferencedNWBDecoder(IBasicRouterDataSource<LiveEdge> graph, Decoder locationDecoder)
-            : base(graph, locationDecoder)
+            : base(graph, new global::OsmSharp.Routing.Shape.Vehicles.Car("RIJRICHTING", "H", "T", string.Empty), locationDecoder)
         {
 
         }
@@ -43,7 +43,7 @@ namespace OpenLR.OsmSharp.NWB
         /// <param name="locationDecoder"></param>
         /// <param name="maxVertexDistance"></param>
         public ReferencedNWBDecoder(IBasicRouterDataSource<LiveEdge> graph, Decoder locationDecoder, Meter maxVertexDistance)
-            : base(graph, locationDecoder)
+            : base(graph, new global::OsmSharp.Routing.Shape.Vehicles.Car("RIJRICHTING", "H", "T", string.Empty), locationDecoder)
         {
             _maxVertexDistance = maxVertexDistance;
         }
@@ -85,10 +85,9 @@ namespace OpenLR.OsmSharp.NWB
         /// <returns></returns>
         public override CandidateRoute<LiveEdge> FindCandiateRoute(CandidateVertexEdge<LiveEdge> from, CandidateVertexEdge<LiveEdge> to, FunctionalRoadClass minimum)
         {
-            var vehicle = new global::OsmSharp.Routing.Shape.Vehicles.Car("RIJRICHTING", "H", "T", string.Empty); // define vehicle with the column and values that define the onway restrictions and (optional) the speed in KPH.
             var edgeInterpreter = new ShapefileEdgeInterpreter();
             var interpreter = new ShapefileRoutingInterpreter();
-            var path = this.GetRouter().Calculate(this.Graph, interpreter, vehicle, from, to, minimum);
+            var path = this.GetRouter().Calculate(this.Graph, interpreter, this.Vehicle, from, to, minimum);
 
             // if no route is found, score is 0.
             if (path == null)

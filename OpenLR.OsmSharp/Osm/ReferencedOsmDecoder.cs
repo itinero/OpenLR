@@ -32,7 +32,7 @@ namespace OpenLR.OsmSharp.Osm
         /// <param name="graph"></param>
         /// <param name="locationDecoder"></param>
         public ReferencedOsmDecoder(IBasicRouterDataSource<LiveEdge> graph, Decoder locationDecoder)
-            : base(graph, locationDecoder)
+            : base(graph, Vehicle.Car, locationDecoder)
         {
 
         }
@@ -44,7 +44,7 @@ namespace OpenLR.OsmSharp.Osm
         /// <param name="locationDecoder"></param>
         /// <param name="maxVertexDistance"></param>
         public ReferencedOsmDecoder(IBasicRouterDataSource<LiveEdge> graph, Decoder locationDecoder, Meter maxVertexDistance)
-            : base(graph, locationDecoder)
+            : base(graph, Vehicle.Car, locationDecoder)
         {
             _maxVertexDistance = maxVertexDistance;
         }

@@ -25,7 +25,7 @@ namespace OpenLR.OsmSharp.MultiNet
         /// <param name="graph"></param>
         /// <param name="locationDecoder"></param>
         public ReferencedMultiNetDecoder(IBasicRouterDataSource<LiveEdge> graph, Decoder locationDecoder)
-            : base(graph, locationDecoder)
+            : base(graph, new global::OsmSharp.Routing.Shape.Vehicles.Car("ONEWAY", "FT", "TF", string.Empty), locationDecoder)
         {
 
         }
@@ -37,7 +37,7 @@ namespace OpenLR.OsmSharp.MultiNet
         /// <param name="locationDecoder"></param>
         /// <param name="maxVertexDistance"></param>
         public ReferencedMultiNetDecoder(IBasicRouterDataSource<LiveEdge> graph, Decoder locationDecoder, Meter maxVertexDistance)
-            : base(graph, locationDecoder, maxVertexDistance)
+            : base(graph, new global::OsmSharp.Routing.Shape.Vehicles.Car("ONEWAY", "FT", "TF", string.Empty), locationDecoder, maxVertexDistance)
         {
 
         }
@@ -222,10 +222,9 @@ namespace OpenLR.OsmSharp.MultiNet
         /// <returns></returns>
         public override CandidateRoute<LiveEdge> FindCandiateRoute(CandidateVertexEdge<LiveEdge> from, CandidateVertexEdge<LiveEdge> to, FunctionalRoadClass minimum)
         {
-            var vehicle = new global::OsmSharp.Routing.Shape.Vehicles.Car("ONEWAY", "FT", "TF", string.Empty); // define vehicle with the column and values that define the onway restrictions and (optional) the speed in KPH.
             var edgeInterpreter = new ShapefileEdgeInterpreter();
             var interpreter = new ShapefileRoutingInterpreter();
-            var path = this.GetRouter().Calculate(this.Graph, interpreter, vehicle, from, to, minimum);
+            var path = this.GetRouter().Calculate(this.Graph, interpreter, this.Vehicle, from, to, minimum);
 
             // if no route is found, score is 0.
             if (path == null)
@@ -401,8 +400,7 @@ namespace OpenLR.OsmSharp.MultiNet
         /// <returns></returns>
         public override bool? IsOneway(TagsCollectionBase tags)
         {
-            var vehicle = new global::OsmSharp.Routing.Shape.Vehicles.Car("ONEWAY", "FT", "TF", string.Empty);
-            return vehicle.IsOneWay(tags);
+            return this.Vehicle.IsOneWay(tags);
         }
     }
 }
