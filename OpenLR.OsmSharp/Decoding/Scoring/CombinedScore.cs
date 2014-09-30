@@ -25,13 +25,18 @@ namespace OpenLR.OsmSharp.Decoding.Scoring
         public CandidateVertexEdge<TEdge> Target { get; set; }
 
         /// <summary>
+        /// Gets or sets the bearing score.
+        /// </summary>
+        public float BearingScore { get; set; }
+
+        /// <summary>
         /// Returns the score.
         /// </summary>
         public float Score
         {
             get
             {
-                return this.Source.Score + this.Target.Score;
+                return this.Source.Score + this.Target.Score + this.BearingScore;
             }
         }
 
@@ -43,7 +48,7 @@ namespace OpenLR.OsmSharp.Decoding.Scoring
         public override bool Equals(object obj)
         {
             var other = (obj as CombinedScore<TEdge>);
-            return other != null && other.Target.Equals(this.Target) && other.Source.Equals(this.Source) && other.Score == this.Score;
+            return other != null && other.Target.Equals(this.Target) && other.Source.Equals(this.Source) && other.Score == this.Score && other.BearingScore == this.BearingScore;
         }
 
         /// <summary>
@@ -54,7 +59,8 @@ namespace OpenLR.OsmSharp.Decoding.Scoring
         {
             return this.Score.GetHashCode() ^
                 this.Target.GetHashCode() ^
-                this.Source.GetHashCode();
+                this.Source.GetHashCode() ^
+                this.BearingScore.GetHashCode();
         }
     }
 }

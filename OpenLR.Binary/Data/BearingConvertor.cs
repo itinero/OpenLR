@@ -71,7 +71,7 @@ namespace OpenLR.Binary.Data
         /// <param name="angleInDegrees"></param>
         /// <returns></returns>
         /// <remarks>7.3.3 in OpenLR whitepaper.</remarks>
-        public static int EncodeAngleToBearing(double angleInDegrees)
+        public static int EncodeAngleToBearing(int angleInDegrees)
         {
             if (angleInDegrees < 0) { throw new ArgumentOutOfRangeException("angleInDegrees", "Angle needs to be in the range of [0-360["); }
             if (angleInDegrees >= 360) { throw new ArgumentOutOfRangeException("angleInDegrees", "Angle needs to be in the range of [0-360["); }
@@ -84,12 +84,12 @@ namespace OpenLR.Binary.Data
         /// </summary>
         /// <param name="bearing"></param>
         /// <returns>The angle represented by the bearing in the range [0-360[.</returns>
-        public static double DecodeAngleFromBearing(int bearing)
+        public static int DecodeAngleFromBearing(int bearing)
         {
             if (bearing < 0) { throw new ArgumentOutOfRangeException("angleInDegrees", "Bearing needs to be in the range of [0-31]"); }
             if (bearing >= 32) { throw new ArgumentOutOfRangeException("angleInDegrees", "Bearing needs to be in the range of [0-31]"); }
 
-            return bearing * DEGREES_PER_SECTOR;
+            return (int)(bearing * DEGREES_PER_SECTOR);
         }
     }
 }

@@ -65,14 +65,25 @@ namespace OpenLR.OsmSharp.Decoding
                 var combinedScoresSet = new SortedSet<CombinedScore<TEdge>>(new CombinedScoreComparer<TEdge>());
                 foreach (var previousCandidate in candidates[0])
                 {
+                    var previousCandidateBearing = this.GetBearing(previousCandidate.Vertex,
+                        previousCandidate.Edge,
+                        previousCandidate.TargetVertex,
+                        true);
+                    var previousBearingDiff = System.Math.Abs(previousCandidateBearing.SmallestDifference(fromBearingReference));
                     foreach (var currentCandidate in candidates[1])
                     {
                         if (previousCandidate.Vertex != currentCandidate.Vertex)
                         { // make sure vertices are different.
+                            var currentCandidateBearing = this.GetBearing(currentCandidate.TargetVertex,
+                                currentCandidate.Edge,
+                                currentCandidate.Vertex,
+                                false);                        
+                            var currentBearingDiff = System.Math.Abs(currentCandidateBearing.SmallestDifference(toBearingReference));
                             combinedScoresSet.Add(new CombinedScore<TEdge>()
                             {
                                 Source = previousCandidate,
-                                Target = currentCandidate
+                                Target = currentCandidate,
+                                BearingScore = (float)(1.0 - (previousBearingDiff / 360.0) - (currentBearingDiff / 360.0))
                             });
                         }
                     }

@@ -29,13 +29,13 @@ namespace OpenLR.Binary.Encoders
             FunctionalRoadClassConvertor.Encode(location.First.FuntionalRoadClass.Value, data, 7, 2);
             FormOfWayConvertor.Encode(location.First.FormOfWay.Value, data, 7, 5);
             FunctionalRoadClassConvertor.Encode(location.First.LowestFunctionalRoadClassToNext.Value, data, 8, 0);
-            BearingConvertor.Encode(location.First.Bearing.Value, data, 8, 3);
+            BearingConvertor.Encode(BearingConvertor.EncodeAngleToBearing(location.First.Bearing.Value), data, 8, 3);
             data[9] = DistanceToNextConvertor.Encode(location.First.DistanceToNext);
 
             CoordinateConverter.EncodeRelative(location.First.Coordinate, location.Last.Coordinate, data, 10);
             FunctionalRoadClassConvertor.Encode(location.Last.FuntionalRoadClass.Value, data, 14, 2);
             FormOfWayConvertor.Encode(location.Last.FormOfWay.Value, data, 14, 5);
-            BearingConvertor.Encode(location.Last.Bearing.Value, data, 15, 3);
+            BearingConvertor.Encode(BearingConvertor.EncodeAngleToBearing(location.Last.Bearing.Value), data, 15, 3);
 
             OrientationConverter.Encode(location.Orientation.Value, data, 7, 0);
             SideOfRoadConverter.Encode(location.SideOfRoad.Value, data, 14, 0);

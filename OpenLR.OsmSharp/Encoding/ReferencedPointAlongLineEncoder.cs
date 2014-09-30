@@ -76,7 +76,7 @@ namespace OpenLR.OsmSharp.Encoding
 
                 // calculate bearing.
                 location.First.Bearing = (int)this.GetBearing(referencedLocation.Route.Vertices[0], referencedLocation.Route.Edges[0], referencedLocation.Route.Vertices[1], false).Value;
-                location.Last.Bearing = (int)this.GetBearing(referencedLocation.Route.Vertices[referencedLocation.Route.Vertices.Length - 2], referencedLocation.Route.Edges[referencedLocation.Route.Edges.Length - 1], referencedLocation.Route.Vertices[referencedLocation.Route.Vertices.Length - 1], true).Value;
+                location.Last.Bearing = (int)this.GetBearing(referencedLocation.Route.Vertices[referencedLocation.Route.Vertices.Length - 1], referencedLocation.Route.Edges[referencedLocation.Route.Edges.Length - 1], referencedLocation.Route.Vertices[referencedLocation.Route.Vertices.Length - 2], true).Value;
 
                 // calculate length.
                 var lengthInMeter = coordinates.Length();

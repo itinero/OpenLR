@@ -357,7 +357,7 @@ namespace OpenLR.OsmSharp
                         var edges = new List<LiveEdge>();
                         for (int idx = 0; idx < vertices.Count - 1; idx++)
                         { // loop over edges.
-                            edge = encoder.Graph.GetArcs(vertices[idx + 1]).Where(x => x.Key == vertices[idx]).First().Value;
+                            edge = encoder.Graph.GetArcs(vertices[idx]).Where(x => x.Key == vertices[idx + 1]).First().Value;
                             if (!edge.Forward)
                             { // use reverse edge.
                                 var reverseEdge = new LiveEdge();

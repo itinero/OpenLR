@@ -26,7 +26,7 @@ namespace OpenLR.Binary.Decoders
             first.FuntionalRoadClass = FunctionalRoadClassConvertor.Decode(data, 7, 2);
             first.FormOfWay = FormOfWayConvertor.Decode(data, 7, 5);
             first.LowestFunctionalRoadClassToNext = FunctionalRoadClassConvertor.Decode(data, 8, 0);
-            first.Bearing = BearingConvertor.Decode(data, 8, 3);
+            first.Bearing = BearingConvertor.DecodeAngleFromBearing(BearingConvertor.Decode(data, 8, 3));
             first.DistanceToNext = DistanceToNextConvertor.Decode(data[9]);
 
             // calculate the intermediate points count.
@@ -44,7 +44,7 @@ namespace OpenLR.Binary.Decoders
                 intermediate.FuntionalRoadClass = FunctionalRoadClassConvertor.Decode(data, location, 2);
                 intermediate.FormOfWay = FormOfWayConvertor.Decode(data, location, 5);
                 location = location + 1;
-                intermediate.Bearing = BearingConvertor.Decode(data, location, 3);
+                intermediate.Bearing = BearingConvertor.DecodeAngleFromBearing(BearingConvertor.Decode(data, location, 3));
                 intermediate.LowestFunctionalRoadClassToNext = FunctionalRoadClassConvertor.Decode(data, location, 0);
                 location = location + 1;
                 intermediate.DistanceToNext = DistanceToNextConvertor.Decode(data[location]);
@@ -61,7 +61,7 @@ namespace OpenLR.Binary.Decoders
             last.FormOfWay = FormOfWayConvertor.Decode(data, location, 5);
             location = location + 1;
             last.LowestFunctionalRoadClassToNext = FunctionalRoadClassConvertor.Decode(data, location, 0);
-            last.Bearing = BearingConvertor.Decode(data, location, 3);
+            last.Bearing = BearingConvertor.DecodeAngleFromBearing(BearingConvertor.Decode(data, location, 3));
             location = location + 1;
 
             // create line location.
