@@ -317,7 +317,7 @@ namespace OpenLR.OsmSharp
         public virtual SortedSet<CandidateVertexEdge<TEdge>> FindCandidatesFor(LocationReferencePoint lrp, bool forward, Meter maxVertexDistance)
         {
             var vertexEdgeCandidates = new SortedSet<CandidateVertexEdge<TEdge>>(new CandidateVertexEdgeComparer<TEdge>());
-            var vertexCandidates = this.FindCandidateVerticesFor(lrp);
+            var vertexCandidates = this.FindCandidateVerticesFor(lrp, maxVertexDistance);
             foreach (var vertexCandidate in vertexCandidates)
             {
                 var edgeCandidates = this.FindCandidateEdgesFor(vertexCandidate.Vertex, forward, lrp.FormOfWay.Value, lrp.FuntionalRoadClass.Value);
