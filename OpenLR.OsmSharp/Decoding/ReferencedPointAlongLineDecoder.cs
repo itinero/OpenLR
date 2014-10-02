@@ -61,24 +61,20 @@ namespace OpenLR.OsmSharp.Decoding
                 lrps.Add(location.Last);
                 candidates.Add(this.FindCandidatesFor(location.Last, false, vertexDistance));
 
+                //// resolve points if one of the locations still hasn't been found.
+                //if ((vertexDistance * 2) > this.MaxVertexDistance.Value)
+                //{ // this is the maximum distance that will be tested.
+
+                //}
+
                 // build a list of combined scores.
                 var combinedScoresSet = new SortedSet<CombinedScore<TEdge>>(new CombinedScoreComparer<TEdge>());
                 foreach (var previousCandidate in candidates[0])
                 {
-                    //var previousCandidateBearing = this.GetBearing(previousCandidate.Vertex,
-                    //    previousCandidate.Edge,
-                    //    previousCandidate.TargetVertex,
-                    //    true);
-                    //var previousBearingDiff = System.Math.Abs(previousCandidateBearing.SmallestDifference(fromBearingReference));
                     foreach (var currentCandidate in candidates[1])
                     {
                         if (previousCandidate.Vertex != currentCandidate.Vertex)
                         { // make sure vertices are different.
-                            //var currentCandidateBearing = this.GetBearing(currentCandidate.TargetVertex,
-                            //    currentCandidate.Edge,
-                            //    currentCandidate.Vertex,
-                            //    false);                        
-                            //var currentBearingDiff = System.Math.Abs(currentCandidateBearing.SmallestDifference(toBearingReference));
                             combinedScoresSet.Add(new CombinedScore<TEdge>()
                             {
                                 Source = previousCandidate,
@@ -104,19 +100,6 @@ namespace OpenLR.OsmSharp.Decoding
                     // verify bearing by adding it to the score.
                     if (candidate != null && candidate.Route != null)
                     { // calculate bearing and compare with reference bearing.
-                        //var fromBearing = this.GetBearing(candidate.Route.Vertices[0],
-                        //    candidate.Route.Edges[0],
-                        //    candidate.Route.Vertices[1],
-                        //    true);
-                        //var fromBearingDiff = System.Math.Abs(fromBearing.SmallestDifference(fromBearingReference));
-                        //var toBearing = this.GetBearing(candidate.Route.Vertices[candidate.Route.Vertices.Length - 1],
-                        //    candidate.Route.Edges[candidate.Route.Edges.Length - 1],
-                        //    candidate.Route.Vertices[candidate.Route.Vertices.Length - 2],
-                        //    false);
-                        //var toBearingDiff = System.Math.Abs(toBearing.SmallestDifference(toBearingReference));
-                        //var diffScore = 1.0 - (fromBearingDiff / 360.0) - (toBearingDiff / 360.0);
-                        //candidate.Score = candidate.Score * (float)diffScore;
-
                         // calculate distance and compare with distancetonext.
                         var distance = this.GetDistance(candidate.Route).Value;
                         var expectedDistance = location.First.DistanceToNext;

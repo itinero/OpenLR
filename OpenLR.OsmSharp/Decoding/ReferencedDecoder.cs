@@ -100,13 +100,13 @@ namespace OpenLR.OsmSharp.Decoding
         }
 
         /// <summary>
-        /// Finds candidate vertices for a location reference point.
+        /// Creates a new candidate vertex/edge pair at the given location reference point.
         /// </summary>
         /// <param name="lrp"></param>
         /// <returns></returns>
-        protected IEnumerable<ReferencedDecoderBase<TEdge>.CandidateVertex> FindCandidateVerticesFor(LocationReferencePoint lrp)
+        protected CandidateVertexEdge<TEdge> CreateCandidateFor(LocationReferencePoint lrp)
         {
-            return _mainDecoder.FindCandidateVerticesFor(lrp);
+            return _mainDecoder.CreateCandidateFor(lrp);
         }
 
         /// <summary>

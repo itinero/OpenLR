@@ -380,7 +380,7 @@ namespace OpenLR.OsmSharp
                         candidates.Add(vertex);
                         scoredCandidates.Add(new CandidateVertex()
                         {
-                            Score = (float)(1.0 - (distance.Value / maxVertexDistance.Value)),
+                            Score = (float)(1.0 - (distance.Value / _maxVertexDistance.Value)), // calculate scoring compared to the fixed max distance.
                             Vertex = vertex
                         });
                     }
@@ -395,7 +395,7 @@ namespace OpenLR.OsmSharp
                         candidates.Add(vertex);
                         scoredCandidates.Add(new CandidateVertex()
                         {
-                            Score = (float)(1.0 - (distance.Value / maxVertexDistance.Value)),
+                            Score = (float)(1.0 - (distance.Value / _maxVertexDistance.Value)), // calculate scoring compared to the fixed max distance.
                             Vertex = vertex
                         });
                     }
@@ -438,15 +438,24 @@ namespace OpenLR.OsmSharp
                             relevantEdges.Add(new CandidateEdge()
                             {
                                 TargetVertex = arc.Key,
-                                Score = score + ((360.0f - localBearingDiff) / 360.0f),
+                                Score = score + ((180f - localBearingDiff) / 180f),
                                 Edge = arc.Value
                             });
                         }
-
                     }
                 }
             }
             return relevantEdges;
+        }
+
+        /// <summary>
+        /// Creates a new candidate vertex/edge pair at the given location reference point.
+        /// </summary>
+        /// <param name="lrp"></param>
+        /// <returns></returns>
+        public virtual CandidateVertexEdge<TEdge> CreateCandidateFor(LocationReferencePoint lrp)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

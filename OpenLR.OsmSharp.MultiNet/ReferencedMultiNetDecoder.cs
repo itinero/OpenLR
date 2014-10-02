@@ -59,7 +59,7 @@ namespace OpenLR.OsmSharp.MultiNet
 
             float frcOneDifferent = 0.8f;
             float frcTwoDifferent = 0.8f;
-            float frcMoreDifferent = 0.2f;
+            float frcMoreDifferent = 0.4f;
 
             switch (frcString)
             {

@@ -111,29 +111,33 @@ namespace OpenLR.OsmSharp.Locations
             var geometryFactory = new GeometryFactory();
             
             // build coordinates list.
-            for(int idx = 0; idx < this.Vertices.Length; idx++)
+            for (int idx = 0; idx < this.Edges.Length; idx++)
             {
                 var coordinates = new List<Coordinate>();
                 float latitude, longitude;
                 _graph.GetVertex((uint)this.Vertices[idx], out latitude, out longitude);
                 coordinates.Add(new Coordinate(longitude, latitude));
 
-                if(idx < this.Edges.Length)
+                var edge = this.Edges[idx];
+                if (edge.Coordinates != null)
                 {
-                    var edge = this.Edges[idx];
-                    if (edge.Coordinates != null)
+                    foreach (var coordinate in edge.Coordinates)
                     {
-                        foreach(var coordinate in edge.Coordinates)
+                        coordinates.Add(new Coordinate()
                         {
-                            coordinates.Add(new Coordinate()
-                            {
-                                X = coordinate.Longitude,
-                                Y = coordinate.Latitude
-                            });
-                        }
+                            X = coordinate.Longitude,
+                            Y = coordinate.Latitude
+                        });
                     }
                 }
-                featureCollection.Add(new Feature(geometryFactory.CreateLineString(coordinates.ToArray()), new AttributesTable()));
+
+                var tags = _graph.TagsIndex.Get(edge.Tags);
+                var table = tags.ToAttributes();
+
+                _graph.GetVertex((uint)this.Vertices[idx + 1], out latitude, out longitude);
+                coordinates.Add(new Coordinate(longitude, latitude));
+
+                featureCollection.Add(new Feature(geometryFactory.CreateLineString(coordinates.ToArray()), table));
             }
             return featureCollection;
         }
