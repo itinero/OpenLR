@@ -3,6 +3,7 @@ using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Utilities;
 using OpenLR.Locations;
+using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Math.Primitives;
@@ -429,6 +430,24 @@ namespace OpenLR.OsmSharp
             pointAttributes.AddAttribute("functional_road_class", locationReferencePoint.FuntionalRoadClass);
             pointAttributes.AddAttribute("lowest_functional_road_class_to_next", locationReferencePoint.LowestFunctionalRoadClassToNext);
             return new Feature(point, pointAttributes);
+        }
+
+        /// <summary>
+        /// Converts the given tags collection to an attributes table.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <returns></returns>
+        public static AttributesTable ToAttributes(this TagsCollectionBase tags)
+        {
+            var attributes = new AttributesTable();
+            if (tags != null)
+            {
+                foreach (var tag in tags)
+                {
+                    attributes.AddAttribute(tag.Key, tag.Value);
+                }
+            }
+            return attributes;
         }
 
         /// <summary>

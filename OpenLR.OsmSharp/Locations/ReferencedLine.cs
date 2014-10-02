@@ -107,12 +107,13 @@ namespace OpenLR.OsmSharp.Locations
         /// <returns></returns>
         public FeatureCollection ToFeatures()
         {
+            var featureCollection = new FeatureCollection();
             var geometryFactory = new GeometryFactory();
             
             // build coordinates list.
-            var coordinates = new List<Coordinate>();
             for(int idx = 0; idx < this.Vertices.Length; idx++)
             {
+                var coordinates = new List<Coordinate>();
                 float latitude, longitude;
                 _graph.GetVertex((uint)this.Vertices[idx], out latitude, out longitude);
                 coordinates.Add(new Coordinate(longitude, latitude));
@@ -132,10 +133,8 @@ namespace OpenLR.OsmSharp.Locations
                         }
                     }
                 }
+                featureCollection.Add(new Feature(geometryFactory.CreateLineString(coordinates.ToArray()), new AttributesTable()));
             }
-
-            var featureCollection = new FeatureCollection();
-            featureCollection.Add(new Feature(geometryFactory.CreateLineString(coordinates.ToArray()), new AttributesTable()));
             return featureCollection;
         }
     }

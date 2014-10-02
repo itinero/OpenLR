@@ -320,7 +320,7 @@ namespace OpenLR.OsmSharp
             var vertexCandidates = this.FindCandidateVerticesFor(lrp, maxVertexDistance);
             foreach (var vertexCandidate in vertexCandidates)
             {
-                var edgeCandidates = this.FindCandidateEdgesFor(vertexCandidate.Vertex, forward, lrp.FormOfWay.Value, lrp.FuntionalRoadClass.Value);
+                var edgeCandidates = this.FindCandidateEdgesFor(vertexCandidate.Vertex, forward, lrp.FormOfWay.Value, lrp.FuntionalRoadClass.Value, (Degree)lrp.Bearing.Value);
                 foreach (var edgeCandidate in edgeCandidates)
                 {
                     vertexEdgeCandidates.Add(new CandidateVertexEdge<TEdge>()
@@ -411,8 +411,9 @@ namespace OpenLR.OsmSharp
         /// <param name="forward"></param>
         /// <param name="fow"></param>
         /// <param name="frc"></param>
+        /// <param name="bearing"></param>
         /// <returns></returns>
-        public virtual IEnumerable<CandidateEdge> FindCandidateEdgesFor(uint vertex, bool forward, FormOfWay fow, FunctionalRoadClass frc)
+        public virtual IEnumerable<CandidateEdge> FindCandidateEdgesFor(uint vertex, bool forward, FormOfWay fow, FunctionalRoadClass frc, Degree bearing)
         {
             var relevantEdges = new List<CandidateEdge>();
             foreach (var arc in this.Graph.GetArcs(vertex))
@@ -430,10 +431,14 @@ namespace OpenLR.OsmSharp
                         var score = this.MatchArc(tags, fow, frc);
                         if (score > 0)
                         { // ok, there is a match.
+                            // check bearing.
+                            var localBearing = this.GetBearing(vertex, arc.Value, arc.Key, true);
+                            var localBearingDiff = (float)System.Math.Abs(localBearing.SmallestDifference(bearing));
+
                             relevantEdges.Add(new CandidateEdge()
                             {
                                 TargetVertex = arc.Key,
-                                Score = score,
+                                Score = score + ((360.0f - localBearingDiff) / 360.0f),
                                 Edge = arc.Value
                             });
                         }
