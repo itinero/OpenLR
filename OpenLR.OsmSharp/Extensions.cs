@@ -3,6 +3,7 @@ using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Utilities;
 using OpenLR.Locations;
+using OpenLR.OsmSharp.Router;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Simple;
@@ -457,7 +458,7 @@ namespace OpenLR.OsmSharp
         /// <param name="graph"></param>
         /// <param name="location"></param>
         /// <returns>Returns an edge or an edge from 0 to 0 if none is found.</returns>
-        public static KeyValuePair<uint, KeyValuePair<uint, TEdge>> GetClosestEdge<TEdge>(this IBasicRouterDataSource<TEdge> graph, GeoCoordinate location)
+        public static KeyValuePair<long, KeyValuePair<long, TEdge>> GetClosestEdge<TEdge>(this BasicRouterDataSource<TEdge> graph, GeoCoordinate location)
             where TEdge : IDynamicGraphEdgeData
         {     
             // create the search box.
@@ -470,7 +471,7 @@ namespace OpenLR.OsmSharp
 
             float latitude, longitude;
             double bestDistance = double.MaxValue;
-            var bestEdge = new KeyValuePair<uint,KeyValuePair<uint,TEdge>>(0, new KeyValuePair<uint,TEdge>(0, default(TEdge)));
+            var bestEdge = new KeyValuePair<long, KeyValuePair<long, TEdge>>(0, new KeyValuePair<long, TEdge>(0, default(TEdge)));
             foreach(var arc in arcs)
             {
                 graph.GetVertex(arc.Key, out latitude, out longitude);

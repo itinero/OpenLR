@@ -1,5 +1,6 @@
 ﻿using OpenLR.Encoding;
 using OpenLR.Model;
+using OpenLR.OsmSharp.Router;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Graph.Router;
@@ -21,19 +22,10 @@ namespace OpenLR.OsmSharp.NWB
         /// </summary>
         /// <param name="graph"></param>
         /// <param name="locationEncoder"></param>
-        public ReferencedNWBEncoder(IBasicRouterDataSource<LiveEdge> graph, Encoder locationEncoder)
+        public ReferencedNWBEncoder(BasicRouterDataSource<LiveEdge> graph, Encoder locationEncoder)
             : base(graph, locationEncoder)
         {
 
-        }
-
-        /// <summary>
-        /// Gets a new router.
-        /// </summary>
-        /// <returns></returns>
-        protected override IBasicRouter<LiveEdge> GetRouter()
-        {
-            return new DykstraRoutingLive();
         }
 
         /// <summary>
@@ -93,9 +85,19 @@ namespace OpenLR.OsmSharp.NWB
         /// </summary>
         /// <param name="graph">The graph containing the NWB network.</param>
         /// <returns></returns>
-        public static ReferencedNWBEncoder CreateBinary(IBasicRouterDataSource<LiveEdge> graph)
+        public static ReferencedNWBEncoder CreateBinary(BasicRouterDataSource<LiveEdge> graph)
         {
             return ReferencedNWBEncoder.Create(graph, new OpenLR.Binary.BinaryEncoder());
+        }
+
+        /// <summary>
+        /// Creates a new referenced NWB encoder.
+        /// </summary>
+        /// <param name="graph">The graph containing the NWB network.</param>
+        /// <returns></returns>
+        public static ReferencedNWBEncoder CreateBinary(IBasicRouterDataSource<LiveEdge> graph)
+        {
+            return ReferencedNWBEncoder.CreateBinary(new BasicRouterDataSource<LiveEdge>(graph));
         }
 
         /// <summary>
@@ -112,7 +114,7 @@ namespace OpenLR.OsmSharp.NWB
             // read the graph from the folder where the shapefiles are placed.
             var graph = graphReader.Read(folder, searchPattern, new ShapefileRoutingInterpreter());
 
-            return ReferencedNWBEncoder.Create(graph, rawLocationEncoder);
+            return ReferencedNWBEncoder.Create(new BasicRouterDataSource<LiveEdge>(graph), rawLocationEncoder);
         }
 
         /// <summary>
@@ -121,7 +123,7 @@ namespace OpenLR.OsmSharp.NWB
         /// <param name="graph">The graph containing the NWB network.</param>
         /// <param name="rawLocationEncoder">The raw location encoder.</param>
         /// <returns></returns>
-        public static ReferencedNWBEncoder Create(IBasicRouterDataSource<LiveEdge> graph, Encoder rawLocationEncoder)
+        public static ReferencedNWBEncoder Create(BasicRouterDataSource<LiveEdge> graph, Encoder rawLocationEncoder)
         {
             return new ReferencedNWBEncoder(graph, rawLocationEncoder);
         }

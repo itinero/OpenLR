@@ -3,6 +3,7 @@ using OpenLR.Locations;
 using OpenLR.Model;
 using OpenLR.OsmSharp.Encoding;
 using OpenLR.OsmSharp.Locations;
+using OpenLR.OsmSharp.Router;
 using OpenLR.Referenced;
 using OsmSharp;
 using OsmSharp.Collections.PriorityQueues;
@@ -29,29 +30,23 @@ namespace OpenLR.OsmSharp
         /// <summary>
         /// Holds the basic router datasource.
         /// </summary>
-        private readonly IBasicRouterDataSource<TEdge> _graph;
+        private readonly BasicRouterDataSource<TEdge> _graph;
 
         /// <summary>
         /// Creates a new referenced encoder.
         /// </summary>
         /// <param name="graph"></param>
         /// <param name="locationEncoder"></param>
-        public ReferencedEncoderBase(IBasicRouterDataSource<TEdge> graph, Encoder locationEncoder)
+        public ReferencedEncoderBase(BasicRouterDataSource<TEdge> graph, Encoder locationEncoder)
             : base(locationEncoder)
         {
             _graph = graph;
         }
 
         /// <summary>
-        /// Returns the router.
-        /// </summary>
-        /// <returns></returns>
-        protected abstract IBasicRouter<TEdge> GetRouter();
-
-        /// <summary>
         /// Returns the reference graph.
         /// </summary>
-        public IBasicRouterDataSource<TEdge> Graph
+        public BasicRouterDataSource<TEdge> Graph
         {
             get
             {
@@ -64,7 +59,7 @@ namespace OpenLR.OsmSharp
         /// </summary>
         protected virtual ReferencedPointAlongLineEncoder<TEdge> GetReferencedPointAlongLineEncoder()
         {
-            return new ReferencedPointAlongLineEncoder<TEdge>(this, this.LocationEncoder.CreatePointAlongLineLocationEncoder(), _graph, this.GetRouter());
+            return new ReferencedPointAlongLineEncoder<TEdge>(this, this.LocationEncoder.CreatePointAlongLineLocationEncoder());
         }
 
         /// <summary>
@@ -240,7 +235,7 @@ namespace OpenLR.OsmSharp
         /// <param name="vertex">The invalid vertex.</param>
         /// <param name="targetNeighbour">The neighbour of this vertex that is part of the location.</param>
         /// <param name="searchForward">When true, the search is forward, otherwise backward.</param>
-        public abstract PathSegment<uint> FindValidVertexFor(long vertex, long targetNeighbour, bool searchForward);
+        public abstract PathSegment<long> FindValidVertexFor(long vertex, long targetNeighbour, bool searchForward);
     }
 
     /// <summary>
@@ -265,7 +260,7 @@ namespace OpenLR.OsmSharp
 
             // build location and make sure the vehicle can travel from from location to to location.
             LiveEdge edge;
-            uint from, to;
+            long from, to;
             if (useForward)
             { // encode first point to last point.
                 edge = closest.Value.Value;

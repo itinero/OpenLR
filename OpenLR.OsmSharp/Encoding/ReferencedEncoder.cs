@@ -19,11 +19,6 @@ namespace OpenLR.OsmSharp.Encoding
         where TLocation : ILocation
     {
         /// <summary>
-        /// Holds the graph.
-        /// </summary>
-        private IBasicRouterDataSource<TEdge> _graph;
-
-        /// <summary>
         /// Holds the main encoder.
         /// </summary>
         private ReferencedEncoderBase<TEdge> _mainEncoder;
@@ -33,14 +28,10 @@ namespace OpenLR.OsmSharp.Encoding
         /// </summary>
         /// <param name="mainEncoder"></param>
         /// <param name="rawEncoder"></param>
-        /// <param name="graph"></param>
-        /// <param name="router"></param>
-        public ReferencedEncoder(ReferencedEncoderBase<TEdge> mainEncoder, OpenLR.Encoding.LocationEncoder<TLocation> rawEncoder, IBasicRouterDataSource<TEdge> graph, IBasicRouter<TEdge> router)
+        public ReferencedEncoder(ReferencedEncoderBase<TEdge> mainEncoder, OpenLR.Encoding.LocationEncoder<TLocation> rawEncoder)
             : base(rawEncoder)
         {
             _mainEncoder = mainEncoder;
-            _graph = graph;
-            //_router = router;
         }
 
         /// <summary>

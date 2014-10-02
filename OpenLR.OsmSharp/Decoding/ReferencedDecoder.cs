@@ -28,19 +28,9 @@ namespace OpenLR.OsmSharp.Decoding
         where TLocation : ILocation
     {
         /// <summary>
-        /// Holds a dynamic graph.
-        /// </summary>
-        private IBasicRouterDataSource<TEdge> _graph;
-
-        /// <summary>
         /// Holds the main decoder.
         /// </summary>
         private ReferencedDecoderBase<TEdge> _mainDecoder;
-
-        /// <summary>
-        /// Holds a basic router.
-        /// </summary>
-        private BasicRouter _router;
 
         /// <summary>
         /// Creates a new dynamic graph decoder.
@@ -49,13 +39,10 @@ namespace OpenLR.OsmSharp.Decoding
         /// <param name="rawDecoder"></param>
         /// <param name="graph"></param>
         /// <param name="router"></param>
-        public ReferencedDecoder(ReferencedDecoderBase<TEdge> mainDecoder, OpenLR.Decoding.LocationDecoder<TLocation> rawDecoder, IBasicRouterDataSource<TEdge> graph,
-            BasicRouter router)
+        public ReferencedDecoder(ReferencedDecoderBase<TEdge> mainDecoder, OpenLR.Decoding.LocationDecoder<TLocation> rawDecoder)
             : base(rawDecoder)
         {
             _mainDecoder = mainDecoder;
-            _graph = graph;
-            _router = router;
         }
 
         /// <summary>

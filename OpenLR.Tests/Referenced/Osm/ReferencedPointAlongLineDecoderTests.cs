@@ -54,17 +54,17 @@ namespace OpenLR.Tests.Referenced.Osm
 
             // build a graph to decode onto.
             var tags = new TagsTableCollectionIndex();
-            var graph = new DynamicGraphRouterDataSource<LiveEdge>(tags);
-            var vertex1 = graph.AddVertex(49.60597f, 6.12829f);
-            var vertex2 = graph.AddVertex(49.60521f, 6.12779f);
-            graph.AddArc(vertex1, vertex2, new LiveEdge()
+            var graphDataSource = new DynamicGraphRouterDataSource<LiveEdge>(tags);
+            var vertex1 = graphDataSource.AddVertex(49.60597f, 6.12829f);
+            var vertex2 = graphDataSource.AddVertex(49.60521f, 6.12779f);
+            graphDataSource.AddArc(vertex1, vertex2, new LiveEdge()
             {
                 Coordinates = null,
                 Distance = 10,
                 Forward = true,
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
             }, null);
-            graph.AddArc(vertex2, vertex1, new LiveEdge()
+            graphDataSource.AddArc(vertex2, vertex1, new LiveEdge()
             {
                 Coordinates = null,
                 Distance = 10,
@@ -73,10 +73,11 @@ namespace OpenLR.Tests.Referenced.Osm
             }, null);
 
             // decode the location
+            var graph = new BasicRouterDataSource<LiveEdge>(graphDataSource);
             var decoder = new PointAlongLineDecoder();
             var router = new BasicRouter();
             var mainDecoder = new ReferencedOsmDecoder(graph, new BinaryDecoder());
-            var referencedDecoder = new ReferencedPointAlongLineDecoder<LiveEdge>(mainDecoder, decoder, graph, router);
+            var referencedDecoder = new ReferencedPointAlongLineDecoder<LiveEdge>(mainDecoder, decoder);
             var referencedLocation = referencedDecoder.Decode(location);
 
             // confirm result.

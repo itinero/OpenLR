@@ -24,11 +24,8 @@ namespace OpenLR.OsmSharp.Decoding
         /// </summary>
         /// <param name="mainDecoder"></param>
         /// <param name="rawDecoder"></param>
-        /// <param name="graph"></param>
-        /// <param name="router"></param>
-        public ReferencedPolygonDecoder(ReferencedDecoderBase<TEdge> mainDecoder, OpenLR.Decoding.LocationDecoder<PolygonLocation> rawDecoder, IBasicRouterDataSource<TEdge> graph,
-            BasicRouter router)
-            : base(mainDecoder, rawDecoder, graph, router)
+        public ReferencedPolygonDecoder(ReferencedDecoderBase<TEdge> mainDecoder, OpenLR.Decoding.LocationDecoder<PolygonLocation> rawDecoder)
+            : base(mainDecoder, rawDecoder)
         {
 
         }

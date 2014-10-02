@@ -1,5 +1,6 @@
 ﻿using OpenLR.Encoding;
 using OpenLR.Model;
+using OpenLR.OsmSharp.Router;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Graph.Router;
@@ -21,19 +22,10 @@ namespace OpenLR.OsmSharp.MultiNet
         /// </summary>
         /// <param name="graph"></param>
         /// <param name="locationEncoder"></param>
-        public ReferencedMultiNetEncoder(IBasicRouterDataSource<LiveEdge> graph, Encoder locationEncoder)
+        public ReferencedMultiNetEncoder(BasicRouterDataSource<LiveEdge> graph, Encoder locationEncoder)
             : base(graph, locationEncoder)
         {
 
-        }
-
-        /// <summary>
-        /// Gets a new router.
-        /// </summary>
-        /// <returns></returns>
-        protected override IBasicRouter<LiveEdge> GetRouter()
-        {
-            return new DykstraRoutingLive();
         }
 
         /// <summary>
@@ -161,9 +153,19 @@ namespace OpenLR.OsmSharp.MultiNet
         /// </summary>
         /// <param name="graph">The graph containing the multinet network.</param>
         /// <returns></returns>
-        public static ReferencedMultiNetEncoder CreateBinary(IBasicRouterDataSource<LiveEdge> graph)
+        public static ReferencedMultiNetEncoder CreateBinary(BasicRouterDataSource<LiveEdge> graph)
         {
             return ReferencedMultiNetEncoder.Create(graph, new OpenLR.Binary.BinaryEncoder());
+        }
+
+        /// <summary>
+        /// Creates a new referenced multinet encoder.
+        /// </summary>
+        /// <param name="graph">The graph containing the multinet network.</param>
+        /// <returns></returns>
+        public static ReferencedMultiNetEncoder CreateBinary(IBasicRouterDataSource<LiveEdge> graph)
+        {
+            return ReferencedMultiNetEncoder.CreateBinary(new BasicRouterDataSource<LiveEdge>(graph));
         }
 
         /// <summary>
@@ -180,7 +182,7 @@ namespace OpenLR.OsmSharp.MultiNet
             // read the graph from the folder where the shapefiles are placed.
             var graph = graphReader.Read(folder, searchPattern, new ShapefileRoutingInterpreter());
 
-            return new ReferencedMultiNetEncoder(graph, rawLocationEncoder);
+            return new ReferencedMultiNetEncoder(new BasicRouterDataSource<LiveEdge>(graph), rawLocationEncoder);
         }
 
         /// <summary>
@@ -189,7 +191,7 @@ namespace OpenLR.OsmSharp.MultiNet
         /// <param name="graph">The graph containing the multinet network.</param>
         /// <param name="rawLocationEncoder">The raw location encoder.</param>
         /// <returns></returns>
-        public static ReferencedMultiNetEncoder Create(IBasicRouterDataSource<LiveEdge> graph, Encoder rawLocationEncoder)
+        public static ReferencedMultiNetEncoder Create(BasicRouterDataSource<LiveEdge> graph, Encoder rawLocationEncoder)
         {
             return new ReferencedMultiNetEncoder(graph, rawLocationEncoder);
         }

@@ -1,4 +1,5 @@
-﻿using OsmSharp.Collections.Tags;
+﻿using OpenLR.OsmSharp.Router;
+using OsmSharp.Collections.Tags;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Osm.Graphs;
 using System;
@@ -18,20 +19,20 @@ namespace OpenLR.Tests.Referenced.Real.Osm
         /// <summary>
         /// Holds the routing graph.
         /// </summary>
-        private static IBasicRouterDataSource<LiveEdge> _routingGraph;
+        private static BasicRouterDataSource<LiveEdge> _routingGraph;
 
         /// <summary>
         /// Returns a routing graph.
         /// </summary>
         /// <returns></returns>
-        public static IBasicRouterDataSource<LiveEdge> GetRoutingGraph()
+        public static BasicRouterDataSource<LiveEdge> GetRoutingGraph()
         {
             if (_routingGraph == null)
             {
                 TagsCollectionBase metaTags;
                 var serializer = new global::OsmSharp.Routing.Osm.Graphs.Serialization.LiveEdgeFlatfileSerializer();
-                _routingGraph = serializer.Deserialize(
-                    new FileInfo(@"C:\OSM\bin\belgium-latest.simple.flat.routing").OpenRead(), out metaTags, false);
+                _routingGraph = new BasicRouterDataSource<LiveEdge>(serializer.Deserialize(
+                    new FileInfo(@"C:\OSM\bin\belgium-latest.simple.flat.routing").OpenRead(), out metaTags, false));
             }
             return _routingGraph;
         }

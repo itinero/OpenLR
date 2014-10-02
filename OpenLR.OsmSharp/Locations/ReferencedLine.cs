@@ -1,6 +1,7 @@
 ﻿using GeoAPI.Geometries;
 using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
+using OpenLR.OsmSharp.Router;
 using OpenLR.Referenced;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
@@ -18,13 +19,13 @@ namespace OpenLR.OsmSharp.Locations
         /// <summary>
         /// Holds the graph.
         /// </summary>
-        private IBasicRouterDataSource<TEdge> _graph;
+        private BasicRouterDataSource<TEdge> _graph;
 
         /// <summary>
         /// Creates a new referenced line.
         /// </summary>
         /// <param name="graph"></param>
-        public ReferencedLine(IBasicRouterDataSource<TEdge> graph)
+        public ReferencedLine(BasicRouterDataSource<TEdge> graph)
         {
             _graph = graph;
         }

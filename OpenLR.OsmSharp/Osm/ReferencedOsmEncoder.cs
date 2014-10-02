@@ -1,5 +1,6 @@
 ﻿using OpenLR.Encoding;
 using OpenLR.Model;
+using OpenLR.OsmSharp.Router;
 using OsmSharp.Collections.PriorityQueues;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Routing;
@@ -20,19 +21,10 @@ namespace OpenLR.OsmSharp.Osm
         /// </summary>
         /// <param name="graph"></param>
         /// <param name="locationEncoder"></param>
-        public ReferencedOsmEncoder(IBasicRouterDataSource<LiveEdge> graph, Encoder locationEncoder)
+        public ReferencedOsmEncoder(BasicRouterDataSource<LiveEdge> graph, Encoder locationEncoder)
             : base(graph, locationEncoder)
         {
 
-        }
-
-        /// <summary>
-        /// Gets a new router.
-        /// </summary>
-        /// <returns></returns>
-        protected override global::OsmSharp.Routing.Graph.Router.IBasicRouter<LiveEdge> GetRouter()
-        {
-            return new DykstraRoutingLive();
         }
 
         /// <summary>

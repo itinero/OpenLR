@@ -21,7 +21,7 @@ namespace OpenLR.OsmSharp.Decoding.Candidates
         /// <summary>
         /// Gets or sets the candidate vertex.
         /// </summary>
-        public uint Vertex { get; set; }
+        public long Vertex { get; set; }
 
         /// <summary>
         /// Gets or sets the candidate edge.
@@ -31,7 +31,7 @@ namespace OpenLR.OsmSharp.Decoding.Candidates
         /// <summary>
         /// Gets or sets the vertex this edge leads to.
         /// </summary>
-        public uint TargetVertex { get; set; }
+        public long TargetVertex { get; set; }
 
         /// <summary>
         /// Determines whether this object is equal to the given object.

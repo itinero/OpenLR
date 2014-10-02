@@ -124,6 +124,7 @@
     <Compile Include="ReferencedEncoderBaseLiveEdge.cs" />
     <Compile Include="ReferencedEncodingException.cs" />
     <Compile Include="Router\BasicRouter.cs" />
+    <Compile Include="Router\BasicRouterDataSource.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

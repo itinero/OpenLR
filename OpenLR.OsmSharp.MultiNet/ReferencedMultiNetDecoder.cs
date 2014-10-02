@@ -2,6 +2,7 @@
 using OpenLR.Model;
 using OpenLR.OsmSharp.Decoding.Candidates;
 using OpenLR.OsmSharp.Locations;
+using OpenLR.OsmSharp.Router;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Graph.Router.Dykstra;
@@ -24,7 +25,7 @@ namespace OpenLR.OsmSharp.MultiNet
         /// </summary>
         /// <param name="graph"></param>
         /// <param name="locationDecoder"></param>
-        public ReferencedMultiNetDecoder(IBasicRouterDataSource<LiveEdge> graph, Decoder locationDecoder)
+        public ReferencedMultiNetDecoder(BasicRouterDataSource<LiveEdge> graph, Decoder locationDecoder)
             : base(graph, new global::OsmSharp.Routing.Shape.Vehicles.Car("ONEWAY", "FT", "TF", string.Empty), locationDecoder)
         {
 
@@ -36,7 +37,7 @@ namespace OpenLR.OsmSharp.MultiNet
         /// <param name="graph"></param>
         /// <param name="locationDecoder"></param>
         /// <param name="maxVertexDistance"></param>
-        public ReferencedMultiNetDecoder(IBasicRouterDataSource<LiveEdge> graph, Decoder locationDecoder, Meter maxVertexDistance)
+        public ReferencedMultiNetDecoder(BasicRouterDataSource<LiveEdge> graph, Decoder locationDecoder, Meter maxVertexDistance)
             : base(graph, new global::OsmSharp.Routing.Shape.Vehicles.Car("ONEWAY", "FT", "TF", string.Empty), locationDecoder, maxVertexDistance)
         {
 
@@ -318,9 +319,30 @@ namespace OpenLR.OsmSharp.MultiNet
         /// </summary>
         /// <param name="graph">The graph containing the multinet network.</param>
         /// <returns></returns>
-        public static ReferencedMultiNetDecoder CreateBinary(IBasicRouterDataSource<LiveEdge> graph)
+        public static ReferencedMultiNetDecoder CreateBinary(BasicRouterDataSource<LiveEdge> graph)
         {
             return ReferencedMultiNetDecoder.Create(graph, new OpenLR.Binary.BinaryDecoder());
+        }
+
+        /// <summary>
+        /// Creates a new referenced multinet decoder.
+        /// </summary>
+        /// <param name="graph">The graph containing the multinet network.</param>
+        /// <returns></returns>
+        public static ReferencedMultiNetDecoder CreateBinary(IBasicRouterDataSource<LiveEdge> graph)
+        {
+            return ReferencedMultiNetDecoder.CreateBinary(new BasicRouterDataSource<LiveEdge>(graph));
+        }
+
+        /// <summary>
+        /// Creates a new referenced multinet decoder.
+        /// </summary>
+        /// <param name="graph">The graph containing the multinet network.</param>
+        /// <param name="maxVertexDistance">The maximum vertex distance.</param>
+        /// <returns></returns>
+        public static ReferencedMultiNetDecoder CreateBinary(BasicRouterDataSource<LiveEdge> graph, Meter maxVertexDistance)
+        {
+            return ReferencedMultiNetDecoder.Create(graph, new OpenLR.Binary.BinaryDecoder(), maxVertexDistance);
         }
 
         /// <summary>
@@ -331,7 +353,7 @@ namespace OpenLR.OsmSharp.MultiNet
         /// <returns></returns>
         public static ReferencedMultiNetDecoder CreateBinary(IBasicRouterDataSource<LiveEdge> graph, Meter maxVertexDistance)
         {
-            return ReferencedMultiNetDecoder.Create(graph, new OpenLR.Binary.BinaryDecoder(), maxVertexDistance);
+            return ReferencedMultiNetDecoder.Create(new BasicRouterDataSource<LiveEdge>(graph), new OpenLR.Binary.BinaryDecoder(), maxVertexDistance);
         }
 
         /// <summary>
@@ -348,7 +370,7 @@ namespace OpenLR.OsmSharp.MultiNet
             // read the graph from the folder where the shapefiles are placed.
             var graph = graphReader.Read(folder, searchPattern, new ShapefileRoutingInterpreter());
 
-            return new ReferencedMultiNetDecoder(graph, rawLocationDecoder);
+            return new ReferencedMultiNetDecoder(new BasicRouterDataSource<LiveEdge>(graph), rawLocationDecoder);
         }
 
         /// <summary>
@@ -366,7 +388,7 @@ namespace OpenLR.OsmSharp.MultiNet
             // read the graph from the folder where the shapefiles are placed.
             var graph = graphReader.Read(folder, searchPattern, new ShapefileRoutingInterpreter());
 
-            return new ReferencedMultiNetDecoder(graph, rawLocationDecoder, maxVertexDistance);
+            return new ReferencedMultiNetDecoder(new BasicRouterDataSource<LiveEdge>(graph), rawLocationDecoder, maxVertexDistance);
         }
 
         /// <summary>
@@ -375,7 +397,7 @@ namespace OpenLR.OsmSharp.MultiNet
         /// <param name="graph">The graph containing the multinet network.</param>
         /// <param name="rawLocationDecoder">The raw location decoder.</param>
         /// <returns></returns>
-        public static ReferencedMultiNetDecoder Create(IBasicRouterDataSource<LiveEdge> graph, Decoder rawLocationDecoder)
+        public static ReferencedMultiNetDecoder Create(BasicRouterDataSource<LiveEdge> graph, Decoder rawLocationDecoder)
         {
             return new ReferencedMultiNetDecoder(graph, rawLocationDecoder);
         }
@@ -387,7 +409,7 @@ namespace OpenLR.OsmSharp.MultiNet
         /// <param name="rawLocationDecoder">The raw location decoder.</param>
         /// <param name="maxVertexDistance">The maximum vertex distance.</param>
         /// <returns></returns>
-        public static ReferencedMultiNetDecoder Create(IBasicRouterDataSource<LiveEdge> graph, Decoder rawLocationDecoder, Meter maxVertexDistance)
+        public static ReferencedMultiNetDecoder Create(BasicRouterDataSource<LiveEdge> graph, Decoder rawLocationDecoder, Meter maxVertexDistance)
         {
             return new ReferencedMultiNetDecoder(graph, rawLocationDecoder, maxVertexDistance);
         }

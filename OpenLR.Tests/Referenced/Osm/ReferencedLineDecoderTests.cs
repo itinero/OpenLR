@@ -50,30 +50,32 @@ namespace OpenLR.Tests.Referenced.Osm
 
             // build a graph to decode onto.
             var tags = new TagsTableCollectionIndex();
-            var graph = new DynamicGraphRouterDataSource<LiveEdge>(tags);
-            uint vertex1 = graph.AddVertex(49.60851f, 6.12683f);
-            uint vertex2 = graph.AddVertex(49.60398f, 6.12838f);
-            uint vertex3 = graph.AddVertex(49.60305f, 6.12817f);
-            graph.AddArc(vertex1, vertex2, new LiveEdge() {
-                Coordinates = null,
-                Distance = 10,
-                Forward = true,
-                Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
-            }, null);
-            graph.AddArc(vertex2, vertex1, new LiveEdge()
+            var graphDataSource = new DynamicGraphRouterDataSource<LiveEdge>(tags);
+            uint vertex1 = graphDataSource.AddVertex(49.60851f, 6.12683f);
+            uint vertex2 = graphDataSource.AddVertex(49.60398f, 6.12838f);
+            uint vertex3 = graphDataSource.AddVertex(49.60305f, 6.12817f);
+            graphDataSource.AddArc(vertex1, vertex2, new LiveEdge()
             {
                 Coordinates = null,
                 Distance = 10,
                 Forward = true,
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
             }, null);
-            graph.AddArc(vertex2, vertex3, new LiveEdge() {
+            graphDataSource.AddArc(vertex2, vertex1, new LiveEdge()
+            {
                 Coordinates = null,
                 Distance = 10,
                 Forward = true,
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
             }, null);
-            graph.AddArc(vertex3, vertex2, new LiveEdge()
+            graphDataSource.AddArc(vertex2, vertex3, new LiveEdge()
+            {
+                Coordinates = null,
+                Distance = 10,
+                Forward = true,
+                Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
+            }, null);
+            graphDataSource.AddArc(vertex3, vertex2, new LiveEdge()
             {
                 Coordinates = null,
                 Distance = 10,
@@ -82,10 +84,11 @@ namespace OpenLR.Tests.Referenced.Osm
             }, null);
 
             // decode the location
+            var graph = new BasicRouterDataSource<LiveEdge>(graphDataSource);
             var decoder = new LineLocationDecoder();
             var router = new BasicRouter();
             var mainDecoder = new ReferencedOsmDecoder(graph, new BinaryDecoder());
-            var referencedDecoder = new ReferencedLineDecoder<LiveEdge>(mainDecoder, decoder, graph, router);
+            var referencedDecoder = new ReferencedLineDecoder<LiveEdge>(mainDecoder, decoder);
             var referencedLocation = referencedDecoder.Decode(location);
 
             // confirm result.

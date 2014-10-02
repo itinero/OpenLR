@@ -4,6 +4,7 @@ using OpenLR.Model;
 using OpenLR.OsmSharp.Encoding;
 using OpenLR.OsmSharp.Locations;
 using OpenLR.OsmSharp.MultiNet;
+using OpenLR.OsmSharp.Router;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Routing.Graph;
@@ -23,10 +24,10 @@ namespace OpenLR.Tests.Referenced.MultiNet
         {
             // build a graph to encode from.
             var tags = new TagsTableCollectionIndex();
-            var graph = new DynamicGraphRouterDataSource<LiveEdge>(tags);
-            var vertex1 = graph.AddVertex(49.60597f, 6.12829f);
-            var vertex2 = graph.AddVertex(49.60521f, 6.12779f);
-            graph.AddArc(vertex1, vertex2, new LiveEdge()
+            var graphDataSource = new DynamicGraphRouterDataSource<LiveEdge>(tags);
+            var vertex1 = graphDataSource.AddVertex(49.60597f, 6.12829f);
+            var vertex2 = graphDataSource.AddVertex(49.60521f, 6.12779f);
+            graphDataSource.AddArc(vertex1, vertex2, new LiveEdge()
             {
                 Coordinates = null,
                 Distance = 10,
@@ -35,7 +36,7 @@ namespace OpenLR.Tests.Referenced.MultiNet
                     Tag.Create("FRC", "2"),
                     Tag.Create("FOW", "3")))
             }, null);
-            graph.AddArc(vertex2, vertex1, new LiveEdge()
+            graphDataSource.AddArc(vertex2, vertex1, new LiveEdge()
             {
                 Coordinates = null,
                 Distance = 10,
@@ -46,6 +47,7 @@ namespace OpenLR.Tests.Referenced.MultiNet
             }, null);
 
             // create a referenced location and encode it.
+            var graph = new BasicRouterDataSource<LiveEdge>(graphDataSource);
             var referencedPointAlongLineLocation = new ReferencedPointAlongLine<LiveEdge>();
             referencedPointAlongLineLocation.Route = new ReferencedLine<LiveEdge>(graph);
             referencedPointAlongLineLocation.Route.Edges = new LiveEdge[1];
@@ -69,7 +71,7 @@ namespace OpenLR.Tests.Referenced.MultiNet
             var encoder = new PointAlongLineEncoder();
             var router = new DykstraRoutingLive();
             var mainEncoder = new ReferencedMultiNetEncoder(graph, null);
-            var referencedEncoder = new ReferencedPointAlongLineEncoder<LiveEdge>(mainEncoder, encoder, graph, router);
+            var referencedEncoder = new ReferencedPointAlongLineEncoder<LiveEdge>(mainEncoder, encoder);
             var location = referencedEncoder.EncodeReferenced(referencedPointAlongLineLocation);
 
             // test result.

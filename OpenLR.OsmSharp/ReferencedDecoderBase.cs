@@ -34,7 +34,7 @@ namespace OpenLR.OsmSharp
         /// <summary>
         /// Holds the basic router datasource.
         /// </summary>
-        private readonly IBasicRouterDataSource<TEdge> _graph;
+        private readonly BasicRouterDataSource<TEdge> _graph;
 
         /// <summary>
         /// Holds the referenced circle decoder.
@@ -80,22 +80,23 @@ namespace OpenLR.OsmSharp
         /// Creates a new referenced decoder.
         /// </summary>
         /// <param name="graph"></param>
+        /// <param name="vehicle"></param>
         /// <param name="locationDecoder"></param>
         /// <param name="maxVertexDistance"></param>
-        public ReferencedDecoderBase(IBasicRouterDataSource<TEdge> graph, Vehicle vehicle, Decoder locationDecoder, Meter maxVertexDistance)
+        public ReferencedDecoderBase(BasicRouterDataSource<TEdge> graph, Vehicle vehicle, Decoder locationDecoder, Meter maxVertexDistance)
             :base(locationDecoder)
         {
             _graph = graph;
             _maxVertexDistance = maxVertexDistance;
             _vehicle = vehicle;
 
-            _referencedCircleDecoder = this.GetReferencedCircleDecoder(_graph);
-            _referencedGeoCoordinateDecoder = this.GetReferencedGeoCoordinateDecoder(_graph);
-            _referencedGridDecoder = this.GetReferencedGridDecoder(_graph);
-            _referencedLineDecoder = this.GetReferencedLineDecoder(_graph);
-            _referencedPointAlongLineDecoder = this.GetReferencedPointAlongLineDecoder(_graph);
-            _referencedPolygonDecoder = this.GetReferencedPolygonDecoder(_graph);
-            _referencedRectangleDecoder = this.GetReferencedRectangleDecoder(_graph);
+            _referencedCircleDecoder = this.GetReferencedCircleDecoder();
+            _referencedGeoCoordinateDecoder = this.GetReferencedGeoCoordinateDecoder();
+            _referencedGridDecoder = this.GetReferencedGridDecoder();
+            _referencedLineDecoder = this.GetReferencedLineDecoder();
+            _referencedPointAlongLineDecoder = this.GetReferencedPointAlongLineDecoder();
+            _referencedPolygonDecoder = this.GetReferencedPolygonDecoder();
+            _referencedRectangleDecoder = this.GetReferencedRectangleDecoder();
         }
 
         /// <summary>
@@ -103,19 +104,19 @@ namespace OpenLR.OsmSharp
         /// </summary>
         /// <param name="graph"></param>
         /// <param name="locationDecoder"></param>
-        public ReferencedDecoderBase(IBasicRouterDataSource<TEdge> graph, Vehicle vehicle, Decoder locationDecoder)
+        public ReferencedDecoderBase(BasicRouterDataSource<TEdge> graph, Vehicle vehicle, Decoder locationDecoder)
             :base(locationDecoder)
         {
             _graph = graph;
             _vehicle = vehicle;
 
-            _referencedCircleDecoder = this.GetReferencedCircleDecoder(_graph);
-            _referencedGeoCoordinateDecoder = this.GetReferencedGeoCoordinateDecoder(_graph);
-            _referencedGridDecoder = this.GetReferencedGridDecoder(_graph);
-            _referencedLineDecoder = this.GetReferencedLineDecoder(_graph);
-            _referencedPointAlongLineDecoder = this.GetReferencedPointAlongLineDecoder(_graph);
-            _referencedPolygonDecoder = this.GetReferencedPolygonDecoder(_graph);
-            _referencedRectangleDecoder = this.GetReferencedRectangleDecoder(_graph);
+            _referencedCircleDecoder = this.GetReferencedCircleDecoder();
+            _referencedGeoCoordinateDecoder = this.GetReferencedGeoCoordinateDecoder();
+            _referencedGridDecoder = this.GetReferencedGridDecoder();
+            _referencedLineDecoder = this.GetReferencedLineDecoder();
+            _referencedPointAlongLineDecoder = this.GetReferencedPointAlongLineDecoder();
+            _referencedPolygonDecoder = this.GetReferencedPolygonDecoder();
+            _referencedRectangleDecoder = this.GetReferencedRectangleDecoder();
         }
 
         /// <summary>
@@ -130,7 +131,7 @@ namespace OpenLR.OsmSharp
         /// <summary>
         /// Returns the graph.
         /// </summary>
-        protected IBasicRouterDataSource<TEdge> Graph
+        protected BasicRouterDataSource<TEdge> Graph
         {
             get
             {
@@ -163,59 +164,59 @@ namespace OpenLR.OsmSharp
         /// <summary>
         /// Holds the referenced circle decoder.
         /// </summary>
-        protected virtual ReferencedCircleDecoder<TEdge> GetReferencedCircleDecoder(IBasicRouterDataSource<TEdge> graph)
+        protected virtual ReferencedCircleDecoder<TEdge> GetReferencedCircleDecoder()
         {
-            return new ReferencedCircleDecoder<TEdge>(this, this.LocationDecoder.CreateCircleLocationDecoder(), graph, this.GetRouter());
+            return new ReferencedCircleDecoder<TEdge>(this, this.LocationDecoder.CreateCircleLocationDecoder());
         }
 
         /// <summary>
         /// Holds the referenced geo coordinate decoder.
         /// </summary>
-        protected virtual ReferencedGeoCoordinateDecoder<TEdge> GetReferencedGeoCoordinateDecoder(IBasicRouterDataSource<TEdge> graph)
+        protected virtual ReferencedGeoCoordinateDecoder<TEdge> GetReferencedGeoCoordinateDecoder()
         {
-            return new ReferencedGeoCoordinateDecoder<TEdge>(this, this.LocationDecoder.CreateGeoCoordinateLocationDecoder(), graph, this.GetRouter());
+            return new ReferencedGeoCoordinateDecoder<TEdge>(this, this.LocationDecoder.CreateGeoCoordinateLocationDecoder());
         }
 
         /// <summary>
         /// Holds the referenced grid decoder.
         /// </summary>
-        protected virtual ReferencedGridDecoder<TEdge> GetReferencedGridDecoder(IBasicRouterDataSource<TEdge> graph)
+        protected virtual ReferencedGridDecoder<TEdge> GetReferencedGridDecoder()
         {
-            return new ReferencedGridDecoder<TEdge>(this, this.LocationDecoder.CreateGridLocationDecoder(), graph, this.GetRouter());
+            return new ReferencedGridDecoder<TEdge>(this, this.LocationDecoder.CreateGridLocationDecoder());
         }
 
         /// <summary>
         /// Holds the referenced line decoder.
         /// </summary>
-        protected virtual ReferencedLineDecoder<TEdge> GetReferencedLineDecoder(IBasicRouterDataSource<TEdge> graph)
+        protected virtual ReferencedLineDecoder<TEdge> GetReferencedLineDecoder()
         {
-            return new ReferencedLineDecoder<TEdge>(this, this.LocationDecoder.CreateLineLocationDecoder(), graph, this.GetRouter());
+            return new ReferencedLineDecoder<TEdge>(this, this.LocationDecoder.CreateLineLocationDecoder());
         }
 
         /// <summary>
         /// Holds the referenced point along line decoder.
         /// </summary>
-        protected virtual ReferencedPointAlongLineDecoder<TEdge> GetReferencedPointAlongLineDecoder(IBasicRouterDataSource<TEdge> graph)
+        protected virtual ReferencedPointAlongLineDecoder<TEdge> GetReferencedPointAlongLineDecoder()
         {
-            return new ReferencedPointAlongLineDecoder<TEdge>(this, this.LocationDecoder.CreatePointAlongLineLocationDecoder(), graph, this.GetRouter());
+            return new ReferencedPointAlongLineDecoder<TEdge>(this, this.LocationDecoder.CreatePointAlongLineLocationDecoder());
         }
 
 
         /// <summary>
         /// Holds the referenced polygon decoder.
         /// </summary>
-        protected virtual ReferencedPolygonDecoder<TEdge> GetReferencedPolygonDecoder(IBasicRouterDataSource<TEdge> graph)
+        protected virtual ReferencedPolygonDecoder<TEdge> GetReferencedPolygonDecoder()
         {
-            return new ReferencedPolygonDecoder<TEdge>(this, this.LocationDecoder.CreatePolygonLocationDecoder(), graph, this.GetRouter());
+            return new ReferencedPolygonDecoder<TEdge>(this, this.LocationDecoder.CreatePolygonLocationDecoder());
         }
 
 
         /// <summary>
         /// Holds the referenced rectangle decoder.
         /// </summary>
-        protected virtual ReferencedRectangleDecoder<TEdge> GetReferencedRectangleDecoder(IBasicRouterDataSource<TEdge> graph)
+        protected virtual ReferencedRectangleDecoder<TEdge> GetReferencedRectangleDecoder()
         {
-            return new ReferencedRectangleDecoder<TEdge>(this, this.LocationDecoder.CreateRectangleLocationDecoder(), graph, this.GetRouter());
+            return new ReferencedRectangleDecoder<TEdge>(this, this.LocationDecoder.CreateRectangleLocationDecoder());
         }
 
         /// <summary>
@@ -357,7 +358,7 @@ namespace OpenLR.OsmSharp
             var geoCoordinate = new GeoCoordinate(lrp.Coordinate.Latitude, lrp.Coordinate.Longitude);
 
             // build candidates list.
-            var candidates = new HashSet<uint>();
+            var candidates = new HashSet<long>();
             var scoredCandidates = new List<CandidateVertex>();
 
             float latitude, longitude;
@@ -370,7 +371,7 @@ namespace OpenLR.OsmSharp
             var arcs = this.Graph.GetArcs(box);
             foreach (var arc in arcs)
             {
-                uint vertex = arc.Key;
+                long vertex = arc.Key;
                 if (!candidates.Contains(vertex))
                 {
                     this.Graph.GetVertex(vertex, out latitude, out longitude);
@@ -413,7 +414,7 @@ namespace OpenLR.OsmSharp
         /// <param name="frc"></param>
         /// <param name="bearing"></param>
         /// <returns></returns>
-        public virtual IEnumerable<CandidateEdge> FindCandidateEdgesFor(uint vertex, bool forward, FormOfWay fow, FunctionalRoadClass frc, Degree bearing)
+        public virtual IEnumerable<CandidateEdge> FindCandidateEdgesFor(long vertex, bool forward, FormOfWay fow, FunctionalRoadClass frc, Degree bearing)
         {
             var relevantEdges = new List<CandidateEdge>();
             foreach (var arc in this.Graph.GetArcs(vertex))
@@ -606,7 +607,7 @@ namespace OpenLR.OsmSharp
             /// <summary>
             /// Gets or sets the vertex.
             /// </summary>
-            public uint Vertex { get; set; }
+            public long Vertex { get; set; }
 
             /// <summary>
             /// Determines whether this object is equal to the given object.
@@ -648,7 +649,7 @@ namespace OpenLR.OsmSharp
             /// <summary>
             /// Gets or sets the target vertex.
             /// </summary>
-            public uint TargetVertex { get; set; }
+            public long TargetVertex { get; set; }
 
             /// <summary>
             /// Determines whether this object is equal to the given object.

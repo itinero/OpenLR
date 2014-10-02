@@ -1,4 +1,5 @@
 ﻿using OpenLR.Encoding;
+using OpenLR.OsmSharp.Router;
 using OsmSharp.Collections.PriorityQueues;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Osm.Graphs;
@@ -19,7 +20,7 @@ namespace OpenLR.OsmSharp
         /// </summary>
         /// <param name="graph"></param>
         /// <param name="locationEncoder"></param>
-        public ReferencedEncoderBaseLiveEdge(IBasicRouterDataSource<LiveEdge> graph, Encoder locationEncoder)
+        public ReferencedEncoderBaseLiveEdge(BasicRouterDataSource<LiveEdge> graph, Encoder locationEncoder)
             : base(graph, locationEncoder)
         {
 
@@ -31,22 +32,22 @@ namespace OpenLR.OsmSharp
         /// <param name="vertex">The invalid vertex.</param>
         /// <param name="targetNeighbour">The neighbour of this vertex that is part of the location.</param>
         /// <param name="searchForward">When true, the search is forward, otherwise backward.</param>
-        public override PathSegment<uint> FindValidVertexFor(long vertex, long targetNeighbour, bool searchForward)
+        public override PathSegment<long> FindValidVertexFor(long vertex, long targetNeighbour, bool searchForward)
         {
             // GIST: execute a dykstra search to find a vertex that is valid.
             // this will return a vertex that is on the shortest path:
             // foundVertex -> vertex -> targetNeighbour.
 
             // initialize settled set.
-            var settled = new HashSet<uint>();
-            settled.Add((uint)targetNeighbour); // make sure not to select target neighbour.
+            var settled = new HashSet<long>();
+            settled.Add(targetNeighbour); // make sure not to select target neighbour.
 
             // initialize heap.
-            var heap = new BinairyHeap<PathSegment<uint>>(10);
-            heap.Push(new PathSegment<uint>((uint)vertex), 0);
+            var heap = new BinairyHeap<PathSegment<long>>(10);
+            heap.Push(new PathSegment<long>(vertex), 0);
 
             // find the path to the closest valid vertex.
-            PathSegment<uint> pathTo = null;
+            PathSegment<long> pathTo = null;
             while (heap.Count > 0)
             {
                 // get next.
@@ -75,7 +76,7 @@ namespace OpenLR.OsmSharp
                                   !(onway.Value == arc.Value.Forward ^ searchForward))
                                 { // ok, no oneway or oneway reversed.
                                     var weight = this.Vehicle.Weight(this.Graph.TagsIndex.Get(arc.Value.Tags), arc.Value.Distance);
-                                    var path = new PathSegment<uint>(arc.Key, current.Weight + weight, current);
+                                    var path = new PathSegment<long>(arc.Key, current.Weight + weight, current);
                                     heap.Push(path, (float)path.Weight);
                                 }
                             }

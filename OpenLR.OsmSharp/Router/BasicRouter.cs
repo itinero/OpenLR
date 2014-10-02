@@ -30,18 +30,18 @@ namespace OpenLR.OsmSharp.Router
         /// <param name="to"></param>
         /// <param name="minimum"></param>
         /// <returns></returns>
-        public PathSegment<uint> Calculate(IBasicRouterDataSource<LiveEdge> graph, IRoutingInterpreter interpreter,
+        public PathSegment<long> Calculate(BasicRouterDataSource<LiveEdge> graph, IRoutingInterpreter interpreter,
             Vehicle vehicle, CandidateVertexEdge<LiveEdge> from, CandidateVertexEdge<LiveEdge> to, FunctionalRoadClass minimum)
         {
             // first check for the simple stuff.
             if (from.Vertex == to.Vertex)
             { // route consists of one vertex.
-                return new PathSegment<uint>(from.Vertex);
+                return new PathSegment<long>(from.Vertex);
             }
 
             // check paths.
             var fromPathWeight = vehicle.Weight(graph.TagsIndex.Get(from.Edge.Tags), from.Edge.Distance);
-            var fromPath = new PathSegment<uint>(from.TargetVertex, fromPathWeight, new PathSegment<uint>(from.Vertex));
+            var fromPath = new PathSegment<long>(from.TargetVertex, fromPathWeight, new PathSegment<long>(from.Vertex));
             if(from.Vertex == to.TargetVertex &&
                 to.Vertex == from.TargetVertex)
             { // edges are the same, 
@@ -49,8 +49,8 @@ namespace OpenLR.OsmSharp.Router
             }
 
             // initialize the heap/visit list.
-            var heap = new BinairyHeap<PathSegment<uint>>(100);
-            var visited = new HashSet<uint>();
+            var heap = new BinairyHeap<PathSegment<long>>(100);
+            var visited = new HashSet<long>();
             visited.Add(from.Vertex);
 
             // also add the target to the visit list and actually search for the target candidate edge ending.
@@ -74,7 +74,7 @@ namespace OpenLR.OsmSharp.Router
                 // check for the target.
                 if(current.VertexId == target)
                 { // target was found.
-                    return new PathSegment<uint>(to.Vertex, current.Weight + fromPathWeight, current);
+                    return new PathSegment<long>(to.Vertex, current.Weight + fromPathWeight, current);
                 }
 
                 // check if the maximum settled vertex count has been reached.
@@ -105,7 +105,7 @@ namespace OpenLR.OsmSharp.Router
                             {
                                 // create path to neighbour and queue it.
                                 var weight = vehicle.Weight(graph.TagsIndex.Get(neighbour.Value.Tags), neighbour.Value.Distance);
-                                var path = new PathSegment<uint>(neighbour.Key, current.Weight + weight, current);
+                                var path = new PathSegment<long>(neighbour.Key, current.Weight + weight, current);
                                 heap.Push(path, (float)path.Weight);
                             }
                         }

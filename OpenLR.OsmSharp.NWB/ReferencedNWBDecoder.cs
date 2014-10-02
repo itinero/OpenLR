@@ -3,6 +3,7 @@ using OpenLR.Model;
 using OpenLR.OsmSharp.Decoding.Candidates;
 using OpenLR.OsmSharp.Locations;
 using OpenLR.OsmSharp.Matching;
+using OpenLR.OsmSharp.Router;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Graph.Router.Dykstra;
@@ -30,7 +31,7 @@ namespace OpenLR.OsmSharp.NWB
         /// </summary>
         /// <param name="graph"></param>
         /// <param name="locationDecoder"></param>
-        public ReferencedNWBDecoder(IBasicRouterDataSource<LiveEdge> graph, Decoder locationDecoder)
+        public ReferencedNWBDecoder(BasicRouterDataSource<LiveEdge> graph, Decoder locationDecoder)
             : base(graph, new global::OsmSharp.Routing.Shape.Vehicles.Car("RIJRICHTING", "H", "T", string.Empty), locationDecoder)
         {
 
@@ -42,7 +43,7 @@ namespace OpenLR.OsmSharp.NWB
         /// <param name="graph"></param>
         /// <param name="locationDecoder"></param>
         /// <param name="maxVertexDistance"></param>
-        public ReferencedNWBDecoder(IBasicRouterDataSource<LiveEdge> graph, Decoder locationDecoder, Meter maxVertexDistance)
+        public ReferencedNWBDecoder(BasicRouterDataSource<LiveEdge> graph, Decoder locationDecoder, Meter maxVertexDistance)
             : base(graph, new global::OsmSharp.Routing.Shape.Vehicles.Car("RIJRICHTING", "H", "T", string.Empty), locationDecoder)
         {
             _maxVertexDistance = maxVertexDistance;
@@ -180,7 +181,7 @@ namespace OpenLR.OsmSharp.NWB
         /// </summary>
         /// <param name="graph">The graph containing the NWB network.</param>
         /// <returns></returns>
-        public static ReferencedNWBDecoder CreateBinary(IBasicRouterDataSource<LiveEdge> graph)
+        public static ReferencedNWBDecoder CreateBinary(BasicRouterDataSource<LiveEdge> graph)
         {
             return ReferencedNWBDecoder.Create(graph, new OpenLR.Binary.BinaryDecoder());
         }
@@ -191,7 +192,7 @@ namespace OpenLR.OsmSharp.NWB
         /// <param name="graph">The graph containing the NWB network.</param>
         /// <param name="maxVertexDistance">The maximum vertex distance.</param>
         /// <returns></returns>
-        public static ReferencedNWBDecoder CreateBinary(IBasicRouterDataSource<LiveEdge> graph, Meter maxVertexDistance)
+        public static ReferencedNWBDecoder CreateBinary(BasicRouterDataSource<LiveEdge> graph, Meter maxVertexDistance)
         {
             return ReferencedNWBDecoder.Create(graph, new OpenLR.Binary.BinaryDecoder(), maxVertexDistance);
         }
@@ -210,7 +211,7 @@ namespace OpenLR.OsmSharp.NWB
             // read the graph from the folder where the shapefiles are placed.
             var graph = graphReader.Read(folder, searchPattern, new ShapefileRoutingInterpreter());
 
-            return ReferencedNWBDecoder.Create(graph, rawLocationDecoder);
+            return ReferencedNWBDecoder.Create(new BasicRouterDataSource<LiveEdge>(graph), rawLocationDecoder);
         }
 
         /// <summary>
@@ -219,7 +220,7 @@ namespace OpenLR.OsmSharp.NWB
         /// <param name="graph">The graph containing the NWB network.</param>
         /// <param name="rawLocationDecoder">The raw location decoder.</param>
         /// <returns></returns>
-        public static ReferencedNWBDecoder Create(IBasicRouterDataSource<LiveEdge> graph, Decoder rawLocationDecoder)
+        public static ReferencedNWBDecoder Create(BasicRouterDataSource<LiveEdge> graph, Decoder rawLocationDecoder)
         {
             return new ReferencedNWBDecoder(graph, rawLocationDecoder);
         }
@@ -231,7 +232,7 @@ namespace OpenLR.OsmSharp.NWB
         /// <param name="rawLocationDecoder">The raw location decoder.</param>
         /// <param name="maxVertexDistance">The maximum vertex distance.</param>
         /// <returns></returns>
-        public static ReferencedNWBDecoder Create(IBasicRouterDataSource<LiveEdge> graph, Decoder rawLocationDecoder, Meter maxVertexDistance)
+        public static ReferencedNWBDecoder Create(BasicRouterDataSource<LiveEdge> graph, Decoder rawLocationDecoder, Meter maxVertexDistance)
         {
             return new ReferencedNWBDecoder(graph, rawLocationDecoder, maxVertexDistance);
         }
