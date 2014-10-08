@@ -2,20 +2,14 @@
 using OpenLR.Model;
 using OpenLR.OsmSharp.Decoding.Candidates;
 using OpenLR.OsmSharp.Locations;
-using OpenLR.OsmSharp.Router;
 using OpenLR.Referenced;
 using OpenLR.Referenced.Decoding;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
-using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Graph.Router;
-using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Units.Angle;
 using OsmSharp.Units.Distance;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace OpenLR.OsmSharp.Decoding
 {
@@ -37,8 +31,6 @@ namespace OpenLR.OsmSharp.Decoding
         /// </summary>
         /// <param name="mainDecoder"></param>
         /// <param name="rawDecoder"></param>
-        /// <param name="graph"></param>
-        /// <param name="router"></param>
         public ReferencedDecoder(ReferencedDecoderBase<TEdge> mainDecoder, OpenLR.Decoding.LocationDecoder<TLocation> rawDecoder)
             : base(rawDecoder)
         {
@@ -87,13 +79,34 @@ namespace OpenLR.OsmSharp.Decoding
         }
 
         /// <summary>
-        /// Creates a new candidate vertex/edge pair at the given location reference point.
+        /// Resets all created candidates.
+        /// </summary>
+        protected void ResetCreatedCandidates()
+        {
+            _mainDecoder.ResetCreatedCandidates();
+        }
+
+        /// <summary>
+        /// Creates all candidates for a given location reference point.
         /// </summary>
         /// <param name="lrp"></param>
+        /// <param name="forward"></param>
         /// <returns></returns>
-        protected CandidateVertexEdge<TEdge> CreateCandidateFor(LocationReferencePoint lrp)
+        protected SortedSet<CandidateVertexEdge<TEdge>> CreateCandidatesFor(LocationReferencePoint lrp, bool forward)
         {
-            return _mainDecoder.CreateCandidateFor(lrp);
+            return _mainDecoder.CreateCandidatesFor(lrp, forward);
+        }
+
+        /// <summary>
+        /// Finds all candidates for a given location reference point.
+        /// </summary>
+        /// <param name="lrp"></param>
+        /// <param name="forward"></param>
+        /// <param name="maxVertexDistance"></param>
+        /// <returns></returns>
+        protected SortedSet<CandidateVertexEdge<TEdge>> CreateCandidatesFor(LocationReferencePoint lrp, bool forward, Meter maxVertexDistance)
+        {
+            return _mainDecoder.CreateCandidatesFor(lrp, forward, maxVertexDistance);
         }
 
         /// <summary>

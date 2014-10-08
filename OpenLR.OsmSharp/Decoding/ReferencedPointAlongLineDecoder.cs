@@ -29,8 +29,6 @@ namespace OpenLR.OsmSharp.Decoding
         /// </summary>
         /// <param name="mainDecoder"></param>
         /// <param name="rawDecoder"></param>
-        /// <param name="graph"></param>
-        /// <param name="router"></param>
         public ReferencedPointAlongLineDecoder(ReferencedDecoderBase<TEdge> mainDecoder, OpenLR.Decoding.LocationDecoder<PointAlongLineLocation> rawDecoder)
             : base(mainDecoder, rawDecoder)
         {
@@ -48,6 +46,9 @@ namespace OpenLR.OsmSharp.Decoding
             var vertexDistance = this.MaxVertexDistance.Value / 8;
             while ((best == null || best.Route == null) && vertexDistance <= this.MaxVertexDistance.Value)
             {
+                // reset the graph.
+                this.ResetCreatedCandidates();
+
                 // get candidate vertices and edges.
                 var candidates = new List<SortedSet<CandidateVertexEdge<TEdge>>>();
                 var lrps = new List<LocationReferencePoint>();
@@ -60,11 +61,18 @@ namespace OpenLR.OsmSharp.Decoding
                 lrps.Add(location.Last);
                 candidates.Add(this.FindCandidatesFor(location.Last, false, vertexDistance));
 
-                //// resolve points if one of the locations still hasn't been found.
-                //if ((vertexDistance * 2) > this.MaxVertexDistance.Value)
-                //{ // this is the maximum distance that will be tested.
-
-                //}
+                // resolve points if one of the locations still hasn't been found.
+                if ((vertexDistance * 2) > this.MaxVertexDistance.Value)
+                { // this is the maximum distance that will be tested.
+                    if(candidates[0].Count == 0)
+                    { // explicitly resolve from.
+                        candidates[0] = this.CreateCandidatesFor(location.First, true, vertexDistance);
+                    }
+                    else if (candidates[1].Count == 1)
+                    { // explicitly remove to.
+                        candidates[0] = this.CreateCandidatesFor(location.First, true, vertexDistance);
+                    }
+                }
 
                 // build a list of combined scores.
                 var combinedScoresSet = new SortedSet<CombinedScore<TEdge>>(new CombinedScoreComparer<TEdge>());

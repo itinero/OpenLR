@@ -103,6 +103,7 @@ namespace OpenLR.OsmSharp
         /// Creates a new referenced decoder.
         /// </summary>
         /// <param name="graph"></param>
+        /// <param name="vehicle"></param>
         /// <param name="locationDecoder"></param>
         public ReferencedDecoderBase(BasicRouterDataSource<TEdge> graph, Vehicle vehicle, Decoder locationDecoder)
             :base(locationDecoder)
@@ -298,6 +299,16 @@ namespace OpenLR.OsmSharp
         }
 
         /// <summary>
+        /// Finds candidate vertices for a location reference point.
+        /// </summary>
+        /// <param name="lrp"></param>
+        /// <returns></returns>
+        public virtual IEnumerable<CandidateVertex> FindCandidateVerticesFor(LocationReferencePoint lrp)
+        {
+            return this.FindCandidateVerticesFor(lrp, _maxVertexDistance);
+        }
+
+        /// <summary>
         /// Finds all candidate vertex/edge pairs for a given location reference point.
         /// </summary>
         /// <param name="lrp"></param>
@@ -337,15 +348,33 @@ namespace OpenLR.OsmSharp
         }
 
         /// <summary>
-        /// Finds candidate vertices for a location reference point.
+        /// Resets all created candidates.
         /// </summary>
-        /// <param name="lrp"></param>
-        /// <returns></returns>
-        public virtual IEnumerable<CandidateVertex> FindCandidateVerticesFor(LocationReferencePoint lrp)
+        public virtual void ResetCreatedCandidates()
         {
-            return this.FindCandidateVerticesFor(lrp, _maxVertexDistance);
+            this.Graph.ClearModifications();
         }
 
+        /// <summary>
+        /// Creates candidate vertex/edge pairs for a given location reference point.
+        /// </summary>
+        /// <param name="lrp"></param>
+        /// <param name="forward"></param>
+        /// <returns></returns>
+        public virtual SortedSet<CandidateVertexEdge<TEdge>> CreateCandidatesFor(LocationReferencePoint lrp, bool forward)
+        {
+            return this.CreateCandidatesFor(lrp, forward, _maxVertexDistance);
+        }
+
+        /// <summary>
+        /// Finds all candidate vertex/edge pairs for a given location reference point.
+        /// </summary>
+        /// <param name="lrp"></param>
+        /// <param name="forward"></param>
+        /// <param name="maxVertexDistance"></param>
+        /// <returns></returns>
+        public abstract SortedSet<CandidateVertexEdge<TEdge>> CreateCandidatesFor(LocationReferencePoint lrp, bool forward, Meter maxVertexDistance);
+        
         /// <summary>
         /// Finds candidate vertices for a location reference point.
         /// </summary>
@@ -406,7 +435,7 @@ namespace OpenLR.OsmSharp
         }
 
         /// <summary>
-        /// Finds candidate edges for a vertex matching a given fow and frc.
+        /// Finds candidate edges starting at a given vertex matching a given fow and frc.
         /// </summary>
         /// <param name="vertex"></param>
         /// <param name="forward"></param>
@@ -447,16 +476,6 @@ namespace OpenLR.OsmSharp
                 }
             }
             return relevantEdges;
-        }
-
-        /// <summary>
-        /// Creates a new candidate vertex/edge pair at the given location reference point.
-        /// </summary>
-        /// <param name="lrp"></param>
-        /// <returns></returns>
-        public virtual CandidateVertexEdge<TEdge> CreateCandidateFor(LocationReferencePoint lrp)
-        {
-            throw new NotImplementedException();
         }
 
         /// <summary>

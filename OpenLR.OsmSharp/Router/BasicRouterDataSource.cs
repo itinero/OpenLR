@@ -3,8 +3,6 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
-using OsmSharp.Routing.Osm.Graphs;
-using System;
 using System.Collections.Generic;
 
 namespace OpenLR.OsmSharp.Router
@@ -19,6 +17,11 @@ namespace OpenLR.OsmSharp.Router
         /// Holds the datasource behing this one.
         /// </summary>
         private IBasicRouterDataSource<TEdge> _datasource;
+
+        /// <summary>
+        /// Holds the next vertex id.
+        /// </summary>
+        private long _nextVertexId = -1;
 
         /// <summary>
         /// Holds the new vertices.
@@ -53,6 +56,8 @@ namespace OpenLR.OsmSharp.Router
         /// </summary>
         public void ClearModifications()
         {
+            _nextVertexId = -1;
+
             _newArcs.Clear();
             _removedArcs.Clear();
             _newVertices.Clear();
@@ -61,12 +66,14 @@ namespace OpenLR.OsmSharp.Router
         /// <summary>
         /// Adds a new vertex.
         /// </summary>
-        /// <param name="newId"></param>
         /// <param name="latitude"></param>
         /// <param name="longitude"></param>
-        public void AddVertex(long newId, float latitude, float longitude)
+        public long AddVertex(float latitude, float longitude)
         {
+            var newId = _nextVertexId;
             _newVertices[newId] = new GeoCoordinate(latitude, longitude);
+            _nextVertexId--;
+            return newId;
         }
 
         /// <summary>
@@ -89,7 +96,7 @@ namespace OpenLR.OsmSharp.Router
         /// <param name="vertex1"></param>
         /// <param name="vertex2"></param>
         /// <param name="edge"></param>
-        public void AddArc(long vertex1, int vertex2, TEdge edge)
+        public void AddArc(long vertex1, long vertex2, TEdge edge)
         {
             _newArcs.Add(new KeyValuePair<long, KeyValuePair<long, TEdge>>(
                 vertex1, new KeyValuePair<long, TEdge>(vertex2, edge)));

@@ -19,7 +19,7 @@ namespace OpenLR.OsmSharp.Osm
     /// <summary>
     /// An implementation of a referenced decoder based on OSM.
     /// </summary>
-    public class ReferencedOsmDecoder : ReferencedDecoderBase<LiveEdge>
+    public class ReferencedOsmDecoder : ReferencedDecoderBaseLiveEdge
     {
         /// <summary>
         /// Holds the maximum vertex distance.

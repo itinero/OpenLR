@@ -19,7 +19,7 @@ namespace OpenLR.OsmSharp.NWB
     /// <summary>
     /// An implementation of a referenced decoder based on the Nationaal Wegenbestand (NWB) in the netherlands.
     /// </summary>
-    public class ReferencedNWBDecoder : ReferencedDecoderBase<LiveEdge>
+    public class ReferencedNWBDecoder : ReferencedDecoderBaseLiveEdge
     {
         /// <summary>
         /// Holds the maximum vertex distance.
