@@ -70,7 +70,7 @@ namespace OpenLR.OsmSharp.Decoding
                     }
                     else if (candidates[1].Count == 1)
                     { // explicitly remove to.
-                        candidates[0] = this.CreateCandidatesFor(location.First, true, vertexDistance);
+                        candidates[1] = this.CreateCandidatesFor(location.First, true, vertexDistance);
                     }
                 }
 

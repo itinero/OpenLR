@@ -62,8 +62,7 @@ namespace OpenLR.OsmSharp
 
             // build candidates list.
             var candidates = new HashSet<long>();
-            var vertexEdgeCandidates = new SortedSet<CandidateVertexEdge<LiveEdge>>(new CandidateVertexEdgeComparer<LiveEdge>());
-            var scoredCandidates = new SortedSet<CandidateVertexEdge<LiveEdge>>();
+            var scoredCandidates = new SortedSet<CandidateVertexEdge<LiveEdge>>(new CandidateVertexEdgeComparer<LiveEdge>());
 
             float latitude, longitude;
 
@@ -76,7 +75,7 @@ namespace OpenLR.OsmSharp
             foreach (var arc in arcs)
             {
                 // check if arc was removed already.
-                if(!this.Graph.HasArc(arc.Key, arc.Value.Key))
+                if (!this.Graph.HasArc(arc.Key, arc.Value.Key))
                 { // this arc was already removed, probably the reverse one.
                     continue;
                 }
@@ -86,7 +85,11 @@ namespace OpenLR.OsmSharp
                 var fromCoordinates = new GeoCoordinate(latitude, longitude);
                 this.Graph.GetVertex(arc.Value.Key, out latitude, out longitude);
                 var toCoordinates = new GeoCoordinate(latitude, longitude);
-                var arcCoordinates = arc.Value.Value.Coordinates;
+                var arcCoordinates = new List<GeoCoordinateSimple>();
+                if (arc.Value.Value.Coordinates != null)
+                { // there are coordinates.
+                    arcCoordinates.AddRange(arc.Value.Value.Coordinates);
+                }
 
                 // search along the line.
                 var closestDistance = double.MaxValue;
@@ -97,14 +100,11 @@ namespace OpenLR.OsmSharp
                 var distanceTotal = 0.0;
                 var distance = 0.0;
                 var previous = fromCoordinates;
-                if (arcCoordinates != null)
-                { // calculate distance along all coordinates.
-                    for (int idx = 0; idx < arcCoordinates.Length; idx++)
-                    {
-                        var current = new GeoCoordinate(arcCoordinates[idx].Latitude, arcCoordinates[idx].Longitude);
-                        distanceTotal = distanceTotal + current.DistanceReal(previous).Value;
-                        previous = current;
-                    }
+                for (int idx = 0; idx < arcCoordinates.Count; idx++)
+                {
+                    var current = new GeoCoordinate(arcCoordinates[idx].Latitude, arcCoordinates[idx].Longitude);
+                    distanceTotal = distanceTotal + current.DistanceReal(previous).Value;
+                    previous = current;
                 }
                 distanceTotal = distanceTotal + toCoordinates.DistanceReal(previous).Value;
                 if (distanceTotal > 0)
@@ -113,39 +113,36 @@ namespace OpenLR.OsmSharp
                     previous = fromCoordinates;
                     GeoCoordinateLine line;
                     double distanceToSegment = 0;
-                    if (arcCoordinates != null)
+                    for (int idx = 0; idx < arcCoordinates.Count; idx++)
                     {
-                        for (int idx = 0; idx < arcCoordinates.Length; idx++)
-                        {
-                            var current = new GeoCoordinate(
-                                arcCoordinates[idx].Latitude, arcCoordinates[idx].Longitude);
-                            line = new GeoCoordinateLine(previous, current, true, true);
+                        var current = new GeoCoordinate(
+                            arcCoordinates[idx].Latitude, arcCoordinates[idx].Longitude);
+                        line = new GeoCoordinateLine(previous, current, true, true);
 
-                            distance = line.DistanceReal(lrpLocation).Value;
+                        distance = line.DistanceReal(lrpLocation).Value;
 
-                            if (distance < closestDistance)
-                            { // the distance is smaller.
-                                var projectedPoint = line.ProjectOn(lrpLocation);
+                        if (distance < closestDistance)
+                        { // the distance is smaller.
+                            var projectedPoint = line.ProjectOn(lrpLocation);
 
-                                // calculate the position.
-                                if (projectedPoint != null)
-                                { // calculate the distance
-                                    var distancePoint = previous.DistanceReal(new GeoCoordinate(projectedPoint)).Value + distanceToSegment;
-                                    var position = distancePoint / distanceTotal;
+                            // calculate the position.
+                            if (projectedPoint != null)
+                            { // calculate the distance
+                                var distancePoint = previous.DistanceReal(new GeoCoordinate(projectedPoint)).Value + distanceToSegment;
+                                var position = distancePoint / distanceTotal;
 
-                                    closestDistance = distance;
-                                    closestRatio = position;
-                                    closestPosition = idx;
-                                    closestLocation = new GeoCoordinate(projectedPoint);
-                                }
+                                closestDistance = distance;
+                                closestRatio = position;
+                                closestPosition = idx;
+                                closestLocation = new GeoCoordinate(projectedPoint);
                             }
-
-                            // add current segment distance to distanceToSegment for the next segment.
-                            distanceToSegment = distanceToSegment + line.LengthReal.Value;
-
-                            // set previous.
-                            previous = current;
                         }
+
+                        // add current segment distance to distanceToSegment for the next segment.
+                        distanceToSegment = distanceToSegment + line.LengthReal.Value;
+
+                        // set previous.
+                        previous = current;
                     }
 
                     // check the last segment.
@@ -163,7 +160,7 @@ namespace OpenLR.OsmSharp
 
                             closestDistance = distance;
                             closestRatio = position;
-                            closestPosition = arcCoordinates.Length;
+                            closestPosition = arcCoordinates.Count;
                             closestLocation = new GeoCoordinate(projectedPoint);
                         }
                     }
@@ -173,12 +170,12 @@ namespace OpenLR.OsmSharp
                 if (distance < maxVertexDistance.Value)
                 { // ok, this arc is closer.
                     // calculate score for projected new vertex.
-                    var newVertexScore =  (float)(1.0 - (distance / this.MaxVertexDistance.Value)); // calculate scoring compared to the fixed max distance.
+                    var newVertexScore = (float)(1.0 - (distance / this.MaxVertexDistance.Value)); // calculate scoring compared to the fixed max distance.
 
                     // add intermediate vertex.
                     this.Graph.RemoveArc(arc.Key, arc.Value.Key);
                     this.Graph.RemoveArc(arc.Value.Key, arc.Key);
-                    
+
                     // add a new vertex.
                     long newId = this.Graph.AddVertex((float)closestLocation.Latitude, (float)closestLocation.Longitude);
 
@@ -187,11 +184,11 @@ namespace OpenLR.OsmSharp
                     var distanceAfter = arc.Value.Value.Distance - distanceBefore;
 
                     // build coordinates before/after.
-                    var coordinatesBefore = new List<GeoCoordinateSimple>(arc.Value.Value.Coordinates.TakeWhile((x, idx) =>
+                    var coordinatesBefore = new List<GeoCoordinateSimple>(arcCoordinates.TakeWhile((x, idx) =>
                     {
                         return idx <= closestPosition;
                     }));
-                    var coordinatesAfter = new List<GeoCoordinateSimple>(arc.Value.Value.Coordinates.TakeWhile((x, idx) =>
+                    var coordinatesAfter = new List<GeoCoordinateSimple>(arcCoordinates.TakeWhile((x, idx) =>
                     {
                         return idx > closestPosition;
                     }));
@@ -199,7 +196,7 @@ namespace OpenLR.OsmSharp
                     // add new edges forward/backward.
                     this.Graph.AddArc(arc.Key, newId, new LiveEdge()
                     {
-                        Coordinates = coordinatesBefore.ToArray(),
+                        Coordinates = coordinatesBefore.Count > 0 ? coordinatesBefore.ToArray() : null,
                         Distance = (float)distanceBefore,
                         Forward = arc.Value.Value.Forward,
                         Tags = arc.Value.Value.Tags
@@ -207,14 +204,14 @@ namespace OpenLR.OsmSharp
                     coordinatesBefore.Reverse();
                     this.Graph.AddArc(newId, arc.Key, new LiveEdge()
                     {
-                        Coordinates = coordinatesBefore.ToArray(),
+                        Coordinates = coordinatesBefore.Count > 0 ? coordinatesBefore.ToArray() : null,
                         Distance = (float)distanceBefore,
                         Forward = !arc.Value.Value.Forward,
                         Tags = arc.Value.Value.Tags
                     });
                     this.Graph.AddArc(newId, arc.Value.Key, new LiveEdge()
                     {
-                        Coordinates = coordinatesAfter.ToArray(),
+                        Coordinates = coordinatesAfter.Count > 0 ? coordinatesAfter.ToArray() : null,
                         Distance = (float)distanceAfter,
                         Forward = arc.Value.Value.Forward,
                         Tags = arc.Value.Value.Tags
@@ -222,7 +219,7 @@ namespace OpenLR.OsmSharp
                     coordinatesAfter.Reverse();
                     this.Graph.AddArc(arc.Value.Key, newId, new LiveEdge()
                     {
-                        Coordinates = coordinatesAfter.ToArray(),
+                        Coordinates = coordinatesAfter.Count > 0 ? coordinatesAfter.ToArray() : null,
                         Distance = (float)distanceAfter,
                         Forward = !arc.Value.Value.Forward,
                         Tags = arc.Value.Value.Tags
@@ -232,7 +229,7 @@ namespace OpenLR.OsmSharp
                     var edgeCandidates = this.FindCandidateEdgesFor(newId, forward, lrp.FormOfWay.Value, lrp.FuntionalRoadClass.Value, (Degree)lrp.Bearing.Value);
                     foreach (var edgeCandidate in edgeCandidates)
                     {
-                        vertexEdgeCandidates.Add(new CandidateVertexEdge<LiveEdge>()
+                        scoredCandidates.Add(new CandidateVertexEdge<LiveEdge>()
                         {
                             Edge = edgeCandidate.Edge,
                             Vertex = newId,

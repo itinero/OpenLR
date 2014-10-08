@@ -3,6 +3,7 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
+using System;
 using System.Collections.Generic;
 
 namespace OpenLR.OsmSharp.Router
@@ -177,9 +178,28 @@ namespace OpenLR.OsmSharp.Router
         /// <param name="vertex"></param>
         /// <param name="routes"></param>
         /// <returns></returns>
-        public bool TryGetRestrictionAsEnd(Vehicle vehicle, uint vertex, out List<uint[]> routes)
+        public bool TryGetRestrictionAsEnd(Vehicle vehicle, long vertex, out List<long[]> routes)
         {
-            return _datasource.TryGetRestrictionAsEnd(vehicle, vertex, out routes);
+            List<uint[]> baseRoutes;
+            if (_datasource.TryGetRestrictionAsEnd(vehicle, Convert.ToUInt32(vertex), out baseRoutes))
+            { // ok, there are restrictions, convert them.
+                routes = null;
+                if(baseRoutes != null)
+                {
+                    foreach(var restriction in baseRoutes)
+                    {
+                        var convertedRestriction = new long[restriction.Length];
+                        for(int idx = 0; idx < restriction.Length; idx++)
+                        {
+                            convertedRestriction[idx] = restriction[idx];
+                        }
+                        routes.Add(convertedRestriction);
+                    }
+                }
+                return true;
+            }
+            routes = null;
+            return false;
         }
 
         /// <summary>
@@ -189,9 +209,28 @@ namespace OpenLR.OsmSharp.Router
         /// <param name="vertex"></param>
         /// <param name="routes"></param>
         /// <returns></returns>
-        public bool TryGetRestrictionAsStart(Vehicle vehicle, uint vertex, out List<uint[]> routes)
+        public bool TryGetRestrictionAsStart(Vehicle vehicle, long vertex, out List<long[]> routes)
         {
-            return _datasource.TryGetRestrictionAsStart(vehicle, vertex, out routes);
+            List<uint[]> baseRoutes;
+            if (_datasource.TryGetRestrictionAsStart(vehicle, Convert.ToUInt32(vertex), out baseRoutes))
+            { // ok, there are restrictions, convert them.
+                routes = null;
+                if (baseRoutes != null)
+                {
+                    foreach (var restriction in baseRoutes)
+                    {
+                        var convertedRestriction = new long[restriction.Length];
+                        for (int idx = 0; idx < restriction.Length; idx++)
+                        {
+                            convertedRestriction[idx] = restriction[idx];
+                        }
+                        routes.Add(convertedRestriction);
+                    }
+                }
+                return true;
+            }
+            routes = null;
+            return false;
         }
 
         /// <summary>
@@ -201,10 +240,15 @@ namespace OpenLR.OsmSharp.Router
         /// <returns></returns>
         public KeyValuePair<long, TEdge>[] GetArcs(long vertexId)
         {
-            var baseArcs = new KeyValuePair<uint, TEdge>[0];
+            var baseArcs = new List<KeyValuePair<long, TEdge>>();
             if(vertexId > 0)
             { // vertex exists in base-graph.
-                baseArcs = _datasource.GetArcs((uint)vertexId);
+                var baseArcsUint = _datasource.GetArcs(Convert.ToUInt32(vertexId));
+                for (int idx = 0; idx < baseArcsUint.Length; idx++)
+                {
+                    baseArcs.Add(new KeyValuePair<long, TEdge>(
+                        baseArcsUint[idx].Key, baseArcsUint[idx].Value));
+                }
             }
             var arcs = new List<KeyValuePair<long, TEdge>>();
             foreach (var baseArc in baseArcs)
@@ -229,8 +273,7 @@ namespace OpenLR.OsmSharp.Router
                     Vertex1 = newArc.Key,
                     Vertex2 = newArc.Value.Key
                 };
-                if ((arc.Vertex1 == vertexId ||
-                     arc.Vertex2 == vertexId))
+                if (arc.Vertex1 == vertexId)
                 { // ok, vertices are contained.
                     arcs.Add(new KeyValuePair<long, TEdge>(newArc.Value.Key, newArc.Value.Value));
                 }

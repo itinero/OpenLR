@@ -35,7 +35,7 @@ namespace OpenLR.OsmSharp.Osm
         public override Coordinate GetVertexLocation(long vertex)
         {
             float latitude, longitude;
-            if (!this.Graph.GetVertex((uint)vertex, out latitude, out longitude))
+            if (!this.Graph.GetVertex(vertex, out latitude, out longitude))
             { // oeps, vertex does not exist!
                 throw new System.ArgumentOutOfRangeException("vertex", string.Format("Vertex {0} not found!", vertex));
             }

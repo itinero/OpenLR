@@ -151,7 +151,7 @@ namespace OpenLR.OsmSharp
         {
             var coordinates = new List<GeoCoordinate>();
             float latitude, longitude;
-            this.Graph.GetVertex((uint)vertexFrom, out latitude, out longitude);
+            this.Graph.GetVertex(vertexFrom, out latitude, out longitude);
             coordinates.Add(new GeoCoordinate(latitude, longitude));
 
             if (edge.Coordinates != null)
@@ -166,7 +166,7 @@ namespace OpenLR.OsmSharp
                 }
             }
 
-            this.Graph.GetVertex((uint)vertexTo, out latitude, out longitude);
+            this.Graph.GetVertex(vertexTo, out latitude, out longitude);
             coordinates.Add(new GeoCoordinate(latitude, longitude));
 
             return BearingEncoder.EncodeBearing(coordinates);
@@ -179,7 +179,7 @@ namespace OpenLR.OsmSharp
         /// <returns></returns>
         public bool IsVertexValid(long vertex)
         {
-            var arcs = this.Graph.GetArcs((uint)vertex);
+            var arcs = this.Graph.GetArcs(vertex);
 
             // filter out non-traversable arcs.
             var traversableArcs = arcs.Where((arc) =>

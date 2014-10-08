@@ -191,8 +191,8 @@ namespace OpenLR.OsmSharp.Osm
                 vertices.Add(path.From.VertexId);
 
                 // get edge between current and from.
-                uint fromVertex = (uint)path.From.VertexId;
-                uint toVertex = (uint)path.VertexId;
+                var fromVertex = path.From.VertexId;
+                var toVertex = path.VertexId;
 
                 bool found = false;
                 foreach (var arc in this.Graph.GetArcs(fromVertex))
@@ -236,7 +236,7 @@ namespace OpenLR.OsmSharp.Osm
         public override Coordinate GetCoordinate(long vertex)
         {
             float latitude, longitude;
-            if (!this.Graph.GetVertex((uint)vertex, out latitude, out longitude))
+            if (!this.Graph.GetVertex(vertex, out latitude, out longitude))
             { // oeps, vertex does not exist!
                 throw new ArgumentOutOfRangeException("vertex", string.Format("Vertex {0} not found!", vertex));
             }

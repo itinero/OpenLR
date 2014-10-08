@@ -511,7 +511,7 @@ namespace OpenLR.OsmSharp
         public virtual Coordinate GetCoordinate(long vertex)
         {
             float latitude, longitude;
-            if (!this.Graph.GetVertex((uint)vertex, out latitude, out longitude))
+            if (!this.Graph.GetVertex(vertex, out latitude, out longitude))
             { // oeps, vertex does not exist!
                 throw new ArgumentOutOfRangeException("vertex", string.Format("Vertex {0} not found!", vertex));
             }
@@ -592,7 +592,7 @@ namespace OpenLR.OsmSharp
         {
             var coordinates = new List<GeoCoordinate>();
             float latitude, longitude;
-            this.Graph.GetVertex((uint)vertexFrom, out latitude, out longitude);
+            this.Graph.GetVertex(vertexFrom, out latitude, out longitude);
             coordinates.Add(new GeoCoordinate(latitude, longitude));
 
             if (edge.Coordinates != null)
@@ -607,7 +607,7 @@ namespace OpenLR.OsmSharp
                 }
             }
 
-            this.Graph.GetVertex((uint)vertexTo, out latitude, out longitude);
+            this.Graph.GetVertex(vertexTo, out latitude, out longitude);
             coordinates.Add(new GeoCoordinate(latitude, longitude));
 
             return BearingEncoder.EncodeBearing(coordinates);

@@ -80,7 +80,7 @@ namespace OpenLR.OsmSharp.Locations
             for (int idx = 0; idx < this.Vertices.Length; idx++)
             {
                 float latitude, longitude;
-                _graph.GetVertex((uint)this.Vertices[idx], out latitude, out longitude);
+                _graph.GetVertex(this.Vertices[idx], out latitude, out longitude);
                 coordinates.Add(new Coordinate(longitude, latitude));
 
                 if (idx < this.Edges.Length)
@@ -116,7 +116,7 @@ namespace OpenLR.OsmSharp.Locations
             {
                 var coordinates = new List<Coordinate>();
                 float latitude, longitude;
-                _graph.GetVertex((uint)this.Vertices[idx], out latitude, out longitude);
+                _graph.GetVertex(this.Vertices[idx], out latitude, out longitude);
                 coordinates.Add(new Coordinate(longitude, latitude));
 
                 var edge = this.Edges[idx];
@@ -135,7 +135,7 @@ namespace OpenLR.OsmSharp.Locations
                 var tags = _graph.TagsIndex.Get(edge.Tags);
                 var table = tags.ToAttributes();
 
-                _graph.GetVertex((uint)this.Vertices[idx + 1], out latitude, out longitude);
+                _graph.GetVertex(this.Vertices[idx + 1], out latitude, out longitude);
                 coordinates.Add(new Coordinate(longitude, latitude));
 
                 featureCollection.Add(new Feature(geometryFactory.CreateLineString(coordinates.ToArray()), table));

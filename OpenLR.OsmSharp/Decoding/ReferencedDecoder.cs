@@ -118,7 +118,7 @@ namespace OpenLR.OsmSharp.Decoding
         /// <param name="frc"></param>
         /// <param name="bearing"></param>
         /// <returns></returns>
-        protected IEnumerable<ReferencedDecoderBase<TEdge>.CandidateEdge> FindCandidateEdgesFor(uint vertex, bool forward, FormOfWay fow, FunctionalRoadClass frc, Degree bearing)
+        protected IEnumerable<ReferencedDecoderBase<TEdge>.CandidateEdge> FindCandidateEdgesFor(long vertex, bool forward, FormOfWay fow, FunctionalRoadClass frc, Degree bearing)
         {
             return _mainDecoder.FindCandidateEdgesFor(vertex, forward, fow, frc, bearing);
         }
