@@ -156,6 +156,7 @@ namespace OpenLR.OsmSharp.Decoding
 
             // create the referenced location.
             var pointAlongLineLocation = new ReferencedPointAlongLine<TEdge>();
+            pointAlongLineLocation.Score = best.Score / 2.0f;
             pointAlongLineLocation.Route = best.Route;
             pointAlongLineLocation.Latitude = latitudeReference;
             pointAlongLineLocation.Longitude = longitudeReference;
