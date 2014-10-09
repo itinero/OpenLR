@@ -190,6 +190,27 @@ namespace OpenLR.OsmSharp.NWB
         /// Creates a new referenced NWB decoder.
         /// </summary>
         /// <param name="graph">The graph containing the NWB network.</param>
+        /// <returns></returns>
+        public static ReferencedNWBDecoder CreateBinary(IBasicRouterDataSource<LiveEdge> graph)
+        {
+            return ReferencedNWBDecoder.Create(new BasicRouterDataSource<LiveEdge>(graph), new OpenLR.Binary.BinaryDecoder());
+        }
+
+        /// <summary>
+        /// Creates a new referenced NWB decoder.
+        /// </summary>
+        /// <param name="graph">The graph containing the NWB network.</param>
+        /// <param name="maxVertexDistance">The maximum vertex distance.</param>
+        /// <returns></returns>
+        public static ReferencedNWBDecoder CreateBinary(IBasicRouterDataSource<LiveEdge> graph, Meter maxVertexDistance)
+        {
+            return ReferencedNWBDecoder.Create(new BasicRouterDataSource<LiveEdge>(graph), new OpenLR.Binary.BinaryDecoder(), maxVertexDistance);
+        }
+
+        /// <summary>
+        /// Creates a new referenced NWB decoder.
+        /// </summary>
+        /// <param name="graph">The graph containing the NWB network.</param>
         /// <param name="maxVertexDistance">The maximum vertex distance.</param>
         /// <returns></returns>
         public static ReferencedNWBDecoder CreateBinary(BasicRouterDataSource<LiveEdge> graph, Meter maxVertexDistance)
