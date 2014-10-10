@@ -178,8 +178,8 @@ namespace OpenLR.OsmSharp.Decoding
             pointAlongLineLocation.EdgeMeta = new EdgeMeta()
             {
                 Idx = offsetEdgeIdx,
-                Length = offsetEdgeLength,
-                Offset = edgeLength
+                Length = edgeLength,
+                Offset = offsetEdgeLength
             };
 
             return pointAlongLineLocation;

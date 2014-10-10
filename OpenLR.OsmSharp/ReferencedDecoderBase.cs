@@ -623,7 +623,7 @@ namespace OpenLR.OsmSharp
 
                 // add current edge length to current offset.
                 currentOffsetLength = currentOffsetLength + currentEdgeLength;
-                if(currentOffsetLength >= offsetLength.Value || 
+                if(currentOffsetLength >= offsetLength.Value && 
                     edgeLength.Value < 0)
                 { // it's this edge that has the valuable info.
                     offsetEdgeIdx = edgeIdx;
