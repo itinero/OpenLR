@@ -119,6 +119,7 @@ namespace OpenLR.OsmSharp.NWB
                     { // there is a candidate arc.
                         found = true;
                         edges.Add(arc.Value);
+                        break;
                     }
                 }
 
