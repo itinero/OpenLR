@@ -161,10 +161,17 @@ namespace OpenLR.OsmSharp.Decoding
         /// Returns the list of coordinates the represent the given route.
         /// </summary>
         /// <param name="route"></param>
+        /// <param name="offsetRatio"></param>
+        /// <param name="offsetEdgeIdx"></param>
+        /// <param name="offsetLocation"></param>
+        /// <param name="offsetLength"></param>
+        /// <param name="offsetEdgeLength"></param>
+        /// <param name="edgeLength"></param>
         /// <returns></returns>
-        protected List<GeoCoordinate> GetCoordinates(ReferencedLine<TEdge> route)
+        protected List<GeoCoordinate> GetCoordinates(ReferencedLine<TEdge> route, double offsetRatio,
+            out int offsetEdgeIdx, out GeoCoordinate offsetLocation, out Meter offsetLength, out Meter offsetEdgeLength, out Meter edgeLength)
         {
-            return _mainDecoder.GetCoordinates(route);
+            return _mainDecoder.GetCoordinates(route, offsetRatio, out offsetEdgeIdx, out offsetLocation, out offsetLength, out offsetEdgeLength, out edgeLength);
         }
 
         /// <summary>

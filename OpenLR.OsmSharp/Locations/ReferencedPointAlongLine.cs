@@ -1,6 +1,7 @@
 ﻿using OpenLR.Model;
 using OpenLR.Referenced;
 using OsmSharp.Routing.Graph;
+using OsmSharp.Units.Distance;
 
 namespace OpenLR.OsmSharp.Locations
 {
@@ -29,5 +30,31 @@ namespace OpenLR.OsmSharp.Locations
         /// Gets or sets the orientation.
         /// </summary>
         public Orientation Orientation { get; set; }
+
+        /// <summary>
+        /// Gets or sets the edge meta.
+        /// </summary>
+        public EdgeMeta EdgeMeta { get; set; }
+    }
+
+    /// <summary>
+    /// Represents edge meta data.
+    /// </summary>
+    public struct EdgeMeta
+    {
+        /// <summary>
+        /// Gets or sets the edge idx.
+        /// </summary>
+        public int Idx { get; set; }
+
+        /// <summary>
+        /// Gets or sets the edge idx.
+        /// </summary>
+        public Meter Offset { get; set; }
+
+        /// <summary>
+        /// Gets or sets the edge length.
+        /// </summary>
+        public Meter Length { get; set; }
     }
 }

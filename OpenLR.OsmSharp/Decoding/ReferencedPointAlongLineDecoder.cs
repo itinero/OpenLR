@@ -9,6 +9,7 @@ using OsmSharp.Math.Primitives;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Units.Angle;
+using OsmSharp.Units.Distance;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -148,11 +149,15 @@ namespace OpenLR.OsmSharp.Decoding
             }
 
             // calculate the actual location and take into account the shape.
-            var coordinates = this.GetCoordinates(best.Route);
-            var referenceLocation = coordinates.GetPositionLocation(offsetRatio);
+            int offsetEdgeIdx;
+            GeoCoordinate offsetLocation;
+            Meter offsetLength;
+            Meter offsetEdgeLength;
+            Meter edgeLength;
+            var coordinates = this.GetCoordinates(best.Route, offsetRatio, out offsetEdgeIdx, out offsetLocation, out offsetLength, out offsetEdgeLength, out edgeLength);
 
-            var longitudeReference = referenceLocation.Longitude;
-            var latitudeReference = referenceLocation.Latitude;
+            var longitudeReference = offsetLocation.Longitude;
+            var latitudeReference = offsetLocation.Latitude;
 
             // create the referenced location.
             var pointAlongLineLocation = new ReferencedPointAlongLine<TEdge>();
@@ -168,6 +173,15 @@ namespace OpenLR.OsmSharp.Decoding
             {
                 pointAlongLineLocation.Orientation = Orientation.NoOrientation;
             }
+
+            // add the edge meta data.
+            pointAlongLineLocation.EdgeMeta = new EdgeMeta()
+            {
+                Idx = offsetEdgeIdx,
+                Length = offsetEdgeLength,
+                Offset = edgeLength
+            };
+
             return pointAlongLineLocation;
         }
     }
