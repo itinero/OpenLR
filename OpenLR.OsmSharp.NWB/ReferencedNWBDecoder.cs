@@ -112,21 +112,25 @@ namespace OpenLR.OsmSharp.NWB
                 uint fromVertex = (uint)path.From.VertexId;
                 uint toVertex = (uint)path.VertexId;
 
-                bool found = false;
-                foreach (var arc in this.Graph.GetArcs(fromVertex))
+                var edgeDistance = double.MaxValue;
+                var arcs = this.Graph.GetArcs(fromVertex);
+                LiveEdge? edge = null;
+                foreach (var arc in arcs)
                 {
-                    if (arc.Key == toVertex)
+                    if (arc.Key == toVertex &&
+                        arc.Value.Distance < edgeDistance)
                     { // there is a candidate arc.
-                        found = true;
-                        edges.Add(arc.Value);
-                        break;
+                        edgeDistance = arc.Value.Distance;
+                        edge = arc.Value;
                     }
                 }
 
-                if (!found)
+                if (!edge.HasValue)
                 { // this should be impossible.
                     throw new Exception("No edge found between two consequtive vertices on a route.");
                 }
+                edges.Add(edge.Value);
+
 
                 // move to next segment.
                 path = path.From;
