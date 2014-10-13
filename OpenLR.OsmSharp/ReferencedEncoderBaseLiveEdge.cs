@@ -30,9 +30,9 @@ namespace OpenLR.OsmSharp
         /// Finds a valid vertex for the given vertex but does not search in the direction of the target neighbour.
         /// </summary>
         /// <param name="vertex">The invalid vertex.</param>
-        /// <param name="targetNeighbour">The neighbour of this vertex that is part of the location.</param>
+        /// <param name="edge">The edge that leads to the target vertex.</param>
         /// <param name="searchForward">When true, the search is forward, otherwise backward.</param>
-        public override PathSegment<long> FindValidVertexFor(long vertex, long targetNeighbour, bool searchForward)
+        public override PathSegment FindValidVertexFor(long vertex, LiveEdge edge, bool searchForward)
         {
             // GIST: execute a dykstra search to find a vertex that is valid.
             // this will return a vertex that is on the shortest path:
@@ -40,33 +40,33 @@ namespace OpenLR.OsmSharp
 
             // initialize settled set.
             var settled = new HashSet<long>();
-            settled.Add(targetNeighbour); // make sure not to select target neighbour.
 
             // initialize heap.
-            var heap = new BinairyHeap<PathSegment<long>>(10);
-            heap.Push(new PathSegment<long>(vertex), 0);
+            var heap = new BinairyHeap<PathSegment>(10);
+            heap.Push(new PathSegment(vertex), 0);
 
             // find the path to the closest valid vertex.
-            PathSegment<long> pathTo = null;
+            PathSegment pathTo = null;
             while (heap.Count > 0)
             {
                 // get next.
                 var current = heap.Pop();
-                settled.Add(current.VertexId);
+                settled.Add(current.Vertex);
 
                 // check if valid.
-                if (current.VertexId != vertex && 
-                    this.IsVertexValid(current.VertexId))
+                if (current.Vertex != vertex && 
+                    this.IsVertexValid(current.Vertex))
                 { // ok! vertex is valid.
                     pathTo = current;
                 }
                 else
                 { // continue search.
                     // add unsettled neighbours.
-                    var arcs = this.Graph.GetArcs(current.VertexId);
+                    var arcs = this.Graph.GetArcs(current.Vertex);
                     foreach (var arc in arcs)
                     {
-                        if (!settled.Contains(arc.Key))
+                        if (!settled.Contains(arc.Key) &&
+                            !edge.Equals(arc.Value))
                         { // ok, new neighbour!
                             var tags = this.Graph.TagsIndex.Get(arc.Value.Tags);
                             if (this.Vehicle.CanTraverse(tags))
@@ -76,7 +76,7 @@ namespace OpenLR.OsmSharp
                                   !(onway.Value == arc.Value.Forward ^ searchForward))
                                 { // ok, no oneway or oneway reversed.
                                     var weight = this.Vehicle.Weight(this.Graph.TagsIndex.Get(arc.Value.Tags), arc.Value.Distance);
-                                    var path = new PathSegment<long>(arc.Key, current.Weight + weight, current);
+                                    var path = new PathSegment(arc.Key, current.Weight + weight, arc.Value, current);
                                     heap.Push(path, (float)path.Weight);
                                 }
                             }
@@ -88,8 +88,9 @@ namespace OpenLR.OsmSharp
             // ok, is there a path found.
             if(pathTo == null)
             { // oeps, probably something wrong with network-topology.
+                // just take the default option.
                 throw new Exception(
-                    string.Format("Could not found a valid vertex for invalid vertex [{0}] and target neighbour [{1}].", vertex, targetNeighbour));
+                    string.Format("Could not find a valid vertex for invalid vertex [{0}].", vertex));
             }
 
             // add the path to the given location.

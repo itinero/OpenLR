@@ -126,6 +126,7 @@
     <Compile Include="ReferencedEncodingException.cs" />
     <Compile Include="Router\BasicRouter.cs" />
     <Compile Include="Router\BasicRouterDataSource.cs" />
+    <Compile Include="Router\PathSegment.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
