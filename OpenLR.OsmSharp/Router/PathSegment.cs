@@ -7,13 +7,27 @@ using System.Threading.Tasks;
 
 namespace OpenLR.OsmSharp.Router
 {
+    /// <summary>
+    /// Represents a path segment.
+    /// </summary>
     public class PathSegment
     {
+        /// <summary>
+        /// Creates a new path segment without a previous one.
+        /// </summary>
+        /// <param name="vertex"></param>
         public PathSegment(long vertex)
         {
             this.Vertex = vertex;
         }
 
+        /// <summary>
+        /// Creates a new path segment referring to the previous one.
+        /// </summary>
+        /// <param name="vertex"></param>
+        /// <param name="weight"></param>
+        /// <param name="edge"></param>
+        /// <param name="from"></param>
         public PathSegment(long vertex, double weight, LiveEdge edge, PathSegment from)
         {
             this.Vertex = vertex;
@@ -22,14 +36,30 @@ namespace OpenLR.OsmSharp.Router
             this.From = from;
         }
 
+        /// <summary>
+        /// Gets the vertex.
+        /// </summary>
         public long Vertex { get; private set; }
 
+        /// <summary>
+        /// Gets the edge.
+        /// </summary>
         public LiveEdge Edge { get; private set; }
 
+        /// <summary>
+        /// Gets the weight.
+        /// </summary>
         public double Weight { get; set; }
 
+        /// <summary>
+        /// Gets the previous segment.
+        /// </summary>
         public PathSegment From { get; private set; }
 
+        /// <summary>
+        /// Converts all the segments an array.
+        /// </summary>
+        /// <returns></returns>
         internal PathSegment[] ToArray()
         {
             var segments = new List<PathSegment>();

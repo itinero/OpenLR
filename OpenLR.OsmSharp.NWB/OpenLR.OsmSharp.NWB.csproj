@@ -43,38 +43,29 @@
     <Reference Include="NetTopologySuite.IO.GeoTools">
       <HintPath>..\packages\NetTopologySuite.IO.GeoTools.1.13.2\lib\net403-client\NetTopologySuite.IO.GeoTools.dll</HintPath>
     </Reference>
-    <Reference Include="OsmSharp">
-      <HintPath>..\packages\OsmSharp.4.2.0.850-beta\lib\net45\OsmSharp.dll</HintPath>
+    <Reference Include="OsmSharp, Version=4.2.0.9999, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\OsmSharp.supported.via\OsmSharp.dll</HintPath>
     </Reference>
-    <Reference Include="OsmSharp.Data.Oracle">
-      <HintPath>..\packages\OsmSharp.4.2.0.850-beta\lib\net45\OsmSharp.Data.Oracle.dll</HintPath>
+    <Reference Include="OsmSharp.Osm, Version=4.2.0.9999, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\OsmSharp.supported.via\OsmSharp.Osm.dll</HintPath>
     </Reference>
-    <Reference Include="OsmSharp.Data.PostgreSQL">
-      <HintPath>..\packages\OsmSharp.4.2.0.850-beta\lib\net45\OsmSharp.Data.PostgreSQL.dll</HintPath>
+    <Reference Include="OsmSharp.Routing, Version=4.2.0.9999, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\OsmSharp.supported.via\OsmSharp.Routing.dll</HintPath>
     </Reference>
-    <Reference Include="OsmSharp.Data.Redis">
-      <HintPath>..\packages\OsmSharp.4.2.0.850-beta\lib\net45\OsmSharp.Data.Redis.dll</HintPath>
+    <Reference Include="OsmSharp.Routing.Shape, Version=0.1.0.13, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\OsmSharp.Routing.Shape.supported.via\OsmSharp.Routing.Shape.dll</HintPath>
     </Reference>
-    <Reference Include="OsmSharp.Data.SQLite">
-      <HintPath>..\packages\OsmSharp.4.2.0.850-beta\lib\net45\OsmSharp.Data.SQLite.dll</HintPath>
+    <Reference Include="OsmSharp.UI, Version=4.2.0.9999, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\OsmSharp.supported.via\OsmSharp.UI.dll</HintPath>
     </Reference>
-    <Reference Include="OsmSharp.Data.SQLServer">
-      <HintPath>..\packages\OsmSharp.4.2.0.850-beta\lib\net45\OsmSharp.Data.SQLServer.dll</HintPath>
-    </Reference>
-    <Reference Include="OsmSharp.Osm">
-      <HintPath>..\packages\OsmSharp.4.2.0.850-beta\lib\net45\OsmSharp.Osm.dll</HintPath>
-    </Reference>
-    <Reference Include="OsmSharp.Routing">
-      <HintPath>..\packages\OsmSharp.4.2.0.850-beta\lib\net45\OsmSharp.Routing.dll</HintPath>
-    </Reference>
-    <Reference Include="OsmSharp.Routing.Shape">
-      <HintPath>..\packages\OsmSharp.Routing.Shape.0.1.0.13\lib\net45\OsmSharp.Routing.Shape.dll</HintPath>
-    </Reference>
-    <Reference Include="OsmSharp.UI">
-      <HintPath>..\packages\OsmSharp.4.2.0.850-beta\lib\net45\OsmSharp.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="OsmSharp.WinForms.UI">
-      <HintPath>..\packages\OsmSharp.4.2.0.850-beta\lib\net45\OsmSharp.WinForms.UI.dll</HintPath>
+    <Reference Include="OsmSharp.WinForms.UI, Version=4.2.0.9999, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\OsmSharp.supported.via\OsmSharp.WinForms.UI.dll</HintPath>
     </Reference>
     <Reference Include="PowerCollections, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

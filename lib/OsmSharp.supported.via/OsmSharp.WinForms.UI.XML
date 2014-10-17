@@ -1,0 +1,609 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>OsmSharp.WinForms.UI</name>
+    </assembly>
+    <members>
+        <member name="T:OsmSharp.WinForms.UI.Logging.ConsoleTraceListener">
+            <summary>
+            A log trace listener that writes message to the console.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.Logging.ConsoleTraceListener.#ctor">
+            <summary>
+            Creates a new console trace listener.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.Logging.ConsoleTraceListener.Write(System.String)">
+            <summary>
+            Writes the given message to the console.
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.Logging.ConsoleTraceListener.WriteLine(System.String)">
+            <summary>
+            Writes the given message to the console.
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="T:OsmSharp.WinForms.UI.MapControl">
+            <summary>
+            A map control.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.MapControl.#ctor">
+            <summary>
+            Creates a new map control.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.WinForms.UI.MapControl._map">
+            <summary>
+            Holds the map.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.MapControl._map_MapChanged">
+            <summary>
+            Called when the map has changed.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.MapControl.OnLoad(System.EventArgs)">
+            <summary>
+            Raises the OnLoad event.
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="F:OsmSharp.WinForms.UI.MapControl._renderer">
+            <summary>
+            Holds the map renderer.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.WinForms.UI.MapControl._quickMode">
+            <summary>
+            Holds the quickmode boolean.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.MapControl.OnPaint(System.Windows.Forms.PaintEventArgs)">
+            <summary>
+            Raises the OnPaint event.
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.MapControl.OnResize(System.EventArgs)">
+            <summary>
+            Raises the OnResize event.
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="F:OsmSharp.WinForms.UI.MapControl._draggingCoordinates">
+            <summary>
+            Coordinates where dragging started.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.WinForms.UI.MapControl._oldCenter">
+            <summary>
+            Coordinates of the old center.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.MapControl.OnMouseDown(System.Windows.Forms.MouseEventArgs)">
+            <summary>
+            Raises the onmousedown event.
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.MapControl.OnMouseMove(System.Windows.Forms.MouseEventArgs)">
+            <summary>
+            Raises the mousemove event.
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.MapControl.OnMouseUp(System.Windows.Forms.MouseEventArgs)">
+            <summary>
+            Raises the mouseup event.
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.MapControl.OnMouseWheel(System.Windows.Forms.MouseEventArgs)">
+            <summary>
+            Raises the mousewheel event.
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="F:OsmSharp.WinForms.UI.MapControl._isQueued">
+            <summary>
+            An event is queued already.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.MapControl.QueueNotifyMapViewChanged">
+            <summary>
+            Queues a notifiy map changed event.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.MapControl.DeQueueNotifyMapViewChanged(System.Object,System.EventArgs)">
+            <summary>
+            Try to dequeu a queued event.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.MapControl.NotifyMapViewChanged">
+            <summary>
+            Notifies that the mapview has changed.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.MapControl.RaiseOnMapMouseUp(System.Windows.Forms.MouseEventArgs)">
+            <summary>
+            Raises the OnMapMouseUp event.
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.MapControl.OnMapMouseUp(OsmSharp.WinForms.UI.MapControlEventArgs)">
+            <summary>
+            Called on a mouse up event.
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.MapControl.RaiseOnMapMouseDown(System.Windows.Forms.MouseEventArgs)">
+            <summary>
+            Raises the OnMapMouseDown event.
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.MapControl.OnMapMouseDown(OsmSharp.WinForms.UI.MapControlEventArgs)">
+            <summary>
+            Called on a mouse up event.
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.MapControl.RaiseOnMapMouseMove(System.Windows.Forms.MouseEventArgs)">
+            <summary>
+            Raises the OnMapMouseMove event.
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.MapControl.OnMapMouseMove(OsmSharp.WinForms.UI.MapControlEventArgs)">
+            <summary>
+            Called on a mouse up event.
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.MapControl.RaiseOnMapMouseWheel(System.Windows.Forms.MouseEventArgs)">
+            <summary>
+            Raises the OnMapMouseWheel event.
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.MapControl.OnMapMouseWheel(OsmSharp.WinForms.UI.MapControlEventArgs)">
+            <summary>
+            Called on a mouse up event.
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.MapControl.RaiseOnMapMouseDoubleClick(System.Windows.Forms.MouseEventArgs)">
+            <summary>
+            Raises the OnMapMouseDoubleClick event.
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.MapControl.OnMouseDoubleClick(System.Windows.Forms.MouseEventArgs)">
+            <summary>
+            Called on mouse double click.
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.MapControl.OnMapMouseDoubleClick(OsmSharp.WinForms.UI.MapControlEventArgs)">
+            <summary>
+            Called on a mouse up event.
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.MapControl.RaiseOnMapMouseClick(System.Windows.Forms.MouseEventArgs)">
+            <summary>
+            Raises the OnMapMouseClick event.
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.MapControl.OnMouseClick(System.Windows.Forms.MouseEventArgs)">
+            <summary>
+            Called on mouse click.
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.MapControl.OnMapMouseClick(OsmSharp.WinForms.UI.MapControlEventArgs)">
+            <summary>
+            Called on a mouse up event.
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.MapControl.NotifyMapChange(System.Double,System.Double,OsmSharp.UI.Renderer.View2D,OsmSharp.Math.Geo.Projections.IProjection)">
+            <summary>
+            Notifies a map change.
+            </summary>
+            <param name="pixelsWidth"></param>
+            <param name="pixelsHeight"></param>
+            <param name="view"></param>
+            <param name="projection"></param>
+        </member>
+        <member name="F:OsmSharp.WinForms.UI.MapControl.components">
+            <summary> 
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.MapControl.Dispose(System.Boolean)">
+            <summary> 
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.MapControl.InitializeComponent">
+            <summary> 
+            Required method for Designer support - do not modify 
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="E:OsmSharp.WinForms.UI.MapControl.MapTouched">
+            <summary>
+            Event raised when the map is touched.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.WinForms.UI.MapControl.MapCenter">
+            <summary>
+            The center coordinates.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.WinForms.UI.MapControl.MapZoom">
+            <summary>
+            The zoom factor.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.WinForms.UI.MapControl.MapTilt">
+            <summary>
+            Gets or sets the MapTilt.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.WinForms.UI.MapControl.CurrentView">
+            <summary>
+            Gets the current view.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.WinForms.UI.MapControl.Map">
+            <summary>
+            Gets/sets the map.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.WinForms.UI.MapControl.MapAllowTilt">
+            <summary>
+            Gets or sets the map tilt flag.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.WinForms.UI.MapControl.MapAllowPan">
+            <summary>
+            Gets or sets the map pan flag.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.WinForms.UI.MapControl.MapAllowZoom">
+            <summary>
+            Gets or sets the map zoom flag.
+            </summary>
+        </member>
+        <member name="E:OsmSharp.WinForms.UI.MapControl.MapMouseUp">
+            <summary>
+            The map mouse up event.
+            </summary>
+        </member>
+        <member name="E:OsmSharp.WinForms.UI.MapControl.MapMouseDown">
+            <summary>
+            The map mouse up event.
+            </summary>
+        </member>
+        <member name="E:OsmSharp.WinForms.UI.MapControl.MapMouseMove">
+            <summary>
+            The map mouse up event.
+            </summary>
+        </member>
+        <member name="E:OsmSharp.WinForms.UI.MapControl.MapMouseWheel">
+            <summary>
+            The map mouse up event.
+            </summary>
+        </member>
+        <member name="E:OsmSharp.WinForms.UI.MapControl.MapMouseDoubleClick">
+            <summary>
+            The map mouse up event.
+            </summary>
+        </member>
+        <member name="E:OsmSharp.WinForms.UI.MapControl.MapMouseClick">
+            <summary>
+            The map mouse up event.
+            </summary>
+        </member>
+        <member name="T:OsmSharp.WinForms.UI.MapControl.MapMouseEventDelegate">
+            <summary>
+            Delegate used to define events from this map control.
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="T:OsmSharp.WinForms.UI.MapControlEventArgs">
+            <summary>
+            Represents map control event information.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.WinForms.UI.MapControlEventArgs.Position">
+            <summary>
+            Returns the position this event occured at.
+            </summary>
+        </member>
+        <member name="T:OsmSharp.WinForms.UI.Native">
+            <summary>
+            Class responsable for creating native hooks for platform-specific functionality.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.Native.Initialize">
+            <summary>
+            Initializes some iOS-specifics for OsmSharp to use.
+            </summary>
+        </member>
+        <member name="T:OsmSharp.WinForms.UI.Renderer.GraphicsRenderer2D">
+            <summary>
+            Graphics renderer 2D.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.Renderer.GraphicsRenderer2D.OnBeforeRender(OsmSharp.UI.Renderer.Target2DWrapper{System.Drawing.Graphics},OsmSharp.UI.Renderer.View2D)">
+            <summary>
+            Called right before rendering starts.
+            </summary>
+            <param name="target"></param>
+            <param name="view"></param>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.Renderer.GraphicsRenderer2D.OnAfterRender(OsmSharp.UI.Renderer.Target2DWrapper{System.Drawing.Graphics},OsmSharp.UI.Renderer.View2D)">
+            <summary>
+            Called right after rendering.
+            </summary>
+            <param name="target"></param>
+            <param name="view"></param>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.Renderer.GraphicsRenderer2D.CreateTarget2DWrapper(System.Drawing.Graphics)">
+            <summary>
+            Creates a wrapper for the given target.
+            </summary>
+            <param name="target"></param>
+            <returns></returns>
+        </member>
+        <member name="F:OsmSharp.WinForms.UI.Renderer.GraphicsRenderer2D._view">
+            <summary>
+            Keeps the view.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.WinForms.UI.Renderer.GraphicsRenderer2D._target">
+            <summary>
+            Holds the target.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.Renderer.GraphicsRenderer2D.Transform(OsmSharp.UI.Renderer.Target2DWrapper{System.Drawing.Graphics},OsmSharp.UI.Renderer.View2D)">
+            <summary>
+            Transforms the target using the specified view.
+            </summary>
+            <param name="target"></param>
+            <param name="view">View.</param>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.Renderer.GraphicsRenderer2D.Tranform(System.Double,System.Double)">
+            <summary>
+            Transforms the y-coordinate to screen coordinates.
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.Renderer.GraphicsRenderer2D.ToPixels(System.Double)">
+            <summary>
+            Returns the size in pixels.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.Renderer.GraphicsRenderer2D.FromPixels(OsmSharp.UI.Renderer.Target2DWrapper{System.Drawing.Graphics},OsmSharp.UI.Renderer.View2D,System.Double)">
+            <summary>
+            Returns the size in pixels.
+            </summary>
+            <returns>The pixels.</returns>
+            <param name="target"></param>
+            <param name="view">View.</param>
+            <param name="sizeInPixels">Size in pixels.</param>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.Renderer.GraphicsRenderer2D.DrawBackColor(OsmSharp.UI.Renderer.Target2DWrapper{System.Drawing.Graphics},System.Int32)">
+            <summary>
+            Draws the backcolor.
+            </summary>
+            <param name="target"></param>
+            <param name="backColor"></param>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.Renderer.GraphicsRenderer2D.DrawPoint(OsmSharp.UI.Renderer.Target2DWrapper{System.Drawing.Graphics},System.Double,System.Double,System.Int32,System.Double)">
+            <summary>
+            Draws a point on the target. The coordinates given are scene coordinates.
+            </summary>
+            <param name="target"></param>
+            <param name="x">The x coordinate.</param>
+            <param name="y">The y coordinate.</param>
+            <param name="color">Color.</param>
+            <param name="size">Size.</param>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.Renderer.GraphicsRenderer2D.DrawLine(OsmSharp.UI.Renderer.Target2DWrapper{System.Drawing.Graphics},System.Double[],System.Double[],System.Int32,System.Double,OsmSharp.UI.Renderer.Primitives.LineJoin,System.Int32[])">
+            <summary>
+            Draws a line on the target. The coordinates given are scene coordinates.
+            </summary>
+            <param name="target"></param>
+            <param name="x">The x coordinate.</param>
+            <param name="y">The y coordinate.</param>
+            <param name="color">Color.</param>
+            <param name="width">Width.</param>
+            <param name="lineJoin"></param>
+            <param name="dashes"></param>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.Renderer.GraphicsRenderer2D.DrawPolygon(OsmSharp.UI.Renderer.Target2DWrapper{System.Drawing.Graphics},System.Double[],System.Double[],System.Int32,System.Double,System.Boolean)">
+            <summary>
+            Draws a polygon on the target. The coordinates given are scene coordinates.
+            </summary>
+            <param name="target"></param>
+            <param name="x">The x coordinate.</param>
+            <param name="y">The y coordinate.</param>
+            <param name="color">Color.</param>
+            <param name="width">Width.</param>
+            <param name="fill">If set to <c>true</c> fill.</param>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.Renderer.GraphicsRenderer2D.DrawIcon(OsmSharp.UI.Renderer.Target2DWrapper{System.Drawing.Graphics},System.Double,System.Double,System.Byte[])">
+            <summary>
+            Draws an icon unscaled but at the given scene coordinates.
+            </summary>
+            <param name="target"></param>
+            <param name="x"></param>
+            <param name="y"></param>
+            <param name="imageData"></param>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.Renderer.GraphicsRenderer2D.DrawImage(OsmSharp.UI.Renderer.Target2DWrapper{System.Drawing.Graphics},System.Double,System.Double,System.Double,System.Double,OsmSharp.UI.Renderer.Primitives.INativeImage)">
+            <summary>
+            Draws an image.
+            </summary>
+            <param name="target"></param>
+            <param name="left"></param>
+            <param name="top"></param>
+            <param name="right"></param>
+            <param name="bottom"></param>
+            <param name="nativeImage"></param>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.Renderer.GraphicsRenderer2D.DrawImage(OsmSharp.UI.Renderer.Target2DWrapper{System.Drawing.Graphics},OsmSharp.Math.Primitives.RectangleF2D,OsmSharp.UI.Renderer.Primitives.INativeImage)">
+            <summary>
+            Draws the image.
+            </summary>
+            <returns>The image.</returns>
+            <param name="target">Target.</param>
+            <param name="bounds">Bounds.</param>
+            <param name="nativeImage">Image data.</param>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.Renderer.GraphicsRenderer2D.DrawText(OsmSharp.UI.Renderer.Target2DWrapper{System.Drawing.Graphics},System.Double,System.Double,System.String,System.Int32,System.Double,System.Nullable{System.Int32},System.Nullable{System.Int32},System.String)">
+            <summary>
+            Draws text.
+            </summary>
+            <param name="target"></param>
+            <param name="x"></param>
+            <param name="y"></param>
+            <param name="text"></param>
+            <param name="color"></param>
+            <param name="size"></param>
+            <param name="haloColor"></param>
+            <param name="haloRadius"></param>
+            <param name="fontName"></param>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.Renderer.GraphicsRenderer2D.DrawLineText(OsmSharp.UI.Renderer.Target2DWrapper{System.Drawing.Graphics},System.Double[],System.Double[],System.String,System.Int32,System.Double,System.Nullable{System.Int32},System.Nullable{System.Int32},System.String)">
+            <summary>
+            Draws text along a line.
+            </summary>
+            <param name="target"></param>
+            <param name="x"></param>
+            <param name="y"></param>
+            <param name="text"></param>
+            <param name="color"></param>
+            <param name="size"></param>
+            <param name="haloColor"></param>
+            <param name="haloRadius"></param>
+            <param name="fontName"></param>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.Renderer.GraphicsRenderer2D.DrawLineTextSegment(OsmSharp.UI.Renderer.Target2DWrapper{System.Drawing.Graphics},System.Double[],System.Double[],System.String,System.Int32,System.Double,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Double,System.Single[],System.Double,System.Drawing.Font,System.Single,System.Drawing.Brush,System.Drawing.Brush)">
+            <summary>
+            Draws text along a line segment.
+            </summary>
+            <param name="target"></param>
+            <param name="x"></param>
+            <param name="y"></param>
+            <param name="text"></param>
+            <param name="color"></param>
+            <param name="size"></param>
+            <param name="haloColor"></param>
+            <param name="haloRadius"></param>
+            <param name="middlePosition"></param>
+            <param name="characterWidths"></param>
+            <param name="textLength"></param>
+            <param name="font"></param>
+            <param name="characterHeight"></param>
+            <param name="haloBrush"></param>
+            <param name="brush"></param>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.Renderer.GraphicsRenderer2D.GetCharacterWidths(System.Drawing.Graphics,System.String,System.Drawing.Font)">
+            <summary>
+            Gets the char widths for the given string and given font.
+            </summary>
+            <param name="graphics"></param>
+            <param name="text"></param>
+            <param name="font"></param>
+            <returns></returns>
+        </member>
+        <member name="T:OsmSharp.WinForms.UI.Renderer.Images.NativeImage">
+            <summary>
+            Represents a native image.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.WinForms.UI.Renderer.Images.NativeImage._image">
+            <summary>
+            Holds the native image.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.Renderer.Images.NativeImage.#ctor(System.Drawing.Image)">
+            <summary>
+            Creates a wrapper native image.
+            </summary>
+            <param name="image"></param>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.Renderer.Images.NativeImage.Dispose">
+            <summary>
+            Diposes of all resources associated with this object.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.Renderer.Images.NativeImage.Finalize">
+            <summary>
+            Finalizer.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.Renderer.Images.NativeImage.Equals(System.Object)">
+            <summary>
+            Returns true when the given object equals this object.
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.Renderer.Images.NativeImage.GetHashCode">
+            <summary>
+            Returns the hashcode of this image.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:OsmSharp.WinForms.UI.Renderer.Images.NativeImage.Image">
+            <summary>
+            Gets or sets the native image.
+            </summary>
+        </member>
+        <member name="T:OsmSharp.WinForms.UI.Renderer.Images.NativeImageCache">
+            <summary>
+            Represents a native image cache.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.Renderer.Images.NativeImageCache.#ctor">
+            <summary>
+            Creates a new native image cache.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.Renderer.Images.NativeImageCache.Obtain(System.Byte[])">
+            <summary>
+            Obtains a new image from this cache.
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.Renderer.Images.NativeImageCache.Release(OsmSharp.UI.Renderer.Primitives.INativeImage)">
+            <summary>
+            Release the given image.
+            </summary>
+            <param name="image">The image to release.</param>
+        </member>
+        <member name="M:OsmSharp.WinForms.UI.Renderer.Images.NativeImageCache.Flush">
+            <summary>
+            Flushes all images from the cache.
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,544 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>OsmSharp.Routing.Shape</name>
+    </assembly>
+    <members>
+        <member name="T:OsmSharp.Routing.Shape.Extensions">
+            <summary>
+            Contains extension methods.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.Extensions.GetMetaTags(NetTopologySuite.IO.ShapefileDataReader)">
+            <summary>
+            Converts the current fields and data into a tags collection.
+            </summary>
+            <param name="reader"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.Extensions.GetMetaTags(NetTopologySuite.IO.ShapefileDataReader,System.Func{System.String,System.Boolean})">
+            <summary>
+            Converts the current fields and data into a tags collection.
+            </summary>
+            <param name="reader"></param>
+            <param name="keepKeys"></param>
+            <returns></returns>
+        </member>
+        <member name="T:OsmSharp.Routing.Shape.ShapefileGraphReader`1">
+            <summary>
+            A reader to read a shapefile network directly into a router data source.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Routing.Shape.ShapefileGraphReader`1._nodeFromColumn">
+            <summary>
+            Holds the node from column.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Routing.Shape.ShapefileGraphReader`1._nodeToColumn">
+            <summary>
+            Holds the node to column.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Routing.Shape.ShapefileGraphReader`1._distanceColumn">
+            <summary>
+            Holds the column with the distance.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Routing.Shape.ShapefileGraphReader`1._distanceFactor">
+            <summary>
+            Holds the distance factor relative to meters.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.ShapefileGraphReader`1.#ctor(System.String,System.String)">
+            <summary>
+            Creates a new shapefile graph reader.
+            </summary>
+            <param name="nodeFromColumn">The column containing the from node. ex: "JTE_ID_BEG"</param>
+            <param name="nodeToColumn">The column containing the to node. ex: "JTE_ID_END"</param>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.ShapefileGraphReader`1.#ctor(System.String,System.String,System.String,System.Single)">
+            <summary>
+            Creates a new shapefile graph reader.
+            </summary>
+            <param name="nodeFromColumn">The column containing the from node. ex: "JTE_ID_BEG"</param>
+            <param name="nodeToColumn">The column containing the to node. ex: "JTE_ID_END"</param>
+            <param name="distanceColumn">The column containg the distance. ex: "METERS"</param>
+            <param name="distanceFactor">The column containing the factor to convert the distance to meter (1=meter, 0.001=km).</param>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.ShapefileGraphReader`1.Read(System.String,System.String)">
+            <summary>
+            Reads a routing network.
+            </summary>
+            <param name="path">The root path to the shapefile(s).</param>
+            <param name="searchPattern">The search string to identify the shapefile(s) to read.  ex: "*nw.shp"</param>
+            <returns>The graph that was created from the shapefile(s).</returns>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.ShapefileGraphReader`1.Read(System.String,System.String,OsmSharp.Routing.Shape.ShapefileRoutingInterpreter)">
+            <summary>
+            Reads a routing network according to the given interpreter.
+            </summary>
+            <param name="path">The root path to the shapefile(s).</param>
+            <param name="searchPattern">The search string to identify the shapefile(s) to read.  ex: "*nw.shp"</param>
+            <param name="interpreter">The shapefile interpreter telling the reader what to import or interpret.</param>
+            <returns>The graph that was created from the shapefile(s).</returns>
+        </member>
+        <member name="P:OsmSharp.Routing.Shape.ShapefileGraphReader`1.NodeFromColumn">
+            <summary>
+            Gets the node from column.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.Routing.Shape.ShapefileGraphReader`1.NodeToColumn">
+            <summary>
+            Gets the node to column.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.Routing.Shape.ShapefileGraphReader`1.HasDistanceColumn">
+            <summary>
+            Returns true if a distance column and factor are set.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.Routing.Shape.ShapefileGraphReader`1.DistanceColumn">
+            <summary>
+            Gets the distance column.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.Routing.Shape.ShapefileGraphReader`1.DistanceFactor">
+            <summary>
+            Gets the distance factor.
+            </summary>
+        </member>
+        <member name="T:OsmSharp.Routing.Shape.Readers.ShapefileLiveGraphReader">
+            <summary>
+            A reader to read a shapefile network directly into a live data source.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.Readers.ShapefileLiveGraphReader.#ctor(System.String,System.String)">
+            <summary>
+            Creates a new shapefile graph reader.
+            </summary>
+            <param name="nodeFromColumn">The column containing the from node. ex: "JTE_ID_BEG"</param>
+            <param name="nodeToColumn">The column containing the to node. ex: "JTE_ID_END"</param>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.Readers.ShapefileLiveGraphReader.#ctor(System.String,System.String,System.String,System.Single)">
+            <summary>
+            Creates a new shapefile graph reader.
+            </summary>
+            <param name="nodeFromColumn">The column containing the from node. ex: "JTE_ID_BEG"</param>
+            <param name="nodeToColumn">The column containing the to node. ex: "JTE_ID_END"</param>
+            <param name="distanceColumn">The column containg the distance. ex: "METERS"</param>
+            <param name="distanceFactor">The column containing the factor to convert the distance to meter (1=meter, 0.001=km).</param>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.Readers.ShapefileLiveGraphReader.Read(System.String,System.String,OsmSharp.Routing.Shape.ShapefileRoutingInterpreter)">
+            <summary>
+            Reads a routing network into a live edge graph.
+            </summary>
+            <param name="path">The root path to the shapefile(s).</param>
+            <param name="searchPattern">The search string to identify the shapefile(s) to read.  ex: "*nw.shp"</param>
+            <param name="interpreter">The shapefile interpreter telling the reader what to import or interpret.</param>
+            <returns></returns>
+        </member>
+        <member name="T:OsmSharp.Routing.Shape.Vehicles.Bike">
+            <summary>
+            Represents a custom bicycle profile.
+            </summary>
+        </member>
+        <member name="T:OsmSharp.Routing.Shape.Vehicles.Vehicle">
+            <summary>
+            Represents a custom-vehicle.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Routing.Shape.Vehicles.Vehicle._onewayKey">
+            <summary>
+            Holds the key containing the oneway information.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Routing.Shape.Vehicles.Vehicle._forwardValue">
+            <summary>
+            Holds the value of a forward-only oneway edge.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Routing.Shape.Vehicles.Vehicle._backwardValue">
+            <summary>
+            Holds the value of a backward-only oneway edge.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.Vehicles.Vehicle.#ctor">
+            <summary>
+            Creates a new shapefile vehicle but without any oneway restrictions.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.Vehicles.Vehicle.#ctor(System.String,System.String,System.String)">
+            <summary>
+            Creates a new shapefile vehicle.
+            </summary>
+            <param name="onewayKey">The key containing the oneway information. ex: "ONEWAY"</param>
+            <param name="forwardValue">The value of a forward-only oneway edge. ex: "ft"</param>
+            <param name="backwardValue">The value of a backward-only oneway edge. ex: "tf"</param>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.Vehicles.Vehicle.CanTraverse(OsmSharp.Collections.Tags.TagsCollectionBase)">
+            <summary>
+            Returns true if the edge with given properties can be traversed by this vehicle.
+            </summary>
+            <param name="tags"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.Vehicles.Vehicle.IsOneWay(OsmSharp.Collections.Tags.TagsCollectionBase)">
+            <summary>
+            Returns true if the edge with given properties is one way, null if both, false if one way reverse.
+            </summary>
+            <param name="tags"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.Vehicles.Bike.#ctor(System.String,System.String,System.String)">
+            <summary>
+            Creates a new shapefile bike.
+            </summary>
+            <param name="onewayKey">The key containing the oneway information. ex: "ONEWAY"</param>
+            <param name="forwardValue">The value of a forward-only oneway edge. ex: "ft"</param>
+            <param name="backwardValue">The value of a backward-only oneway edge. ex: "tf"</param>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.Vehicles.Bike.CanTraverse(OsmSharp.Collections.Tags.TagsCollectionBase)">
+            <summary>
+            Returns true if the edge with given properties can be traversed by this vehicle.
+            </summary>
+            <param name="tags"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.Vehicles.Bike.IsVehicleAllowed(OsmSharp.Collections.Tags.TagsCollectionBase,System.String)">
+            <summary>
+            Returns true if the vehicle is allowed on the given edge.
+            </summary>
+            <param name="tags"></param>
+            <param name="highwayType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.Vehicles.Bike.MaxSpeed">
+            <summary>
+            Returns the maximum speed.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.Vehicles.Bike.MaxSpeedAllowed(System.String)">
+            <summary>
+            Returns the maximum speed for given highway-type.
+            </summary>
+            <param name="highwayType"></param>
+            <returns></returns>
+        </member>
+        <member name="P:OsmSharp.Routing.Shape.Vehicles.Bike.UniqueName">
+            <summary>
+            Returns the unique name of this profile.
+            </summary>
+        </member>
+        <member name="T:OsmSharp.Routing.Shape.Vehicles.Car">
+            <summary>
+            Represents a car profile.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Routing.Shape.Vehicles.Car._speedKey">
+            <summary>
+            Holds the speed key.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.Vehicles.Car.#ctor(System.String,System.String,System.String,System.String)">
+            <summary>
+            Creates a new shapefile car.
+            </summary>
+            <param name="onewayKey">The key containing the oneway information. ex: "ONEWAY"</param>
+            <param name="forwardValue">The value of a forward-only oneway edge. ex: "ft"</param>
+            <param name="backwardValue">The value of a backward-only oneway edge. ex: "tf"</param>
+            <param name="speedKey">The value of the key containing the speed information in (kilometer per hour). ex: "kph"</param>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.Vehicles.Car.CanTraverse(OsmSharp.Collections.Tags.TagsCollectionBase)">
+            <summary>
+            Returns true if the edge with given properties can be traversed by this vehicle.
+            </summary>
+            <param name="tags"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.Vehicles.Car.IsVehicleAllowed(OsmSharp.Collections.Tags.TagsCollectionBase,System.String)">
+            <summary>
+            Returns true if the vehicle is allowed.
+            </summary>
+            <param name="tags"></param>
+            <param name="highwayType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.Vehicles.Car.MaxSpeed">
+            <summary>
+            Returns the maximum speed for this vehicle.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.Vehicles.Car.MaxSpeedAllowed(System.String)">
+            <summary>
+            Returns the maximum speed for given highway-type.
+            </summary>
+            <param name="highwayType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.Vehicles.Car.MaxSpeedAllowed(OsmSharp.Collections.Tags.TagsCollectionBase)">
+            <summary>
+            Returns the maximum speed from the tags collection.
+            </summary>
+            <param name="tags"></param>
+            <returns></returns>
+        </member>
+        <member name="P:OsmSharp.Routing.Shape.Vehicles.Car.UniqueName">
+            <summary>
+            Returns the unique name of this profile.
+            </summary>
+        </member>
+        <member name="T:OsmSharp.Routing.Shape.ShapefileRoutingInterpreter">
+            <summary>
+            Represents a shapefile routing interpreter.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Routing.Shape.ShapefileRoutingInterpreter._usefulKeys">
+            <summary>
+            Holds all useful keys.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.ShapefileRoutingInterpreter.#ctor">
+            <summary>
+            Creates a new shapefile routing interpreter.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.ShapefileRoutingInterpreter.#ctor(System.Collections.Generic.HashSet{System.String})">
+            <summary>
+            Creates a new shapefile routing interpreter.
+            </summary>
+            <param name="usefulKeys"></param>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.ShapefileRoutingInterpreter.CanBeTraversed(System.Int64,System.Int64,System.Int64)">
+            <summary>
+            Returns true if the given sequence of vertices can be traversed.
+            </summary>
+            <param name="from"></param>
+            <param name="along"></param>
+            <param name="to"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.ShapefileRoutingInterpreter.IsRelevant(System.String,System.String)">
+            <summary>
+            Returns true if the given key-value pair is relevant.
+            </summary>
+            <param name="key"></param>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.ShapefileRoutingInterpreter.IsRelevant(System.String)">
+            <summary>
+            Returns true if the given key is relevant.
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="P:OsmSharp.Routing.Shape.ShapefileRoutingInterpreter.Constraints">
+            <summary>
+            Returns the contraints.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.Routing.Shape.ShapefileRoutingInterpreter.EdgeInterpreter">
+            <summary>
+            Returns the edge interpreter.
+            </summary>
+        </member>
+        <member name="T:OsmSharp.Routing.Shape.ShapefileEdgeInterpreter">
+            <summary>
+            Represents a custom edge interpreter.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.ShapefileEdgeInterpreter.IsOnlyLocalAccessible(OsmSharp.Collections.Tags.TagsCollectionBase)">
+            <summary>
+            Returns true if the edge with the given tags is only accessible locally.
+            </summary>
+            <param name="tags"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.ShapefileEdgeInterpreter.IsRoutable(OsmSharp.Collections.Tags.TagsCollectionBase)">
+            <summary>
+            Returns true if the edge with the given tags is routable.
+            </summary>
+            <param name="tags"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.ShapefileEdgeInterpreter.GetName(OsmSharp.Collections.Tags.TagsCollectionBase)">
+            <summary>
+            Returns the name of a given way.
+            </summary>
+            <param name="tags"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.ShapefileEdgeInterpreter.GetNamesInAllLanguages(OsmSharp.Collections.Tags.TagsCollectionBase)">
+            <summary>
+                Returns all the names in all languages and alternatives.
+            </summary>
+            <param name="tags"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.ShapefileEdgeInterpreter.IsRoundabout(OsmSharp.Collections.Tags.TagsCollectionBase)">
+            <summary>
+                Returns true if the edge with the given properties represents a roundabout.
+            </summary>
+            <param name="tags"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.ShapefileEdgeInterpreter.CanBeTraversedBy(OsmSharp.Collections.Tags.TagsCollectionBase,OsmSharp.Routing.Vehicle)">
+            <summary>
+            Returns true if the edge with given tags can be traversed by the given vehicle.
+            </summary>
+            <param name="tags"></param>
+            <param name="vehicle"></param>
+            <returns></returns>
+        </member>
+        <member name="T:OsmSharp.Routing.Shape.Vehicles.Truck">
+            <summary>
+            Represents a truck vehicle profile.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.Vehicles.Truck.#ctor(System.String,System.String,System.String)">
+            <summary>
+            Creates a new shapefile truck.
+            </summary>
+            <param name="onewayKey">The key containing the oneway information. ex: "ONEWAY"</param>
+            <param name="forwardValue">The value of a forward-only oneway edge. ex: "ft"</param>
+            <param name="backwardValue">The value of a backward-only oneway edge. ex: "tf"</param>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.Vehicles.Truck.CanTraverse(OsmSharp.Collections.Tags.TagsCollectionBase)">
+            <summary>
+            Returns true if the edge with given properties can be traversed by this vehicle.
+            </summary>
+            <param name="tags"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.Vehicles.Truck.IsVehicleAllowed(OsmSharp.Collections.Tags.TagsCollectionBase,System.String)">
+            <summary>
+            Returns true if the given vehicle is allowed for the given highway type.
+            </summary>
+            <param name="tags"></param>
+            <param name="highwayType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.Vehicles.Truck.MaxSpeed">
+            <summary>
+            Returns the maximum speed for this vehicle.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.Vehicles.Truck.MaxSpeedAllowed(System.String)">
+            <summary>
+            Returns the maximum speed for given highway-type.
+            </summary>
+            <param name="highwayType"></param>
+            <returns></returns>
+        </member>
+        <member name="P:OsmSharp.Routing.Shape.Vehicles.Truck.UniqueName">
+            <summary>
+            Returns the unique name of this profile.
+            </summary>
+        </member>
+        <member name="T:OsmSharp.Routing.Shape.Streams.ShapefileStreamSource">
+            <summary>
+            A stream source that converts the shapefile source data into the OSM data model.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Routing.Shape.Streams.ShapefileStreamSource._nwReaders">
+            <summary>
+            Holds the shapefile datareader.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Routing.Shape.Streams.ShapefileStreamSource._currentReader">
+            <summary>
+            Holds the current reader.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Routing.Shape.Streams.ShapefileStreamSource._processedNodes">
+            <summary>
+            Holds a set of already processed nodes.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Routing.Shape.Streams.ShapefileStreamSource._intermediates">
+            <summary>
+            Holds a set of intermediates.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Routing.Shape.Streams.ShapefileStreamSource._nextIntermediateId">
+            <summary>
+            Holds the next intermediate id.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Routing.Shape.Streams.ShapefileStreamSource._currentType">
+            <summary>
+            Holds the current type that is being processed.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Routing.Shape.Streams.ShapefileStreamSource._queue">
+            <summary>
+            Holds already known next objects.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Routing.Shape.Streams.ShapefileStreamSource._current">
+            <summary>
+            Holds the current geometry.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Routing.Shape.Streams.ShapefileStreamSource._nwHeader">
+            <summary>
+            Holds a dictionary of the nwHeader definition.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Routing.Shape.Streams.ShapefileStreamSource._path">
+            <summary>
+            Holds the path.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.Streams.ShapefileStreamSource.#ctor(System.String)">
+            <summary>
+            Creates a new shapefile stream source.
+            </summary>
+            <param name="path">The path to the folder containing the NW (Network Features) Shapefile.</param>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.Streams.ShapefileStreamSource.Current">
+            <summary>
+            Returns the current object.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.Streams.ShapefileStreamSource.Initialize">
+            <summary>
+            Initializes this source.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.Streams.ShapefileStreamSource.MoveNext(System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Move to the next item in the stream.
+            </summary>
+            <param name="ignoreNodes">Makes this source skip all nodes.</param>
+            <param name="ignoreWays">Makes this source skip all ways.</param>
+            <param name="ignoreRelations">Makes this source skip all relations.</param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.Streams.ShapefileStreamSource.DoMoveNext">
+            <summary>
+            Executes the actual move to the next object without ignoring objects.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Routing.Shape.Streams.ShapefileStreamSource.Reset">
+            <summary>
+            Resets this source.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.Routing.Shape.Streams.ShapefileStreamSource.CanReset">
+            <summary>
+            Returns true if this source can be reset.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.Routing.Shape.Streams.ShapefileStreamSource.IsSorted">
+            <summary>
+            Returns true if this source is sorted.
+            </summary>
+        </member>
+    </members>
+</doc>

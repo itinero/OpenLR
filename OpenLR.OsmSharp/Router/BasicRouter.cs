@@ -69,6 +69,10 @@ namespace OpenLR.OsmSharp.Router
                 { // there is nothing more in the queue, target will not be found.
                     break;
                 }
+                if (visited.Contains(current.VertexId))
+                { // move to the next neighbour.
+                    continue;
+                }
                 visited.Add(current.VertexId);
 
                 // check for the target.

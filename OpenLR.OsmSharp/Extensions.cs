@@ -4,12 +4,14 @@ using NetTopologySuite.Geometries;
 using NetTopologySuite.Utilities;
 using OpenLR.Locations;
 using OpenLR.OsmSharp.Router;
+using OsmSharp;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Units.Distance;
 using System;
 using System.Collections.Generic;
@@ -458,7 +460,7 @@ namespace OpenLR.OsmSharp
         /// <param name="graph"></param>
         /// <param name="location"></param>
         /// <returns>Returns an edge or an edge from 0 to 0 if none is found.</returns>
-        public static KeyValuePair<long, KeyValuePair<long, TEdge>> GetClosestEdge<TEdge>(this BasicRouterDataSource<TEdge> graph, GeoCoordinate location)
+        public static KeyValuePair<long, KeyValuePair<long, TEdge>>? GetClosestEdge<TEdge>(this BasicRouterDataSource<TEdge> graph, GeoCoordinate location)
             where TEdge : IDynamicGraphEdgeData
         {     
             // create the search box.
@@ -471,7 +473,7 @@ namespace OpenLR.OsmSharp
 
             float latitude, longitude;
             double bestDistance = double.MaxValue;
-            var bestEdge = new KeyValuePair<long, KeyValuePair<long, TEdge>>(0, new KeyValuePair<long, TEdge>(0, default(TEdge)));
+            KeyValuePair<long, KeyValuePair<long, TEdge>>? bestEdge = null;
             foreach(var arc in arcs)
             {
                 graph.GetVertex(arc.Key, out latitude, out longitude);
@@ -678,6 +680,27 @@ namespace OpenLR.OsmSharp
         public static Feature ToFeature(this OpenLR.Model.Coordinate coordinate)
         {
             return new Feature(new Point(coordinate.ToGeoAPICoordinate()), new AttributesTable());
+        }
+
+        /// <summary>
+        /// Converts the edge to it's reverse version.
+        /// </summary>
+        /// <param name="edge"></param>
+        /// <returns></returns>
+        public static LiveEdge ToReverse(this LiveEdge edge)
+        {
+            var reverseEdge = new LiveEdge();
+            reverseEdge.Tags = edge.Tags;
+            reverseEdge.Forward = !edge.Forward;
+            reverseEdge.Distance = edge.Distance;
+            reverseEdge.Coordinates = null;
+            if (edge.Coordinates != null)
+            {
+                var reverse = new GeoCoordinateSimple[edge.Coordinates.Length];
+                edge.Coordinates.CopyToReverse(reverse, 0);
+                reverseEdge.Coordinates = reverse;
+            }
+            return reverseEdge;
         }
     }
 }

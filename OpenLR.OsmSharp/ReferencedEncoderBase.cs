@@ -236,7 +236,7 @@ namespace OpenLR.OsmSharp
         /// <param name="vertex">The invalid vertex.</param>
         /// <param name="edge">The edge that leads to the target vertex.</param>
         /// <param name="searchForward">When true, the search is forward, otherwise backward.</param>
-        public abstract PathSegment FindValidVertexFor(long vertex, LiveEdge edge, bool searchForward);
+        public abstract PathSegment FindValidVertexFor(long vertex, LiveEdge edge, long targetVertex, bool searchForward);
     }
 
     /// <summary>
@@ -253,7 +253,12 @@ namespace OpenLR.OsmSharp
         public static ReferencedPointAlongLine<LiveEdge> BuildPointAlongLine(this ReferencedEncoderBase<LiveEdge> encoder, GeoCoordinate location)
         {
             // get the closest edge that can be traversed to the given location.
-            var closest = encoder.Graph.GetClosestEdge<LiveEdge>(location);
+            var closestNullable = encoder.Graph.GetClosestEdge<LiveEdge>(location);
+            if(!closestNullable.HasValue)
+            { // no location could be found. 
+                throw new Exception("No network features found near the given location. Make sure the network covers the given location.");
+            }
+            var closest = closestNullable.Value;
 
             // check oneway.
             var oneway = encoder.Vehicle.IsOneWay(encoder.Graph.TagsIndex.Get(closest.Value.Value.Tags));
@@ -333,7 +338,7 @@ namespace OpenLR.OsmSharp
             // RULE4: choosen points should be valid network points.
             if (!encoder.IsVertexValid(referencedPointAlongLine.Route.Vertices[0]))
             { // from is not valid, try to find a valid point.
-                var pathToValid = encoder.FindValidVertexFor(referencedPointAlongLine.Route.Vertices[0], referencedPointAlongLine.Route.Edges[0], false);
+                var pathToValid = encoder.FindValidVertexFor(referencedPointAlongLine.Route.Vertices[0], referencedPointAlongLine.Route.Edges[0], referencedPointAlongLine.Route.Vertices[1], false);
 
                 // build edges list.
                 var vertices = pathToValid.ToArray().Reverse().ToList();
@@ -341,20 +346,9 @@ namespace OpenLR.OsmSharp
                 for (int idx = 0; idx < vertices.Count - 1; idx++)
                 { // loop over edges.
                     edge = vertices[idx].Edge;
-                    if (!edge.Forward)
+                    if (edge.Forward)
                     { // use reverse edge.
-                        var reverseEdge = new LiveEdge();
-                        reverseEdge.Tags = edge.Tags;
-                        reverseEdge.Forward = !edge.Forward;
-                        reverseEdge.Distance = edge.Distance;
-                        reverseEdge.Coordinates = null;
-                        if (edge.Coordinates != null)
-                        {
-                            var reverse = new GeoCoordinateSimple[edge.Coordinates.Length];
-                            edge.Coordinates.CopyToReverse(reverse, 0);
-                            reverseEdge.Coordinates = reverse;
-                        }
-                        edge = reverseEdge;
+                        edge = edge.ToReverse();
                     }
                     edges.Add(edge);
                 }
@@ -375,28 +369,17 @@ namespace OpenLR.OsmSharp
             { // from is not valid, try to find a valid point.
                 var vertexCount = referencedPointAlongLine.Route.Vertices.Length;
                 var pathToValid = encoder.FindValidVertexFor(referencedPointAlongLine.Route.Vertices[vertexCount - 1], referencedPointAlongLine.Route.Edges[
-                    referencedPointAlongLine.Route.Edges.Length - 1], true);
+                    referencedPointAlongLine.Route.Edges.Length - 1].ToReverse(), referencedPointAlongLine.Route.Vertices[vertexCount - 2], true);
 
                 // build edges list.
                 var vertices = pathToValid.ToArray().ToList();
                 var edges = new List<LiveEdge>();
-                for (int idx = 0; idx < vertices.Count - 1; idx++)
+                for (int idx = 1; idx < vertices.Count; idx++)
                 { // loop over edges.
                     edge = vertices[idx].Edge;
                     if (!edge.Forward)
                     { // use reverse edge.
-                        var reverseEdge = new LiveEdge();
-                        reverseEdge.Tags = edge.Tags;
-                        reverseEdge.Forward = !edge.Forward;
-                        reverseEdge.Distance = edge.Distance;
-                        reverseEdge.Coordinates = null;
-                        if (edge.Coordinates != null)
-                        {
-                            var reverse = new GeoCoordinateSimple[edge.Coordinates.Length];
-                            edge.Coordinates.CopyToReverse(reverse, 0);
-                            reverseEdge.Coordinates = reverse;
-                        }
-                        edge = reverseEdge;
+                        edge = edge.ToReverse();
                     }
                     edges.Add(edge);
                 }

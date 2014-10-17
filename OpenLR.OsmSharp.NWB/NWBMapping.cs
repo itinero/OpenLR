@@ -9,6 +9,31 @@ namespace OpenLR.OsmSharp.NWB
     public static class NWBMapping
     {
         /// <summary>
+        /// Holds the baan sub soort field.
+        /// </summary>
+        public static string BAANSUBSRT = "BAANSUBSRT";
+
+        /// <summary>
+        /// Holds the wegbeheerder soort field.
+        /// </summary>
+        public static string WEGBEHSRT = "WEGBEHSRT";
+
+        /// <summary>
+        /// Holds the wegnummer field.
+        /// </summary>
+        public static string WEGNUMMER = "WEGNUMMER";
+
+        /// <summary>
+        /// Holds the name of the hecto letter field.
+        /// </summary>
+        public static string HECTOLTTR = "HECTOLTTR";
+
+        /// <summary>
+        /// Holds the name of the rijrichting field.
+        /// </summary>
+        public static string RIJRICHTNG = "RIJRICHTNG";
+
+        /// <summary>
         /// Maps NWB attributes and translates them to OpenLR FOW and FRC.
         /// </summary>
         /// <param name="tags"></param>
@@ -20,11 +45,11 @@ namespace OpenLR.OsmSharp.NWB
             fow = FormOfWay.Undefined;
             frc = FunctionalRoadClass.Frc7;
             string baansubsrt, wegbeerder, wegnummer, rijrichting, dvkletter_;
-            if (!tags.TryGetValue("BAANSUBSRT", out baansubsrt) ||
-                !tags.TryGetValue("WEGBEHSRT", out wegbeerder) ||
-                !tags.TryGetValue("WEGNUMMER", out wegnummer) ||
-                !tags.TryGetValue("HECTO_LTTR", out dvkletter_) ||
-                !tags.TryGetValue("RIJRICHTNG", out rijrichting))
+            if (!tags.TryGetValue(NWBMapping.BAANSUBSRT, out baansubsrt) ||
+                !tags.TryGetValue(NWBMapping.WEGBEHSRT, out wegbeerder) ||
+                !tags.TryGetValue(NWBMapping.WEGNUMMER, out wegnummer) ||
+                !tags.TryGetValue(NWBMapping.HECTOLTTR, out dvkletter_) ||
+                !tags.TryGetValue(NWBMapping.RIJRICHTNG, out rijrichting))
             { // not even a BAANSUBSRT tag!
                 return false;
             }

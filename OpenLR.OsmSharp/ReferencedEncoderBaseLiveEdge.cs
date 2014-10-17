@@ -32,7 +32,7 @@ namespace OpenLR.OsmSharp
         /// <param name="vertex">The invalid vertex.</param>
         /// <param name="edge">The edge that leads to the target vertex.</param>
         /// <param name="searchForward">When true, the search is forward, otherwise backward.</param>
-        public override PathSegment FindValidVertexFor(long vertex, LiveEdge edge, bool searchForward)
+        public override PathSegment FindValidVertexFor(long vertex, LiveEdge edge, long targetVertex, bool searchForward)
         {
             // GIST: execute a dykstra search to find a vertex that is valid.
             // this will return a vertex that is on the shortest path:
@@ -66,8 +66,8 @@ namespace OpenLR.OsmSharp
                     foreach (var arc in arcs)
                     {
                         if (!settled.Contains(arc.Key) &&
-                            !edge.Equals(arc.Value))
-                        { // ok, new neighbour!
+                           !(current.Vertex == vertex && arc.Key == targetVertex && edge.Distance == arc.Value.Distance))
+                        { // ok, new neighbour, and ok, not the edge and neighbour to ignore.
                             var tags = this.Graph.TagsIndex.Get(arc.Value.Tags);
                             if (this.Vehicle.CanTraverse(tags))
                             { // ok, we can traverse this edge.                    

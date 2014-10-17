@@ -9,7 +9,6 @@ using OpenLR.OsmSharp.Router;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Graph.Router.Dykstra;
 using OsmSharp.Routing.Osm.Graphs;
 
 namespace OpenLR.Tests.Referenced.NWB
@@ -58,11 +57,11 @@ namespace OpenLR.Tests.Referenced.NWB
                 Distance = 10,
                 Forward = true,
                 Tags = tags.Add(new TagsCollection(
-                    Tag.Create("BAANSUBSRT", "VBD"), 
-                    Tag.Create("WEGBEHSRT", "R"), 
-                    Tag.Create("WEGNUMMER", string.Empty),
-                    Tag.Create("RIJRICHTNG", string.Empty),
-                    Tag.Create("HECTOLTTR", string.Empty)))
+                    Tag.Create(NWBMapping.BAANSUBSRT, "VBD"), 
+                    Tag.Create(NWBMapping.WEGBEHSRT, "R"), 
+                    Tag.Create(NWBMapping.WEGNUMMER, string.Empty),
+                    Tag.Create(NWBMapping.RIJRICHTNG, string.Empty),
+                    Tag.Create(NWBMapping.HECTOLTTR, string.Empty)))
             }, null);
             graphDataSource.AddArc(vertex2, vertex1, new LiveEdge()
             {
@@ -70,11 +69,11 @@ namespace OpenLR.Tests.Referenced.NWB
                 Distance = 10,
                 Forward = true,
                 Tags = tags.Add(new TagsCollection(
-                    Tag.Create("BAANSUBSRT", "VBD"),
-                    Tag.Create("WEGBEHSRT", "R"),
-                    Tag.Create("WEGNUMMER", string.Empty),
-                    Tag.Create("RIJRICHTNG", string.Empty),
-                    Tag.Create("HECTOLTTR", string.Empty)))
+                    Tag.Create(NWBMapping.BAANSUBSRT, "VBD"),
+                    Tag.Create(NWBMapping.WEGBEHSRT, "R"),
+                    Tag.Create(NWBMapping.WEGNUMMER, string.Empty),
+                    Tag.Create(NWBMapping.RIJRICHTNG, string.Empty),
+                    Tag.Create(NWBMapping.HECTOLTTR, string.Empty)))
             }, null);
 
             // decode the location
