@@ -40,6 +40,7 @@ namespace OpenLR.OsmSharp
 
             // initialize settled set.
             var settled = new HashSet<long>();
+            settled.Add(targetVertex);
 
             // initialize heap.
             var heap = new BinairyHeap<PathSegment>(10);
@@ -89,8 +90,9 @@ namespace OpenLR.OsmSharp
             if(pathTo == null)
             { // oeps, probably something wrong with network-topology.
                 // just take the default option.
-                throw new Exception(
-                    string.Format("Could not find a valid vertex for invalid vertex [{0}].", vertex));
+                //throw new Exception(
+                //    string.Format("Could not find a valid vertex for invalid vertex [{0}].", vertex));
+                return null;
             }
 
             // add the path to the given location.

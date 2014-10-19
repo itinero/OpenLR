@@ -341,28 +341,31 @@ namespace OpenLR.OsmSharp
                 var pathToValid = encoder.FindValidVertexFor(referencedPointAlongLine.Route.Vertices[0], referencedPointAlongLine.Route.Edges[0], referencedPointAlongLine.Route.Vertices[1], false);
 
                 // build edges list.
-                var vertices = pathToValid.ToArray().Reverse().ToList();
-                var edges = new List<LiveEdge>();
-                for (int idx = 0; idx < vertices.Count - 1; idx++)
-                { // loop over edges.
-                    edge = vertices[idx].Edge;
-                    if (edge.Forward)
-                    { // use reverse edge.
-                        edge = edge.ToReverse();
+                if (pathToValid != null)
+                { // no path found, just leave things as is.
+                    var vertices = pathToValid.ToArray().Reverse().ToList();
+                    var edges = new List<LiveEdge>();
+                    for (int idx = 0; idx < vertices.Count - 1; idx++)
+                    { // loop over edges.
+                        edge = vertices[idx].Edge;
+                        if (edge.Forward)
+                        { // use reverse edge.
+                            edge = edge.ToReverse();
+                        }
+                        edges.Add(edge);
                     }
-                    edges.Add(edge);
+
+                    // create new location.
+                    var edgesArray = new LiveEdge[edges.Count + referencedPointAlongLine.Route.Edges.Length];
+                    edges.CopyTo(0, edgesArray, 0, edges.Count);
+                    referencedPointAlongLine.Route.Edges.CopyTo(0, edgesArray, edges.Count, referencedPointAlongLine.Route.Edges.Length);
+                    var vertexArray = new long[vertices.Count - 1 + referencedPointAlongLine.Route.Vertices.Length];
+                    vertices.ConvertAll(x => (long)x.Vertex).CopyTo(0, vertexArray, 0, vertices.Count - 1);
+                    referencedPointAlongLine.Route.Vertices.CopyTo(0, vertexArray, vertices.Count - 1, referencedPointAlongLine.Route.Vertices.Length);
+
+                    referencedPointAlongLine.Route.Edges = edgesArray;
+                    referencedPointAlongLine.Route.Vertices = vertexArray;
                 }
-
-                // create new location.
-                var edgesArray = new LiveEdge[edges.Count + referencedPointAlongLine.Route.Edges.Length];
-                edges.CopyTo(0, edgesArray, 0, edges.Count);
-                referencedPointAlongLine.Route.Edges.CopyTo(0, edgesArray, edges.Count, referencedPointAlongLine.Route.Edges.Length);
-                var vertexArray = new long[vertices.Count - 1 + referencedPointAlongLine.Route.Vertices.Length];
-                vertices.ConvertAll(x => (long)x.Vertex).CopyTo(0, vertexArray, 0, vertices.Count - 1);
-                referencedPointAlongLine.Route.Vertices.CopyTo(0, vertexArray, vertices.Count - 1, referencedPointAlongLine.Route.Vertices.Length);
-
-                referencedPointAlongLine.Route.Edges = edgesArray;
-                referencedPointAlongLine.Route.Vertices = vertexArray;
             }
 
             if (!encoder.IsVertexValid(referencedPointAlongLine.Route.Vertices[referencedPointAlongLine.Route.Vertices.Length - 1]))
@@ -372,28 +375,31 @@ namespace OpenLR.OsmSharp
                     referencedPointAlongLine.Route.Edges.Length - 1].ToReverse(), referencedPointAlongLine.Route.Vertices[vertexCount - 2], true);
 
                 // build edges list.
-                var vertices = pathToValid.ToArray().ToList();
-                var edges = new List<LiveEdge>();
-                for (int idx = 1; idx < vertices.Count; idx++)
-                { // loop over edges.
-                    edge = vertices[idx].Edge;
-                    if (!edge.Forward)
-                    { // use reverse edge.
-                        edge = edge.ToReverse();
+                if (pathToValid != null)
+                { // no path found, just leave things as is.
+                    var vertices = pathToValid.ToArray().ToList();
+                    var edges = new List<LiveEdge>();
+                    for (int idx = 1; idx < vertices.Count; idx++)
+                    { // loop over edges.
+                        edge = vertices[idx].Edge;
+                        if (!edge.Forward)
+                        { // use reverse edge.
+                            edge = edge.ToReverse();
+                        }
+                        edges.Add(edge);
                     }
-                    edges.Add(edge);
+
+                    // create new location.
+                    var edgesArray = new LiveEdge[edges.Count + referencedPointAlongLine.Route.Edges.Length];
+                    referencedPointAlongLine.Route.Edges.CopyTo(0, edgesArray, 0, referencedPointAlongLine.Route.Edges.Length);
+                    edges.CopyTo(0, edgesArray, referencedPointAlongLine.Route.Edges.Length, edges.Count);
+                    var vertexArray = new long[vertices.Count - 1 + referencedPointAlongLine.Route.Vertices.Length];
+                    referencedPointAlongLine.Route.Vertices.CopyTo(0, vertexArray, 0, referencedPointAlongLine.Route.Vertices.Length);
+                    vertices.ConvertAll(x => (long)x.Vertex).CopyTo(1, vertexArray, referencedPointAlongLine.Route.Vertices.Length, vertices.Count - 1);
+
+                    referencedPointAlongLine.Route.Edges = edgesArray;
+                    referencedPointAlongLine.Route.Vertices = vertexArray;
                 }
-
-                // create new location.
-                var edgesArray = new LiveEdge[edges.Count + referencedPointAlongLine.Route.Edges.Length];
-                referencedPointAlongLine.Route.Edges.CopyTo(0, edgesArray, 0, referencedPointAlongLine.Route.Edges.Length);
-                edges.CopyTo(0, edgesArray, referencedPointAlongLine.Route.Edges.Length, edges.Count);
-                var vertexArray = new long[vertices.Count - 1 + referencedPointAlongLine.Route.Vertices.Length];
-                referencedPointAlongLine.Route.Vertices.CopyTo(0, vertexArray, 0, referencedPointAlongLine.Route.Vertices.Length);
-                vertices.ConvertAll(x => (long)x.Vertex).CopyTo(1, vertexArray, referencedPointAlongLine.Route.Vertices.Length, vertices.Count - 1);
-
-                referencedPointAlongLine.Route.Edges = edgesArray;
-                referencedPointAlongLine.Route.Vertices = vertexArray;
             }
 
             // RULE1: check again, distance should not exceed 15km.

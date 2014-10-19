@@ -18,7 +18,7 @@ namespace OpenLR.OsmSharp.Router
         /// <summary>
         /// Holds the maximum settles.
         /// </summary>
-        private const uint MAX_SETTLES = 1000;
+        private const uint MAX_SETTLES = 5000;
 
         /// <summary>
         /// Calculates a path between the two candidates using the information in the candidates.
@@ -56,6 +56,7 @@ namespace OpenLR.OsmSharp.Router
             // also add the target to the visit list and actually search for the target candidate edge ending.
             visited.Add(to.Vertex);
             var target = to.TargetVertex;
+            var targetWeight = double.MaxValue;
 
             // create a path segment from the from-candidate.
             heap.Push(fromPath, (float)fromPath.Weight);
@@ -110,7 +111,19 @@ namespace OpenLR.OsmSharp.Router
                                 // create path to neighbour and queue it.
                                 var weight = vehicle.Weight(graph.TagsIndex.Get(neighbour.Value.Tags), neighbour.Value.Distance);
                                 var path = new PathSegment<long>(neighbour.Key, current.Weight + weight, current);
-                                heap.Push(path, (float)path.Weight);
+                                if (path.Weight < targetWeight)
+                                { // the weight of the neighbour is smaller than the first neighbour found.
+                                    heap.Push(path, (float)path.Weight);
+
+                                    // save distance.
+                                    if (path.VertexId == target)
+                                    { // the target is already found, no use of queuing neigbours that have a higher weight.
+                                        if (targetWeight > path.Weight)
+                                        { // set the weight.
+                                            targetWeight = path.Weight;
+                                        }
+                                    }
+                                }
                             }
                         }
                     }

@@ -462,9 +462,11 @@ namespace OpenLR.OsmSharp
         /// <returns>Returns an edge or an edge from 0 to 0 if none is found.</returns>
         public static KeyValuePair<long, KeyValuePair<long, TEdge>>? GetClosestEdge<TEdge>(this BasicRouterDataSource<TEdge> graph, GeoCoordinate location)
             where TEdge : IDynamicGraphEdgeData
-        {     
+        {
             // create the search box.
             var searchBoxSize = 0.1;
+            KeyValuePair<long, KeyValuePair<long, TEdge>>? bestEdge = null;
+
             var searchBox = new GeoCoordinateBox(new GeoCoordinate(
                 location.Latitude - searchBoxSize, location.Longitude - searchBoxSize),
                                                                new GeoCoordinate(
@@ -473,8 +475,7 @@ namespace OpenLR.OsmSharp
 
             float latitude, longitude;
             double bestDistance = double.MaxValue;
-            KeyValuePair<long, KeyValuePair<long, TEdge>>? bestEdge = null;
-            foreach(var arc in arcs)
+            foreach (var arc in arcs)
             {
                 graph.GetVertex(arc.Key, out latitude, out longitude);
                 var from = new GeoCoordinate(latitude, longitude);
@@ -491,9 +492,9 @@ namespace OpenLR.OsmSharp
                     coordinates = arc.Value.Value.GetCoordinates(to, from);
                 }
 
-                if(coordinates != null && coordinates.Count > 0)
+                if (coordinates != null && coordinates.Count > 0)
                 {
-                    for(int idx = 1; idx < coordinates.Count; idx++)
+                    for (int idx = 1; idx < coordinates.Count; idx++)
                     {
                         var line = new GeoCoordinateLine(coordinates[idx - 1], coordinates[idx], true, true);
                         var distance = line.Distance(location);
