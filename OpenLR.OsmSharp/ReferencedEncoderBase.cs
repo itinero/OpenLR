@@ -365,7 +365,7 @@ namespace OpenLR.OsmSharp
                 if (pathToValid != null)
                 { // no path found, just leave things as is.
                     var shortestRoute = encoder.FindShortestPath(referencedPointAlongLine.Route.Vertices[1], pathToValid.Vertex, false);
-                    while(!shortestRoute.Contains(referencedPointAlongLine.Route.Vertices[0]))
+                    while (shortestRoute != null && !shortestRoute.Contains(referencedPointAlongLine.Route.Vertices[0]))
                     { // the vertex that should be on this shortest route, isn't anymore.
                         // exclude the current target vertex, 
                         excludeSet.Add(pathToValid.Vertex);
@@ -416,7 +416,7 @@ namespace OpenLR.OsmSharp
                 if (pathToValid != null)
                 { // no path found, just leave things as is.
                     var shortestRoute = encoder.FindShortestPath(referencedPointAlongLine.Route.Vertices[vertexCount - 2], pathToValid.Vertex, true);
-                    while (!shortestRoute.Contains(referencedPointAlongLine.Route.Vertices[vertexCount - 1]))
+                    while (shortestRoute != null && !shortestRoute.Contains(referencedPointAlongLine.Route.Vertices[vertexCount - 1]))
                     { // the vertex that should be on this shortest route, isn't anymore.
                         // exclude the current target vertex, 
                         excludeSet.Add(pathToValid.Vertex);
