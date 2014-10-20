@@ -3,6 +3,7 @@ using OpenLR.OsmSharp.Router;
 using OsmSharp.Collections.PriorityQueues;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Osm.Graphs;
+using OsmSharp.Routing.Shape;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,7 @@ namespace OpenLR.OsmSharp
         public ReferencedEncoderBaseLiveEdge(BasicRouterDataSource<LiveEdge> graph, Encoder locationEncoder)
             : base(graph, locationEncoder)
         {
-
+            
         }
 
         /// <summary>
@@ -31,8 +32,9 @@ namespace OpenLR.OsmSharp
         /// </summary>
         /// <param name="vertex">The invalid vertex.</param>
         /// <param name="edge">The edge that leads to the target vertex.</param>
+        /// <param name="excludeSet">The set of vertices that should be excluded in the search.</param>
         /// <param name="searchForward">When true, the search is forward, otherwise backward.</param>
-        public override PathSegment FindValidVertexFor(long vertex, LiveEdge edge, long targetVertex, bool searchForward)
+        public override PathSegment FindValidVertexFor(long vertex, LiveEdge edge, long targetVertex, HashSet<long> excludeSet, bool searchForward)
         {
             // GIST: execute a dykstra search to find a vertex that is valid.
             // this will return a vertex that is on the shortest path:
@@ -66,12 +68,13 @@ namespace OpenLR.OsmSharp
                     var arcs = this.Graph.GetArcs(current.Vertex);
                     foreach (var arc in arcs)
                     {
-                        if (!settled.Contains(arc.Key) &&
+                        if (!excludeSet.Contains(arc.Key) &&
+                            !settled.Contains(arc.Key) &&
                            !(current.Vertex == vertex && arc.Key == targetVertex && edge.Distance == arc.Value.Distance))
                         { // ok, new neighbour, and ok, not the edge and neighbour to ignore.
                             var tags = this.Graph.TagsIndex.Get(arc.Value.Tags);
                             if (this.Vehicle.CanTraverse(tags))
-                            { // ok, we can traverse this edge.                    
+                            { // ok, we can traverse this edge.
                                 var onway = this.Vehicle.IsOneWay(tags);
                                 if (onway == null ||
                                   !(onway.Value == arc.Value.Forward ^ searchForward))
@@ -97,6 +100,22 @@ namespace OpenLR.OsmSharp
 
             // add the path to the given location.
             return pathTo;
+        }
+
+        /// <summary>
+        /// Finds the shortest path between the given from->to.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="searchForward"></param>
+        /// <returns></returns>
+        public override PathSegment FindShortestPath(long from, long to, bool searchForward)
+        {
+            var edgeInterpreter = new ShapefileEdgeInterpreter();
+            var interpreter = new ShapefileRoutingInterpreter();
+            var router = this.GetRouter();
+            return router.Calculate(this.Graph, interpreter, this.Vehicle,
+                from, to, searchForward);
         }
     }
 }

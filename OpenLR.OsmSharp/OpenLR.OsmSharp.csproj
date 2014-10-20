@@ -50,6 +50,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\OsmSharp.supported.via\OsmSharp.Routing.dll</HintPath>
     </Reference>
+    <Reference Include="OsmSharp.Routing.Shape, Version=0.1.0.9999, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\OsmSharp.Routing.Shape.supported.via\OsmSharp.Routing.Shape.dll</HintPath>
+    </Reference>
     <Reference Include="OsmSharp.UI, Version=4.2.0.9999, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\OsmSharp.supported.via\OsmSharp.UI.dll</HintPath>

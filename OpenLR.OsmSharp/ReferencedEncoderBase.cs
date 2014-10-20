@@ -44,6 +44,15 @@ namespace OpenLR.OsmSharp
         }
 
         /// <summary>
+        /// Gets a new router.
+        /// </summary>
+        /// <returns></returns>
+        protected virtual BasicRouter GetRouter()
+        {
+            return new BasicRouter();
+        }
+
+        /// <summary>
         /// Returns the reference graph.
         /// </summary>
         public BasicRouterDataSource<TEdge> Graph
@@ -234,9 +243,19 @@ namespace OpenLR.OsmSharp
         /// Finds a valid vertex for the given vertex but does not search in the direction of the target neighbour.
         /// </summary>
         /// <param name="vertex">The invalid vertex.</param>
+        /// <param name="targetVertex">The target vertex.</param>
         /// <param name="edge">The edge that leads to the target vertex.</param>
+        /// <param name="excludeSet">The set of vertices that should be excluded in the search.</param>
         /// <param name="searchForward">When true, the search is forward, otherwise backward.</param>
-        public abstract PathSegment FindValidVertexFor(long vertex, LiveEdge edge, long targetVertex, bool searchForward);
+        public abstract PathSegment FindValidVertexFor(long vertex, LiveEdge edge, long targetVertex, HashSet<long> excludeSet, bool searchForward);
+
+        /// <summary>
+        /// Finds the shortest path between the two given vertices.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="searchForward"></param>
+        public abstract PathSegment FindShortestPath(long from, long to, bool searchForward);
     }
 
     /// <summary>
@@ -336,69 +355,105 @@ namespace OpenLR.OsmSharp
             // RULE3: ok, there are two points.
 
             // RULE4: choosen points should be valid network points.
+            var excludeSet = new HashSet<long>();
             if (!encoder.IsVertexValid(referencedPointAlongLine.Route.Vertices[0]))
             { // from is not valid, try to find a valid point.
-                var pathToValid = encoder.FindValidVertexFor(referencedPointAlongLine.Route.Vertices[0], referencedPointAlongLine.Route.Edges[0], referencedPointAlongLine.Route.Vertices[1], false);
+                var pathToValid = encoder.FindValidVertexFor(referencedPointAlongLine.Route.Vertices[0], referencedPointAlongLine.Route.Edges[0], referencedPointAlongLine.Route.Vertices[1],
+                    excludeSet, false);
 
                 // build edges list.
                 if (pathToValid != null)
                 { // no path found, just leave things as is.
-                    var vertices = pathToValid.ToArray().Reverse().ToList();
-                    var edges = new List<LiveEdge>();
-                    for (int idx = 0; idx < vertices.Count - 1; idx++)
-                    { // loop over edges.
-                        edge = vertices[idx].Edge;
-                        if (edge.Forward)
-                        { // use reverse edge.
-                            edge = edge.ToReverse();
+                    var shortestRoute = encoder.FindShortestPath(referencedPointAlongLine.Route.Vertices[1], pathToValid.Vertex, false);
+                    while(!shortestRoute.Contains(referencedPointAlongLine.Route.Vertices[0]))
+                    { // the vertex that should be on this shortest route, isn't anymore.
+                        // exclude the current target vertex, 
+                        excludeSet.Add(pathToValid.Vertex);
+                        // calulate a new path-to-valid.
+                        pathToValid = encoder.FindValidVertexFor(referencedPointAlongLine.Route.Vertices[0], referencedPointAlongLine.Route.Edges[0], referencedPointAlongLine.Route.Vertices[1],
+                            excludeSet, false);
+                        if (pathToValid == null)
+                        { // a new path was not found.
+                            break;
                         }
-                        edges.Add(edge);
+                        shortestRoute = encoder.FindShortestPath(referencedPointAlongLine.Route.Vertices[1], pathToValid.Vertex, false);
                     }
+                    if (pathToValid != null)
+                    { // no path found, just leave things as is.
+                        var vertices = pathToValid.ToArray().Reverse().ToList();
+                        var edges = new List<LiveEdge>();
+                        for (int idx = 0; idx < vertices.Count - 1; idx++)
+                        { // loop over edges.
+                            edge = vertices[idx].Edge;
+                            if (edge.Forward)
+                            { // use reverse edge.
+                                edge = edge.ToReverse();
+                            }
+                            edges.Add(edge);
+                        }
 
-                    // create new location.
-                    var edgesArray = new LiveEdge[edges.Count + referencedPointAlongLine.Route.Edges.Length];
-                    edges.CopyTo(0, edgesArray, 0, edges.Count);
-                    referencedPointAlongLine.Route.Edges.CopyTo(0, edgesArray, edges.Count, referencedPointAlongLine.Route.Edges.Length);
-                    var vertexArray = new long[vertices.Count - 1 + referencedPointAlongLine.Route.Vertices.Length];
-                    vertices.ConvertAll(x => (long)x.Vertex).CopyTo(0, vertexArray, 0, vertices.Count - 1);
-                    referencedPointAlongLine.Route.Vertices.CopyTo(0, vertexArray, vertices.Count - 1, referencedPointAlongLine.Route.Vertices.Length);
+                        // create new location.
+                        var edgesArray = new LiveEdge[edges.Count + referencedPointAlongLine.Route.Edges.Length];
+                        edges.CopyTo(0, edgesArray, 0, edges.Count);
+                        referencedPointAlongLine.Route.Edges.CopyTo(0, edgesArray, edges.Count, referencedPointAlongLine.Route.Edges.Length);
+                        var vertexArray = new long[vertices.Count - 1 + referencedPointAlongLine.Route.Vertices.Length];
+                        vertices.ConvertAll(x => (long)x.Vertex).CopyTo(0, vertexArray, 0, vertices.Count - 1);
+                        referencedPointAlongLine.Route.Vertices.CopyTo(0, vertexArray, vertices.Count - 1, referencedPointAlongLine.Route.Vertices.Length);
 
-                    referencedPointAlongLine.Route.Edges = edgesArray;
-                    referencedPointAlongLine.Route.Vertices = vertexArray;
+                        referencedPointAlongLine.Route.Edges = edgesArray;
+                        referencedPointAlongLine.Route.Vertices = vertexArray;
+                    }
                 }
             }
-
+            excludeSet.Clear();
             if (!encoder.IsVertexValid(referencedPointAlongLine.Route.Vertices[referencedPointAlongLine.Route.Vertices.Length - 1]))
             { // from is not valid, try to find a valid point.
                 var vertexCount = referencedPointAlongLine.Route.Vertices.Length;
                 var pathToValid = encoder.FindValidVertexFor(referencedPointAlongLine.Route.Vertices[vertexCount - 1], referencedPointAlongLine.Route.Edges[
-                    referencedPointAlongLine.Route.Edges.Length - 1].ToReverse(), referencedPointAlongLine.Route.Vertices[vertexCount - 2], true);
+                    referencedPointAlongLine.Route.Edges.Length - 1].ToReverse(), referencedPointAlongLine.Route.Vertices[vertexCount - 2], excludeSet, true);
 
                 // build edges list.
                 if (pathToValid != null)
                 { // no path found, just leave things as is.
-                    var vertices = pathToValid.ToArray().ToList();
-                    var edges = new List<LiveEdge>();
-                    for (int idx = 1; idx < vertices.Count; idx++)
-                    { // loop over edges.
-                        edge = vertices[idx].Edge;
-                        if (!edge.Forward)
-                        { // use reverse edge.
-                            edge = edge.ToReverse();
+                    var shortestRoute = encoder.FindShortestPath(referencedPointAlongLine.Route.Vertices[vertexCount - 2], pathToValid.Vertex, true);
+                    while (!shortestRoute.Contains(referencedPointAlongLine.Route.Vertices[vertexCount - 1]))
+                    { // the vertex that should be on this shortest route, isn't anymore.
+                        // exclude the current target vertex, 
+                        excludeSet.Add(pathToValid.Vertex);
+                        // calulate a new path-to-valid.
+                        pathToValid = encoder.FindValidVertexFor(referencedPointAlongLine.Route.Vertices[vertexCount - 1], referencedPointAlongLine.Route.Edges[
+                            referencedPointAlongLine.Route.Edges.Length - 1].ToReverse(), referencedPointAlongLine.Route.Vertices[vertexCount - 2], excludeSet, true);
+                        if (pathToValid == null)
+                        { // a new path was not found.
+                            break;
                         }
-                        edges.Add(edge);
+                        shortestRoute = encoder.FindShortestPath(referencedPointAlongLine.Route.Vertices[vertexCount - 2], pathToValid.Vertex, true);
                     }
+                    if (pathToValid != null)
+                    { // no path found, just leave things as is.
+                        var vertices = pathToValid.ToArray().ToList();
+                        var edges = new List<LiveEdge>();
+                        for (int idx = 1; idx < vertices.Count; idx++)
+                        { // loop over edges.
+                            edge = vertices[idx].Edge;
+                            if (!edge.Forward)
+                            { // use reverse edge.
+                                edge = edge.ToReverse();
+                            }
+                            edges.Add(edge);
+                        }
 
-                    // create new location.
-                    var edgesArray = new LiveEdge[edges.Count + referencedPointAlongLine.Route.Edges.Length];
-                    referencedPointAlongLine.Route.Edges.CopyTo(0, edgesArray, 0, referencedPointAlongLine.Route.Edges.Length);
-                    edges.CopyTo(0, edgesArray, referencedPointAlongLine.Route.Edges.Length, edges.Count);
-                    var vertexArray = new long[vertices.Count - 1 + referencedPointAlongLine.Route.Vertices.Length];
-                    referencedPointAlongLine.Route.Vertices.CopyTo(0, vertexArray, 0, referencedPointAlongLine.Route.Vertices.Length);
-                    vertices.ConvertAll(x => (long)x.Vertex).CopyTo(1, vertexArray, referencedPointAlongLine.Route.Vertices.Length, vertices.Count - 1);
+                        // create new location.
+                        var edgesArray = new LiveEdge[edges.Count + referencedPointAlongLine.Route.Edges.Length];
+                        referencedPointAlongLine.Route.Edges.CopyTo(0, edgesArray, 0, referencedPointAlongLine.Route.Edges.Length);
+                        edges.CopyTo(0, edgesArray, referencedPointAlongLine.Route.Edges.Length, edges.Count);
+                        var vertexArray = new long[vertices.Count - 1 + referencedPointAlongLine.Route.Vertices.Length];
+                        referencedPointAlongLine.Route.Vertices.CopyTo(0, vertexArray, 0, referencedPointAlongLine.Route.Vertices.Length);
+                        vertices.ConvertAll(x => (long)x.Vertex).CopyTo(1, vertexArray, referencedPointAlongLine.Route.Vertices.Length, vertices.Count - 1);
 
-                    referencedPointAlongLine.Route.Edges = edgesArray;
-                    referencedPointAlongLine.Route.Vertices = vertexArray;
+                        referencedPointAlongLine.Route.Edges = edgesArray;
+                        referencedPointAlongLine.Route.Vertices = vertexArray;
+                    }
                 }
             }
 

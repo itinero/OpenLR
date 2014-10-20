@@ -131,5 +131,106 @@ namespace OpenLR.OsmSharp.Router
             }
             return null;
         }
+
+        /// <summary>
+        /// Calculates the shortest path between the two given vertices.
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <param name="interpreter"></param>
+        /// <param name="vehicle"></param>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="searchForward"></param>
+        /// <returns></returns>
+        public PathSegment Calculate(BasicRouterDataSource<LiveEdge> graph, IRoutingInterpreter interpreter,
+            Vehicle vehicle, long from, long to, bool searchForward)
+        {
+            // first check for the simple stuff.
+            if (from == to)
+            { // route consists of one vertex.
+                return new PathSegment(from);
+            }
+
+            // initialize the heap/visit list.
+            var heap = new BinairyHeap<PathSegment>(100);
+            var visited = new HashSet<long>();
+
+            // set the target.
+            var target = to;
+            var targetWeight = double.MaxValue;
+
+            // create a path segment from the from-candidate.
+            heap.Push(new PathSegment(from), (float)0);
+
+            // keep searching for the target.
+            while (true)
+            {
+                // get the next vertex.
+                var current = heap.Pop();
+                if (current == null)
+                { // there is nothing more in the queue, target will not be found.
+                    break;
+                }
+                if (visited.Contains(current.Vertex))
+                { // move to the next neighbour.
+                    continue;
+                }
+                visited.Add(current.Vertex);
+
+                // check for the target.
+                if (current.Vertex == target)
+                { // target was found.
+                    return current;
+                }
+
+                // check if the maximum settled vertex count has been reached.
+                if (visited.Count >= MAX_SETTLES)
+                { // stop search, target will not be found.
+                    break;
+                }
+
+                // add the neighbours to queue.
+                var neighbours = graph.GetArcs(current.Vertex);
+                if (neighbours != null)
+                { // neighbours exist.
+                    foreach (var neighbour in neighbours)
+                    {
+                        // check if the neighbour was settled before.
+                        if (visited.Contains(neighbour.Key))
+                        { // move to the next neighbour.
+                            continue;
+                        }
+
+                        // get tags and check traversability and oneway.
+                        var tags = graph.TagsIndex.Get(neighbour.Value.Tags);
+                        if (vehicle.CanTraverse(tags))
+                        { // yay! can traverse.
+                            var onway = vehicle.IsOneWay(tags);
+                            if (onway == null ||
+                              !(onway.Value == neighbour.Value.Forward ^ searchForward))
+                            {
+                                // create path to neighbour and queue it.
+                                var weight = vehicle.Weight(graph.TagsIndex.Get(neighbour.Value.Tags), neighbour.Value.Distance);
+                                var path = new PathSegment(neighbour.Key, current.Weight + weight, neighbour.Value, current);
+                                if (path.Weight < targetWeight)
+                                { // the weight of the neighbour is smaller than the first neighbour found.
+                                    heap.Push(path, (float)path.Weight);
+
+                                    // save distance.
+                                    if (path.Vertex == target)
+                                    { // the target is already found, no use of queuing neigbours that have a higher weight.
+                                        if (targetWeight > path.Weight)
+                                        { // set the weight.
+                                            targetWeight = path.Weight;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return null;
+        }
     }
 }

@@ -72,5 +72,24 @@ namespace OpenLR.OsmSharp.Router
             segments.Reverse();
             return segments.ToArray();
         }
+
+        /// <summary>
+        /// Returns true if this path contains the given vertex.
+        /// </summary>
+        /// <param name="vertex"></param>
+        /// <returns></returns>
+        internal bool Contains(long vertex)
+        {
+            var current = this;
+            while(current != null)
+            {
+                if (current.Vertex == vertex)
+                {
+                    return true;
+                }
+                current = current.From;
+            }
+            return false;
+        }
     }
 }
