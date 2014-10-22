@@ -622,21 +622,21 @@ namespace OpenLR.OsmSharp
                 currentEdgeLength = currentEdgeLength + coordinates[coordinates.Count - 2].DistanceEstimate(coordinates[coordinates.Count - 1]).Value;
 
                 // add current edge length to current offset.
-                currentOffsetLength = currentOffsetLength + currentEdgeLength;
                 if(currentOffsetLength >= offsetLength.Value && 
                     edgeLength.Value < 0)
                 { // it's this edge that has the valuable info.
                     offsetEdgeIdx = edgeIdx;
-                    offsetEdgeLength = currentOffsetLength - offsetLength;
+                    offsetEdgeLength = offsetLength - currentOffsetLength;
                     edgeLength = currentEdgeLength;
                 }
+                currentOffsetLength = currentOffsetLength + currentEdgeLength;
             }
 
             // choose the last edge.
             if (edgeLength.Value < 0)
             { // it's this edge that has the valuable info.
                 offsetEdgeIdx = route.Edges.Length - 1;
-                offsetEdgeLength = currentOffsetLength - offsetLength;
+                offsetEdgeLength = offsetLength - currentOffsetLength;
                 edgeLength = currentEdgeLength;
             }
 
