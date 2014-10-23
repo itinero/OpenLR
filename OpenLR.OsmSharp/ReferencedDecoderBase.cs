@@ -411,7 +411,7 @@ namespace OpenLR.OsmSharp
                         candidates.Add(vertex);
                         scoredCandidates.Add(new CandidateVertex()
                         {
-                            Score = Score.New("vertex_distance", string.Format("The vertex score compare to max distance {0}", _maxVertexDistance), (float)System.Math.Max(0, (1.0 - (distance.Value / _maxVertexDistance.Value))), 1), // calculate scoring compared to the fixed max distance.
+                            Score = Score.New(Score.VERTEX_DISTANCE, string.Format("The vertex score compare to max distance {0}", _maxVertexDistance), (float)System.Math.Max(0, (1.0 - (distance.Value / _maxVertexDistance.Value))), 1), // calculate scoring compared to the fixed max distance.
                             Vertex = vertex
                         });
                     }
@@ -426,7 +426,7 @@ namespace OpenLR.OsmSharp
                         candidates.Add(vertex);
                         scoredCandidates.Add(new CandidateVertex()
                         {
-                            Score = Score.New("vertex_distance", string.Format("The vertex score compare to max distance {0}", _maxVertexDistance), (float)System.Math.Max(0, (1.0 - (distance.Value / _maxVertexDistance.Value))), 1), // calculate scoring compared to the fixed max distance.
+                            Score = Score.New(Score.VERTEX_DISTANCE, string.Format("The vertex score compare to max distance {0}", _maxVertexDistance), (float)System.Math.Max(0, (1.0 - (distance.Value / _maxVertexDistance.Value))), 1), // calculate scoring compared to the fixed max distance.
                             Vertex = vertex
                         });
                     }
@@ -459,7 +459,7 @@ namespace OpenLR.OsmSharp
                         (forward && oneway.Value == arc.Value.Forward) ||
                         (!forward && oneway.Value != arc.Value.Forward))
                     {
-                        var score = Score.New("match_arc", "Metric indicating a match with fow, frc etc...", this.MatchArc(tags, fow, frc), 1);
+                        var score = Score.New(Score.MATCH_ARC, "Metric indicating a match with fow, frc etc...", this.MatchArc(tags, fow, frc), 1);
                         if (score.Value > 0)
                         { // ok, there is a match.
                             // check bearing.
@@ -470,7 +470,7 @@ namespace OpenLR.OsmSharp
                             {
                                 TargetVertex = arc.Key,
                                 Score = score + 
-                                    Score.New("bearing_diff", "Bearing difference (0=0 & 180=1)", ((180f - localBearingDiff) / 180f), 1),
+                                    Score.New(Score.BEARING_DIFF, "Bearing difference (0=0 & 180=1)", ((180f - localBearingDiff) / 180f), 1),
                                 Edge = arc.Value
                             });
                         }

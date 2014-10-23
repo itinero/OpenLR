@@ -6,6 +6,31 @@
     public abstract class Score
     {
         /// <summary>
+        /// Holds the candidate route score name.
+        /// </summary>
+        public static string CANDIDATE_ROUTE = "candidate_route";
+
+        /// <summary>
+        /// Holds the distance comparison score name.
+        /// </summary>
+        public static string DISTANCE_COMPARISON = "distance_comparison";
+
+        /// <summary>
+        /// Holds the vertex distance score name.
+        /// </summary>
+        public static string VERTEX_DISTANCE = "vertex_distance";
+
+        /// <summary>
+        /// Holds the match arc score name.
+        /// </summary>
+        public static string MATCH_ARC = "match_arc";
+
+        /// <summary>
+        /// Holds the bearing difference.
+        /// </summary>
+        public static string BEARING_DIFF = "bearing_diff";
+
+        /// <summary>
         /// Gets the name of this score.
         /// </summary>
         public abstract string Name { get; }
@@ -25,6 +50,13 @@
         /// </summary>
         /// <remarks>If value is max 1, this contains 1.</remarks>
         public abstract double Reference { get; }
+
+        /// <summary>
+        /// Gets a score by name.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public abstract Score GetByName(string key);
 
         /// <summary>
         /// Creates a new simple score.

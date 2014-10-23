@@ -179,7 +179,7 @@ namespace OpenLR.OsmSharp.Osm
                 return new CandidateRoute<LiveEdge>()
                 {
                     Route = null,
-                    Score = Score.New("candidate_route", "Candidate route quality.", 0, 1)
+                    Score = Score.New(Score.CANDIDATE_ROUTE, "Candidate route quality.", 0, 1)
                 };
             }
 
@@ -225,7 +225,7 @@ namespace OpenLR.OsmSharp.Osm
                     Edges = edges.ToArray(),
                     Vertices = vertices.ToArray()
                 },
-                Score = Score.New("candidate_route", "Candidate route quality.", 1, 1)
+                Score = Score.New(Score.CANDIDATE_ROUTE, "Candidate route quality.", 1, 1)
             };
         }
 

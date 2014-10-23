@@ -79,5 +79,29 @@
         {
             get { return this.Left.Reference + this.Right.Reference; }
         }
+
+        /// <summary>
+        /// Gets a score by name.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public override Score GetByName(string key)
+        {
+            var leftScore = this.Left.GetByName(key);
+            var rightScore = this.Right.GetByName(key);
+            if (leftScore != null && rightScore != null)
+            {
+                return leftScore + rightScore;
+            }
+            else if(leftScore != null)
+            {
+                return leftScore;
+            }
+            else if (rightScore != null)
+            {
+                return rightScore;
+            }
+            return null;
+        }
     }
 }

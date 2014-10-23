@@ -171,7 +171,7 @@ namespace OpenLR.OsmSharp
                 if (distance < maxVertexDistance.Value)
                 { // ok, this arc is closer.
                     // calculate score for projected new vertex.
-                    var newVertexScore = Score.New("vertex_distance", string.Format("Metric of vertex quality relative to distance {0}.", this.MaxVertexDistance),
+                    var newVertexScore = Score.New(Score.VERTEX_DISTANCE, string.Format("Metric of vertex quality relative to distance {0}.", this.MaxVertexDistance),
                         (float)System.Math.Max(0, (1.0 - (distance / this.MaxVertexDistance.Value))), 1);
 
                     // add intermediate vertex.

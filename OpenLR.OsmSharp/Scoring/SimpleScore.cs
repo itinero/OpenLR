@@ -59,5 +59,19 @@
         /// Gets the references of this score.
         /// </summary>
         public override double Reference { get { return _reference; } }
+
+        /// <summary>
+        /// Gets a score by name.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public override Score GetByName(string key)
+        {
+            if(this.Name == key)
+            {
+                return this;
+            }
+            return null;
+        }
     }
 }

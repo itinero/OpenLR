@@ -45,6 +45,7 @@ namespace OpenLR.OsmSharp.Decoding
         public override ReferencedPointAlongLine<TEdge> Decode(PointAlongLineLocation location)
         {
             CandidateRoute<TEdge> best = null;
+            CombinedScore<TEdge> bestCombinedEdge = null;
             var vertexDistance = this.MaxVertexDistance.Value / 8;
             while ((best == null || best.Route == null) && vertexDistance <= this.MaxVertexDistance.Value)
             {
@@ -108,13 +109,14 @@ namespace OpenLR.OsmSharp.Decoding
                     // verify bearing by adding it to the score.
                     if (candidate != null && candidate.Route != null)
                     { // calculate bearing and compare with reference bearing.
-
                         // calculate distance and compare with distancetonext.
                         var distance = this.GetDistance(candidate.Route).Value;
                         var expectedDistance = location.First.DistanceToNext;
                         var distanceDiff = System.Math.Abs(distance - expectedDistance);
-                        var deviation = Score.New("distance_comparison", "Compares expected location distance with decoded location distance (1=prefect, 0=difference bigger than total distance)",
+                        var deviation = Score.New(Score.DISTANCE_COMPARISON, "Compares expected location distance with decoded location distance (1=prefect, 0=difference bigger than total distance)",
                             1 - System.Math.Min(System.Math.Max(distanceDiff / expectedDistance, 0), 1), 1);
+
+                        // add deviation-score.
                         candidate.Score = candidate.Score * deviation;
                     }
 
@@ -122,10 +124,12 @@ namespace OpenLR.OsmSharp.Decoding
                     if (best == null)
                     { // there was no previous candidate.
                         best = candidate;
+                        bestCombinedEdge = combinedScore;
                     }
                     else if (best.Score.Value < candidate.Score.Value)
                     { // the new candidate is better.
                         best = candidate;
+                        bestCombinedEdge = combinedScore;
                     }
                     else if (best.Score.Value > candidate.Score.Value)
                     { // the current candidate is better.
@@ -142,6 +146,9 @@ namespace OpenLR.OsmSharp.Decoding
             { // no location could be found.
                 throw new ReferencedDecodingException(location, "No valid location was found.");
             }
+
+            // calculate total score.
+            var totalScore = bestCombinedEdge.Score + best.Score;
 
             // calculate the percentage value.
             var offsetRatio = 0.0;
@@ -163,7 +170,7 @@ namespace OpenLR.OsmSharp.Decoding
 
             // create the referenced location.
             var pointAlongLineLocation = new ReferencedPointAlongLine<TEdge>();
-            pointAlongLineLocation.Score = (float)(best.Score.Value / best.Score.Reference);
+            pointAlongLineLocation.Score = totalScore;
             pointAlongLineLocation.Route = best.Route;
             pointAlongLineLocation.Latitude = latitudeReference;
             pointAlongLineLocation.Longitude = longitudeReference;

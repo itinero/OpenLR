@@ -1,4 +1,5 @@
 ﻿using OpenLR.Model;
+using OpenLR.OsmSharp.Scoring;
 using OpenLR.Referenced;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Units.Distance;
@@ -30,6 +31,11 @@ namespace OpenLR.OsmSharp.Locations
         /// Gets or sets the orientation.
         /// </summary>
         public Orientation Orientation { get; set; }
+
+        /// <summary>
+        /// Holds an indication of accuracy.
+        /// </summary>
+        public Score Score { get; set; }
 
         /// <summary>
         /// Gets or sets the edge meta.
