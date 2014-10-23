@@ -1804,7 +1804,7 @@
             <param name="size"></param>
             <param name="graph"></param>
         </member>
-        <member name="M:OsmSharp.Routing.Graph.Serialization.FlatfileSerializer`1.DeserializeTags(OsmSharp.IO.LimitedStream,System.Int64,OsmSharp.Collections.Tags.Index.ITagsCollectionIndex)">
+        <member name="M:OsmSharp.Routing.Graph.Serialization.FlatfileSerializer`1.DeserializeTags(OsmSharp.IO.LimitedStream,System.Int64,OsmSharp.Collections.Tags.Index.TagsTableCollectionIndex)">
             <summary>
             Deserializes the meta-data.
             </summary>
