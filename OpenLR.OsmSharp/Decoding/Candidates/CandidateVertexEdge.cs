@@ -1,9 +1,5 @@
-﻿using OsmSharp.Routing.Graph;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using OpenLR.OsmSharp.Scoring;
+using OsmSharp.Routing.Graph;
 
 namespace OpenLR.OsmSharp.Decoding.Candidates
 {
@@ -16,7 +12,7 @@ namespace OpenLR.OsmSharp.Decoding.Candidates
         /// <summary>
         /// The combined score of vertex and edge.
         /// </summary>
-        public float Score { get; set; }
+        public Score Score { get; set; }
 
         /// <summary>
         /// Gets or sets the candidate vertex.

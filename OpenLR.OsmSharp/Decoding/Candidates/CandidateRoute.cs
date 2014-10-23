@@ -1,4 +1,5 @@
 ﻿using OpenLR.OsmSharp.Locations;
+using OpenLR.OsmSharp.Scoring;
 using OsmSharp.Routing.Graph;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,6 @@ namespace OpenLR.OsmSharp.Decoding.Candidates
         /// <summary>
         /// Gets or sets the score.
         /// </summary>
-        public float Score { get; set; }
+        public Score Score { get; set; }
     }
 }

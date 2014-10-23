@@ -103,16 +103,16 @@ namespace OpenLR.OsmSharp.Decoding
                     { // there was no previous candidate or candidate has no route.
                         best = candidate;
                     }
-                    else if (best.Score < candidate.Score)
+                    else if (best.Score.Value < candidate.Score.Value)
                     { // the new candidate is better.
                         best = candidate;
                     }
-                    else if (best.Score > candidate.Score)
+                    else if (best.Score.Value > candidate.Score.Value)
                     { // the current candidate is better.
                         break;
                     }
 
-                    if (best.Score == 1)
+                    if (best.Score.Value == 1)
                     { // stop search on a perfect scrore!
                         break;
                     }

@@ -4,6 +4,7 @@ using OpenLR.OsmSharp.Decoding.Candidates;
 using OpenLR.OsmSharp.Decoding.Scoring;
 using OpenLR.OsmSharp.Locations;
 using OpenLR.OsmSharp.Router;
+using OpenLR.OsmSharp.Scoring;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Routing.Graph;
@@ -86,8 +87,7 @@ namespace OpenLR.OsmSharp.Decoding
                             combinedScoresSet.Add(new CombinedScore<TEdge>()
                             {
                                 Source = previousCandidate,
-                                Target = currentCandidate,
-                                BearingScore = (float)(1.0) // - (previousBearingDiff / 360.0) - (currentBearingDiff / 360.0))
+                                Target = currentCandidate
                             });
                         }
                     }
@@ -108,12 +108,14 @@ namespace OpenLR.OsmSharp.Decoding
                     // verify bearing by adding it to the score.
                     if (candidate != null && candidate.Route != null)
                     { // calculate bearing and compare with reference bearing.
+
                         // calculate distance and compare with distancetonext.
                         var distance = this.GetDistance(candidate.Route).Value;
                         var expectedDistance = location.First.DistanceToNext;
                         var distanceDiff = System.Math.Abs(distance - expectedDistance);
-                        var deviation = 1 - System.Math.Min(System.Math.Max(distanceDiff / expectedDistance, 0), 1);
-                        candidate.Score = (float)(candidate.Score * deviation);
+                        var deviation = Score.New("distance_comparison", "Compares expected location distance with decoded location distance (1=prefect, 0=difference bigger than total distance)",
+                            1 - System.Math.Min(System.Math.Max(distanceDiff / expectedDistance, 0), 1), 1);
+                        candidate.Score = candidate.Score * deviation;
                     }
 
                     // check candidate.
@@ -121,11 +123,11 @@ namespace OpenLR.OsmSharp.Decoding
                     { // there was no previous candidate.
                         best = candidate;
                     }
-                    else if (best.Score < candidate.Score)
+                    else if (best.Score.Value < candidate.Score.Value)
                     { // the new candidate is better.
                         best = candidate;
                     }
-                    else if (best.Score > candidate.Score)
+                    else if (best.Score.Value > candidate.Score.Value)
                     { // the current candidate is better.
                         break;
                     }
@@ -161,7 +163,7 @@ namespace OpenLR.OsmSharp.Decoding
 
             // create the referenced location.
             var pointAlongLineLocation = new ReferencedPointAlongLine<TEdge>();
-            pointAlongLineLocation.Score = best.Score / 2.0f;
+            pointAlongLineLocation.Score = (float)(best.Score.Value / best.Score.Reference);
             pointAlongLineLocation.Route = best.Route;
             pointAlongLineLocation.Latitude = latitudeReference;
             pointAlongLineLocation.Longitude = longitudeReference;

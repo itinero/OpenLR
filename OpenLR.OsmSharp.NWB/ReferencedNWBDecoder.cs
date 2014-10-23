@@ -4,6 +4,7 @@ using OpenLR.OsmSharp.Decoding.Candidates;
 using OpenLR.OsmSharp.Locations;
 using OpenLR.OsmSharp.Matching;
 using OpenLR.OsmSharp.Router;
+using OpenLR.OsmSharp.Scoring;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Graph.Router.Dykstra;
@@ -96,7 +97,7 @@ namespace OpenLR.OsmSharp.NWB
                 return new CandidateRoute<LiveEdge>()
                 {
                     Route = null,
-                    Score = 0
+                    Score = Score.New("candidate_route", "Candidate route quality.", 0, 1)
                 };
             }
 
@@ -147,7 +148,7 @@ namespace OpenLR.OsmSharp.NWB
                     Edges = edges.ToArray(),
                     Vertices = vertices.ToArray()
                 },
-                Score = 1
+                Score = Score.New("candidate_route", "Candidate route quality.", 1, 1)
             };
         }
 

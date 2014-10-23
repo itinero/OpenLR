@@ -21,7 +21,7 @@ namespace OpenLR.OsmSharp.Decoding.Scoring
         /// <returns></returns>
         public int Compare(CombinedScore<TEdge> x, CombinedScore<TEdge> y)
         {
-            var comparison = y.Score.CompareTo(x.Score);
+            var comparison = y.Score.Value.CompareTo(x.Score.Value);
             if(comparison == 0)
             {
                 if(y.Target.Vertex == x.Target.Vertex && x.Source.Vertex == y.Source.Vertex &&

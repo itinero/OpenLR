@@ -2,6 +2,7 @@
 using OpenLR.Model;
 using OpenLR.OsmSharp.Decoding.Candidates;
 using OpenLR.OsmSharp.Router;
+using OpenLR.OsmSharp.Scoring;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Routing;
@@ -170,7 +171,8 @@ namespace OpenLR.OsmSharp
                 if (distance < maxVertexDistance.Value)
                 { // ok, this arc is closer.
                     // calculate score for projected new vertex.
-                    var newVertexScore = (float)(1.0 - (distance / this.MaxVertexDistance.Value)); // calculate scoring compared to the fixed max distance.
+                    var newVertexScore = Score.New("vertex_distance", string.Format("Metric of vertex quality relative to distance {0}.", this.MaxVertexDistance),
+                        (float)System.Math.Max(0, (1.0 - (distance / this.MaxVertexDistance.Value))), 1);
 
                     // add intermediate vertex.
                     this.Graph.RemoveArc(arc.Key, arc.Value.Key);

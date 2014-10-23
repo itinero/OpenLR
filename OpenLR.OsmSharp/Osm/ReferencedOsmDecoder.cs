@@ -3,6 +3,7 @@ using OpenLR.Model;
 using OpenLR.OsmSharp.Decoding.Candidates;
 using OpenLR.OsmSharp.Locations;
 using OpenLR.OsmSharp.Router;
+using OpenLR.OsmSharp.Scoring;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Routing;
@@ -178,7 +179,7 @@ namespace OpenLR.OsmSharp.Osm
                 return new CandidateRoute<LiveEdge>()
                 {
                     Route = null,
-                    Score = 0
+                    Score = Score.New("candidate_route", "Candidate route quality.", 0, 1)
                 };
             }
 
@@ -224,7 +225,7 @@ namespace OpenLR.OsmSharp.Osm
                     Edges = edges.ToArray(),
                     Vertices = vertices.ToArray()
                 },
-                Score = 1
+                Score = Score.New("candidate_route", "Candidate route quality.", 1, 1)
             };
         }
 
