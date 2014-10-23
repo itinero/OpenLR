@@ -7,6 +7,7 @@ using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OpenLR.OsmSharp.Locations
 {
@@ -122,13 +123,27 @@ namespace OpenLR.OsmSharp.Locations
                 var edge = this.Edges[idx];
                 if (edge.Coordinates != null)
                 {
-                    foreach (var coordinate in edge.Coordinates)
+                    if (edge.Forward)
                     {
-                        coordinates.Add(new Coordinate()
+                        foreach (var coordinate in edge.Coordinates)
                         {
-                            X = coordinate.Longitude,
-                            Y = coordinate.Latitude
-                        });
+                            coordinates.Add(new Coordinate()
+                            {
+                                X = coordinate.Longitude,
+                                Y = coordinate.Latitude
+                            });
+                        }
+                    }
+                    else
+                    {
+                        foreach (var coordinate in edge.Coordinates.Reverse())
+                        {
+                            coordinates.Add(new Coordinate()
+                            {
+                                X = coordinate.Longitude,
+                                Y = coordinate.Latitude
+                            });
+                        }
                     }
                 }
 

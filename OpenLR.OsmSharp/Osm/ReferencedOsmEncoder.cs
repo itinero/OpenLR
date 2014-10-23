@@ -28,25 +28,6 @@ namespace OpenLR.OsmSharp.Osm
         }
 
         /// <summary>
-        /// Returns the location of the given vertex.
-        /// </summary>
-        /// <param name="vertex"></param>
-        /// <returns></returns>
-        public override Coordinate GetVertexLocation(long vertex)
-        {
-            float latitude, longitude;
-            if (!this.Graph.GetVertex(vertex, out latitude, out longitude))
-            { // oeps, vertex does not exist!
-                throw new System.ArgumentOutOfRangeException("vertex", string.Format("Vertex {0} not found!", vertex));
-            }
-            return new Coordinate()
-            {
-                Latitude = latitude,
-                Longitude = longitude
-            };
-        }
-
-        /// <summary>
         /// Returns the tags associated with the given tags id.
         /// </summary>
         /// <param name="tagsId"></param>

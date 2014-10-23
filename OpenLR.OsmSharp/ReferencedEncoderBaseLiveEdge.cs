@@ -32,6 +32,7 @@ namespace OpenLR.OsmSharp
         /// </summary>
         /// <param name="vertex">The invalid vertex.</param>
         /// <param name="edge">The edge that leads to the target vertex.</param>
+        /// <param name="targetVertex">The target vertex.</param>
         /// <param name="excludeSet">The set of vertices that should be excluded in the search.</param>
         /// <param name="searchForward">When true, the search is forward, otherwise backward.</param>
         public override PathSegment FindValidVertexFor(long vertex, LiveEdge edge, long targetVertex, HashSet<long> excludeSet, bool searchForward)

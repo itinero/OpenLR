@@ -481,6 +481,25 @@ namespace OpenLR.OsmSharp
         }
 
         /// <summary>
+        /// Returns the location of the given vertex.
+        /// </summary>
+        /// <param name="vertex"></param>
+        /// <returns></returns>
+        public virtual Coordinate GetVertexLocation(long vertex)
+        {
+            float latitude, longitude;
+            if (!this.Graph.GetVertex(vertex, out latitude, out longitude))
+            { // oeps, vertex does not exist!
+                throw new ArgumentOutOfRangeException("vertex", string.Format("Vertex {0} not found!", vertex));
+            }
+            return new Coordinate()
+            {
+                Latitude = latitude,
+                Longitude = longitude
+            };
+        }
+
+        /// <summary>
         /// Calculates a match between the tags collection and the properties of the OpenLR location reference.
         /// </summary>
         /// <param name="tags"></param>
@@ -600,6 +619,7 @@ namespace OpenLR.OsmSharp
             coordinates.Add(this.GetCoordinate(route.Vertices[0]).ToGeoCoordinate());
             for (int edgeIdx = 0; edgeIdx < route.Edges.Length; edgeIdx++)
             {
+                currentEdgeLength = 0;
                 var edge = route.Edges[edgeIdx];
                 if (edge.Coordinates != null)
                 { // there are intermediate coordinates.

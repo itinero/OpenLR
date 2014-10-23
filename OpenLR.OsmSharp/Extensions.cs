@@ -305,24 +305,11 @@ namespace OpenLR.OsmSharp
             var geometryFactory = new GeometryFactory();
 
             // create the feature collection.
-            var featureCollection = new FeatureCollection();
+            var featureCollection = referencedPointALongLineLocation.Route.ToFeatures();
 
             // create the coordinates.
-            var geoCoordinates = baseDecoder.GetCoordinates(referencedPointALongLineLocation.Route);
-            featureCollection.Add(baseDecoder.GetCoordinate(referencedPointALongLineLocation.Route.Vertices[0]).ToFeature());
-            featureCollection.Add(baseDecoder.GetCoordinate(referencedPointALongLineLocation.Route.Vertices[referencedPointALongLineLocation.Route.Vertices.Length - 1]).ToFeature());
-            var coordinates = new List<Coordinate>(geoCoordinates.Count);
-            for(int idx = 0; idx < geoCoordinates.Count; idx++)
-            {
-                coordinates.Add(new Coordinate(geoCoordinates[idx].Longitude, geoCoordinates[idx].Latitude));
-            }
-
-            // create a line feature.
-            var line = geometryFactory.CreateLineString(coordinates.ToArray());
-            var lineAttributes = new AttributesTable();
-            lineAttributes.AddAttribute("orientation", referencedPointALongLineLocation.Orientation.ToString());
-            var lineFeature = new Feature(line, lineAttributes);
-            featureCollection.Add(lineFeature);
+            featureCollection.Add(baseDecoder.GetVertexLocation(referencedPointALongLineLocation.Route.Vertices[0]).ToFeature());
+            featureCollection.Add(baseDecoder.GetVertexLocation(referencedPointALongLineLocation.Route.Vertices[referencedPointALongLineLocation.Route.Vertices.Length - 1]).ToFeature());
 
             // create a feature for the actual location.
             var locationCoordinate = new Coordinate(referencedPointALongLineLocation.Longitude, referencedPointALongLineLocation.Latitude);
