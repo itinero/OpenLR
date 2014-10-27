@@ -511,9 +511,19 @@ namespace OpenLR.OsmSharp
             coordinates.Add(from);
             if (edge.Coordinates != null)
             {
-                for (int idx = 0; idx < edge.Coordinates.Length; idx++)
+                if (edge.Forward)
                 {
-                    coordinates.Add(new GeoCoordinate(edge.Coordinates[idx].Latitude, edge.Coordinates[idx].Longitude));
+                    for (int idx = 0; idx < edge.Coordinates.Length; idx++)
+                    {
+                        coordinates.Add(new GeoCoordinate(edge.Coordinates[idx].Latitude, edge.Coordinates[idx].Longitude));
+                    }
+                }
+                else
+                {
+                    for (int idx = edge.Coordinates.Length - 1; idx >= 0; idx--)
+                    {
+                        coordinates.Add(new GeoCoordinate(edge.Coordinates[idx].Latitude, edge.Coordinates[idx].Longitude));
+                    }
                 }
             }
             coordinates.Add(to);

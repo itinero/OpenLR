@@ -256,7 +256,14 @@ namespace OpenLR.OsmSharp.MultiNet
                     if (arc.Key == toVertex)
                     { // there is a candidate arc.
                         found = true;
-                        edges.Add(arc.Value);
+                        if(arc.Value.Forward)
+                        {
+                            edges.Add(arc.Value);
+                        }
+                        else
+                        {
+                            edges.Add(arc.Value.ToReverse());
+                        }
                         break;
                     }
                 }

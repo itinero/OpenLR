@@ -46,7 +46,7 @@ namespace OpenLR.OsmSharp.Decoding
         {
             CandidateRoute<TEdge> best = null;
             CombinedScore<TEdge> bestCombinedEdge = null;
-            var vertexDistance = this.MaxVertexDistance.Value / 8;
+            var vertexDistance = this.MaxVertexDistance.Value;
             while ((best == null || best.Route == null) && vertexDistance <= this.MaxVertexDistance.Value)
             {
                 // reset the graph.
@@ -67,13 +67,13 @@ namespace OpenLR.OsmSharp.Decoding
                 // resolve points if one of the locations still hasn't been found.
                 if ((vertexDistance * 2) > this.MaxVertexDistance.Value)
                 { // this is the maximum distance that will be tested.
-                    if(candidates[0].Count == 0)
+                    if (candidates[0].Count == 0)
                     { // explicitly resolve from.
                         candidates[0] = this.CreateCandidatesFor(location.First, true, vertexDistance);
                     }
-                    else if (candidates[1].Count == 1)
+                    else if (candidates[1].Count == 0)
                     { // explicitly remove to.
-                        candidates[1] = this.CreateCandidatesFor(location.First, true, vertexDistance);
+                        candidates[1] = this.CreateCandidatesFor(location.Last, false, vertexDistance);
                     }
                 }
 
@@ -142,7 +142,7 @@ namespace OpenLR.OsmSharp.Decoding
             }
 
             // check if a location was found or not.
-            if(best == null || best.Route == null)
+            if (best == null || best.Route == null)
             { // no location could be found.
                 throw new ReferencedDecodingException(location, "No valid location was found.");
             }
@@ -152,7 +152,7 @@ namespace OpenLR.OsmSharp.Decoding
 
             // calculate the percentage value.
             var offsetRatio = 0.0;
-            if(location.PositiveOffsetPercentage.HasValue)
+            if (location.PositiveOffsetPercentage.HasValue)
             { // there is a percentage set.
                 offsetRatio = location.PositiveOffsetPercentage.Value / 100.0;
             }
@@ -174,7 +174,7 @@ namespace OpenLR.OsmSharp.Decoding
             pointAlongLineLocation.Route = best.Route;
             pointAlongLineLocation.Latitude = latitudeReference;
             pointAlongLineLocation.Longitude = longitudeReference;
-            if(location.Orientation.HasValue)
+            if (location.Orientation.HasValue)
             {
                 pointAlongLineLocation.Orientation = location.Orientation.Value;
             }

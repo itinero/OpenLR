@@ -301,43 +301,36 @@ namespace OpenLR.OsmSharp
             if (useForward)
             { // encode first point to last point.
                 edge = closest.Value.Value;
-                if (!closest.Value.Value.Forward)
-                { // use reverse edge.
-                    var reverseEdge = new LiveEdge();
-                    reverseEdge.Tags = closest.Value.Value.Tags;
-                    reverseEdge.Forward = !closest.Value.Value.Forward;
-                    reverseEdge.Distance = closest.Value.Value.Distance;
-                    reverseEdge.Coordinates = null;
-                    if (closest.Value.Value.Coordinates != null)
-                    {
-                        var reverse = new GeoCoordinateSimple[closest.Value.Value.Coordinates.Length];
-                        closest.Value.Value.Coordinates.CopyToReverse(reverse, 0);
-                        reverseEdge.Coordinates = reverse;
-                    }
-                    edge = reverseEdge;
-                }
+                //if (!closest.Value.Value.Forward)
+                //{ // use reverse edge.
+                //    var reverseEdge = new LiveEdge();
+                //    reverseEdge.Tags = closest.Value.Value.Tags;
+                //    reverseEdge.Forward = !closest.Value.Value.Forward;
+                //    reverseEdge.Distance = closest.Value.Value.Distance;
+                //    reverseEdge.Coordinates = null;
+                //    if (closest.Value.Value.Coordinates != null)
+                //    {
+                //        var reverse = new GeoCoordinateSimple[closest.Value.Value.Coordinates.Length];
+                //        closest.Value.Value.Coordinates.CopyToReverse(reverse, 0);
+                //        reverseEdge.Coordinates = reverse;
+                //    }
+                //    edge = reverseEdge;
+                //}
                 from = closest.Key;
                 to = closest.Value.Key;
             }
             else
             { // encode last point to first point.
-                edge = closest.Value.Value;
-                if (closest.Value.Value.Forward)
-                { // reverse edge if needed.
-                    // Next OsmSharp version: use closest.Value.Value.Reverse();
-                    var reverseEdge = new LiveEdge();
-                    reverseEdge.Tags = closest.Value.Value.Tags;
-                    reverseEdge.Forward = !closest.Value.Value.Forward;
-                    reverseEdge.Distance = closest.Value.Value.Distance;
-                    reverseEdge.Coordinates = null;
-                    if (closest.Value.Value.Coordinates != null)
-                    {
-                        var reverse = new GeoCoordinateSimple[closest.Value.Value.Coordinates.Length];
-                        closest.Value.Value.Coordinates.CopyToReverse(reverse, 0);
-                        reverseEdge.Coordinates = reverse;
-                    }
-                    edge = reverseEdge;
-                }
+                edge = closest.Value.Value.ToReverse();
+
+                // Next OsmSharp version: use closest.Value.Value.Reverse()?
+                var reverseEdge = new LiveEdge();
+                reverseEdge.Tags = closest.Value.Value.Tags;
+                reverseEdge.Forward = !closest.Value.Value.Forward;
+                reverseEdge.Distance = closest.Value.Value.Distance;
+                reverseEdge.Coordinates = closest.Value.Value.Coordinates;
+
+                edge = reverseEdge;
                 from = closest.Value.Key;
                 to = closest.Key;
             }
@@ -397,10 +390,14 @@ namespace OpenLR.OsmSharp
                         for (int idx = 0; idx < vertices.Count - 1; idx++)
                         { // loop over edges.
                             edge = vertices[idx].Edge;
-                            if (edge.Forward)
-                            { // use reverse edge.
-                                edge = edge.ToReverse();
-                            }
+                            // Next OsmSharp version: use closest.Value.Value.Reverse()?
+                            var reverseEdge = new LiveEdge();
+                            reverseEdge.Tags = edge.Tags;
+                            reverseEdge.Forward = !edge.Forward;
+                            reverseEdge.Distance = edge.Distance;
+                            reverseEdge.Coordinates = edge.Coordinates;
+
+                            edge = reverseEdge;
                             edges.Add(edge);
                         }
 
@@ -448,10 +445,10 @@ namespace OpenLR.OsmSharp
                         for (int idx = 1; idx < vertices.Count; idx++)
                         { // loop over edges.
                             edge = vertices[idx].Edge;
-                            if (!edge.Forward)
-                            { // use reverse edge.
-                                edge = edge.ToReverse();
-                            }
+                            //if (!edge.Forward)
+                            //{ // use reverse edge.
+                            //    edge = edge.ToReverse();
+                            //}
                             edges.Add(edge);
                         }
 
