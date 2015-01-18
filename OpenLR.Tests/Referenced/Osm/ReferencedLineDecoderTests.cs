@@ -34,6 +34,7 @@ namespace OpenLR.Tests.Referenced.Osm
             location.First.FuntionalRoadClass = FunctionalRoadClass.Frc3;
             location.First.FormOfWay = FormOfWay.MultipleCarriageWay;
             location.First.LowestFunctionalRoadClassToNext = FunctionalRoadClass.Frc3;
+            location.First.Bearing = 0;
             location.Intermediate = new LocationReferencePoint[1];
             location.Intermediate[0] = new LocationReferencePoint();
             location.Intermediate[0].Coordinate = new Coordinate() { Latitude = 49.60398, Longitude = 6.12838 };
@@ -41,12 +42,14 @@ namespace OpenLR.Tests.Referenced.Osm
             location.Intermediate[0].FuntionalRoadClass = FunctionalRoadClass.Frc3;
             location.Intermediate[0].FormOfWay = FormOfWay.SingleCarriageWay;
             location.Intermediate[0].LowestFunctionalRoadClassToNext = FunctionalRoadClass.Frc5;
+            location.Intermediate[0].Bearing = 0;
             location.Last = new LocationReferencePoint();
             location.Last = new LocationReferencePoint();
             location.Last.Coordinate = new Coordinate() { Latitude = 49.60305, Longitude = 6.12817 };
             location.Last.DistanceToNext = 10;
             location.Last.FuntionalRoadClass = FunctionalRoadClass.Frc5;
             location.Last.FormOfWay = FormOfWay.SingleCarriageWay;
+            location.Last.Bearing = 0;
 
             // build a graph to decode onto.
             var tags = new TagsTableCollectionIndex();

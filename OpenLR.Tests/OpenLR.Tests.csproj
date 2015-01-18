@@ -163,6 +163,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <EmbeddedResource Include="Data\mons.osm.pbf" />
+    <EmbeddedResource Include="Data\overijse.osm.pbf" />
+    <EmbeddedResource Include="Data\puurs.osm.pbf" />
+    <EmbeddedResource Include="Data\wavre.osm.pbf" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
