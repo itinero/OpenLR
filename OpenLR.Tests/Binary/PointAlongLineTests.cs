@@ -21,7 +21,7 @@ namespace OpenLR.Tests.Binary
             double delta = 0.0001;
 
             // define a base64 string we are sure is a line location.
-            string stringData = "KwRboCNGfhJRAf/O/7SSQ00=";
+            string stringData = "KwRbnyNGfhJBAv/P/7WSAEw=";
 
             // decode.
             var decoder = new PointAlongLineDecoder();
@@ -39,7 +39,7 @@ namespace OpenLR.Tests.Binary
             Assert.AreEqual(FunctionalRoadClass.Frc2, pointAlongLineLocation.First.FuntionalRoadClass);
             Assert.AreEqual(FormOfWay.MultipleCarriageWay, pointAlongLineLocation.First.FormOfWay);
             Assert.AreEqual(FunctionalRoadClass.Frc2, pointAlongLineLocation.First.LowestFunctionalRoadClassToNext);
-            Assert.AreEqual(17, pointAlongLineLocation.First.Bearing);
+            Assert.AreEqual(17, pointAlongLineLocation.First.Bearing.Value, 11.25); // binary encode loses accuracy for bearing.
 
             // check second reference.
             Assert.IsNotNull(pointAlongLineLocation.Last);
@@ -47,12 +47,12 @@ namespace OpenLR.Tests.Binary
             Assert.AreEqual(49.60521, pointAlongLineLocation.Last.Coordinate.Latitude, delta); // 49.60521°
             Assert.AreEqual(FunctionalRoadClass.Frc2, pointAlongLineLocation.Last.FuntionalRoadClass);
             Assert.AreEqual(FormOfWay.MultipleCarriageWay, pointAlongLineLocation.Last.FormOfWay);
-            Assert.AreEqual(3, pointAlongLineLocation.Last.Bearing);
+            Assert.AreEqual(3, pointAlongLineLocation.Last.Bearing.Value, 11.25); // binary encode loses accuracy for bearing.
 
             // check other properties.
             Assert.AreEqual(Orientation.NoOrientation, pointAlongLineLocation.Orientation);
             Assert.AreEqual(SideOfRoad.Left, pointAlongLineLocation.SideOfRoad);
-            Assert.AreEqual(30.19, pointAlongLineLocation.PositiveOffsetPercentage, 0.1);
+            Assert.AreEqual(30.19, pointAlongLineLocation.PositiveOffsetPercentage, 0.5); // binary encode loses accuracy.
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace OpenLR.Tests.Binary
             Assert.AreEqual(location.First.FuntionalRoadClass, pointAlongLineLocation.First.FuntionalRoadClass);
             Assert.AreEqual(location.First.FormOfWay, pointAlongLineLocation.First.FormOfWay);
             Assert.AreEqual(location.First.LowestFunctionalRoadClassToNext, pointAlongLineLocation.First.LowestFunctionalRoadClassToNext);
-            Assert.AreEqual(location.First.Bearing, pointAlongLineLocation.First.Bearing);
+            Assert.AreEqual(location.First.Bearing.Value, pointAlongLineLocation.First.Bearing.Value, 11.25); // binary encode loses accuracy for bearing.
             Assert.AreEqual(location.First.DistanceToNext, pointAlongLineLocation.First.DistanceToNext);
 
             // check second reference.
@@ -120,16 +120,16 @@ namespace OpenLR.Tests.Binary
             Assert.AreEqual(location.Last.Coordinate.Latitude, pointAlongLineLocation.Last.Coordinate.Latitude, delta); // 49.60521°
             Assert.AreEqual(location.Last.FuntionalRoadClass, pointAlongLineLocation.Last.FuntionalRoadClass);
             Assert.AreEqual(location.Last.FormOfWay, pointAlongLineLocation.Last.FormOfWay);
-            Assert.AreEqual(location.Last.Bearing, pointAlongLineLocation.Last.Bearing);
+            Assert.AreEqual(location.Last.Bearing.Value, pointAlongLineLocation.Last.Bearing.Value, 11.25); // binary encode loses accuracy for bearing.
             Assert.AreEqual(location.Last.DistanceToNext, pointAlongLineLocation.Last.DistanceToNext);
 
             // check other properties.
             Assert.AreEqual(location.Orientation, pointAlongLineLocation.Orientation);
             Assert.AreEqual(location.SideOfRoad, pointAlongLineLocation.SideOfRoad);
-            Assert.AreEqual(location.PositiveOffsetPercentage.Value, pointAlongLineLocation.PositiveOffsetPercentage.Value, 0.4f);
+            Assert.AreEqual(location.PositiveOffsetPercentage.Value, pointAlongLineLocation.PositiveOffsetPercentage.Value, 0.5f); // binary encode loses accuracy.
 
             // compare again with reference encoded string.
-            string referenceStringData = "KwRboCNGfhJRAf/O/7SSQ00=";
+            var referenceStringData = "KwRbnyNGfhJBAv/P/7WSAEw=";
             var referenceDecodedLocation = decoder.Decode(referenceStringData);
 
             var referenceBinary = System.Convert.FromBase64String(referenceStringData);
@@ -142,7 +142,7 @@ namespace OpenLR.Tests.Binary
             Assert.AreEqual(referenceDecodedLocation.First.FuntionalRoadClass, pointAlongLineLocation.First.FuntionalRoadClass);
             Assert.AreEqual(referenceDecodedLocation.First.FormOfWay, pointAlongLineLocation.First.FormOfWay);
             Assert.AreEqual(referenceDecodedLocation.First.LowestFunctionalRoadClassToNext, pointAlongLineLocation.First.LowestFunctionalRoadClassToNext);
-            Assert.AreEqual(referenceDecodedLocation.First.Bearing, pointAlongLineLocation.First.Bearing);
+            Assert.AreEqual(referenceDecodedLocation.First.Bearing.Value, pointAlongLineLocation.First.Bearing.Value, 11.25); // binary encode loses accuracy for bearing.
 
             // check second reference.
             Assert.IsNotNull(pointAlongLineLocation.Last);
@@ -150,12 +150,12 @@ namespace OpenLR.Tests.Binary
             Assert.AreEqual(referenceDecodedLocation.Last.Coordinate.Latitude, pointAlongLineLocation.Last.Coordinate.Latitude, delta); // 49.60521°
             Assert.AreEqual(referenceDecodedLocation.Last.FuntionalRoadClass, pointAlongLineLocation.Last.FuntionalRoadClass);
             Assert.AreEqual(referenceDecodedLocation.Last.FormOfWay, pointAlongLineLocation.Last.FormOfWay);
-            Assert.AreEqual(referenceDecodedLocation.Last.Bearing, pointAlongLineLocation.Last.Bearing);
+            Assert.AreEqual(referenceDecodedLocation.Last.Bearing.Value, pointAlongLineLocation.Last.Bearing.Value, 11.25); // binary encode loses accuracy for bearing.
 
             // check other properties.
             Assert.AreEqual(referenceDecodedLocation.Orientation, pointAlongLineLocation.Orientation);
             Assert.AreEqual(referenceDecodedLocation.SideOfRoad, pointAlongLineLocation.SideOfRoad);
-            Assert.AreEqual(referenceDecodedLocation.PositiveOffsetPercentage.Value, pointAlongLineLocation.PositiveOffsetPercentage.Value, 0.4f);
+            Assert.AreEqual(referenceDecodedLocation.PositiveOffsetPercentage.Value, pointAlongLineLocation.PositiveOffsetPercentage.Value, 0.5f); // binary encode loses accuracy.
         }
     }
 }
