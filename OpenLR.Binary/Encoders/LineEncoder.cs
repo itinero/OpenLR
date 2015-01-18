@@ -16,13 +16,18 @@ namespace OpenLR.Binary.Encoders
         /// <returns></returns>
         protected override byte[] EncodeByteArray(LineLocation location)
         {
-            byte[] data = new byte[17];
+            int size = 18;
+            if (location.Intermediate != null)
+            { // each intermediate adds 7 bytes.
+                size = size + (location.Intermediate.Length * 7);
+            }
+            byte[] data = new byte[size];
 
             var header = new Header();
             header.Version = 3;
             header.HasAttributes = true;
             header.ArF0 = false;
-            header.IsPoint = true;
+            header.IsPoint = false;
             header.ArF1 = false;
             HeaderConvertor.Encode(data, 0, header);
             CoordinateConverter.Encode(location.First.Coordinate, data, 1);
@@ -32,10 +37,41 @@ namespace OpenLR.Binary.Encoders
             BearingConvertor.Encode(BearingConvertor.EncodeAngleToBearing(location.First.Bearing.Value), data, 8, 3);
             data[9] = DistanceToNextConvertor.Encode(location.First.DistanceToNext);
 
-            CoordinateConverter.EncodeRelative(location.First.Coordinate, location.Last.Coordinate, data, 10);
-            FunctionalRoadClassConvertor.Encode(location.Last.FuntionalRoadClass.Value, data, 14, 2);
-            FormOfWayConvertor.Encode(location.Last.FormOfWay.Value, data, 14, 5);
-            BearingConvertor.Encode(BearingConvertor.EncodeAngleToBearing(location.Last.Bearing.Value), data, 15, 3);
+            // calculate the intermediate points count.
+            var position = 10;
+            var reference = location.First.Coordinate;
+            if (location.Intermediate != null)
+            {
+                for (int idx = 0; idx < location.Intermediate.Length; idx++)
+                { // create an intermediate point.
+                    var intermediate = location.Intermediate[idx];
+                    CoordinateConverter.EncodeRelative(location.First.Coordinate, intermediate.Coordinate, data, position);
+                    reference = intermediate.Coordinate;
+                    position = position + 4;
+                    FunctionalRoadClassConvertor.Encode(intermediate.FuntionalRoadClass.Value, data, position, 2);
+                    FormOfWayConvertor.Encode(intermediate.FormOfWay.Value, data, position, 5);
+                    position = position + 1;
+                    BearingConvertor.Encode(BearingConvertor.EncodeAngleToBearing(intermediate.Bearing.Value), data, position, 3);
+                    FunctionalRoadClassConvertor.Encode(intermediate.LowestFunctionalRoadClassToNext.Value, data, position, 0);
+                    position = position + 1;
+                    data[position] = DistanceToNextConvertor.Encode(intermediate.DistanceToNext);
+                    position = position + 1;
+                }
+            }
+
+            CoordinateConverter.EncodeRelative(reference, location.Last.Coordinate, data, position);
+            FunctionalRoadClassConvertor.Encode(location.Last.FuntionalRoadClass.Value, data, position + 4, 2);
+            FormOfWayConvertor.Encode(location.Last.FormOfWay.Value, data, position + 4, 5);
+            BearingConvertor.Encode(BearingConvertor.EncodeAngleToBearing(location.Last.Bearing.Value), data, position + 5, 3);
+
+            if (location.PositiveOffsetPercentage.HasValue)
+            { // positive offset percentage is present.
+                OffsetConvertor.Encode(location.PositiveOffsetPercentage.Value, data, position + 6);
+            }
+            if (location.NegativeOffsetPercentage.HasValue)
+            { // positive offset percentage is present.
+                OffsetConvertor.Encode(location.PositiveOffsetPercentage.Value, data, position + 7);
+            }
 
             return data;
         }

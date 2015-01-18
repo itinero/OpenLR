@@ -181,8 +181,8 @@ namespace OpenLR.OsmSharp
             // create a line feature.
             var line = geometryFactory.CreateLineString(coordinates.ToArray());
             var lineAttributes = new AttributesTable();
-            lineAttributes.AddAttribute("negative_offset", lineLocation.NegativeOffset);
-            lineAttributes.AddAttribute("positive_offset", lineLocation.PositiveOffset);
+            lineAttributes.AddAttribute("negative_offset", lineLocation.NegativeOffsetPercentage.HasValue ? lineLocation.NegativeOffsetPercentage.Value : 0);
+            lineAttributes.AddAttribute("positive_offset", lineLocation.PositiveOffsetPercentage.HasValue ? lineLocation.PositiveOffsetPercentage.Value : 0);
             var lineFeature = new Feature(line, lineAttributes);
             featureCollection.Add(lineFeature);
 

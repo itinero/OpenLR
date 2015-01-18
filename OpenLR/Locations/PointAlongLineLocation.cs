@@ -23,6 +23,11 @@ namespace OpenLR.Locations
         public float? PositiveOffsetPercentage { get; set; }
 
         /// <summary>
+        /// Gets or sets the negative offset percentage value (POFF).
+        /// </summary>
+        public float? NegativeOffsetPercentage { get; set; }
+
+        /// <summary>
         /// Gets or sets the side of road information (SOR).
         /// </summary>
         public SideOfRoad? SideOfRoad { get; set; }

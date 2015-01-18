@@ -67,12 +67,12 @@ namespace OpenLR.Binary.Decoders
             var lineLocation = new LineLocation();
             if (location < data.Length)
             { // if present.
-                lineLocation.PositiveOffset = data[location];
+                lineLocation.PositiveOffsetPercentage = data[location];
                 location = location + 1;
             }
             if(location < data.Length)
             { // if present.
-                lineLocation.NegativeOffset = data[location];
+                lineLocation.NegativeOffsetPercentage = data[location];
                 location = location + 1;
             }
             lineLocation.First = first;

@@ -21,15 +21,15 @@ namespace OpenLR.Locations
         /// Gets or sets the last point.
         /// </summary>
         public LocationReferencePoint Last { get; set; }
-        
-        /// <summary>
-        /// Gets or sets the positive offset (POFF) is the difference of the start point of the location and the start point of the desired location along the location reference path.
-        /// </summary>
-        public int? PositiveOffset { get; set; }
 
         /// <summary>
-        /// The negative offset (NOFF) is the difference of the end point of the desired location and the end point of the location reference path.
+        /// Gets or sets the positive offset percentage value (POFF).
         /// </summary>
-        public int? NegativeOffset { get; set; }
+        public float? PositiveOffsetPercentage { get; set; }
+
+        /// <summary>
+        /// Gets or sets the negative offset percentage value (POFF).
+        /// </summary>
+        public float? NegativeOffsetPercentage { get; set; }
     }
 }

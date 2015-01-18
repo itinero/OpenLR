@@ -16,7 +16,7 @@ namespace OpenLR.Binary.Encoders
         /// <returns></returns>
         protected override byte[] EncodeByteArray(PointAlongLineLocation location)
         {
-            byte[] data = new byte[17];
+            var data = new byte[17];
 
             var header = new Header();
             header.Version = 3;
