@@ -1,4 +1,5 @@
-OpenLR - Encoder/decoder
+OpenLR Encoder/decoder
+========================
 
 ** This is still a work in progress
 
