@@ -10,7 +10,7 @@ namespace OpenLR.Tests.Binary
     /// Contains tests for decoding/encoding a point along location to/from OpenLR binary representation.
     /// </summary>
     [TestFixture]
-    public class PointAlongLineTests
+    public class PointAlongLineLocationTests
     {
         /// <summary>
         /// A simple test decoding from a base64 string.

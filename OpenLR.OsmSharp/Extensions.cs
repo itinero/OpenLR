@@ -293,6 +293,31 @@ namespace OpenLR.OsmSharp
         }
 
         /// <summary>
+        /// Converts the referenced line location to features.
+        /// </summary>
+        /// <param name="referencedPointALongLineLocation"></param>
+        /// <param name="baseEncoder"></param>
+        /// <returns></returns>
+        public static List<GeoCoordinate> GetCoordinates<TEdge>(this OpenLR.OsmSharp.Locations.ReferencedLine<TEdge> referencedPointALongLineLocation, ReferencedEncoderBase<TEdge> baseEncoder)
+            where TEdge : IDynamicGraphEdgeData
+        {
+            var coordinates = new List<GeoCoordinate>();
+            for (int idx = 0; idx < referencedPointALongLineLocation.Edges.Length; idx++)
+            {
+                var from = baseEncoder.GetVertexLocation(referencedPointALongLineLocation.Vertices[idx]).ToGeoCoordinate();
+                var to = baseEncoder.GetVertexLocation(referencedPointALongLineLocation.Vertices[idx + 1]).ToGeoCoordinate();
+                var edgeCoordinates = referencedPointALongLineLocation.Edges[idx].GetCoordinates(from, to);
+                if (coordinates.Count > 0)
+                {
+                    coordinates.RemoveAt(coordinates.Count - 1);
+
+                }
+                coordinates.AddRange(edgeCoordinates);
+            }
+            return coordinates;
+        }
+
+        /// <summary>
         /// Converts the referenced point along the line location to features.
         /// </summary>
         /// <param name="referencedPointALongLineLocation"></param>

@@ -110,7 +110,7 @@
     <Compile Include="Binary\GeoCoordinateTests.cs" />
     <Compile Include="Binary\GridLocationTests.cs" />
     <Compile Include="Binary\LineLocationTests.cs" />
-    <Compile Include="Binary\PointAlongLineTests.cs" />
+    <Compile Include="Binary\PointAlongLineLocationTests.cs" />
     <Compile Include="Binary\PoiWithAccessPointLocationDecoderTests.cs" />
     <Compile Include="Binary\PolygonLocationTests.cs" />
     <Compile Include="Binary\RectangleLocationTests.cs" />
@@ -120,6 +120,7 @@
     <Compile Include="Referenced\NWB\NWBMappingTests.cs" />
     <Compile Include="Referenced\NWB\ReferencedPointAlongLineDecoderTests.cs" />
     <Compile Include="Referenced\NWB\ReferencedPointAlongLineEncoderTests.cs" />
+    <Compile Include="Referenced\Osm\ReferencedLineEncoderTests.cs" />
     <Compile Include="Referenced\Real\Osm\RealGraphOsm.cs" />
     <Compile Include="Referenced\Real\Osm\RealReferencedDecoderTests.cs" />
     <Compile Include="Referenced\Osm\ReferencedPointAlongLineDecoderTests.cs" />

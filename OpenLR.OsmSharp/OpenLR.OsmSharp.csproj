@@ -89,6 +89,7 @@
     <Compile Include="Decoding\Candidates\CandidateVertexEdgeComparer.cs" />
     <Compile Include="Encoding\BearingEncoder.cs" />
     <Compile Include="Encoding\ReferencedEncoder.cs" />
+    <Compile Include="Encoding\ReferencedLineEncoder.cs" />
     <Compile Include="Encoding\ReferencedPointAlongLineEncoder.cs" />
     <Compile Include="Locations\ReferencedCircle.cs" />
     <Compile Include="Decoding\ReferencedCircleDecoder.cs" />

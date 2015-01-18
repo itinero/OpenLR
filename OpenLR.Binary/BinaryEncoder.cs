@@ -51,7 +51,7 @@ namespace OpenLR.Binary
         /// <returns></returns>
         public override LocationEncoder<LineLocation> CreateLineLocationEncoder()
         {
-            throw new System.NotImplementedException();
+            return new LineEncoder();
         }
 
         /// <summary>
