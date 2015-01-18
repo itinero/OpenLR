@@ -17,6 +17,7 @@ Decoding/encoding is possible using different datasources, OpenStreetMap, NWB an
 
 Using this library is very simple. There is one decoder and and one encoder for each type of network, OpenStreetMap, NWB or MultiNet. A decoder or encoder needs a routing graph. How to [create a routing graph dump file](#create_routing_graph) read below.
 
+The most basic code sample to create an NWB or MultiNet encoder/decoder:
 ```csharp
 var serializer = new LiveEdgeFlatfileSerializer();
 var nwbGraph = serializer.Deserialize(
