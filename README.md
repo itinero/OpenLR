@@ -8,8 +8,8 @@ Decoding/encoding is possible using different datasources, OpenStreetMap, NWB an
 
 ## Dependencies
 
-OsmSharp: For a basic graph structure, loading data and routing. Use OpenStreetMap for encoding/decoding.
-OsmSharp.Routing.Shape: Use shapefiles for routing and encoding/decoding.
+* OsmSharp: For a basic graph structure, loading data and routing. Use OpenStreetMap for encoding/decoding.
+* OsmSharp.Routing.Shape: Use shapefiles for routing and encoding/decoding.
 
 ## Usage
 
@@ -18,11 +18,13 @@ OsmSharp.Routing.Shape: Use shapefiles for routing and encoding/decoding.
 Using the OpenLR library is very simple. There is one decoder class and and one encoder class for each type of network, OpenStreetMap, NWB or MultiNet:
 
 ```csharp
-var nwbGraph = serializer.Deserialize(new FileInfo(@"path\to\nwbdata.dump").OpenRead());
+var nwbGraph = serializer.Deserialize(
+     new FileInfo(@"path\to\nwbdata.dump").OpenRead());
 var nwbEncoder = ReferencedNWBEncoder.CreateBinary(nwbGraph);
 var nwbDecoder = ReferencedNWBDecoder.CreateBinary(nwbGraph);
 
-var multinetGraph = serializer.Deserialize(new FileInfo(@"path\to\multinetdata.dump").OpenRead());
+var multinetGraph = serializer.Deserialize(
+     new FileInfo(@"path\to\multinetdata.dump").OpenRead());
 var multinetEncoder = ReferencedMultiNetEncoder.CreateBinary(multinetGraph);
 var multinetDecoder = ReferencedMultiNetDecoder.CreateBinary(multinetGraph);
 ```
@@ -55,7 +57,8 @@ usefullKeys.Add("FOW");
 // create an instance of the graph reader and define the columns that contain the 'node-ids'.
 var graphReader = new ShapefileLiveGraphReader("F_JNCTID", "T_JNCTID");
 // read the graph from the folder where the shapefiles are placed.
-var graph = graphReader.Read(@"\path\to\multinetshapes", "*nw.shp", new ShapefileRoutingInterpreter(usefullKeys));
+var graph = graphReader.Read(@"\path\to\multinetshapes", "*nw.shp", 
+     new ShapefileRoutingInterpreter(usefullKeys));
 ```
 
 Loading networks this way can take a while. It's best to make a memory-dump of the routing graph for reuse later:
