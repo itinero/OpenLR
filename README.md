@@ -39,7 +39,7 @@ string encoded = nwbEncoder.Encode(location);
 Decoding is very similar and done by calling 'Decode' on the decoder given an encoded string:
 
 ```csharp
-var decodedLocation = nwbDecoder.Decode(encoded) as ReferencedPointAlongLine<LiveEdge>;
+var decodedLocation = nwbDecoder.Decode(encoded);
 ```
 
 ### Create a memory dump
