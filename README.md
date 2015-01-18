@@ -18,6 +18,7 @@ Decoding/encoding is possible using different datasources, OpenStreetMap, NWB an
 Using the OpenLR library is very simple. There is one decoder class and and one encoder class for each type of network, OpenStreetMap, NWB or MultiNet:
 
 ```csharp
+var serializer = new LiveEdgeFlatfileSerializer();
 var nwbGraph = serializer.Deserialize(
      new FileInfo(@"path\to\nwbdata.dump").OpenRead());
 var nwbEncoder = ReferencedNWBEncoder.CreateBinary(nwbGraph);
