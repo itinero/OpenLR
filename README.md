@@ -15,7 +15,7 @@ Decoding/encoding is possible using different datasources, OpenStreetMap, NWB an
 
 ### The basics
 
-Using the OpenLR library is very simple. There is one decoder class and and one encoder class for each type of network, OpenStreetMap, NWB or MultiNet:
+Using this library is very simple. There is one decoder and and one encoder for each type of network, OpenStreetMap, NWB or MultiNet:
 
 ```csharp
 var serializer = new LiveEdgeFlatfileSerializer();
@@ -39,7 +39,7 @@ string encoded = nwbEncoder.Encode(location);
 Decoding is very similar and done by calling 'Decode' on the decoder given an encoded string:
 
 ```csharp
-var decodedLocation = decoder.Decode(encoded) as ReferencedPointAlongLine<LiveEdge>;
+var decodedLocation = nwbDecoder.Decode(encoded) as ReferencedPointAlongLine<LiveEdge>;
 ```
 
 ### Create a memory dump
