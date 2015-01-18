@@ -15,7 +15,7 @@ Decoding/encoding is possible using different datasources, OpenStreetMap, NWB an
 
 ### The basics
 
-Using this library is very simple. There is one decoder and and one encoder for each type of network, OpenStreetMap, NWB or MultiNet:
+Using this library is very simple. There is one decoder and and one encoder for each type of network, OpenStreetMap, NWB or MultiNet. A decoder or encoder needs a routing graph. How to [create a routing graph dump file](#create_routing_graph) read below.
 
 ```csharp
 var serializer = new LiveEdgeFlatfileSerializer();
@@ -42,7 +42,7 @@ Decoding is very similar and done by calling 'Decode' on the decoder given an en
 var decodedLocation = nwbDecoder.Decode(encoded);
 ```
 
-### Create a memory dump
+### <a name="create_routing_graph"/>Create a memory dump
 
 The raw loader of OsmSharp can be used to load OpenStreetMap-data or load a shapefile. This codesample loads MultiNet data from a shapefile into a routing graph:
 
@@ -65,7 +65,7 @@ var graph = graphReader.Read(@"\path\to\multinetshapes", "*nw.shp",
 Loading networks this way can take a while. It's best to make a memory-dump of the routing graph for reuse later:
 
 ```csharp
-// reading the shapefiles can take a while, this serializes the routing graph to disk to load again later.
+// this serializes the routing graph to disk to load again later.
 var stream = new FileInfo(@"path\to\data.dump").OpenWrite();
 var serializer = new LiveEdgeFlatfileSerializer();
 serializer.Serialize(stream, graph, new TagsCollection());
