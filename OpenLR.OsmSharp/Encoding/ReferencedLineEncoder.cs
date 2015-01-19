@@ -82,6 +82,10 @@ namespace OpenLR.OsmSharp.Encoding
                 var lengthInMeter = coordinates.Length();
                 location.First.DistanceToNext = (int)lengthInMeter.Value;
 
+                // set offsets.
+                location.PositiveOffsetPercentage = referencedLocation.PositiveOffsetPercentage;
+                location.NegativeOffsetPercentage = referencedLocation.NegativeOffsetPercentage;
+
                 return location;
             }
             catch (ReferencedEncodingException)

@@ -674,8 +674,8 @@ namespace OpenLR.OsmSharp
             }
 
             // update offset percentags.
-            referencedLine.PositivePercentageOffset = (float)((positiveOffsetLength / length) * 100.0);
-            referencedLine.NegativePercentageOffset = (float)((negativeOffsetLength / length) * 100.0);
+            referencedLine.PositiveOffsetPercentage = (float)((positiveOffsetLength / length) * 100.0);
+            referencedLine.NegativeOffsetPercentage = (float)((negativeOffsetLength / length) * 100.0);
 
             return referencedLine;
         }

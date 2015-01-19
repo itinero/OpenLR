@@ -44,12 +44,12 @@ namespace OpenLR.OsmSharp.Locations
         /// <summary>
         /// Gets or sets the offset at the beginning of the path representing this location.
         /// </summary>
-        public float PositivePercentageOffset { get; set; }
+        public float PositiveOffsetPercentage { get; set; }
 
         /// <summary>
         /// Gets or sets the offset at the end of the path representing this location.
         /// </summary>
-        public float NegativePercentageOffset { get; set; }
+        public float NegativeOffsetPercentage { get; set; }
 
         /// <summary>
         /// Adds another line location to this one.
