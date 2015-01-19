@@ -205,11 +205,11 @@ namespace OpenLR.Tests.Referenced.Osm
         ///          (100m)
         ///            |
         ///            4
-        /// Toencode: 1->2
-        /// Expected result: 1 is invalid, we should get 3->1->2 with a positive offset percentage of approx 50%.
+        /// Toencode:           1->2
+        /// Expected result:    1 is invalid, we should get 3->1->2 with a positive offset percentage of approx 50%.
         /// </remarks>
         [Test]
-        public void EncodeLineLocation1BuildLineLocationInvalidStart()
+        public void EncodeLineLocation2BuildLineLocationInvalidStart()
         {
             // build a graph to encode from.
             var tags = new TagsTableCollectionIndex();
@@ -259,6 +259,75 @@ namespace OpenLR.Tests.Referenced.Osm
             Assert.AreEqual(edge.Tags, referencedLocation.Edges[1].Tags);
             Assert.AreEqual(50, referencedLocation.PositivePercentageOffset, 1);
             Assert.AreEqual(0, referencedLocation.NegativePercentageOffset);
+        }
+
+        /// <summary>
+        /// A simple referenced line location encoding test.
+        /// </summary>
+        /// <remarks>Tests building a line location from a path with the end point invalid.
+        /// Network:                         5
+        ///                                  |
+        ///                                (100m)
+        ///                                  |
+        ///            3--(100m)--1--(100m)--2
+        ///                                  |
+        ///                                (100m)
+        ///                                  |
+        ///                                  4
+        /// Toencode:           3->1
+        /// Expected result:    1 is invalid, we should get 3->1->2 with a negative offset percentage of approx 50%.
+        /// </remarks>
+        [Test]
+        public void EncodeLineLocation3BuildLineLocationInvalidEnd()
+        {
+            // build a graph to encode from.
+            var tags = new TagsTableCollectionIndex();
+            var graphDataSource = new DynamicGraphRouterDataSource<LiveEdge>(tags);
+            var vertex1 = graphDataSource.AddVertex(51.05849821468899f, 3.7240000000000000f);
+            var vertex2 = graphDataSource.AddVertex(51.05849821468899f, 3.7254400000000000f);
+            var vertex3 = graphDataSource.AddVertex(51.05849821468899f, 3.7225627899169926f);
+            var vertex4 = graphDataSource.AddVertex(51.05760000000000f, 3.7254400000000000f);
+            var vertex5 = graphDataSource.AddVertex(51.05940000000000f, 3.7254400000000000f);
+            var edge = new LiveEdge() // all edge are identical.
+            {
+                Coordinates = null,
+                Distance = 100,
+                Forward = true,
+                Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
+            };
+            graphDataSource.AddArc(vertex1, vertex2, edge, null);
+            graphDataSource.AddArc(vertex2, vertex1, edge.ToReverse(), null);
+            graphDataSource.AddArc(vertex1, vertex3, edge, null);
+            graphDataSource.AddArc(vertex3, vertex1, edge.ToReverse(), null);
+            graphDataSource.AddArc(vertex2, vertex5, edge, null);
+            graphDataSource.AddArc(vertex5, vertex2, edge.ToReverse(), null);
+            graphDataSource.AddArc(vertex2, vertex4, edge, null);
+            graphDataSource.AddArc(vertex4, vertex2, edge.ToReverse(), null);
+
+            // create a referenced location and encode it.
+            var graph = new BasicRouterDataSource<LiveEdge>(graphDataSource);
+
+            var mainEncoder = new ReferencedOsmEncoder(graph, null);
+            var referencedLocation = mainEncoder.BuildLineLocation(new long[] { vertex3, vertex1 }, new LiveEdge[] { edge.ToReverse() }, 0, 0);
+
+            Assert.IsNotNull(referencedLocation);
+            Assert.IsNotNull(referencedLocation.Vertices);
+            Assert.IsNotNull(referencedLocation.Edges);
+            Assert.AreEqual(3, referencedLocation.Vertices.Length);
+            Assert.AreEqual(3, referencedLocation.Vertices[0]);
+            Assert.AreEqual(1, referencedLocation.Vertices[1]);
+            Assert.AreEqual(2, referencedLocation.Vertices[2]);
+            Assert.AreEqual(2, referencedLocation.Edges.Length);
+            Assert.AreEqual(edge.Coordinates, referencedLocation.Edges[0].Coordinates);
+            Assert.AreEqual(edge.Distance, referencedLocation.Edges[0].Distance);
+            Assert.AreEqual(!edge.Forward, referencedLocation.Edges[0].Forward); // edge was reversed.
+            Assert.AreEqual(edge.Tags, referencedLocation.Edges[0].Tags);
+            Assert.AreEqual(edge.Coordinates, referencedLocation.Edges[1].Coordinates);
+            Assert.AreEqual(edge.Distance, referencedLocation.Edges[1].Distance);
+            Assert.AreEqual(edge.Forward, referencedLocation.Edges[1].Forward);
+            Assert.AreEqual(edge.Tags, referencedLocation.Edges[1].Tags);
+            Assert.AreEqual(0, referencedLocation.PositivePercentageOffset, 1);
+            Assert.AreEqual(50, referencedLocation.NegativePercentageOffset, 1);
         }
     }
 }
