@@ -276,10 +276,10 @@ namespace OpenLR.OsmSharp
     public static class ReferencedEncoderBaseExtensions
     {
         /// <summary>
-        /// Builds a point along line location for the given encoder.
+        /// Builds a point along line location.
         /// </summary>
-        /// <param name="encoder"></param>
-        /// <param name="location"></param>
+        /// <param name="encoder">The encoder.</param>
+        /// <param name="location">The location.</param>
         /// <returns></returns>
         public static ReferencedPointAlongLine<LiveEdge> BuildPointAlongLine(this ReferencedEncoderBase<LiveEdge> encoder, GeoCoordinate location)
         {
@@ -474,6 +474,210 @@ namespace OpenLR.OsmSharp
             }
 
             return referencedPointAlongLine;
+        }
+
+        /// <summary>
+        /// Builds a line location given a sequence of vertex->edge->vertex...edge->vertex.
+        /// </summary>
+        /// <param name="encoder">The encoder.</param>
+        /// <param name="vertices">The vertices along the path to create the location for. Contains at least two vertices (#vertices = #edges + 1).</param>
+        /// <param name="edges">The edge along the path to create the location for. Contains at least one edge (#vertices = #edges + 1). Adges need to be taversible by the vehicle profile used by the encoder in the direction of the path</param>
+        /// <param name="positivePercentageOffset">The offset in percentage relative to the distance of the total path and it's start. [0-100[</param>
+        /// <param name="negativePercentageOffset">The offset in percentage relative to the distance of the total path and it's end. [0-100[</param>
+        /// <returns></returns>
+        public static ReferencedLine<LiveEdge> BuildLineLocation(this ReferencedEncoderBase<LiveEdge> encoder, long[] vertices, LiveEdge[] edges, float positivePercentageOffset, float negativePercentageOffset)
+        {
+            // validate parameters.
+            if (encoder == null) { throw new ArgumentNullException("encoder"); }
+            if (vertices == null) { throw new ArgumentNullException("vertices"); }
+            if (edges == null) { throw new ArgumentNullException("edges"); }
+            if (vertices.Length < 2) { throw new ArgumentOutOfRangeException("vertices", "A referenced line location can only be created with a valid path consisting of at least two vertices and one edge."); }
+            if (edges.Length < 1) { throw new ArgumentOutOfRangeException("edges", "A referenced line location can only be created with a valid path consisting of at least two vertices and one edge."); }
+            if (edges.Length + 1 != vertices.Length) { throw new ArgumentException("The #vertices need to equal #edges + 1 to have a valid path."); }
+
+            if (positivePercentageOffset < 0 || positivePercentageOffset >= 100) { throw new ArgumentOutOfRangeException("positivePercentageOffset", "The positive percentage offset should be in the range [0-100[."); }
+            if (negativePercentageOffset < 0 || negativePercentageOffset >= 100) { throw new ArgumentOutOfRangeException("negativePercentageOffset", "The negative percentage offset should be in the range [0-100[."); }
+            if ((negativePercentageOffset + positivePercentageOffset) > 100) { throw new ArgumentException("The negative and positive percentage offsets together should be in the range [0-100[."); }
+
+            // OK, now we have a naive location, we need to check if it's valid.
+            // see: §F section 11.1 @ http://www.tomtom.com/lib/OpenLR/OpenLR-whitepaper.pdf
+            var referencedLine = new OpenLR.OsmSharp.Locations.ReferencedLine<LiveEdge>(encoder.Graph)
+            {
+                Edges = edges.Clone() as LiveEdge[],
+                Vertices = vertices.Clone() as long[]
+            };
+            var length = referencedLine.Length(encoder).Value;
+            var positiveOffsetLength = length * (positivePercentageOffset / 100.0);
+            var negativeOffsetLength = length * (negativePercentageOffset / 100.0);
+
+            // 1: Is the path connected?
+            // 2: Is the path traversable?
+            for (int edgeIdx = 0; edgeIdx < edges.Length; edgeIdx++)
+            {
+                var from = vertices[edgeIdx];
+                var to = vertices[edgeIdx + 1];
+
+                bool found = false;
+                foreach (var edge in encoder.Graph.GetArcs(from))
+                {
+                    if (edge.Key == to &&
+                        edge.Value.Equals(edges[edgeIdx]))
+                    { // edge was found, is valid.
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found)
+                { // edge is not found, path not connected.
+                    throw new ArgumentOutOfRangeException(string.Format("Edge {0} cannot be found between vertex {1} and {2}. The given path is not connected.",
+                        edges[edgeIdx].ToInvariantString(), from, to));
+                }
+                // check whether the edge can traversed.
+                var tags = encoder.Graph.TagsIndex.Get(edges[edgeIdx].Tags);
+                if (!encoder.Vehicle.CanTraverse(tags))
+                { // oeps, cannot be traversed.
+                    throw new ArgumentOutOfRangeException(string.Format("Edge at index {0} cannot be traversed by vehicle {1}.", edgeIdx, encoder.Vehicle.UniqueName));
+                }
+                // check whether the edge can be traversed in the correct direction.
+                var oneway = encoder.Vehicle.IsOneWay(tags);
+                var canMoveForward = (oneway == null) || (oneway.Value == edges[edgeIdx].Forward);
+                if (!canMoveForward)
+                { // path cannot be traversed in this direction.
+                    throw new ArgumentOutOfRangeException(string.Format("Edge at index {0} cannot be traversed by vehicle {1} in the direction given.", edgeIdx, encoder.Vehicle.UniqueName));
+                }
+            }
+
+            // 3: The sum of the positive and negative offset cannot be greater than the total length of the location lines (see arguments check).
+            // 4: Positive offset value shall be less than the length of the first line.
+            //  o Otherwise the first line can be removed from the list of location lines and the offset value must be reduced in the same way.
+            //  o This procedure shall be repeated until this constraint is fulfilled
+            // 5: Negative offset value shall be less than the length of the last line
+            //  o Otherwise the last line can be removed from the list of location lines and the offset value must be reduced in the same way
+            //  o This procedure shall be repeated until this constraint is fulfilled
+            // TODO: check 4 and 5, an implementation will work without this part but may be a bit inefficient.
+
+            // RULE4: choosen points should be valid network points.
+            var excludeSet = new HashSet<long>();
+            if (!encoder.IsVertexValid(referencedLine.Vertices[0]))
+            { // from is not valid, try to find a valid point.
+                var pathToValid = encoder.FindValidVertexFor(referencedLine.Vertices[0], referencedLine.Edges[0], referencedLine.Vertices[1],
+                    excludeSet, false);
+
+                // build edges list.
+                if (pathToValid != null)
+                { // no path found, just leave things as is.
+                    var shortestRoute = encoder.FindShortestPath(referencedLine.Vertices[1], pathToValid.Vertex, false);
+                    while (shortestRoute != null && !shortestRoute.Contains(referencedLine.Vertices[0]))
+                    { // the vertex that should be on this shortest route, isn't anymore.
+                        // exclude the current target vertex, 
+                        excludeSet.Add(pathToValid.Vertex);
+                        // calulate a new path-to-valid.
+                        pathToValid = encoder.FindValidVertexFor(referencedLine.Vertices[0], referencedLine.Edges[0], referencedLine.Vertices[1],
+                            excludeSet, false);
+                        if (pathToValid == null)
+                        { // a new path was not found.
+                            break;
+                        }
+                        shortestRoute = encoder.FindShortestPath(referencedLine.Vertices[1], pathToValid.Vertex, false);
+                    }
+                    if (pathToValid != null)
+                    { // no path found, just leave things as is.
+                        var newVertices = pathToValid.ToArray().Reverse().ToList();
+                        var newEdges = new List<LiveEdge>();
+                        for (int idx = 0; idx < newVertices.Count - 1; idx++)
+                        { // loop over edges.
+                            var edge = newVertices[idx].Edge;
+                            // Next OsmSharp version: use closest.Value.Value.Reverse()?
+                            var reverseEdge = new LiveEdge();
+                            reverseEdge.Tags = edge.Tags;
+                            reverseEdge.Forward = !edge.Forward;
+                            reverseEdge.Distance = edge.Distance;
+                            reverseEdge.Coordinates = edge.Coordinates;
+
+                            edge = reverseEdge;
+                            newEdges.Add(edge);
+                        }
+
+                        // create new location.
+                        var edgesArray = new LiveEdge[newEdges.Count + referencedLine.Edges.Length];
+                        newEdges.CopyTo(0, edgesArray, 0, newEdges.Count);
+                        referencedLine.Edges.CopyTo(0, edgesArray, newEdges.Count, referencedLine.Edges.Length);
+                        var vertexArray = new long[newVertices.Count - 1 + referencedLine.Vertices.Length];
+                        newVertices.ConvertAll(x => (long)x.Vertex).CopyTo(0, vertexArray, 0, newVertices.Count - 1);
+                        referencedLine.Vertices.CopyTo(0, vertexArray, newVertices.Count - 1, referencedLine.Vertices.Length);
+
+                        referencedLine.Edges = edgesArray;
+                        referencedLine.Vertices = vertexArray;
+
+                        // adjust offset length.
+                        var newLength = referencedLine.Length(encoder).Value;
+                        positiveOffsetLength = positiveOffsetLength + (newLength - length);
+                        length = newLength;
+                    }
+                }
+            }
+            excludeSet.Clear();
+            if (!encoder.IsVertexValid(referencedLine.Vertices[referencedLine.Vertices.Length - 1]))
+            { // from is not valid, try to find a valid point.
+                var vertexCount = referencedLine.Vertices.Length;
+                var pathToValid = encoder.FindValidVertexFor(referencedLine.Vertices[vertexCount - 1], referencedLine.Edges[
+                    referencedLine.Edges.Length - 1].ToReverse(), referencedLine.Vertices[vertexCount - 2], excludeSet, true);
+
+                // build edges list.
+                if (pathToValid != null)
+                { // no path found, just leave things as is.
+                    var shortestRoute = encoder.FindShortestPath(referencedLine.Vertices[vertexCount - 2], pathToValid.Vertex, true);
+                    while (shortestRoute != null && !shortestRoute.Contains(referencedLine.Vertices[vertexCount - 1]))
+                    { // the vertex that should be on this shortest route, isn't anymore.
+                        // exclude the current target vertex, 
+                        excludeSet.Add(pathToValid.Vertex);
+                        // calulate a new path-to-valid.
+                        pathToValid = encoder.FindValidVertexFor(referencedLine.Vertices[vertexCount - 1], referencedLine.Edges[
+                            referencedLine.Edges.Length - 1].ToReverse(), referencedLine.Vertices[vertexCount - 2], excludeSet, true);
+                        if (pathToValid == null)
+                        { // a new path was not found.
+                            break;
+                        }
+                        shortestRoute = encoder.FindShortestPath(referencedLine.Vertices[vertexCount - 2], pathToValid.Vertex, true);
+                    }
+                    if (pathToValid != null)
+                    { // no path found, just leave things as is.
+                        var newVertices = pathToValid.ToArray().ToList();
+                        var newEdges = new List<LiveEdge>();
+                        for (int idx = 1; idx < newVertices.Count; idx++)
+                        { // loop over edges.
+                            var edge = newVertices[idx].Edge;
+                            //if (!edge.Forward)
+                            //{ // use reverse edge.
+                            //    edge = edge.ToReverse();
+                            //}
+                            newEdges.Add(edge);
+                        }
+
+                        // create new location.
+                        var edgesArray = new LiveEdge[newEdges.Count + referencedLine.Edges.Length];
+                        referencedLine.Edges.CopyTo(0, edgesArray, 0, referencedLine.Edges.Length);
+                        newEdges.CopyTo(0, edgesArray, referencedLine.Edges.Length, newEdges.Count);
+                        var vertexArray = new long[newVertices.Count - 1 + referencedLine.Vertices.Length];
+                        referencedLine.Vertices.CopyTo(0, vertexArray, 0, referencedLine.Vertices.Length);
+                        newVertices.ConvertAll(x => (long)x.Vertex).CopyTo(1, vertexArray, referencedLine.Vertices.Length, newVertices.Count - 1);
+
+                        referencedLine.Edges = edgesArray;
+                        referencedLine.Vertices = vertexArray;
+
+                        // adjust offset length.
+                        var newLength = referencedLine.Length(encoder).Value;
+                        negativeOffsetLength = negativeOffsetLength + (newLength - length);
+                        length = newLength;
+                    }
+                }
+            }
+
+            // update offset percentags.
+            referencedLine.PositivePercentageOffset = (float)((positiveOffsetLength / length) * 100.0);
+            referencedLine.NegativePercentageOffset = (float)((negativeOffsetLength / length) * 100.0);
+
+            return referencedLine;
         }
     }
 }

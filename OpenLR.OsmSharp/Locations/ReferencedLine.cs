@@ -42,6 +42,16 @@ namespace OpenLR.OsmSharp.Locations
         public TEdge[] Edges { get; set; }
 
         /// <summary>
+        /// Gets or sets the offset at the beginning of the path representing this location.
+        /// </summary>
+        public float PositivePercentageOffset { get; set; }
+
+        /// <summary>
+        /// Gets or sets the offset at the end of the path representing this location.
+        /// </summary>
+        public float NegativePercentageOffset { get; set; }
+
+        /// <summary>
         /// Adds another line location to this one.
         /// </summary>
         /// <param name="location"></param>

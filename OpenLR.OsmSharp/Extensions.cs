@@ -10,7 +10,6 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Units.Distance;
 using System;
@@ -257,12 +256,24 @@ namespace OpenLR.OsmSharp
         public static Meter Length<TEdge>(this OpenLR.OsmSharp.Locations.ReferencedPointAlongLine<TEdge> referencedPointALongLineLocation, ReferencedEncoderBase<TEdge> baseEncoder)
             where TEdge : IDynamicGraphEdgeData
         {
+            return referencedPointALongLineLocation.Route.Length(baseEncoder);
+        }
+
+        /// <summary>
+        /// Converts the referenced point along the line location to features.
+        /// </summary>
+        /// <param name="referencedLine"></param>
+        /// <param name="baseEncoder"></param>
+        /// <returns></returns>
+        public static Meter Length<TEdge>(this OpenLR.OsmSharp.Locations.ReferencedLine<TEdge> referencedLine, ReferencedEncoderBase<TEdge> baseEncoder)
+            where TEdge : IDynamicGraphEdgeData
+        {
             var length = 0.0;
-            for(int idx = 0; idx < referencedPointALongLineLocation.Route.Edges.Length; idx++)
+            for (int idx = 0; idx < referencedLine.Edges.Length; idx++)
             {
-                var from = baseEncoder.GetVertexLocation(referencedPointALongLineLocation.Route.Vertices[idx]).ToGeoCoordinate();
-                var to = baseEncoder.GetVertexLocation(referencedPointALongLineLocation.Route.Vertices[idx + 1]).ToGeoCoordinate();
-                length = length + referencedPointALongLineLocation.Route.Edges[idx].Length(from, to).Value;
+                var from = baseEncoder.GetVertexLocation(referencedLine.Vertices[idx]).ToGeoCoordinate();
+                var to = baseEncoder.GetVertexLocation(referencedLine.Vertices[idx + 1]).ToGeoCoordinate();
+                length = length + referencedLine.Edges[idx].Length(from, to).Value;
             }
             return length;
         }
