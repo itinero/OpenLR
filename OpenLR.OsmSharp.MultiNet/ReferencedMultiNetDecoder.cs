@@ -312,7 +312,20 @@ namespace OpenLR.OsmSharp.MultiNet
         }
 
         /// <summary>
-        /// Creates a new referenced multinet decoder.
+        /// Returns a value if a oneway restriction is found.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <returns>null: no restrictions, true: forward restriction, false: backward restriction.</returns>
+        /// <returns></returns>
+        public override bool? IsOneway(TagsCollectionBase tags)
+        {
+            return this.Vehicle.IsOneWay(tags);
+        }
+
+        #region Static Creation Helper Functions
+
+        /// <summary>
+        /// Creates a new referenced MultiNet decoder.
         /// </summary>
         /// <param name="folder">The folder containing the shapefile(s).</param>
         /// <param name="searchPattern">The search pattern to identify the relevant shapefiles.</param>
@@ -323,9 +336,9 @@ namespace OpenLR.OsmSharp.MultiNet
         }
 
         /// <summary>
-        /// Creates a new referenced multinet decoder.
+        /// Creates a new referenced MultiNet decoder.
         /// </summary>
-        /// <param name="graph">The graph containing the multinet network.</param>
+        /// <param name="graph">The graph containing the MultiNet network.</param>
         /// <returns></returns>
         public static ReferencedMultiNetDecoder CreateBinary(BasicRouterDataSource<LiveEdge> graph)
         {
@@ -333,30 +346,19 @@ namespace OpenLR.OsmSharp.MultiNet
         }
 
         /// <summary>
-        /// Creates a new referenced multinet decoder.
+        /// Creates a new referenced MultiNet decoder.
         /// </summary>
-        /// <param name="graph">The graph containing the multinet network.</param>
+        /// <param name="graph">The graph containing the MultiNet network.</param>
         /// <returns></returns>
         public static ReferencedMultiNetDecoder CreateBinary(IBasicRouterDataSource<LiveEdge> graph)
         {
-            return ReferencedMultiNetDecoder.CreateBinary(new BasicRouterDataSource<LiveEdge>(graph));
+            return ReferencedMultiNetDecoder.Create(new BasicRouterDataSource<LiveEdge>(graph), new OpenLR.Binary.BinaryDecoder());
         }
 
         /// <summary>
-        /// Creates a new referenced multinet decoder.
+        /// Creates a new referenced MultiNet decoder.
         /// </summary>
-        /// <param name="graph">The graph containing the multinet network.</param>
-        /// <param name="maxVertexDistance">The maximum vertex distance.</param>
-        /// <returns></returns>
-        public static ReferencedMultiNetDecoder CreateBinary(BasicRouterDataSource<LiveEdge> graph, Meter maxVertexDistance)
-        {
-            return ReferencedMultiNetDecoder.Create(graph, new OpenLR.Binary.BinaryDecoder(), maxVertexDistance);
-        }
-
-        /// <summary>
-        /// Creates a new referenced multinet decoder.
-        /// </summary>
-        /// <param name="graph">The graph containing the multinet network.</param>
+        /// <param name="graph">The graph containing the MultiNet network.</param>
         /// <param name="maxVertexDistance">The maximum vertex distance.</param>
         /// <returns></returns>
         public static ReferencedMultiNetDecoder CreateBinary(IBasicRouterDataSource<LiveEdge> graph, Meter maxVertexDistance)
@@ -365,7 +367,18 @@ namespace OpenLR.OsmSharp.MultiNet
         }
 
         /// <summary>
-        /// Creates a new referenced multinet decoder.
+        /// Creates a new referenced MultiNet decoder.
+        /// </summary>
+        /// <param name="graph">The graph containing the MultiNet network.</param>
+        /// <param name="maxVertexDistance">The maximum vertex distance.</param>
+        /// <returns></returns>
+        public static ReferencedMultiNetDecoder CreateBinary(BasicRouterDataSource<LiveEdge> graph, Meter maxVertexDistance)
+        {
+            return ReferencedMultiNetDecoder.Create(graph, new OpenLR.Binary.BinaryDecoder(), maxVertexDistance);
+        }
+
+        /// <summary>
+        /// Creates a new referenced MultiNet decoder.
         /// </summary>
         /// <param name="folder">The folder containing the shapefile(s).</param>
         /// <param name="searchPattern">The search pattern to identify the relevant shapefiles.</param>
@@ -374,35 +387,17 @@ namespace OpenLR.OsmSharp.MultiNet
         public static ReferencedMultiNetDecoder Create(string folder, string searchPattern, Decoder rawLocationDecoder)
         {
             // create an instance of the graph reader and define the columns that contain the 'node-ids'.
-            var graphReader = new ShapefileLiveGraphReader("F_JNCTID", "T_JNCTID");
+            var graphReader = new ShapefileLiveGraphReader("JTE_ID_BEG", "JTE_ID_END");
             // read the graph from the folder where the shapefiles are placed.
             var graph = graphReader.Read(folder, searchPattern, new ShapefileRoutingInterpreter());
 
-            return new ReferencedMultiNetDecoder(new BasicRouterDataSource<LiveEdge>(graph), rawLocationDecoder);
+            return ReferencedMultiNetDecoder.Create(new BasicRouterDataSource<LiveEdge>(graph), rawLocationDecoder);
         }
 
         /// <summary>
-        /// Creates a new referenced multinet decoder.
+        /// Creates a new referenced MultiNet decoder.
         /// </summary>
-        /// <param name="folder">The folder containing the shapefile(s).</param>
-        /// <param name="searchPattern">The search pattern to identify the relevant shapefiles.</param>
-        /// <param name="rawLocationDecoder">The raw location decoder.</param>
-        /// <param name="maxVertexDistance">The maximum vertex distance.</param>
-        /// <returns></returns>
-        public static ReferencedMultiNetDecoder Create(string folder, string searchPattern, Decoder rawLocationDecoder, Meter maxVertexDistance)
-        {
-            // create an instance of the graph reader and define the columns that contain the 'node-ids'.
-            var graphReader = new ShapefileLiveGraphReader("F_JNCTID", "T_JNCTID");
-            // read the graph from the folder where the shapefiles are placed.
-            var graph = graphReader.Read(folder, searchPattern, new ShapefileRoutingInterpreter());
-
-            return new ReferencedMultiNetDecoder(new BasicRouterDataSource<LiveEdge>(graph), rawLocationDecoder, maxVertexDistance);
-        }
-
-        /// <summary>
-        /// Creates a new referenced multinet decoder.
-        /// </summary>
-        /// <param name="graph">The graph containing the multinet network.</param>
+        /// <param name="graph">The graph containing the MultiNet network.</param>
         /// <param name="rawLocationDecoder">The raw location decoder.</param>
         /// <returns></returns>
         public static ReferencedMultiNetDecoder Create(BasicRouterDataSource<LiveEdge> graph, Decoder rawLocationDecoder)
@@ -411,9 +406,9 @@ namespace OpenLR.OsmSharp.MultiNet
         }
 
         /// <summary>
-        /// Creates a new referenced multinet decoder.
+        /// Creates a new referenced MultiNet decoder.
         /// </summary>
-        /// <param name="graph">The graph containing the multinet network.</param>
+        /// <param name="graph">The graph containing the MultiNet network.</param>
         /// <param name="rawLocationDecoder">The raw location decoder.</param>
         /// <param name="maxVertexDistance">The maximum vertex distance.</param>
         /// <returns></returns>
@@ -422,15 +417,6 @@ namespace OpenLR.OsmSharp.MultiNet
             return new ReferencedMultiNetDecoder(graph, rawLocationDecoder, maxVertexDistance);
         }
 
-        /// <summary>
-        /// Returns a value if a oneway restriction is found.
-        /// </summary>
-        /// <param name="tags"></param>
-        /// <returns>null: no restrictions, true: forward restriction, false: backward restriction.</returns>
-        /// <returns></returns>
-        public override bool? IsOneway(TagsCollectionBase tags)
-        {
-            return this.Vehicle.IsOneWay(tags);
-        }
+        #endregion
     }
 }

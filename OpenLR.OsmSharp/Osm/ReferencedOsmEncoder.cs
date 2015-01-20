@@ -7,6 +7,8 @@ using OsmSharp.Routing;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Graph.Router.Dykstra;
 using OsmSharp.Routing.Osm.Graphs;
+using OsmSharp.Routing.Shape;
+using OsmSharp.Routing.Shape.Readers;
 using System.Collections.Generic;
 
 namespace OpenLR.OsmSharp.Osm
@@ -125,5 +127,68 @@ namespace OpenLR.OsmSharp.Osm
         {
             get { return Vehicle.Car; }
         }
+
+        #region Static Creation Helper Functions
+
+        /// <summary>
+        /// Creates a new referenced Osm encoder.
+        /// </summary>
+        /// <param name="folder">The folder containing the shapefile(s).</param>
+        /// <param name="searchPattern">The search pattern to identify the relevant shapefiles.</param>
+        /// <returns></returns>
+        public static ReferencedOsmEncoder CreateBinary(string folder, string searchPattern)
+        {
+            return ReferencedOsmEncoder.Create(folder, searchPattern, new OpenLR.Binary.BinaryEncoder());
+        }
+
+        /// <summary>
+        /// Creates a new referenced Osm encoder.
+        /// </summary>
+        /// <param name="graph">The graph containing the Osm network.</param>
+        /// <returns></returns>
+        public static ReferencedOsmEncoder CreateBinary(BasicRouterDataSource<LiveEdge> graph)
+        {
+            return ReferencedOsmEncoder.Create(graph, new OpenLR.Binary.BinaryEncoder());
+        }
+
+        /// <summary>
+        /// Creates a new referenced Osm encoder.
+        /// </summary>
+        /// <param name="graph">The graph containing the Osm network.</param>
+        /// <returns></returns>
+        public static ReferencedOsmEncoder CreateBinary(IBasicRouterDataSource<LiveEdge> graph)
+        {
+            return ReferencedOsmEncoder.CreateBinary(new BasicRouterDataSource<LiveEdge>(graph));
+        }
+
+        /// <summary>
+        /// Creates a new referenced Osm encoder.
+        /// </summary>
+        /// <param name="folder">The folder containing the shapefile(s).</param>
+        /// <param name="searchPattern">The search pattern to identify the relevant shapefiles.</param>
+        /// <param name="rawLocationEncoder">The raw location encoder.</param>
+        /// <returns></returns>
+        public static ReferencedOsmEncoder Create(string folder, string searchPattern, Encoder rawLocationEncoder)
+        {
+            // create an instance of the graph reader and define the columns that contain the 'node-ids'.
+            var graphReader = new ShapefileLiveGraphReader("JTE_ID_BEG", "JTE_ID_END");
+            // read the graph from the folder where the shapefiles are placed.
+            var graph = graphReader.Read(folder, searchPattern, new ShapefileRoutingInterpreter());
+
+            return ReferencedOsmEncoder.Create(new BasicRouterDataSource<LiveEdge>(graph), rawLocationEncoder);
+        }
+
+        /// <summary>
+        /// Creates a new referenced Osm encoder.
+        /// </summary>
+        /// <param name="graph">The graph containing the Osm network.</param>
+        /// <param name="rawLocationEncoder">The raw location encoder.</param>
+        /// <returns></returns>
+        public static ReferencedOsmEncoder Create(BasicRouterDataSource<LiveEdge> graph, Encoder rawLocationEncoder)
+        {
+            return new ReferencedOsmEncoder(graph, rawLocationEncoder);
+        }
+
+        #endregion
     }
 }

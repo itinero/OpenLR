@@ -131,6 +131,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\OpenLR.Binary\OpenLR.Binary.csproj">
+      <Project>{252d884c-8bed-4711-a2da-21f8dc05d697}</Project>
+      <Name>OpenLR.Binary</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OpenLR\OpenLR.csproj">
       <Project>{036ad1da-006a-48b6-826c-83d12561411d}</Project>
       <Name>OpenLR</Name>

@@ -11,6 +11,8 @@ using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Graph.Router.Dykstra;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Interpreter;
+using OsmSharp.Routing.Shape;
+using OsmSharp.Routing.Shape.Readers;
 using OsmSharp.Units.Distance;
 using System;
 using System.Collections.Generic;
@@ -247,5 +249,102 @@ namespace OpenLR.OsmSharp.Osm
                 Longitude = longitude
             };
         }
+
+        #region Static Creation Helper Functions
+
+        /// <summary>
+        /// Creates a new referenced Osm decoder.
+        /// </summary>
+        /// <param name="folder">The folder containing the shapefile(s).</param>
+        /// <param name="searchPattern">The search pattern to identify the relevant shapefiles.</param>
+        /// <returns></returns>
+        public static ReferencedOsmDecoder CreateBinary(string folder, string searchPattern)
+        {
+            return ReferencedOsmDecoder.Create(folder, searchPattern, new OpenLR.Binary.BinaryDecoder());
+        }
+
+        /// <summary>
+        /// Creates a new referenced Osm decoder.
+        /// </summary>
+        /// <param name="graph">The graph containing the Osm network.</param>
+        /// <returns></returns>
+        public static ReferencedOsmDecoder CreateBinary(BasicRouterDataSource<LiveEdge> graph)
+        {
+            return ReferencedOsmDecoder.Create(graph, new OpenLR.Binary.BinaryDecoder());
+        }
+
+        /// <summary>
+        /// Creates a new referenced Osm decoder.
+        /// </summary>
+        /// <param name="graph">The graph containing the Osm network.</param>
+        /// <returns></returns>
+        public static ReferencedOsmDecoder CreateBinary(IBasicRouterDataSource<LiveEdge> graph)
+        {
+            return ReferencedOsmDecoder.Create(new BasicRouterDataSource<LiveEdge>(graph), new OpenLR.Binary.BinaryDecoder());
+        }
+
+        /// <summary>
+        /// Creates a new referenced Osm decoder.
+        /// </summary>
+        /// <param name="graph">The graph containing the Osm network.</param>
+        /// <param name="maxVertexDistance">The maximum vertex distance.</param>
+        /// <returns></returns>
+        public static ReferencedOsmDecoder CreateBinary(IBasicRouterDataSource<LiveEdge> graph, Meter maxVertexDistance)
+        {
+            return ReferencedOsmDecoder.Create(new BasicRouterDataSource<LiveEdge>(graph), new OpenLR.Binary.BinaryDecoder(), maxVertexDistance);
+        }
+
+        /// <summary>
+        /// Creates a new referenced Osm decoder.
+        /// </summary>
+        /// <param name="graph">The graph containing the Osm network.</param>
+        /// <param name="maxVertexDistance">The maximum vertex distance.</param>
+        /// <returns></returns>
+        public static ReferencedOsmDecoder CreateBinary(BasicRouterDataSource<LiveEdge> graph, Meter maxVertexDistance)
+        {
+            return ReferencedOsmDecoder.Create(graph, new OpenLR.Binary.BinaryDecoder(), maxVertexDistance);
+        }
+
+        /// <summary>
+        /// Creates a new referenced Osm decoder.
+        /// </summary>
+        /// <param name="folder">The folder containing the shapefile(s).</param>
+        /// <param name="searchPattern">The search pattern to identify the relevant shapefiles.</param>
+        /// <param name="rawLocationDecoder">The raw location decoder.</param>
+        /// <returns></returns>
+        public static ReferencedOsmDecoder Create(string folder, string searchPattern, Decoder rawLocationDecoder)
+        {
+            // create an instance of the graph reader and define the columns that contain the 'node-ids'.
+            var graphReader = new ShapefileLiveGraphReader("JTE_ID_BEG", "JTE_ID_END");
+            // read the graph from the folder where the shapefiles are placed.
+            var graph = graphReader.Read(folder, searchPattern, new ShapefileRoutingInterpreter());
+
+            return ReferencedOsmDecoder.Create(new BasicRouterDataSource<LiveEdge>(graph), rawLocationDecoder);
+        }
+
+        /// <summary>
+        /// Creates a new referenced Osm decoder.
+        /// </summary>
+        /// <param name="graph">The graph containing the Osm network.</param>
+        /// <param name="rawLocationDecoder">The raw location decoder.</param>
+        /// <returns></returns>
+        public static ReferencedOsmDecoder Create(BasicRouterDataSource<LiveEdge> graph, Decoder rawLocationDecoder)
+        {
+            return new ReferencedOsmDecoder(graph, rawLocationDecoder);
+        }
+
+        /// <summary>
+        /// Creates a new referenced Osm decoder.
+        /// </summary>
+        /// <param name="graph">The graph containing the Osm network.</param>
+        /// <param name="rawLocationDecoder">The raw location decoder.</param>
+        /// <param name="maxVertexDistance">The maximum vertex distance.</param>
+        /// <returns></returns>
+        public static ReferencedOsmDecoder Create(BasicRouterDataSource<LiveEdge> graph, Decoder rawLocationDecoder, Meter maxVertexDistance)
+        {
+            return new ReferencedOsmDecoder(graph, rawLocationDecoder, maxVertexDistance);
+        }
+
+        #endregion
     }
 }

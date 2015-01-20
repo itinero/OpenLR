@@ -51,6 +51,32 @@ namespace OpenLR.OsmSharp.NWB
         }
 
         /// <summary>
+        /// Returns a value if a oneway restriction is found.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <returns>null: no restrictions, true: forward restriction, false: backward restriction.</returns>
+        /// <returns></returns>
+        public override bool? IsOneway(TagsCollectionBase tags)
+        {
+            return this.Vehicle.IsOneWay(tags);
+        }
+
+        /// <summary>
+        /// Holds the encoder vehicle.
+        /// </summary>
+        private Vehicle _vehicle = new global::OsmSharp.Routing.Shape.Vehicles.Car("RIJRICHTNG", "H", "T", string.Empty);
+
+        /// <summary>
+        /// Returns the encoder vehicle profile.
+        /// </summary>
+        public override global::OsmSharp.Routing.Vehicle Vehicle
+        {
+            get { return _vehicle; }
+        }
+
+        #region Static Creation Helper Functions
+
+        /// <summary>
         /// Creates a new referenced NWB encoder.
         /// </summary>
         /// <param name="folder">The folder containing the shapefile(s).</param>
@@ -109,28 +135,6 @@ namespace OpenLR.OsmSharp.NWB
             return new ReferencedNWBEncoder(graph, rawLocationEncoder);
         }
 
-        /// <summary>
-        /// Returns a value if a oneway restriction is found.
-        /// </summary>
-        /// <param name="tags"></param>
-        /// <returns>null: no restrictions, true: forward restriction, false: backward restriction.</returns>
-        /// <returns></returns>
-        public override bool? IsOneway(TagsCollectionBase tags)
-        {
-            return this.Vehicle.IsOneWay(tags);
-        }
-
-        /// <summary>
-        /// Holds the encoder vehicle.
-        /// </summary>
-        private Vehicle _vehicle = new global::OsmSharp.Routing.Shape.Vehicles.Car("RIJRICHTNG", "H", "T", string.Empty);
-
-        /// <summary>
-        /// Returns the encoder vehicle profile.
-        /// </summary>
-        public override global::OsmSharp.Routing.Vehicle Vehicle
-        {
-            get { return _vehicle; }
-        }
+        #endregion
     }
 }
