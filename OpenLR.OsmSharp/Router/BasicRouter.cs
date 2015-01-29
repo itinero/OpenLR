@@ -153,21 +153,28 @@ namespace OpenLR.OsmSharp.Router
             var visited = new HashSet<long>();
 
             // queue the from-paths.
-            long fromVertex = fromPaths[0].From.Vertex;
-            foreach(var fromPath in fromPaths)
+            heap.Push(fromPaths[0], (float)fromPaths[0].Weight);
+            for (int i = 1; i < fromPaths.Count; i++)
             {
-                heap.Push(fromPath, (float)fromPath.Weight);
-                if(fromVertex != fromPath.From.Vertex)
+                if (fromPaths[0].From.Vertex != fromPaths[i].From.Vertex)
                 {
-                    throw new ArgumentException("From paths should be one-hop away from a common vertex.");
+                    throw new ArgumentException("When multiple from paths they should be one-hop away from a common vertex.");
                 }
+                heap.Push(fromPaths[i], (float)fromPaths[i].Weight);
             }
 
             // enumerate and store target-paths.
-            var toPathDictonary = new Dictionary<long, PathSegment>();
+            var toPathDictonary = new Dictionary<long, PathSegment>(); 
             foreach(var toPath in toPaths)
             {
-                toPathDictonary.Add(toPath.From.Vertex, toPath);
+                if (toPath.From == null)
+                {
+                    toPathDictonary.Add(toPath.Vertex, toPath);
+                }
+                else
+                {
+                    toPathDictonary.Add(toPath.From.Vertex, toPath);
+                }
             }
 
             // keep searching for the target.
@@ -194,7 +201,14 @@ namespace OpenLR.OsmSharp.Router
                     if (bestToTarget == null ||
                         current.Weight + foundToPath.Weight < bestToTarget.Weight)
                     { // ok, this path is better!
-                        bestToTarget = new PathSegment(foundToPath.Vertex, foundToPath.Weight + current.Weight, foundToPath.Edge, current);
+                        if (foundToPath.From != null)
+                        {
+                            bestToTarget = new PathSegment(foundToPath.Vertex, foundToPath.Weight + current.Weight, foundToPath.Edge, current);
+                        }
+                        else
+                        {
+                            bestToTarget = current;
+                        }
                     }
                     if(toPathDictonary.Count == 0)
                     { // no more targets let, this has to be it.
