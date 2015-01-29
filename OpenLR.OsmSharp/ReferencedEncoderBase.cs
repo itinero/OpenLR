@@ -558,12 +558,12 @@ namespace OpenLR.OsmSharp
                     var weightBefore = encoder.Vehicle.Weight(tags, (float)bestStartOffset.Value);
                     if (startEdge.Item3.Forward)
                     {
-                        startPaths.Add(new PathSegment(startEdge.Item1, weightBefore, startEdge.Item3,
+                        startPaths.Add(new PathSegment(startEdge.Item1, weightBefore, startEdge.Item3.ToReverse(),
                             new PathSegment(-1)));
                     }
                     else
                     {
-                        startPaths.Add(new PathSegment(startEdge.Item1, weightBefore, startEdge.Item3.ToReverse(),
+                        startPaths.Add(new PathSegment(startEdge.Item1, weightBefore, startEdge.Item3,
                             new PathSegment(-1)));
                     }
                 }
@@ -574,12 +574,12 @@ namespace OpenLR.OsmSharp
                     var weightAfter = encoder.Vehicle.Weight(encoder.Graph.TagsIndex.Get(startEdge.Item3.Tags), (float)(startEdgeLength.Value - bestStartOffset.Value));
                     if (startEdge.Item3.Forward)
                     {
-                        startPaths.Add(new PathSegment(startEdge.Item2, weightAfter, startEdge.Item3.ToReverse(),
+                        startPaths.Add(new PathSegment(startEdge.Item2, weightAfter, startEdge.Item3,
                             new PathSegment(-1)));
                     }
                     else
                     {
-                        startPaths.Add(new PathSegment(startEdge.Item2, weightAfter, startEdge.Item3,
+                        startPaths.Add(new PathSegment(startEdge.Item2, weightAfter, startEdge.Item3.ToReverse(),
                             new PathSegment(-1)));
                     }
                 }
@@ -595,7 +595,7 @@ namespace OpenLR.OsmSharp
             coordinates = encoder.Graph.GetCoordinates(endEdge);
             var endEdgeLength = coordinates.Length();
             if (!coordinates.ProjectOn(endLocation, out bestProjected, out bestPosition, out bestEndOffset))
-            { // projection failed,.
+            { // projection failed.
                 throw new BuildLocationFailedException("Projection of location {0} on the closest edge failed.",
                     endLocation);
             }
@@ -620,12 +620,12 @@ namespace OpenLR.OsmSharp
                     var weightBefore = encoder.Vehicle.Weight(tags, (float)bestEndOffset.Value);
                     if (endEdge.Item3.Forward)
                     {
-                        endPaths.Add(new PathSegment(-1, weightBefore, endEdge.Item3,
+                        endPaths.Add(new PathSegment(-1, weightBefore, endEdge.Item3.ToReverse(),
                             new PathSegment(endEdge.Item1)));
                     }
                     else
                     {
-                        endPaths.Add(new PathSegment(-1, weightBefore, endEdge.Item3.ToReverse(),
+                        endPaths.Add(new PathSegment(-1, weightBefore, endEdge.Item3,
                             new PathSegment(endEdge.Item1)));
                     }
                 }
@@ -636,12 +636,12 @@ namespace OpenLR.OsmSharp
                     var weightAfter = encoder.Vehicle.Weight(encoder.Graph.TagsIndex.Get(endEdge.Item3.Tags), (float)(endEdgeLength.Value - bestEndOffset.Value));
                     if (endEdge.Item3.Forward)
                     {
-                        endPaths.Add(new PathSegment(-1, weightAfter, endEdge.Item3.ToReverse(),
+                        endPaths.Add(new PathSegment(-1, weightAfter, endEdge.Item3,
                             new PathSegment(endEdge.Item2)));
                     }
                     else
                     {
-                        endPaths.Add(new PathSegment(-1, weightAfter, endEdge.Item3,
+                        endPaths.Add(new PathSegment(-1, weightAfter, endEdge.Item3.ToReverse(),
                             new PathSegment(endEdge.Item2)));
                     }
                 }
@@ -659,14 +659,14 @@ namespace OpenLR.OsmSharp
             var vertices = new List<long>();
             var edges = new List<LiveEdge>();
             vertices.Add(shortestPath.Vertex);
-            edges.Add(shortestPath.Edge.ToReverse());
+            edges.Add(shortestPath.Edge);
             while (shortestPath.From != null)
             {
                 shortestPath = shortestPath.From;
                 vertices.Add(shortestPath.Vertex);
                 if (shortestPath.From != null)
                 {
-                    edges.Add(shortestPath.Edge.ToReverse());
+                    edges.Add(shortestPath.Edge);
                 }
             }
             vertices.Reverse();
@@ -703,8 +703,28 @@ namespace OpenLR.OsmSharp
                 Vertices = vertices.ToArray()
             };
             var length = referencedLine.Length(encoder).Value;
+
+            // project again on the first edge.
+            startEdge = new Tuple<long,long,LiveEdge>(referencedLine.Vertices[0], referencedLine.Vertices[1], referencedLine.Edges[0]);
+            coordinates = encoder.Graph.GetCoordinates(startEdge);
+            if(!coordinates.ProjectOn(startLocation, out bestProjected, out bestPosition, out bestStartOffset))
+            { // projection did not succeed.
+                throw new BuildLocationFailedException("Projection of location {0} on the first edge of shortest path failed.",
+                    endLocation);
+            }
             var positivePercentageOffset = (float)System.Math.Max(System.Math.Min((bestStartOffset.Value / length) * 100.0, 100), 0);
-            var negativePercentageOffset = (float)System.Math.Max(100 - (System.Math.Min(((endEdgeLength.Value - bestEndOffset.Value) / length) * 100.0, 100)), 0);
+
+            // project again on the last edge.
+            endEdge = new Tuple<long, long, LiveEdge>(referencedLine.Vertices[referencedLine.Vertices.Length - 2], 
+                referencedLine.Vertices[referencedLine.Vertices.Length - 1],  referencedLine.Edges[referencedLine.Edges.Length - 1]);
+            coordinates = encoder.Graph.GetCoordinates(endEdge);
+            endEdgeLength = coordinates.Length();
+            if (!coordinates.ProjectOn(endLocation, out bestProjected, out bestPosition, out bestEndOffset))
+            { // projection did not succeed.
+                throw new BuildLocationFailedException("Projection of location {0} on the first edge of shortest path failed.",
+                    endLocation);
+            }
+            var negativePercentageOffset = (float)System.Math.Max((System.Math.Min(((endEdgeLength.Value - bestEndOffset.Value) / length) * 100.0, 100)), 0);
 
             return encoder.BuildLineLocation(vertices.ToArray(), edges.ToArray(), positivePercentageOffset, negativePercentageOffset);
         }
