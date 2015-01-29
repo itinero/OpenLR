@@ -164,16 +164,16 @@ namespace OpenLR.OsmSharp.Router
             }
 
             // enumerate and store target-paths.
-            var toPathDictonary = new Dictionary<long, PathSegment>(); 
-            foreach(var toPath in toPaths)
+            var toPathDictonary = new Dictionary<long, PathSegment>();
+            foreach (var toPath in toPaths)
             {
-                if (toPath.From == null)
+                if(toPath.From != null)
                 {
-                    toPathDictonary.Add(toPath.Vertex, toPath);
+                    toPathDictonary.Add(toPath.From.Vertex, toPath);
                 }
                 else
                 {
-                    toPathDictonary.Add(toPath.From.Vertex, toPath);
+                    toPathDictonary.Add(toPath.Vertex, toPath);
                 }
             }
 
@@ -203,7 +203,7 @@ namespace OpenLR.OsmSharp.Router
                     { // ok, this path is better!
                         if (foundToPath.From != null)
                         {
-                            bestToTarget = new PathSegment(foundToPath.Vertex, foundToPath.Weight + current.Weight, foundToPath.Edge, current);
+                            bestToTarget = new PathSegment(foundToPath.Vertex, foundToPath.Weight + current.Weight, foundToPath.Edge.ToReverse(), current);
                         }
                         else
                         {

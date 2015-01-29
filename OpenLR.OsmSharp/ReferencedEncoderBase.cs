@@ -556,16 +556,32 @@ namespace OpenLR.OsmSharp
                 if(oneway == null || (oneway.Value ^ !startEdge.Item3.Forward))
                 { // edge is in the correct direction.
                     var weightBefore = encoder.Vehicle.Weight(tags, (float)bestStartOffset.Value);
-                    startPaths.Add(new PathSegment(startEdge.Item1, weightBefore, startEdge.Item3.ToReverse(), 
-                        new PathSegment(-1)));
+                    if (startEdge.Item3.Forward)
+                    {
+                        startPaths.Add(new PathSegment(startEdge.Item1, weightBefore, startEdge.Item3,
+                            new PathSegment(-1)));
+                    }
+                    else
+                    {
+                        startPaths.Add(new PathSegment(startEdge.Item1, weightBefore, startEdge.Item3.ToReverse(),
+                            new PathSegment(-1)));
+                    }
                 }
 
                 // build path from vertex (location)->vertex2
                 if (oneway == null || (oneway.Value ^ startEdge.Item3.Forward))
                 { // edge is in the correct direction.
                     var weightAfter = encoder.Vehicle.Weight(encoder.Graph.TagsIndex.Get(startEdge.Item3.Tags), (float)(startEdgeLength.Value - bestStartOffset.Value));
-                    startPaths.Add(new PathSegment(startEdge.Item2, weightAfter, startEdge.Item3,
-                        new PathSegment(-1)));
+                    if (startEdge.Item3.Forward)
+                    {
+                        startPaths.Add(new PathSegment(startEdge.Item2, weightAfter, startEdge.Item3.ToReverse(),
+                            new PathSegment(-1)));
+                    }
+                    else
+                    {
+                        startPaths.Add(new PathSegment(startEdge.Item2, weightAfter, startEdge.Item3,
+                            new PathSegment(-1)));
+                    }
                 }
             }
 
@@ -602,16 +618,32 @@ namespace OpenLR.OsmSharp
                 if (oneway == null || (oneway.Value ^ !endEdge.Item3.Forward))
                 { // edge is in the correct direction.
                     var weightBefore = encoder.Vehicle.Weight(tags, (float)bestEndOffset.Value);
-                    endPaths.Add(new PathSegment(endEdge.Item1, weightBefore, endEdge.Item3.ToReverse(),
-                        new PathSegment(-1)));
+                    if (endEdge.Item3.Forward)
+                    {
+                        endPaths.Add(new PathSegment(-1, weightBefore, endEdge.Item3,
+                            new PathSegment(endEdge.Item1)));
+                    }
+                    else
+                    {
+                        endPaths.Add(new PathSegment(-1, weightBefore, endEdge.Item3.ToReverse(),
+                            new PathSegment(endEdge.Item1)));
+                    }
                 }
 
                 // build path from vertex (location)->vertex2
                 if (oneway == null || (oneway.Value ^ endEdge.Item3.Forward))
                 { // edge is in the correct direction.
                     var weightAfter = encoder.Vehicle.Weight(encoder.Graph.TagsIndex.Get(endEdge.Item3.Tags), (float)(endEdgeLength.Value - bestEndOffset.Value));
-                    endPaths.Add(new PathSegment(endEdge.Item2, weightAfter, endEdge.Item3,
-                        new PathSegment(-1)));
+                    if (endEdge.Item3.Forward)
+                    {
+                        endPaths.Add(new PathSegment(-1, weightAfter, endEdge.Item3.ToReverse(),
+                            new PathSegment(endEdge.Item2)));
+                    }
+                    else
+                    {
+                        endPaths.Add(new PathSegment(-1, weightAfter, endEdge.Item3,
+                            new PathSegment(endEdge.Item2)));
+                    }
                 }
             }
 
@@ -622,17 +654,19 @@ namespace OpenLR.OsmSharp
                 throw new BuildLocationFailedException("Projection of location {0} on the closest edge failed.",
                     endLocation);
             }
+
+            // convert to edge and vertex-array.
             var vertices = new List<long>();
             var edges = new List<LiveEdge>();
             vertices.Add(shortestPath.Vertex);
-            edges.Add(shortestPath.Edge);
+            edges.Add(shortestPath.Edge.ToReverse());
             while (shortestPath.From != null)
             {
                 shortestPath = shortestPath.From;
                 vertices.Add(shortestPath.Vertex);
                 if (shortestPath.From != null)
                 {
-                    edges.Add(shortestPath.Edge);
+                    edges.Add(shortestPath.Edge.ToReverse());
                 }
             }
             vertices.Reverse();
@@ -663,8 +697,14 @@ namespace OpenLR.OsmSharp
             }
 
             // calculate offset.
-            var positivePercentageOffset = (float)System.Math.Max(System.Math.Min((bestStartOffset.Value / startEdgeLength.Value) * 100.0, 100), 0);
-            var negativePercentageOffset = (float)System.Math.Max(100 - (System.Math.Min((bestEndOffset.Value / endEdgeLength.Value) * 100.0, 100)), 0);
+            var referencedLine = new OpenLR.OsmSharp.Locations.ReferencedLine<LiveEdge>(encoder.Graph)
+            {
+                Edges = edges.ToArray(),
+                Vertices = vertices.ToArray()
+            };
+            var length = referencedLine.Length(encoder).Value;
+            var positivePercentageOffset = (float)System.Math.Max(System.Math.Min((bestStartOffset.Value / length) * 100.0, 100), 0);
+            var negativePercentageOffset = (float)System.Math.Max(100 - (System.Math.Min(((endEdgeLength.Value - bestEndOffset.Value) / length) * 100.0, 100)), 0);
 
             return encoder.BuildLineLocation(vertices.ToArray(), edges.ToArray(), positivePercentageOffset, negativePercentageOffset);
         }
