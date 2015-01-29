@@ -11,7 +11,7 @@ namespace OpenLR.OsmSharp.Decoding.Candidates
     /// A comparer for vertex edge candidates.
     /// </summary>
     public class CandidateVertexEdgeComparer<TEdge> : IComparer<CandidateVertexEdge<TEdge>>
-        where TEdge : IDynamicGraphEdgeData
+        where TEdge : IGraphEdgeData
     {
         /// <summary>
         /// Compares the two given vertex-edge candidates.

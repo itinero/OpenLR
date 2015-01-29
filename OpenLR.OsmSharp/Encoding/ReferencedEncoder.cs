@@ -3,6 +3,7 @@ using OpenLR.Model;
 using OpenLR.Referenced;
 using OpenLR.Referenced.Encoding;
 using OsmSharp.Collections.Tags;
+using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Units.Angle;
@@ -14,7 +15,7 @@ namespace OpenLR.OsmSharp.Encoding
     /// Represents a dynamic graph encoder: Encodes a reference OpenLR location into an unreferenced location.
     /// </summary>
     public abstract class ReferencedEncoder<TReferencedLocation, TLocation, TEdge> : ReferencedLocationEncoder<TReferencedLocation, TLocation>
-        where TEdge : IDynamicGraphEdgeData
+        where TEdge : IGraphEdgeData
         where TReferencedLocation : ReferencedLocation
         where TLocation : ILocation
     {
@@ -93,12 +94,13 @@ namespace OpenLR.OsmSharp.Encoding
         /// </summary>
         /// <param name="vertexFrom"></param>
         /// <param name="edge"></param>
+        /// <param name="edgeShape"></param>
         /// <param name="vertexTo"></param>
         /// <param name="forward">When true the edge is forward relative to the vertices, false the edge is backward.</param>
         /// <returns></returns>
-        protected Degree GetBearing(long vertexFrom, TEdge edge, long vertexTo, bool forward)
+        protected Degree GetBearing(long vertexFrom, TEdge edge, GeoCoordinateSimple[] edgeShape, long vertexTo, bool forward)
         {
-            return _mainEncoder.GetBearing(vertexFrom, edge, vertexTo, forward);
+            return _mainEncoder.GetBearing(vertexFrom, edge, edgeShape, vertexTo, forward);
         }
     }
 }

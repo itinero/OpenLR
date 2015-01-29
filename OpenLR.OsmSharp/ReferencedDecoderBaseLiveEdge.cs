@@ -72,7 +72,7 @@ namespace OpenLR.OsmSharp
             box = box.Resize(0.1);
 
             // get arcs.
-            var arcs = this.Graph.GetArcs(box);
+            var arcs = this.Graph.GetEdges(box);
             foreach (var arc in arcs)
             {
                 // check if arc was removed already.
@@ -175,8 +175,8 @@ namespace OpenLR.OsmSharp
                         (float)System.Math.Max(0, (1.0 - (distance / this.MaxVertexDistance.Value))), 1);
 
                     // add intermediate vertex.
-                    this.Graph.RemoveArc(arc.Key, arc.Value.Key);
-                    this.Graph.RemoveArc(arc.Value.Key, arc.Key);
+                    this.Graph.RemoveEdge(arc.Key, arc.Value.Key);
+                    this.Graph.RemoveEdge(arc.Value.Key, arc.Key);
 
                     // add a new vertex.
                     long newId = this.Graph.AddVertex((float)closestLocation.Latitude, (float)closestLocation.Longitude);
@@ -196,7 +196,7 @@ namespace OpenLR.OsmSharp
                     }));
 
                     // add new edges forward/backward.
-                    this.Graph.AddArc(arc.Key, newId, new LiveEdge()
+                    this.Graph.AddEdge(arc.Key, newId, new LiveEdge()
                     {
                         Coordinates = coordinatesBefore.Count > 0 ? coordinatesBefore.ToArray() : null,
                         Distance = (float)distanceBefore,
@@ -204,14 +204,14 @@ namespace OpenLR.OsmSharp
                         Tags = arc.Value.Value.Tags
                     });
                     coordinatesBefore.Reverse();
-                    this.Graph.AddArc(newId, arc.Key, new LiveEdge()
+                    this.Graph.AddEdge(newId, arc.Key, new LiveEdge()
                     {
                         Coordinates = coordinatesBefore.Count > 0 ? coordinatesBefore.ToArray() : null,
                         Distance = (float)distanceBefore,
                         Forward = !arc.Value.Value.Forward,
                         Tags = arc.Value.Value.Tags
                     });
-                    this.Graph.AddArc(newId, arc.Value.Key, new LiveEdge()
+                    this.Graph.AddEdge(newId, arc.Value.Key, new LiveEdge()
                     {
                         Coordinates = coordinatesAfter.Count > 0 ? coordinatesAfter.ToArray() : null,
                         Distance = (float)distanceAfter,
@@ -219,7 +219,7 @@ namespace OpenLR.OsmSharp
                         Tags = arc.Value.Value.Tags
                     });
                     coordinatesAfter.Reverse();
-                    this.Graph.AddArc(arc.Value.Key, newId, new LiveEdge()
+                    this.Graph.AddEdge(arc.Value.Key, newId, new LiveEdge()
                     {
                         Coordinates = coordinatesAfter.Count > 0 ? coordinatesAfter.ToArray() : null,
                         Distance = (float)distanceAfter,

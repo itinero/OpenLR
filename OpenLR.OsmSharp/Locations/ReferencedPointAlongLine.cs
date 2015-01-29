@@ -10,7 +10,7 @@ namespace OpenLR.OsmSharp.Locations
     /// Represents a referenced point along line location with a graph as a reference.
     /// </summary>
     public class ReferencedPointAlongLine<TEdge> : ReferencedLocation
-        where TEdge : IDynamicGraphEdgeData
+        where TEdge : IGraphEdgeData
     {
         /// <summary>
         /// Gets or sets the latitude.

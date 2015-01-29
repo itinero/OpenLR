@@ -24,7 +24,7 @@ namespace OpenLR.OsmSharp.Decoding
     /// </summary>
     /// <typeparam name="TEdge"></typeparam>
     public class ReferencedPointAlongLineDecoder<TEdge> : ReferencedDecoder<ReferencedPointAlongLine<TEdge>, PointAlongLineLocation, TEdge>
-        where TEdge : IDynamicGraphEdgeData
+        where TEdge : IGraphEdgeData
     {
         /// <summary>
         /// Creates a point along line location graph decoder.

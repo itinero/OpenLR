@@ -13,7 +13,7 @@ namespace OpenLR.OsmSharp.Decoding.Scoring
     /// Represents a combined score.
     /// </summary>
     internal class CombinedScore<TEdge>
-        where TEdge : IDynamicGraphEdgeData
+        where TEdge : IGraphEdgeData
     {
         /// <summary>
         /// Gets or sets the source candidate.

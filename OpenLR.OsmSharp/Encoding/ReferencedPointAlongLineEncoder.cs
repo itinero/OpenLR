@@ -17,7 +17,7 @@ namespace OpenLR.OsmSharp.Encoding
     /// </summary>
     /// <typeparam name="TEdge"></typeparam>
     public class ReferencedPointAlongLineEncoder<TEdge> : ReferencedEncoder<ReferencedPointAlongLine<TEdge>, PointAlongLineLocation, TEdge>
-        where TEdge : IDynamicGraphEdgeData
+        where TEdge : IGraphEdgeData
     {
         /// <summary>
         /// Creates a point along line referenced encoder.
@@ -73,8 +73,11 @@ namespace OpenLR.OsmSharp.Encoding
                 var coordinates = referencedLocation.GetCoordinates(this.MainEncoder);
 
                 // calculate bearing.
-                location.First.Bearing = (int)this.GetBearing(referencedLocation.Route.Vertices[0], referencedLocation.Route.Edges[0], referencedLocation.Route.Vertices[1], false).Value;
-                location.Last.Bearing = (int)this.GetBearing(referencedLocation.Route.Vertices[referencedLocation.Route.Vertices.Length - 1], referencedLocation.Route.Edges[referencedLocation.Route.Edges.Length - 1], referencedLocation.Route.Vertices[referencedLocation.Route.Vertices.Length - 2], true).Value;
+                location.First.Bearing = (int)this.GetBearing(referencedLocation.Route.Vertices[0], referencedLocation.Route.Edges[0],
+                    referencedLocation.Route.EdgeShapes[0], referencedLocation.Route.Vertices[1], false).Value;
+                location.Last.Bearing = (int)this.GetBearing(referencedLocation.Route.Vertices[referencedLocation.Route.Vertices.Length - 1],
+                    referencedLocation.Route.Edges[referencedLocation.Route.Edges.Length - 1], referencedLocation.Route.EdgeShapes[referencedLocation.Route.Edges.Length - 1], 
+                    referencedLocation.Route.Vertices[referencedLocation.Route.Vertices.Length - 2], true).Value;
 
                 // calculate length.
                 var lengthInMeter = coordinates.Length();

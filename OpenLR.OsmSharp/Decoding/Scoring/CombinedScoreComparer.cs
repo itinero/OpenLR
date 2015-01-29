@@ -11,7 +11,7 @@ namespace OpenLR.OsmSharp.Decoding.Scoring
     /// A combined score compared.
     /// </summary>
     internal class CombinedScoreComparer<TEdge> : IComparer<CombinedScore<TEdge>>
-        where TEdge : IDynamicGraphEdgeData
+        where TEdge : IGraphEdgeData
     {
         /// <summary>
         /// Compares the two combine scores.

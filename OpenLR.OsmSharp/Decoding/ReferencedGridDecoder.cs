@@ -16,7 +16,7 @@ namespace OpenLR.OsmSharp.Decoding
     /// </summary>
     /// <typeparam name="TEdge"></typeparam>
     public class ReferencedGridDecoder<TEdge> : ReferencedDecoder<ReferencedGrid, GridLocation, TEdge>
-        where TEdge : IDynamicGraphEdgeData
+        where TEdge : IGraphEdgeData
     {
         /// <summary>
         /// Creates a grid location graph decoder.

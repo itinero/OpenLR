@@ -3,6 +3,7 @@ using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 using OpenLR.OsmSharp.Router;
 using OpenLR.Referenced;
+using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using System;
@@ -15,7 +16,7 @@ namespace OpenLR.OsmSharp.Locations
     /// Represents a referenced line location with a graph as a reference.
     /// </summary>
     public class ReferencedLine<TEdge> : ReferencedLocation
-        where TEdge : IDynamicGraphEdgeData
+        where TEdge : IGraphEdgeData
     {
         /// <summary>
         /// Holds the graph.
@@ -40,6 +41,11 @@ namespace OpenLR.OsmSharp.Locations
         /// Gets or sets the edges.
         /// </summary>
         public TEdge[] Edges { get; set; }
+
+        /// <summary>
+        /// Gets or sets the edge shapes.
+        /// </summary>
+        public GeoCoordinateSimple[][] EdgeShapes { get; set; }
 
         /// <summary>
         /// Gets or sets the offset at the beginning of the path representing this location.
@@ -97,27 +103,28 @@ namespace OpenLR.OsmSharp.Locations
                 if (idx < this.Edges.Length)
                 {
                     var edge = this.Edges[idx];
-                    if (edge.Coordinates != null)
+                    var edgeShape = this.EdgeShapes[idx];
+                    if (edgeShape != null)
                     {
                         if (edge.Forward)
                         {
-                            for (int coordIdx = 0; coordIdx < edge.Coordinates.Length; coordIdx++)
+                            for (int coordIdx = 0; coordIdx < edgeShape.Length; coordIdx++)
                             {
                                 coordinates.Add(new Coordinate()
                                 {
-                                    X = edge.Coordinates[coordIdx].Longitude,
-                                    Y = edge.Coordinates[coordIdx].Latitude
+                                    X = edgeShape[coordIdx].Longitude,
+                                    Y = edgeShape[coordIdx].Latitude
                                 });
                             }
                         }
                         else
                         {
-                            for (int coordIdx = edge.Coordinates.Length - 1; coordIdx >= 0; coordIdx--)
+                            for (int coordIdx = edgeShape.Length - 1; coordIdx >= 0; coordIdx--)
                             {
                                 coordinates.Add(new Coordinate()
                                 {
-                                    X = edge.Coordinates[coordIdx].Longitude,
-                                    Y = edge.Coordinates[coordIdx].Latitude
+                                    X = edgeShape[coordIdx].Longitude,
+                                    Y = edgeShape[coordIdx].Latitude
                                 });
                             }
                         }
@@ -145,27 +152,28 @@ namespace OpenLR.OsmSharp.Locations
                 coordinates.Add(new Coordinate(longitude, latitude));
 
                 var edge = this.Edges[idx];
-                if (edge.Coordinates != null)
+                var edgeShape = this.EdgeShapes[idx];
+                if (edgeShape != null)
                 {
                     if (edge.Forward)
                     {
-                        for (int coordIdx = 0; coordIdx < edge.Coordinates.Length; coordIdx++)
+                        for (int coordIdx = 0; coordIdx < edgeShape.Length; coordIdx++)
                         {
                             coordinates.Add(new Coordinate()
                             {
-                                X = edge.Coordinates[coordIdx].Longitude,
-                                Y = edge.Coordinates[coordIdx].Latitude
+                                X = edgeShape[coordIdx].Longitude,
+                                Y = edgeShape[coordIdx].Latitude
                             });
                         }
                     }
                     else
                     {
-                        for (int coordIdx = edge.Coordinates.Length - 1; coordIdx >= 0; coordIdx--)
+                        for (int coordIdx = edgeShape.Length - 1; coordIdx >= 0; coordIdx--)
                         {
                             coordinates.Add(new Coordinate()
                             {
-                                X = edge.Coordinates[coordIdx].Longitude,
-                                Y = edge.Coordinates[coordIdx].Latitude
+                                X = edgeShape[coordIdx].Longitude,
+                                Y = edgeShape[coordIdx].Latitude
                             });
                         }
                     }

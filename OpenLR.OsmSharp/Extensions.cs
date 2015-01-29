@@ -227,7 +227,7 @@ namespace OpenLR.OsmSharp
         /// <param name="baseEncoder"></param>
         /// <returns></returns>
         public static FeatureCollection ToFeatures<TEdge>(this OpenLR.OsmSharp.Locations.ReferencedPointAlongLine<TEdge> referencedPointALongLineLocation, ReferencedEncoderBase<TEdge> baseEncoder)
-            where TEdge : IDynamicGraphEdgeData
+            where TEdge : IGraphEdgeData
         {
             // create the geometry factory.
             var geometryFactory = new GeometryFactory();
@@ -254,7 +254,7 @@ namespace OpenLR.OsmSharp
         /// <param name="baseEncoder"></param>
         /// <returns></returns>
         public static Meter Length<TEdge>(this OpenLR.OsmSharp.Locations.ReferencedPointAlongLine<TEdge> referencedPointALongLineLocation, ReferencedEncoderBase<TEdge> baseEncoder)
-            where TEdge : IDynamicGraphEdgeData
+            where TEdge : IGraphEdgeData
         {
             return referencedPointALongLineLocation.Route.Length(baseEncoder);
         }
@@ -266,7 +266,7 @@ namespace OpenLR.OsmSharp
         /// <param name="baseEncoder"></param>
         /// <returns></returns>
         public static Meter Length<TEdge>(this OpenLR.OsmSharp.Locations.ReferencedLine<TEdge> referencedLine, ReferencedEncoderBase<TEdge> baseEncoder)
-            where TEdge : IDynamicGraphEdgeData
+            where TEdge : IGraphEdgeData
         {
             var length = 0.0;
             for (int idx = 0; idx < referencedLine.Edges.Length; idx++)
@@ -285,14 +285,15 @@ namespace OpenLR.OsmSharp
         /// <param name="baseEncoder"></param>
         /// <returns></returns>
         public static List<GeoCoordinate> GetCoordinates<TEdge>(this OpenLR.OsmSharp.Locations.ReferencedPointAlongLine<TEdge> referencedPointALongLineLocation, ReferencedEncoderBase<TEdge> baseEncoder)
-            where TEdge : IDynamicGraphEdgeData
+            where TEdge : IGraphEdgeData
         {
             var coordinates = new List<GeoCoordinate>();
             for (int idx = 0; idx < referencedPointALongLineLocation.Route.Edges.Length; idx++)
             {
                 var from = baseEncoder.GetVertexLocation(referencedPointALongLineLocation.Route.Vertices[idx]).ToGeoCoordinate();
                 var to = baseEncoder.GetVertexLocation(referencedPointALongLineLocation.Route.Vertices[idx + 1]).ToGeoCoordinate();
-                var edgeCoordinates = referencedPointALongLineLocation.Route.Edges[idx].GetCoordinates(from, to);
+                var edgeCoordinates = referencedPointALongLineLocation.Route.Edges[idx].GetCoordinates(
+                    referencedPointALongLineLocation.Route.EdgeShapes[idx], from, to);
                 if (coordinates.Count > 0)
                 {
                     coordinates.RemoveAt(coordinates.Count - 1);
@@ -310,14 +311,15 @@ namespace OpenLR.OsmSharp
         /// <param name="baseEncoder"></param>
         /// <returns></returns>
         public static List<GeoCoordinate> GetCoordinates<TEdge>(this OpenLR.OsmSharp.Locations.ReferencedLine<TEdge> referencedPointALongLineLocation, ReferencedEncoderBase<TEdge> baseEncoder)
-            where TEdge : IDynamicGraphEdgeData
+            where TEdge : IGraphEdgeData
         {
             var coordinates = new List<GeoCoordinate>();
             for (int idx = 0; idx < referencedPointALongLineLocation.Edges.Length; idx++)
             {
                 var from = baseEncoder.GetVertexLocation(referencedPointALongLineLocation.Vertices[idx]).ToGeoCoordinate();
                 var to = baseEncoder.GetVertexLocation(referencedPointALongLineLocation.Vertices[idx + 1]).ToGeoCoordinate();
-                var edgeCoordinates = referencedPointALongLineLocation.Edges[idx].GetCoordinates(from, to);
+                var edgeCoordinates = referencedPointALongLineLocation.Edges[idx].GetCoordinates(
+                    referencedPointALongLineLocation.EdgeShapes[idx], from, to);
                 if (coordinates.Count > 0)
                 {
                     coordinates.RemoveAt(coordinates.Count - 1);
@@ -335,7 +337,7 @@ namespace OpenLR.OsmSharp
         /// <param name="baseDecoder"></param>
         /// <returns></returns>
         public static FeatureCollection ToFeatures<TEdge>(this OpenLR.OsmSharp.Locations.ReferencedPointAlongLine<TEdge> referencedPointALongLineLocation, ReferencedDecoderBase<TEdge> baseDecoder)
-            where TEdge : IDynamicGraphEdgeData
+            where TEdge : IGraphEdgeData
         {
             // create the geometry factory.
             var geometryFactory = new GeometryFactory();
@@ -484,7 +486,7 @@ namespace OpenLR.OsmSharp
         /// <param name="location">The location.</param>
         /// <returns>Returns an edge or an edge from 0 to 0 if none is found.</returns>
         public static Tuple<long, long, TEdge> GetClosestEdge<TEdge>(this BasicRouterDataSource<TEdge> graph, GeoCoordinate location)
-            where TEdge : IDynamicGraphEdgeData
+            where TEdge : IGraphEdgeData
         {
             return graph.GetClosestEdge<TEdge>(location, double.MaxValue);
         }
@@ -498,7 +500,7 @@ namespace OpenLR.OsmSharp
         /// <param name="maxDistance">The maximum distance.</param>
         /// <returns>Returns an edge or an edge from 0 to 0 if none is found.</returns>
         public static Tuple<long, long, TEdge> GetClosestEdge<TEdge>(this BasicRouterDataSource<TEdge> graph, GeoCoordinate location, Meter maxDistance)
-            where TEdge : IDynamicGraphEdgeData
+            where TEdge : IGraphEdgeData
         { // create the search box.
             var searchBoxSize = 0.1;
             Tuple<long, long, TEdge> bestEdge = null;
@@ -506,7 +508,7 @@ namespace OpenLR.OsmSharp
             var searchBox = new GeoCoordinateBox(
                 new GeoCoordinate(location.Latitude - searchBoxSize, location.Longitude - searchBoxSize),
                 new GeoCoordinate(location.Latitude + searchBoxSize, location.Longitude + searchBoxSize));
-            var arcs = graph.GetArcs(searchBox);
+            var arcs = graph.GetEdges(searchBox);
 
             float latitude, longitude;
             var bestDistance = maxDistance.Value;
@@ -552,7 +554,7 @@ namespace OpenLR.OsmSharp
         /// <param name="edge">The edge-tuple with (from-vertex, to-vertex, edgedata).</param>
         /// <returns></returns>
         public static List<GeoCoordinate> GetCoordinates<TEdge>(this BasicRouterDataSource<TEdge> graph, Tuple<long, long, TEdge> edge)
-            where TEdge : IDynamicGraphEdgeData
+            where TEdge : IGraphEdgeData
         {
             float latitude, longitude;
             graph.GetVertex(edge.Item1, out latitude, out longitude);
@@ -567,28 +569,29 @@ namespace OpenLR.OsmSharp
         /// </summary>
         /// <typeparam name="TEdge"></typeparam>
         /// <param name="edge"></param>
+        /// <param name="edgeShape"></param>
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        public static List<GeoCoordinate> GetCoordinates<TEdge>(this TEdge edge, GeoCoordinate from, GeoCoordinate to)
-            where TEdge : IDynamicGraphEdgeData
+        public static List<GeoCoordinate> GetCoordinates<TEdge>(this TEdge edge, GeoCoordinateSimple[] edgeShape, GeoCoordinate from, GeoCoordinate to)
+            where TEdge : IGraphEdgeData
         {
             var coordinates = new List<GeoCoordinate>();
             coordinates.Add(from);
-            if (edge.Coordinates != null)
+            if (edgeShape != null)
             {
                 if (edge.Forward)
                 {
-                    for (int idx = 0; idx < edge.Coordinates.Length; idx++)
+                    for (int idx = 0; idx < edgeShape.Length; idx++)
                     {
-                        coordinates.Add(new GeoCoordinate(edge.Coordinates[idx].Latitude, edge.Coordinates[idx].Longitude));
+                        coordinates.Add(new GeoCoordinate(edgeShape[idx].Latitude, edgeShape[idx].Longitude));
                     }
                 }
                 else
                 {
-                    for (int idx = edge.Coordinates.Length - 1; idx >= 0; idx--)
+                    for (int idx = edgeShape.Length - 1; idx >= 0; idx--)
                     {
-                        coordinates.Add(new GeoCoordinate(edge.Coordinates[idx].Latitude, edge.Coordinates[idx].Longitude));
+                        coordinates.Add(new GeoCoordinate(edgeShape[idx].Latitude, edgeShape[idx].Longitude));
                     }
                 }
             }
@@ -605,7 +608,7 @@ namespace OpenLR.OsmSharp
         /// <param name="to"></param>
         /// <returns></returns>
         public static Meter Length<TEdge>(this TEdge edge, GeoCoordinate from, GeoCoordinate to)
-            where TEdge : IDynamicGraphEdgeData
+            where TEdge : IGraphEdgeData
         {
             var coordinates = edge.GetCoordinates(from, to);
             return coordinates.Length();

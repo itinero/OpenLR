@@ -13,7 +13,7 @@ namespace OpenLR.OsmSharp.Decoding.Candidates
     /// Represents a candiate route and associated score.
     /// </summary>
     public class CandidateRoute<TEdge>
-        where TEdge : IDynamicGraphEdgeData
+        where TEdge : IGraphEdgeData
     {
         /// <summary>
         /// Gets or sets the route.

@@ -25,7 +25,7 @@ namespace OpenLR.OsmSharp
     /// A referenced decoder implementation.
     /// </summary>
     public abstract class ReferencedDecoderBase<TEdge> : OpenLR.Referenced.Decoding.ReferencedDecoder
-        where TEdge : IDynamicGraphEdgeData
+        where TEdge : IGraphEdgeData
     {
         /// <summary>
         /// Holds the maximum vertex distance.
@@ -398,7 +398,7 @@ namespace OpenLR.OsmSharp
             box = box.Resize(0.1);
 
             // get arcs.
-            var arcs = this.Graph.GetArcs(box);
+            var arcs = this.Graph.GetEdges(box);
             foreach (var arc in arcs)
             {
                 long vertex = arc.Key;
@@ -561,20 +561,21 @@ namespace OpenLR.OsmSharp
             for (int edgeIdx = 0; edgeIdx < route.Edges.Length; edgeIdx++)
             {
                 var edge = route.Edges[edgeIdx];
-                if (edge.Coordinates != null)
+                var edgeShape = route.EdgeShapes[edgeIdx];
+                if (edgeShape != null)
                 { // there are intermediate coordinates.
                     if (edge.Forward)
                     { // the edge is forward.
-                        for (int idx = 0; idx < edge.Coordinates.Length; idx++)
+                        for (int idx = 0; idx < edgeShape.Length; idx++)
                         {
-                            coordinates.Add(new GeoCoordinate(edge.Coordinates[idx].Latitude, edge.Coordinates[idx].Longitude));
+                            coordinates.Add(new GeoCoordinate(edgeShape[idx].Latitude, edgeShape[idx].Longitude));
                         }
                     }
                     else
                     { // the edge is backward.
-                        for (int idx = edge.Coordinates.Length - 1; idx >= 0; idx--)
+                        for (int idx = edgeShape.Length - 1; idx >= 0; idx--)
                         {
-                            coordinates.Add(new GeoCoordinate(edge.Coordinates[idx].Latitude, edge.Coordinates[idx].Longitude));
+                            coordinates.Add(new GeoCoordinate(edgeShape[idx].Latitude, edgeShape[idx].Longitude));
                         }
                     }
                 }
@@ -621,21 +622,22 @@ namespace OpenLR.OsmSharp
             {
                 currentEdgeLength = 0;
                 var edge = route.Edges[edgeIdx];
-                if (edge.Coordinates != null)
+                var edgeShapes = route.EdgeShapes[edgeIdx];
+                if (edgeShapes != null)
                 { // there are intermediate coordinates.
                     if (edge.Forward)
                     { // the edge is forward.
-                        for (int idx = 0; idx < edge.Coordinates.Length; idx++)
+                        for (int idx = 0; idx < edgeShapes.Length; idx++)
                         {
-                            coordinates.Add(new GeoCoordinate(edge.Coordinates[idx].Latitude, edge.Coordinates[idx].Longitude));
+                            coordinates.Add(new GeoCoordinate(edgeShapes[idx].Latitude, edgeShapes[idx].Longitude));
                             currentEdgeLength = currentEdgeLength + coordinates[coordinates.Count - 2].DistanceEstimate(coordinates[coordinates.Count - 1]).Value;
                         }
                     }
                     else
                     { // the edge is backward.
-                        for (int idx = edge.Coordinates.Length - 1; idx >= 0; idx--)
+                        for (int idx = edgeShapes.Length - 1; idx >= 0; idx--)
                         {
-                            coordinates.Add(new GeoCoordinate(edge.Coordinates[idx].Latitude, edge.Coordinates[idx].Longitude));
+                            coordinates.Add(new GeoCoordinate(edgeShapes[idx].Latitude, edgeShapes[idx].Longitude));
                             currentEdgeLength = currentEdgeLength + coordinates[coordinates.Count - 2].DistanceEstimate(coordinates[coordinates.Count - 1]).Value;
                         }
                     }
@@ -679,20 +681,21 @@ namespace OpenLR.OsmSharp
             for (int edgeIdx = 0; edgeIdx < route.Edges.Length; edgeIdx++)
             {
                 var edge = route.Edges[edgeIdx];
-                if (edge.Coordinates != null)
+                var edgeShape = route.EdgeShapes[edgeIdx];
+                if (edgeShape != null)
                 { // there are intermediate coordinates.
                     if (edge.Forward)
                     { // the edge is forward.
-                        for (int idx = 0; idx < edge.Coordinates.Length; idx++)
+                        for (int idx = 0; idx < edgeShape.Length; idx++)
                         {
-                            coordinates.Add(new GeoCoordinate(edge.Coordinates[idx].Latitude, edge.Coordinates[idx].Longitude));
+                            coordinates.Add(new GeoCoordinate(edgeShape[idx].Latitude, edgeShape[idx].Longitude));
                         }
                     }
                     else
                     { // the edge is backward.
-                        for (int idx = edge.Coordinates.Length - 1; idx >= 0; idx--)
+                        for (int idx = edgeShape.Length - 1; idx >= 0; idx--)
                         {
-                            coordinates.Add(new GeoCoordinate(edge.Coordinates[idx].Latitude, edge.Coordinates[idx].Longitude));
+                            coordinates.Add(new GeoCoordinate(edgeShape[idx].Latitude, edgeShape[idx].Longitude));
                         }
                     }
                 }
@@ -715,25 +718,26 @@ namespace OpenLR.OsmSharp
         /// </summary>
         /// <param name="vertexFrom"></param>
         /// <param name="edge"></param>
+        /// <param name="edgeShape"></param>
         /// <param name="vertexTo"></param>
         /// <param name="forward">When true the edge is forward relative to the vertices, false the edge is backward.</param>
         /// <returns></returns>
-        public virtual Degree GetBearing(long vertexFrom, TEdge edge, long vertexTo, bool forward)
+        public virtual Degree GetBearing(long vertexFrom, TEdge edge, GeoCoordinateSimple[] edgeShape, long vertexTo, bool forward)
         {
             var coordinates = new List<GeoCoordinate>();
             float latitude, longitude;
             this.Graph.GetVertex(vertexFrom, out latitude, out longitude);
             coordinates.Add(new GeoCoordinate(latitude, longitude));
 
-            if (edge.Coordinates != null)
+            if (edgeShape != null)
             { // there are intermediates, add them in the correct order.
                 if (forward)
                 {
-                    coordinates.AddRange(edge.Coordinates.Select<GeoCoordinateSimple, GeoCoordinate>(x => { return new GeoCoordinate(x.Latitude, x.Longitude); }));
+                    coordinates.AddRange(edgeShape.Select<GeoCoordinateSimple, GeoCoordinate>(x => { return new GeoCoordinate(x.Latitude, x.Longitude); }));
                 }
                 else
                 {
-                    coordinates.AddRange(edge.Coordinates.Reverse().Select<GeoCoordinateSimple, GeoCoordinate>(x => { return new GeoCoordinate(x.Latitude, x.Longitude); }));
+                    coordinates.AddRange(edgeShape.Reverse().Select<GeoCoordinateSimple, GeoCoordinate>(x => { return new GeoCoordinate(x.Latitude, x.Longitude); }));
                 }
             }
 

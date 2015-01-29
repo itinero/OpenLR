@@ -28,7 +28,7 @@ namespace OpenLR.OsmSharp
     /// A referenced encoder implementation.
     /// </summary>
     public abstract class ReferencedEncoderBase<TEdge> : OpenLR.Referenced.Encoding.ReferencedEncoder
-        where TEdge : IDynamicGraphEdgeData
+        where TEdge : IGraphEdgeData
     {
         /// <summary>
         /// Holds the basic router datasource.
@@ -168,25 +168,30 @@ namespace OpenLR.OsmSharp
         /// </summary>
         /// <param name="vertexFrom"></param>
         /// <param name="edge"></param>
+        /// <param name="edgeShape"></param>
         /// <param name="vertexTo"></param>
         /// <param name="forward">When true the edge is forward relative to the vertices, false the edge is backward.</param>
         /// <returns></returns>
-        public virtual Degree GetBearing(long vertexFrom, TEdge edge, long vertexTo, bool forward)
+        public virtual Degree GetBearing(long vertexFrom, TEdge edge, GeoCoordinateSimple[] edgeShape, long vertexTo, bool forward)
         {
             var coordinates = new List<GeoCoordinate>();
             float latitude, longitude;
             this.Graph.GetVertex(vertexFrom, out latitude, out longitude);
             coordinates.Add(new GeoCoordinate(latitude, longitude));
 
-            if (edge.Coordinates != null)
+            if (edgeShape != null)
             { // there are intermediates, add them in the correct order.
                 if (forward)
                 {
-                    coordinates.AddRange(edge.Coordinates.Select<GeoCoordinateSimple, GeoCoordinate>(x => { return new GeoCoordinate(x.Latitude, x.Longitude); }));
+                    coordinates.AddRange(edgeShape.Select<GeoCoordinateSimple, GeoCoordinate>(x => { 
+                        return new GeoCoordinate(x.Latitude, x.Longitude); 
+                    }));
                 }
                 else
                 {
-                    coordinates.AddRange(edge.Coordinates.Reverse().Select<GeoCoordinateSimple, GeoCoordinate>(x => { return new GeoCoordinate(x.Latitude, x.Longitude); }));
+                    coordinates.AddRange(edgeShape.Reverse().Select<GeoCoordinateSimple, GeoCoordinate>(x => { 
+                        return new GeoCoordinate(x.Latitude, x.Longitude); 
+                    }));
                 }
             }
 

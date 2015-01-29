@@ -12,7 +12,7 @@ namespace OpenLR.OsmSharp.Router
     /// Represents an editable data source or graph of routing data.
     /// </summary>
     public class BasicRouterDataSource<TEdge>
-        where TEdge : IDynamicGraphEdgeData
+        where TEdge : IGraphEdgeData
     {
         /// <summary>
         /// Holds the datasource behing this one.
@@ -32,7 +32,7 @@ namespace OpenLR.OsmSharp.Router
         /// <summary>
         /// Holds the new arcs.
         /// </summary>
-        private List<KeyValuePair<long, KeyValuePair<long, TEdge>>> _newArcs;
+        private List<KeyValuePair<long, KeyValuePair<long, TEdge>>> _newEdges;
 
         /// <summary>
         /// Holds the removed arcs.
@@ -47,7 +47,7 @@ namespace OpenLR.OsmSharp.Router
         {
             _datasource = datasource;
 
-            _newArcs = new List<KeyValuePair<long, KeyValuePair<long, TEdge>>>();
+            _newEdges = new List<KeyValuePair<long, KeyValuePair<long, TEdge>>>();
             _removedArcs = new HashSet<Arc>();
             _newVertices = new Dictionary<long, GeoCoordinate>();
         }
@@ -59,7 +59,7 @@ namespace OpenLR.OsmSharp.Router
         {
             _nextVertexId = -1;
 
-            _newArcs.Clear();
+            _newEdges.Clear();
             _removedArcs.Clear();
             _newVertices.Clear();
         }
@@ -82,7 +82,7 @@ namespace OpenLR.OsmSharp.Router
         /// </summary>
         /// <param name="vertex1"></param>
         /// <param name="vertex2"></param>
-        public void RemoveArc(long vertex1, long vertex2)
+        public void RemoveEdge(long vertex1, long vertex2)
         {
             _removedArcs.Add(new Arc()
             {
@@ -97,9 +97,9 @@ namespace OpenLR.OsmSharp.Router
         /// <param name="vertex1"></param>
         /// <param name="vertex2"></param>
         /// <param name="edge"></param>
-        public void AddArc(long vertex1, long vertex2, TEdge edge)
+        public void AddEdge(long vertex1, long vertex2, TEdge edge)
         {
-            _newArcs.Add(new KeyValuePair<long, KeyValuePair<long, TEdge>>(
+            _newEdges.Add(new KeyValuePair<long, KeyValuePair<long, TEdge>>(
                 vertex1, new KeyValuePair<long, TEdge>(vertex2, edge)));
         }
 
@@ -108,9 +108,9 @@ namespace OpenLR.OsmSharp.Router
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        public KeyValuePair<long, KeyValuePair<long, TEdge>>[] GetArcs(GeoCoordinateBox box)
+        public KeyValuePair<long, KeyValuePair<long, TEdge>>[] GetEdges(GeoCoordinateBox box)
         {
-            var baseArcs = _datasource.GetArcs(box);
+            var baseArcs = _datasource.GetEdges(box);
             var arcs = new List<KeyValuePair<long, KeyValuePair<long, TEdge>>>();
             foreach(var baseArc in baseArcs)
             {
@@ -136,7 +136,7 @@ namespace OpenLR.OsmSharp.Router
                 }
             }
             // check arcs to include.
-            foreach(var newArc in _newArcs)
+            foreach(var newArc in _newEdges)
             {
                 var arc = new Arc()
                 {
@@ -243,11 +243,11 @@ namespace OpenLR.OsmSharp.Router
             var baseArcs = new List<KeyValuePair<long, TEdge>>();
             if(vertexId > 0)
             { // vertex exists in base-graph.
-                var baseArcsUint = _datasource.GetArcs(Convert.ToUInt32(vertexId));
-                for (int idx = 0; idx < baseArcsUint.Length; idx++)
+                var baseArcsUint = _datasource.GetEdges(Convert.ToUInt32(vertexId));
+                while(baseArcsUint.MoveNext())
                 {
                     baseArcs.Add(new KeyValuePair<long, TEdge>(
-                        baseArcsUint[idx].Key, baseArcsUint[idx].Value));
+                        baseArcsUint.Neighbour, baseArcsUint.EdgeData));
                 }
             }
             var arcs = new List<KeyValuePair<long, TEdge>>();
@@ -266,7 +266,7 @@ namespace OpenLR.OsmSharp.Router
             }
 
             // also include new arcs.
-            foreach (var newArc in _newArcs)
+            foreach (var newArc in _newEdges)
             {
                 var arc = new Arc()
                 {
@@ -319,7 +319,7 @@ namespace OpenLR.OsmSharp.Router
         {
             if (vertexId > 0 && neighbour > 0)
             {
-                if (_datasource.HasArc((uint)vertexId, (uint)neighbour))
+                if (_datasource.ContainsEdge((uint)vertexId, (uint)neighbour))
                 { // has the arc.
                     return !_removedArcs.Contains(new Arc()
                     {
@@ -330,7 +330,7 @@ namespace OpenLR.OsmSharp.Router
             }
 
             // also check new arcs.
-            foreach (var newArc in _newArcs)
+            foreach (var newArc in _newEdges)
             {
                 if(newArc.Key == vertexId &&
                     newArc.Value.Key == neighbour)

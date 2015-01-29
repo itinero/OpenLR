@@ -7,7 +7,7 @@ namespace OpenLR.OsmSharp.Decoding.Candidates
     /// Represents a candidate vertex/edge pair and associated score.
     /// </summary>
     public class CandidateVertexEdge<TEdge>
-        where TEdge : IDynamicGraphEdgeData
+        where TEdge : IGraphEdgeData
     {
         /// <summary>
         /// The combined score of vertex and edge.

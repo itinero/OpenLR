@@ -32,6 +32,9 @@
     <DocumentationFile>..\Output\OpenLR.OsmSharp.NWB.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Antlr3.Runtime">
+      <HintPath>..\packages\Antlr3.Runtime.PCL.3.5.0.2\lib\portable-win+net40+sl40+wp\Antlr3.Runtime.dll</HintPath>
+    </Reference>
     <Reference Include="GeoAPI, Version=1.7.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\GeoAPI.1.7.2\lib\net403-client\GeoAPI.dll</HintPath>
@@ -43,33 +46,37 @@
     <Reference Include="NetTopologySuite.IO.GeoTools">
       <HintPath>..\packages\NetTopologySuite.IO.GeoTools.1.13.2\lib\net403-client\NetTopologySuite.IO.GeoTools.dll</HintPath>
     </Reference>
-    <Reference Include="OsmSharp, Version=4.2.0.9999, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="OsmSharp, Version=4.3.0.940, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\OsmSharp.supported.via\OsmSharp.dll</HintPath>
+      <HintPath>..\packages\OsmSharp.4.3.0.940-beta\lib\net45\OsmSharp.dll</HintPath>
     </Reference>
-    <Reference Include="OsmSharp.Osm, Version=4.2.0.9999, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="OsmSharp.Osm, Version=4.3.0.940, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\OsmSharp.supported.via\OsmSharp.Osm.dll</HintPath>
+      <HintPath>..\packages\OsmSharp.4.3.0.940-beta\lib\net45\OsmSharp.Osm.dll</HintPath>
     </Reference>
-    <Reference Include="OsmSharp.Routing, Version=4.2.0.9999, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="OsmSharp.Routing, Version=4.3.0.940, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\OsmSharp.supported.via\OsmSharp.Routing.dll</HintPath>
+      <HintPath>..\packages\OsmSharp.4.3.0.940-beta\lib\net45\OsmSharp.Routing.dll</HintPath>
     </Reference>
-    <Reference Include="OsmSharp.Routing.Shape, Version=0.1.0.13, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="OsmSharp.Routing.Shape, Version=0.1.0.24, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\OsmSharp.Routing.Shape.supported.via\OsmSharp.Routing.Shape.dll</HintPath>
+      <HintPath>..\packages\OsmSharp.Routing.Shape.0.1.0.24-beta\lib\net45\OsmSharp.Routing.Shape.dll</HintPath>
     </Reference>
-    <Reference Include="OsmSharp.UI, Version=4.2.0.9999, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="OsmSharp.UI, Version=4.3.0.940, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\OsmSharp.supported.via\OsmSharp.UI.dll</HintPath>
+      <HintPath>..\packages\OsmSharp.4.3.0.940-beta\lib\net45\OsmSharp.UI.dll</HintPath>
     </Reference>
-    <Reference Include="OsmSharp.WinForms.UI, Version=4.2.0.9999, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="OsmSharp.WinForms.UI, Version=4.3.0.940, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\OsmSharp.supported.via\OsmSharp.WinForms.UI.dll</HintPath>
+      <HintPath>..\packages\OsmSharp.4.3.0.940-beta\lib\net45\OsmSharp.WinForms.UI.dll</HintPath>
     </Reference>
     <Reference Include="PowerCollections, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NetTopologySuite.1.13.2\lib\net403-client\PowerCollections.dll</HintPath>
+    </Reference>
+    <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -78,6 +85,10 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Zlib.Portable, Version=1.9.1.9000, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Zlib.Portable.1.9.2\lib\portable-net4+sl4+wp71+win8\Zlib.Portable.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="NWBMapping.cs" />

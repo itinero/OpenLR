@@ -16,7 +16,7 @@ namespace OpenLR.OsmSharp.Decoding
     /// </summary>
     /// <typeparam name="TEdge"></typeparam>
     public class ReferencedGeoCoordinateDecoder<TEdge> : ReferencedDecoder<ReferencedGeoCoordinate, GeoCoordinateLocation, TEdge>
-        where TEdge : IDynamicGraphEdgeData
+        where TEdge : IGraphEdgeData
     {
         /// <summary>
         /// Creates a geo coordinate location referenced decoder.

@@ -16,7 +16,7 @@ namespace OpenLR.OsmSharp.Decoding
     /// </summary>
     /// <typeparam name="TEdge"></typeparam>
     public class ReferencedCircleDecoder<TEdge> : ReferencedDecoder<ReferencedCircle, CircleLocation, TEdge>
-        where TEdge : IDynamicGraphEdgeData
+        where TEdge : IGraphEdgeData
     {
         /// <summary>
         /// Creates a circle location graph decoder.
