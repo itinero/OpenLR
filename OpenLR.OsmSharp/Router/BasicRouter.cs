@@ -5,6 +5,7 @@ using OsmSharp.Routing;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Osm.Graphs;
+using System;
 using System.Collections.Generic;
 
 namespace OpenLR.OsmSharp.Router
@@ -133,17 +134,127 @@ namespace OpenLR.OsmSharp.Router
         }
 
         /// <summary>
+        /// Calculates the shortest path between the two given 'virtual' vertices described by pre-calculate path segments.
+        /// </summary>
+        /// <param name="graph">The graph.</param>
+        /// <param name="vehicle">The vehicle profile.</param>
+        /// <param name="fromPaths">The paths to the source.</param>
+        /// <param name="toPaths">The paths to the target.</param>
+        /// <param name="searchForward">Flag indicating search direction.</param>
+        /// <returns></returns>
+        public PathSegment Calculate(BasicRouterDataSource<LiveEdge> graph, Vehicle vehicle, 
+            List<PathSegment> fromPaths, List<PathSegment> toPaths, bool searchForward)
+        {
+            if (fromPaths.Count == 0) { return null; }
+            if (toPaths.Count == 0) { return null; }
+
+            // initialize the heap/visit list.
+            var heap = new BinairyHeap<PathSegment>(MAX_SETTLES);
+            var visited = new HashSet<long>();
+
+            // queue the from-paths.
+            long fromVertex = fromPaths[0].From.Vertex;
+            foreach(var fromPath in fromPaths)
+            {
+                heap.Push(fromPath, (float)fromPath.Weight);
+                if(fromVertex != fromPath.From.Vertex)
+                {
+                    throw new ArgumentException("From paths should be one-hop away from a common vertex.");
+                }
+            }
+
+            // enumerate and store target-paths.
+            var toPathDictonary = new Dictionary<long, PathSegment>();
+            foreach(var toPath in toPaths)
+            {
+                toPathDictonary.Add(toPath.From.Vertex, toPath);
+            }
+
+            // keep searching for the target.
+            PathSegment bestToTarget = null;
+            while (true)
+            {
+                // get the next vertex.
+                var current = heap.Pop();
+                if (current == null)
+                { // there is nothing more in the queue, target will not be found.
+                    break;
+                }
+                if (visited.Contains(current.Vertex))
+                { // move to the next neighbour.
+                    continue;
+                }
+                visited.Add(current.Vertex);
+
+                // check for the target.
+                PathSegment foundToPath;
+                if (toPathDictonary.TryGetValue(current.Vertex, out foundToPath))
+                { // target was found.
+                    toPathDictonary.Remove(current.Vertex);
+                    if (bestToTarget == null ||
+                        current.Weight + foundToPath.Weight < bestToTarget.Weight)
+                    { // ok, this path is better!
+                        bestToTarget = new PathSegment(foundToPath.Vertex, foundToPath.Weight + current.Weight, foundToPath.Edge, current);
+                    }
+                    if(toPathDictonary.Count == 0)
+                    { // no more targets let, this has to be it.
+                        return bestToTarget;
+                    }
+                }
+
+                // check if the maximum settled vertex count has been reached.
+                if (visited.Count >= MAX_SETTLES)
+                { // stop search, target will not be found.
+                    break;
+                }
+
+                // add the neighbours to queue.
+                var neighbours = graph.GetArcs(current.Vertex);
+                if (neighbours != null)
+                { // neighbours exist.
+                    foreach (var neighbour in neighbours)
+                    {
+                        // check if the neighbour was settled before.
+                        if (visited.Contains(neighbour.Key))
+                        { // move to the next neighbour.
+                            continue;
+                        }
+
+                        // get tags and check traversability and oneway.
+                        var tags = graph.TagsIndex.Get(neighbour.Value.Tags);
+                        if (vehicle.CanTraverse(tags))
+                        { // yay! can traverse.
+                            var onway = vehicle.IsOneWay(tags);
+                            if (onway == null ||
+                              !(onway.Value == neighbour.Value.Forward ^ searchForward))
+                            {
+                                // create path to neighbour and queue it.
+                                var weight = vehicle.Weight(graph.TagsIndex.Get(neighbour.Value.Tags), neighbour.Value.Distance);
+                                var path = new PathSegment(neighbour.Key, current.Weight + weight, neighbour.Value, current);
+                                if (bestToTarget == null ||
+                                    path.Weight < bestToTarget.Weight)
+                                { // the weight of the neighbour is smaller than the first neighbour found.
+                                    heap.Push(path, (float)path.Weight);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Calculates the shortest path between the two given vertices.
         /// </summary>
-        /// <param name="graph"></param>
-        /// <param name="interpreter"></param>
-        /// <param name="vehicle"></param>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        /// <param name="searchForward"></param>
+        /// <param name="graph">The graph.</param>
+        /// <param name="vehicle">The vehicle profile.</param>
+        /// <param name="from">The source vertex.</param>
+        /// <param name="to">The target vertex.</param>
+        /// <param name="searchForward">Flag indicating search direction.</param>
         /// <returns></returns>
-        public PathSegment Calculate(BasicRouterDataSource<LiveEdge> graph, IRoutingInterpreter interpreter,
-            Vehicle vehicle, long from, long to, bool searchForward)
+        public PathSegment Calculate(BasicRouterDataSource<LiveEdge> graph, Vehicle vehicle, 
+            long from, long to, bool searchForward)
         {
             // first check for the simple stuff.
             if (from == to)

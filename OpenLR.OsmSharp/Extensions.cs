@@ -479,25 +479,37 @@ namespace OpenLR.OsmSharp
         /// <summary>
         /// Returns the edge that is closest to the given location.
         /// </summary>
-        /// <typeparam name="TEdge"></typeparam>
-        /// <param name="graph"></param>
-        /// <param name="location"></param>
+        /// <typeparam name="TEdge">The type of edge.</typeparam>
+        /// <param name="graph">The graph to search.</param>
+        /// <param name="location">The location.</param>
         /// <returns>Returns an edge or an edge from 0 to 0 if none is found.</returns>
-        public static KeyValuePair<long, KeyValuePair<long, TEdge>>? GetClosestEdge<TEdge>(this BasicRouterDataSource<TEdge> graph, GeoCoordinate location)
+        public static Tuple<long, long, TEdge> GetClosestEdge<TEdge>(this BasicRouterDataSource<TEdge> graph, GeoCoordinate location)
             where TEdge : IDynamicGraphEdgeData
         {
-            // create the search box.
-            var searchBoxSize = 0.1;
-            KeyValuePair<long, KeyValuePair<long, TEdge>>? bestEdge = null;
+            return graph.GetClosestEdge<TEdge>(location, double.MaxValue);
+        }
 
-            var searchBox = new GeoCoordinateBox(new GeoCoordinate(
-                location.Latitude - searchBoxSize, location.Longitude - searchBoxSize),
-                                                               new GeoCoordinate(
-                location.Latitude + searchBoxSize, location.Longitude + searchBoxSize));
+        /// <summary>
+        /// Returns the edge that is closest to the given location.
+        /// </summary>
+        /// <typeparam name="TEdge">The type of edge.</typeparam>
+        /// <param name="graph">The graph to search.</param>
+        /// <param name="location">The location.</param>
+        /// <param name="maxDistance">The maximum distance.</param>
+        /// <returns>Returns an edge or an edge from 0 to 0 if none is found.</returns>
+        public static Tuple<long, long, TEdge> GetClosestEdge<TEdge>(this BasicRouterDataSource<TEdge> graph, GeoCoordinate location, Meter maxDistance)
+            where TEdge : IDynamicGraphEdgeData
+        { // create the search box.
+            var searchBoxSize = 0.1;
+            Tuple<long, long, TEdge> bestEdge = null;
+
+            var searchBox = new GeoCoordinateBox(
+                new GeoCoordinate(location.Latitude - searchBoxSize, location.Longitude - searchBoxSize),
+                new GeoCoordinate(location.Latitude + searchBoxSize, location.Longitude + searchBoxSize));
             var arcs = graph.GetArcs(searchBox);
 
             float latitude, longitude;
-            double bestDistance = double.MaxValue;
+            var bestDistance = maxDistance.Value;
             foreach (var arc in arcs)
             {
                 graph.GetVertex(arc.Key, out latitude, out longitude);
@@ -523,13 +535,31 @@ namespace OpenLR.OsmSharp
                         var distance = line.Distance(location);
                         if (distance < bestDistance)
                         {
-                            bestEdge = arc;
+                            bestEdge = new Tuple<long,long,TEdge>(arc.Key, arc.Value.Key, arc.Value.Value);
                             bestDistance = distance;
                         }
                     }
                 }
             }
             return bestEdge;
+        }
+
+        /// <summary>
+        /// Returns a list of coordinates representing the geometry of the edge.
+        /// </summary>
+        /// <typeparam name="TEdge">The type of edge.</typeparam>
+        /// <param name="graph">The graph.</param>
+        /// <param name="edge">The edge-tuple with (from-vertex, to-vertex, edgedata).</param>
+        /// <returns></returns>
+        public static List<GeoCoordinate> GetCoordinates<TEdge>(this BasicRouterDataSource<TEdge> graph, Tuple<long, long, TEdge> edge)
+            where TEdge : IDynamicGraphEdgeData
+        {
+            float latitude, longitude;
+            graph.GetVertex(edge.Item1, out latitude, out longitude);
+            var from = new GeoCoordinate(latitude, longitude);
+            graph.GetVertex(edge.Item2, out latitude, out longitude);
+            var to = new GeoCoordinate(latitude, longitude);
+            return edge.Item3.GetCoordinates(from, to);
         }
 
         /// <summary>

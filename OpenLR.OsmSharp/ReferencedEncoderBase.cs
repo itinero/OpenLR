@@ -2,6 +2,7 @@
 using OpenLR.Locations;
 using OpenLR.Model;
 using OpenLR.OsmSharp.Encoding;
+using OpenLR.OsmSharp.Exceptions;
 using OpenLR.OsmSharp.Locations;
 using OpenLR.OsmSharp.Router;
 using OpenLR.Referenced;
@@ -10,11 +11,13 @@ using OsmSharp.Collections.PriorityQueues;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Simple;
+using OsmSharp.Math.Primitives;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Units.Angle;
+using OsmSharp.Units.Distance;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -264,10 +267,19 @@ namespace OpenLR.OsmSharp
         /// <summary>
         /// Finds the shortest path between the two given vertices.
         /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        /// <param name="searchForward"></param>
+        /// <param name="from">The source vertex.</param>
+        /// <param name="to">The target vertex.</param>
+        /// <param name="searchForward">Flag to define search direction.</param>
         public abstract PathSegment FindShortestPath(long from, long to, bool searchForward);
+
+        /// <summary>
+        /// Finds the shortest path between two 'virtual' vertices.
+        /// </summary>
+        /// <param name="fromPaths">The paths to the source vertex.</param>
+        /// <param name="toPaths">The paths to the target vertex.</param>
+        /// <param name="searchForward">Flag to define search direction.</param>
+        /// <returns></returns>
+        public abstract PathSegment FindShortestPath(List<PathSegment> fromPaths, List<PathSegment> toPaths, bool searchForward);
     }
 
     /// <summary>
@@ -283,24 +295,25 @@ namespace OpenLR.OsmSharp
         /// <returns></returns>
         public static ReferencedPointAlongLine<LiveEdge> BuildPointAlongLine(this ReferencedEncoderBase<LiveEdge> encoder, GeoCoordinate location)
         {
+            if (location == null) { throw new ArgumentNullException("location"); }
+
             // get the closest edge that can be traversed to the given location.
-            var closestNullable = encoder.Graph.GetClosestEdge<LiveEdge>(location);
-            if(!closestNullable.HasValue)
+            var closest = encoder.Graph.GetClosestEdge<LiveEdge>(location);
+            if (closest == null)
             { // no location could be found. 
                 throw new Exception("No network features found near the given location. Make sure the network covers the given location.");
             }
-            var closest = closestNullable.Value;
 
             // check oneway.
-            var oneway = encoder.Vehicle.IsOneWay(encoder.Graph.TagsIndex.Get(closest.Value.Value.Tags));
-            var useForward = (oneway == null) || (oneway.Value == closest.Value.Value.Forward);
+            var oneway = encoder.Vehicle.IsOneWay(encoder.Graph.TagsIndex.Get(closest.Item3.Tags));
+            var useForward = (oneway == null) || (oneway.Value == closest.Item3.Forward);
 
             // build location and make sure the vehicle can travel from from location to to location.
             LiveEdge edge;
             long from, to;
             if (useForward)
             { // encode first point to last point.
-                edge = closest.Value.Value;
+                edge = closest.Item3;
                 //if (!closest.Value.Value.Forward)
                 //{ // use reverse edge.
                 //    var reverseEdge = new LiveEdge();
@@ -316,23 +329,23 @@ namespace OpenLR.OsmSharp
                 //    }
                 //    edge = reverseEdge;
                 //}
-                from = closest.Key;
-                to = closest.Value.Key;
+                from = closest.Item1;
+                to = closest.Item2;
             }
             else
             { // encode last point to first point.
-                edge = closest.Value.Value.ToReverse();
+                edge = closest.Item3.ToReverse();
 
                 // Next OsmSharp version: use closest.Value.Value.Reverse()?
                 var reverseEdge = new LiveEdge();
-                reverseEdge.Tags = closest.Value.Value.Tags;
-                reverseEdge.Forward = !closest.Value.Value.Forward;
-                reverseEdge.Distance = closest.Value.Value.Distance;
-                reverseEdge.Coordinates = closest.Value.Value.Coordinates;
+                reverseEdge.Tags = closest.Item3.Tags;
+                reverseEdge.Forward = !closest.Item3.Forward;
+                reverseEdge.Distance = closest.Item3.Distance;
+                reverseEdge.Coordinates = closest.Item3.Coordinates;
 
                 edge = reverseEdge;
-                from = closest.Value.Key;
-                to = closest.Key;
+                from = closest.Item2;
+                to = closest.Item1;
             }
 
             // OK, now we have a naive location, we need to check if it's valid.
@@ -477,15 +490,196 @@ namespace OpenLR.OsmSharp
         }
 
         /// <summary>
+        /// Builds a line location along the shortest path between start and end location.
+        /// </summary>
+        /// <param name="encoder">The encoder.</param>
+        /// <param name="startLocation">The start location.</param>
+        /// <param name="endLocation">The end location.</param>
+        /// <returns></returns>
+        /// <remarks>This should only be used when sure the start and endlocation or very close to the network use for encoding.</remarks>
+        public static ReferencedLine<LiveEdge> BuildLineLocation(this ReferencedEncoderBase<LiveEdge> encoder, GeoCoordinate startLocation, GeoCoordinate endLocation)
+        {
+            return encoder.BuildLineLocation(startLocation, endLocation, 0.1);
+        }
+
+        /// <summary>
+        /// Builds a line location along the shortest path between start and end location.
+        /// </summary>
+        /// <param name="encoder">The encoder.</param>
+        /// <param name="startLocation">The start location.</param>
+        /// <param name="endLocation">The end location.</param>
+        /// <param name="tolerance">The tolerance value, the minimum distance between a given start or endlocation and the network used for encoding.</param>
+        /// <returns></returns>
+        /// <remarks>This should only be used when sure the start and endlocation or very close to the network use for encoding.</remarks>
+        public static ReferencedLine<LiveEdge> BuildLineLocation(this ReferencedEncoderBase<LiveEdge> encoder, GeoCoordinate startLocation, GeoCoordinate endLocation, Meter tolerance)
+        {
+            PointF2D bestProjected;
+            LinePointPosition bestPosition;
+            Meter bestStartOffset;
+            Meter bestEndOffset;
+            double epsilon = 0.1;
+
+            if (startLocation == null) { throw new ArgumentNullException("startLocation"); }
+            if (endLocation == null) { throw new ArgumentNullException("endLocation"); }
+
+            // search start and end location hooks.
+            var startEdge = encoder.Graph.GetClosestEdge<LiveEdge>(startLocation);
+            if(startEdge == null)
+            { // no closest edge found within tolerance, encoding has failed!
+                throw new BuildLocationFailedException("Location {0} is too far from the network used for encoding with used tolerance {1}",
+                    startLocation, tolerance);
+            }
+            // project the startlocation on the edge.
+            var coordinates = encoder.Graph.GetCoordinates(startEdge);
+            var startEdgeLength = coordinates.Length();
+            if (!coordinates.ProjectOn(startLocation, out bestProjected, out bestPosition, out bestStartOffset))
+            { // projection failed,.
+                throw new BuildLocationFailedException("Projection of location {0} on the closest edge failed.",
+                    startLocation);
+            }
+            // construct from pathsegments.
+            var startPaths = new List<PathSegment>();
+            if(bestStartOffset.Value < epsilon)
+            { // use the first vertex as start location.
+                startPaths.Add(new PathSegment(startEdge.Item1));
+            }
+            else if ((startEdgeLength.Value - bestStartOffset.Value) < epsilon)
+            { // use the last vertex as end start location.
+                startPaths.Add(new PathSegment(startEdge.Item2));
+            }
+            else
+            { // point is somewhere in between.
+                var tags = encoder.Graph.TagsIndex.Get(startEdge.Item3.Tags);
+                var oneway = encoder.Vehicle.IsOneWay(tags);
+
+                // build path from vertex1->(location)
+                if(oneway == null || (oneway.Value ^ !startEdge.Item3.Forward))
+                { // edge is in the correct direction.
+                    var weightBefore = encoder.Vehicle.Weight(tags, (float)bestStartOffset.Value);
+                    startPaths.Add(new PathSegment(startEdge.Item1, weightBefore, startEdge.Item3.ToReverse(), 
+                        new PathSegment(-1)));
+                }
+
+                // build path from vertex (location)->vertex2
+                if (oneway == null || (oneway.Value ^ startEdge.Item3.Forward))
+                { // edge is in the correct direction.
+                    var weightAfter = encoder.Vehicle.Weight(encoder.Graph.TagsIndex.Get(startEdge.Item3.Tags), (float)(startEdgeLength.Value - bestStartOffset.Value));
+                    startPaths.Add(new PathSegment(startEdge.Item2, weightAfter, startEdge.Item3,
+                        new PathSegment(-1)));
+                }
+            }
+
+            var endEdge = encoder.Graph.GetClosestEdge<LiveEdge>(endLocation);
+            if (endEdge == null)
+            { // no closest edge found within tolerance, encoding has failed!
+                throw new BuildLocationFailedException("Location {0} is too far from the network used for encoding with used tolerance {1}",
+                    endLocation, tolerance);
+            }
+            // project the endlocation on the edge.
+            coordinates = encoder.Graph.GetCoordinates(endEdge);
+            var endEdgeLength = coordinates.Length();
+            if (!coordinates.ProjectOn(endLocation, out bestProjected, out bestPosition, out bestEndOffset))
+            { // projection failed,.
+                throw new BuildLocationFailedException("Projection of location {0} on the closest edge failed.",
+                    endLocation);
+            }
+            // construct from pathsegments.
+            var endPaths = new List<PathSegment>();
+            if (bestEndOffset.Value < epsilon)
+            { // use the first vertex as end location.
+                endPaths.Add(new PathSegment(endEdge.Item1));
+            }
+            else if ((endEdgeLength.Value - bestEndOffset.Value) < epsilon)
+            { // use the last vertex as end end location.
+                endPaths.Add(new PathSegment(endEdge.Item2));
+            }
+            else
+            { // point is somewhere in between.
+                var tags = encoder.Graph.TagsIndex.Get(endEdge.Item3.Tags);
+                var oneway = encoder.Vehicle.IsOneWay(tags);
+
+                // build path from vertex1->(location)
+                if (oneway == null || (oneway.Value ^ !endEdge.Item3.Forward))
+                { // edge is in the correct direction.
+                    var weightBefore = encoder.Vehicle.Weight(tags, (float)bestEndOffset.Value);
+                    endPaths.Add(new PathSegment(endEdge.Item1, weightBefore, endEdge.Item3.ToReverse(),
+                        new PathSegment(-1)));
+                }
+
+                // build path from vertex (location)->vertex2
+                if (oneway == null || (oneway.Value ^ endEdge.Item3.Forward))
+                { // edge is in the correct direction.
+                    var weightAfter = encoder.Vehicle.Weight(encoder.Graph.TagsIndex.Get(endEdge.Item3.Tags), (float)(endEdgeLength.Value - bestEndOffset.Value));
+                    endPaths.Add(new PathSegment(endEdge.Item2, weightAfter, endEdge.Item3,
+                        new PathSegment(-1)));
+                }
+            }
+
+            // calculate shortest path.
+            var shortestPath = encoder.FindShortestPath(startPaths, endPaths, true);
+            if(shortestPath == null)
+            { // routing failed,.
+                throw new BuildLocationFailedException("Projection of location {0} on the closest edge failed.",
+                    endLocation);
+            }
+            var vertices = new List<long>();
+            var edges = new List<LiveEdge>();
+            vertices.Add(shortestPath.Vertex);
+            edges.Add(shortestPath.Edge);
+            while (shortestPath.From != null)
+            {
+                shortestPath = shortestPath.From;
+                vertices.Add(shortestPath.Vertex);
+                if (shortestPath.From != null)
+                {
+                    edges.Add(shortestPath.Edge);
+                }
+            }
+            vertices.Reverse();
+            edges.Reverse();
+
+            // extract vertices, edges and offsets.
+            if(vertices[0] < 0)
+            { // replace the first virtual vertex with the real vertex.
+                if (vertices[1] == startEdge.Item1)
+                { // the virtual vertex should be item2.
+                    vertices[0] = startEdge.Item2;
+                }
+                else
+                { // the virtual vertex should be item1.
+                    vertices[0] = startEdge.Item1;
+                }
+            }
+            if(vertices[vertices.Count - 1] < 0)
+            { // replace the last virtual vertex with the real vertex.
+                if (vertices[vertices.Count - 2] == endEdge.Item1)
+                { // the virtual vertex should be item2.
+                    vertices[vertices.Count - 1] = endEdge.Item2;
+                }
+                else
+                { // the virtual vertex should be item1.
+                    vertices[vertices.Count - 1] = endEdge.Item1;
+                }
+            }
+
+            // calculate offset.
+            var positivePercentageOffset = (float)System.Math.Max(System.Math.Min((bestStartOffset.Value / startEdgeLength.Value) * 100.0, 100), 0);
+            var negativePercentageOffset = (float)System.Math.Max(100 - (System.Math.Min((bestEndOffset.Value / endEdgeLength.Value) * 100.0, 100)), 0);
+
+            return encoder.BuildLineLocation(vertices.ToArray(), edges.ToArray(), positivePercentageOffset, negativePercentageOffset);
+        }
+
+        /// <summary>
         /// Builds a line location given a sequence of vertex->edge->vertex...edge->vertex.
         /// </summary>
         /// <param name="encoder">The encoder.</param>
         /// <param name="vertices">The vertices along the path to create the location for. Contains at least two vertices (#vertices = #edges + 1).</param>
-        /// <param name="edges">The edge along the path to create the location for. Contains at least one edge (#vertices = #edges + 1). Adges need to be taversible by the vehicle profile used by the encoder in the direction of the path</param>
+        /// <param name="edges">The edge along the path to create the location for. Contains at least one edge (#vertices = #edges + 1). Edges need to be traversible by the vehicle profile used by the encoder in the direction of the path</param>
         /// <param name="positivePercentageOffset">The offset in percentage relative to the distance of the total path and it's start. [0-100[</param>
         /// <param name="negativePercentageOffset">The offset in percentage relative to the distance of the total path and it's end. [0-100[</param>
         /// <returns></returns>
-        public static ReferencedLine<LiveEdge> BuildLineLocation(this ReferencedEncoderBase<LiveEdge> encoder, long[] vertices, LiveEdge[] edges, float positivePercentageOffset, float negativePercentageOffset)
+        public static ReferencedLine<LiveEdge> BuildLineLocation(this ReferencedEncoderBase<LiveEdge> encoder, long[] vertices, LiveEdge[] edges, 
+            float positivePercentageOffset, float negativePercentageOffset)
         {
             // validate parameters.
             if (encoder == null) { throw new ArgumentNullException("encoder"); }

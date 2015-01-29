@@ -91,6 +91,7 @@
     <Compile Include="Encoding\ReferencedEncoder.cs" />
     <Compile Include="Encoding\ReferencedLineEncoder.cs" />
     <Compile Include="Encoding\ReferencedPointAlongLineEncoder.cs" />
+    <Compile Include="Exceptions\BuildLocationFailedException.cs" />
     <Compile Include="Locations\ReferencedCircle.cs" />
     <Compile Include="Decoding\ReferencedCircleDecoder.cs" />
     <Compile Include="Locations\ReferencedGeoCoordinate.cs" />

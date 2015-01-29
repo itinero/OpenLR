@@ -106,17 +106,29 @@ namespace OpenLR.OsmSharp
         /// <summary>
         /// Finds the shortest path between the given from->to.
         /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        /// <param name="searchForward"></param>
+        /// <param name="from">The source vertex.</param>
+        /// <param name="to">The target vertex.</param>
+        /// <param name="searchForward">Flag for search direction.</param>
         /// <returns></returns>
         public override PathSegment FindShortestPath(long from, long to, bool searchForward)
         {
-            var edgeInterpreter = new ShapefileEdgeInterpreter();
-            var interpreter = new ShapefileRoutingInterpreter();
             var router = this.GetRouter();
-            return router.Calculate(this.Graph, interpreter, this.Vehicle,
+            return router.Calculate(this.Graph, this.Vehicle,
                 from, to, searchForward);
+        }
+
+        /// <summary>
+        /// Finds the shortest path between the given from->to.
+        /// </summary>
+        /// <param name="fromPaths">The paths to the source.</param>
+        /// <param name="toPaths">The paths to the target.</param>
+        /// <param name="searchForward">Flag for search direction.</param>
+        /// <returns></returns>
+        public override PathSegment FindShortestPath(List<PathSegment> fromPaths, List<PathSegment> toPaths, bool searchForward)
+        {
+            var router = this.GetRouter();
+            return router.Calculate(this.Graph, this.Vehicle,
+                fromPaths, toPaths, searchForward);
         }
     }
 }
