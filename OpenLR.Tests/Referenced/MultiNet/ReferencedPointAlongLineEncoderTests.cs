@@ -7,6 +7,7 @@ using OpenLR.OsmSharp.MultiNet;
 using OpenLR.OsmSharp.Router;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Index;
+using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router.Dykstra;
 using OsmSharp.Routing.Osm.Graphs;
@@ -57,6 +58,8 @@ namespace OpenLR.Tests.Referenced.MultiNet
                     Tag.Create("FRC", "2"),
                     Tag.Create("FOW", "3")))
             };
+            referencedPointAlongLineLocation.Route.EdgeShapes = new GeoCoordinateSimple[1][];
+            referencedPointAlongLineLocation.Route.EdgeShapes[0] = new GeoCoordinateSimple[0];
             referencedPointAlongLineLocation.Route.Vertices = new long[2];
             referencedPointAlongLineLocation.Route.Vertices[0] = vertex1;
             referencedPointAlongLineLocation.Route.Vertices[1] = vertex2;

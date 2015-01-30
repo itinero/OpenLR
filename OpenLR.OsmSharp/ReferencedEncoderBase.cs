@@ -929,6 +929,13 @@ namespace OpenLR.OsmSharp
             // update offset percentags.
             referencedLine.PositiveOffsetPercentage = (float)((positiveOffsetLength / length) * 100.0);
             referencedLine.NegativeOffsetPercentage = (float)((negativeOffsetLength / length) * 100.0);
+            
+            // fill shapes.
+            referencedLine.EdgeShapes = new GeoCoordinateSimple[referencedLine.Edges.Length][];
+            for (int i = 0; i < referencedLine.Edges.Length; i++)
+            {
+                referencedLine.EdgeShapes[i] = encoder.Graph.GetEdgeShape(referencedLine.Vertices[i], referencedLine.Vertices[i + 1]);
+            }
 
             return referencedLine;
         }

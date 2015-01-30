@@ -6,6 +6,7 @@ using OpenLR.OsmSharp.Router;
 using OpenLR.OsmSharp.Scoring;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
+using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Graph.Router.Dykstra;
@@ -220,11 +221,19 @@ namespace OpenLR.OsmSharp.Osm
             edges.Reverse();
             vertices.Reverse();
 
+            // fill shapes.
+            var edgeShapes = new GeoCoordinateSimple[edges.Count][];
+            for (int i = 0; i < edges.Count; i++)
+            {
+                edgeShapes[i] = this.Graph.GetEdgeShape(vertices[i], vertices[i + 1]);
+            }
+
             return new CandidateRoute<LiveEdge>()
             {
                 Route = new ReferencedLine<LiveEdge>(this.Graph)
                 {
                     Edges = edges.ToArray(),
+                    EdgeShapes = edgeShapes,
                     Vertices = vertices.ToArray()
                 },
                 Score = Score.New(Score.CANDIDATE_ROUTE, "Candidate route quality.", 1, 1)

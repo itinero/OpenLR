@@ -200,6 +200,7 @@ namespace OpenLR.OsmSharp.Decoding
         /// Returns the bearing calculate between two given vertices along the given edge.
         /// </summary>
         /// <param name="vertexFrom"></param>
+        /// <param name="edgeShape"></param>
         /// <param name="edge"></param>
         /// <param name="vertexTo"></param>
         /// <param name="forward">When true the edge is forward relative to the vertices, false the edge is backward.</param>

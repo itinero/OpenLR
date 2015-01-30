@@ -111,6 +111,7 @@ namespace OpenLR.OsmSharp.Router
         /// <param name="vertex1"></param>
         /// <param name="vertex2"></param>
         /// <param name="edge"></param>
+        /// <param name="shape"></param>
         public void AddEdge(long vertex1, long vertex2, TEdge edge, GeoCoordinateSimple[] shape)
         {
             _newEdges.Add(new KeyValuePair<long, KeyValuePair<long, Tuple<TEdge, ICoordinateCollection>>>(
@@ -123,6 +124,7 @@ namespace OpenLR.OsmSharp.Router
         /// <param name="vertex1"></param>
         /// <param name="vertex2"></param>
         /// <param name="edge"></param>
+        /// <param name="shape"></param>
         public void AddEdge(long vertex1, long vertex2, TEdge edge, ICoordinateCollection shape)
         {
             _newEdges.Add(new KeyValuePair<long, KeyValuePair<long, Tuple<TEdge, ICoordinateCollection>>>(

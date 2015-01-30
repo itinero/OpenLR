@@ -9,6 +9,7 @@ using OpenLR.OsmSharp.Router;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Math.Geo;
+using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router.Dykstra;
 using OsmSharp.Routing.Osm.Graphs;
@@ -55,6 +56,8 @@ namespace OpenLR.Tests.Referenced.Osm
                 Forward = true,
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
             };
+            referencedLocation.EdgeShapes = new GeoCoordinateSimple[1][];
+            referencedLocation.EdgeShapes[0] = new GeoCoordinateSimple[0];
             referencedLocation.Vertices = new long[2];
             referencedLocation.Vertices[0] = vertex1;
             referencedLocation.Vertices[1] = vertex2;
@@ -89,6 +92,8 @@ namespace OpenLR.Tests.Referenced.Osm
                 Forward = true,
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
             };
+            referencedLocation.EdgeShapes = new GeoCoordinateSimple[1][];
+            referencedLocation.EdgeShapes[0] = new GeoCoordinateSimple[0];
             referencedLocation.Vertices = new long[2];
             referencedLocation.Vertices[0] = vertex1;
             referencedLocation.Vertices[1] = vertex2;
@@ -118,6 +123,8 @@ namespace OpenLR.Tests.Referenced.Osm
                 Forward = true,
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
             };
+            referencedLocation.EdgeShapes = new GeoCoordinateSimple[1][];
+            referencedLocation.EdgeShapes[0] = new GeoCoordinateSimple[0];
             referencedLocation.Vertices = new long[2];
             referencedLocation.Vertices[0] = vertex1;
             referencedLocation.Vertices[1] = vertex2;
@@ -158,12 +165,6 @@ namespace OpenLR.Tests.Referenced.Osm
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
             };
             graphDataSource.AddEdge(vertex1, vertex2, edge1, null);
-            graphDataSource.AddEdge(vertex2, vertex1, new LiveEdge()
-            {
-                Distance = 10,
-                Forward = true,
-                Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
-            }, null);
 
             // create a referenced location and encode it.
             var graph = new BasicRouterDataSource<LiveEdge>(graphDataSource);
@@ -219,13 +220,9 @@ namespace OpenLR.Tests.Referenced.Osm
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
             };
             graphDataSource.AddEdge(vertex1, vertex2, edge, null);
-            graphDataSource.AddEdge(vertex2, vertex1, edge.ToReverse(), null);
             graphDataSource.AddEdge(vertex1, vertex3, edge, null);
-            graphDataSource.AddEdge(vertex3, vertex1, edge.ToReverse(), null);
             graphDataSource.AddEdge(vertex3, vertex5, edge, null);
-            graphDataSource.AddEdge(vertex5, vertex3, edge.ToReverse(), null);
             graphDataSource.AddEdge(vertex3, vertex4, edge, null);
-            graphDataSource.AddEdge(vertex4, vertex3, edge.ToReverse(), null);
 
             // create a referenced location and encode it.
             var graph = new BasicRouterDataSource<LiveEdge>(graphDataSource);
@@ -285,13 +282,9 @@ namespace OpenLR.Tests.Referenced.Osm
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
             };
             graphDataSource.AddEdge(vertex1, vertex2, edge, null);
-            graphDataSource.AddEdge(vertex2, vertex1, edge.ToReverse(), null);
             graphDataSource.AddEdge(vertex1, vertex3, edge, null);
-            graphDataSource.AddEdge(vertex3, vertex1, edge.ToReverse(), null);
             graphDataSource.AddEdge(vertex2, vertex5, edge, null);
-            graphDataSource.AddEdge(vertex5, vertex2, edge.ToReverse(), null);
             graphDataSource.AddEdge(vertex2, vertex4, edge, null);
-            graphDataSource.AddEdge(vertex4, vertex2, edge.ToReverse(), null);
 
             // create a referenced location and encode it.
             var graph = new BasicRouterDataSource<LiveEdge>(graphDataSource);
@@ -351,13 +344,9 @@ namespace OpenLR.Tests.Referenced.Osm
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
             };
             graphDataSource.AddEdge(vertex1, vertex2, edge, null);
-            graphDataSource.AddEdge(vertex2, vertex1, edge.ToReverse(), null);
             graphDataSource.AddEdge(vertex1, vertex3, edge, null);
-            graphDataSource.AddEdge(vertex3, vertex1, edge.ToReverse(), null);
             graphDataSource.AddEdge(vertex3, vertex5, edge, null);
-            graphDataSource.AddEdge(vertex5, vertex3, edge.ToReverse(), null);
             graphDataSource.AddEdge(vertex3, vertex4, edge, null);
-            graphDataSource.AddEdge(vertex4, vertex3, edge.ToReverse(), null);
 
             // create a referenced location and encode it.
             var graph = new BasicRouterDataSource<LiveEdge>(graphDataSource);
@@ -417,13 +406,9 @@ namespace OpenLR.Tests.Referenced.Osm
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
             };
             graphDataSource.AddEdge(vertex1, vertex2, edge, null);
-            graphDataSource.AddEdge(vertex2, vertex1, edge.ToReverse(), null);
             graphDataSource.AddEdge(vertex1, vertex3, edge, null);
-            graphDataSource.AddEdge(vertex3, vertex1, edge.ToReverse(), null);
             graphDataSource.AddEdge(vertex2, vertex5, edge, null);
-            graphDataSource.AddEdge(vertex5, vertex2, edge.ToReverse(), null);
             graphDataSource.AddEdge(vertex2, vertex4, edge, null);
-            graphDataSource.AddEdge(vertex4, vertex2, edge.ToReverse(), null);
 
             // create a referenced location and encode it.
             var graph = new BasicRouterDataSource<LiveEdge>(graphDataSource);
@@ -468,12 +453,6 @@ namespace OpenLR.Tests.Referenced.Osm
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
             };
             graphDataSource.AddEdge(vertex1, vertex2, edge1, null);
-            graphDataSource.AddEdge(vertex2, vertex1, new LiveEdge()
-            {
-                Distance = 10,
-                Forward = true,
-                Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
-            }, null);
 
             // create a referenced location and encode it.
             var graph = new BasicRouterDataSource<LiveEdge>(graphDataSource);
@@ -535,13 +514,9 @@ namespace OpenLR.Tests.Referenced.Osm
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
             };
             graphDataSource.AddEdge(vertex1, vertex2, edge, null);
-            graphDataSource.AddEdge(vertex2, vertex1, edge.ToReverse(), null);
             graphDataSource.AddEdge(vertex1, vertex3, edge, null);
-            graphDataSource.AddEdge(vertex3, vertex1, edge.ToReverse(), null);
             graphDataSource.AddEdge(vertex3, vertex5, edge, null);
-            graphDataSource.AddEdge(vertex5, vertex3, edge.ToReverse(), null);
             graphDataSource.AddEdge(vertex3, vertex4, edge, null);
-            graphDataSource.AddEdge(vertex4, vertex3, edge.ToReverse(), null);
 
             // create a referenced location and encode it.
             var graph = new BasicRouterDataSource<LiveEdge>(graphDataSource);
@@ -606,13 +581,9 @@ namespace OpenLR.Tests.Referenced.Osm
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
             };
             graphDataSource.AddEdge(vertex1, vertex2, edge, null);
-            graphDataSource.AddEdge(vertex2, vertex1, edge.ToReverse(), null);
             graphDataSource.AddEdge(vertex1, vertex3, edge, null);
-            graphDataSource.AddEdge(vertex3, vertex1, edge.ToReverse(), null);
             graphDataSource.AddEdge(vertex2, vertex5, edge, null);
-            graphDataSource.AddEdge(vertex5, vertex2, edge.ToReverse(), null);
             graphDataSource.AddEdge(vertex2, vertex4, edge, null);
-            graphDataSource.AddEdge(vertex4, vertex2, edge.ToReverse(), null);
 
             // create a referenced location and encode it.
             var graph = new BasicRouterDataSource<LiveEdge>(graphDataSource);
@@ -668,9 +639,7 @@ namespace OpenLR.Tests.Referenced.Osm
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
             };
             graphDataSource.AddEdge(vertex1, vertex2, edge, null);
-            graphDataSource.AddEdge(vertex2, vertex1, edge.ToReverse(), null);
             graphDataSource.AddEdge(vertex1, vertex3, edge, null);
-            graphDataSource.AddEdge(vertex3, vertex1, edge.ToReverse(), null);
 
             // create a referenced location and encode it.
             var graph = new BasicRouterDataSource<LiveEdge>(graphDataSource);
@@ -723,9 +692,7 @@ namespace OpenLR.Tests.Referenced.Osm
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
             };
             graphDataSource.AddEdge(vertex1, vertex2, edge, null);
-            graphDataSource.AddEdge(vertex2, vertex1, edge.ToReverse(), null);
             graphDataSource.AddEdge(vertex1, vertex3, edge, null);
-            graphDataSource.AddEdge(vertex3, vertex1, edge.ToReverse(), null);
 
             // create a referenced location and encode it.
             var graph = new BasicRouterDataSource<LiveEdge>(graphDataSource);
@@ -778,7 +745,6 @@ namespace OpenLR.Tests.Referenced.Osm
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
             };
             graphDataSource.AddEdge(vertex1, vertex2, edge, null);
-            graphDataSource.AddEdge(vertex2, vertex1, edge.ToReverse(), null);
 
             // create a referenced location and encode it.
             var graph = new BasicRouterDataSource<LiveEdge>(graphDataSource);
@@ -828,7 +794,6 @@ namespace OpenLR.Tests.Referenced.Osm
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
             };
             graphDataSource.AddEdge(vertex1, vertex2, edge, null);
-            graphDataSource.AddEdge(vertex2, vertex1, edge.ToReverse(), null);
 
             // create a referenced location and encode it.
             var graph = new BasicRouterDataSource<LiveEdge>(graphDataSource);
