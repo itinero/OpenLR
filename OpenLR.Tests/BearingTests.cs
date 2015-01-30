@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using OpenLR.Binary.Data;
 using OpenLR.Model;
-using OpenLR.OsmSharp.Encoding;
+using OpenLR.Referenced.Encoding;
 using OsmSharp.Math.Geo;
 using System;
 using System.Collections.Generic;

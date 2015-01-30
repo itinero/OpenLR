@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using OpenLR.Locations;
-using OpenLR.OsmSharp.Decoding;
-using OpenLR.OsmSharp.Osm;
+using OpenLR.Referenced.Decoding;
+using OpenLR.Referenced.Osm;
 using OsmSharp.Routing.Osm.Graphs;
 
 namespace OpenLR.Tests.Referenced

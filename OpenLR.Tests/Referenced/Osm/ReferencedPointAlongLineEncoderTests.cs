@@ -1,10 +1,10 @@
 ﻿using NUnit.Framework;
 using OpenLR.Binary.Encoders;
 using OpenLR.Model;
-using OpenLR.OsmSharp.Encoding;
-using OpenLR.OsmSharp.Locations;
-using OpenLR.OsmSharp.Osm;
-using OpenLR.OsmSharp.Router;
+using OpenLR.Referenced.Encoding;
+using OpenLR.Referenced.Locations;
+using OpenLR.Referenced.Osm;
+using OpenLR.Referenced.Router;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Math.Geo.Simple;

@@ -1,9 +1,9 @@
 ﻿using NetTopologySuite.IO;
 using NUnit.Framework;
 using OpenLR.Binary;
-using OpenLR.OsmSharp;
-using OpenLR.OsmSharp.Locations;
-using OpenLR.OsmSharp.Osm;
+using OpenLR.Referenced;
+using OpenLR.Referenced.Locations;
+using OpenLR.Referenced.Osm;
 using OsmSharp.Routing.Osm.Graphs;
 
 namespace OpenLR.Tests.Referenced.Real.Osm

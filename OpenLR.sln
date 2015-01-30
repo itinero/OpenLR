@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenLR", "OpenLR\OpenLR.csproj", "{036AD1DA-006A-48B6-826C-83D12561411D}"
 EndProject
@@ -11,11 +11,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenLR.Tests", "OpenLR.Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenLR.XML", "OpenLR.XML\OpenLR.XML.csproj", "{CF358CF6-913D-47DC-9A83-DE90153A82F2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenLR.OsmSharp", "OpenLR.OsmSharp\OpenLR.OsmSharp.csproj", "{61C1F8E2-9AFB-4EDA-8465-B0ECB20296D7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenLR.Referenced", "OpenLR.Referenced\OpenLR.Referenced.csproj", "{61C1F8E2-9AFB-4EDA-8465-B0ECB20296D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenLR.OsmSharp.NWB", "OpenLR.OsmSharp.NWB\OpenLR.OsmSharp.NWB.csproj", "{E14B6468-C422-4811-828E-BCF522266EFF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenLR.Referenced.MultiNet", "OpenLR.Referenced.MultiNet\OpenLR.Referenced.MultiNet.csproj", "{1130C7F7-C993-4669-9B93-010C9BBADE1C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenLR.OsmSharp.MultiNet", "OpenLR.OsmSharp.MultiNet\OpenLR.OsmSharp.MultiNet.csproj", "{1130C7F7-C993-4669-9B93-010C9BBADE1C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenLR.Referenced.NWB", "OpenLR.Referenced.NWB\OpenLR.Referenced.NWB.csproj", "{E14B6468-C422-4811-828E-BCF522266EFF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,14 +43,14 @@ Global
 		{61C1F8E2-9AFB-4EDA-8465-B0ECB20296D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61C1F8E2-9AFB-4EDA-8465-B0ECB20296D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{61C1F8E2-9AFB-4EDA-8465-B0ECB20296D7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E14B6468-C422-4811-828E-BCF522266EFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E14B6468-C422-4811-828E-BCF522266EFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E14B6468-C422-4811-828E-BCF522266EFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E14B6468-C422-4811-828E-BCF522266EFF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1130C7F7-C993-4669-9B93-010C9BBADE1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1130C7F7-C993-4669-9B93-010C9BBADE1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1130C7F7-C993-4669-9B93-010C9BBADE1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1130C7F7-C993-4669-9B93-010C9BBADE1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E14B6468-C422-4811-828E-BCF522266EFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E14B6468-C422-4811-828E-BCF522266EFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E14B6468-C422-4811-828E-BCF522266EFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E14B6468-C422-4811-828E-BCF522266EFF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

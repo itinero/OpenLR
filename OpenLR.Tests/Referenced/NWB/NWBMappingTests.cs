@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using OpenLR.OsmSharp.NWB;
+using OpenLR.Referenced.NWB;
 
 namespace OpenLR.Tests.Referenced.NWB
 {

@@ -150,17 +150,17 @@
       <Project>{252d884c-8bed-4711-a2da-21f8dc05d697}</Project>
       <Name>OpenLR.Binary</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OpenLR.OsmSharp.MultiNet\OpenLR.OsmSharp.MultiNet.csproj">
+    <ProjectReference Include="..\OpenLR.Referenced.MultiNet\OpenLR.Referenced.MultiNet.csproj">
       <Project>{1130c7f7-c993-4669-9b93-010c9bbade1c}</Project>
-      <Name>OpenLR.OsmSharp.MultiNet</Name>
+      <Name>OpenLR.Referenced.MultiNet</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OpenLR.OsmSharp.NWB\OpenLR.OsmSharp.NWB.csproj">
+    <ProjectReference Include="..\OpenLR.Referenced.NWB\OpenLR.Referenced.NWB.csproj">
       <Project>{e14b6468-c422-4811-828e-bcf522266eff}</Project>
-      <Name>OpenLR.OsmSharp.NWB</Name>
+      <Name>OpenLR.Referenced.NWB</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OpenLR.OsmSharp\OpenLR.OsmSharp.csproj">
+    <ProjectReference Include="..\OpenLR.Referenced\OpenLR.Referenced.csproj">
       <Project>{61c1f8e2-9afb-4eda-8465-b0ecb20296d7}</Project>
-      <Name>OpenLR.OsmSharp</Name>
+      <Name>OpenLR.Referenced</Name>
     </ProjectReference>
     <ProjectReference Include="..\OpenLR.XML\OpenLR.XML.csproj">
       <Project>{cf358cf6-913d-47dc-9a83-de90153a82f2}</Project>

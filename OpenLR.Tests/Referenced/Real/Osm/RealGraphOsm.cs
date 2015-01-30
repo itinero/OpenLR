@@ -1,4 +1,4 @@
-﻿using OpenLR.OsmSharp.Router;
+﻿using OpenLR.Referenced.Router;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Osm.PBF.Streams;
 using OsmSharp.Routing.Graph.Router;
