@@ -90,7 +90,7 @@ namespace OpenLR.OsmSharp.Router
                 }
 
                 // add the neighbours to queue.
-                var neighbours = graph.GetArcs(current.VertexId);
+                var neighbours = graph.GetEdges(current.VertexId);
                 if (neighbours != null)
                 { // neighbours exist.
                     foreach (var neighbour in neighbours)
@@ -223,7 +223,7 @@ namespace OpenLR.OsmSharp.Router
                 }
 
                 // add the neighbours to queue.
-                var neighbours = graph.GetArcs(current.Vertex);
+                var neighbours = graph.GetEdges(current.Vertex);
                 if (neighbours != null)
                 { // neighbours exist.
                     foreach (var neighbour in neighbours)
@@ -315,7 +315,7 @@ namespace OpenLR.OsmSharp.Router
                 }
 
                 // add the neighbours to queue.
-                var neighbours = graph.GetArcs(current.Vertex);
+                var neighbours = graph.GetEdges(current.Vertex);
                 if (neighbours != null)
                 { // neighbours exist.
                     foreach (var neighbour in neighbours)

@@ -5,6 +5,7 @@ using NetTopologySuite.Utilities;
 using OpenLR.Locations;
 using OpenLR.OsmSharp.Router;
 using OsmSharp;
+using OsmSharp.Collections.Coordinates.Collections;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Simple;
@@ -271,9 +272,9 @@ namespace OpenLR.OsmSharp
             var length = 0.0;
             for (int idx = 0; idx < referencedLine.Edges.Length; idx++)
             {
-                var from = baseEncoder.GetVertexLocation(referencedLine.Vertices[idx]).ToGeoCoordinate();
-                var to = baseEncoder.GetVertexLocation(referencedLine.Vertices[idx + 1]).ToGeoCoordinate();
-                length = length + referencedLine.Edges[idx].Length(from, to).Value;
+                length = length + baseEncoder.Graph.GetCoordinates(new Tuple<long,long,TEdge>(
+                    referencedLine.Vertices[idx], referencedLine.Vertices[idx + 1],
+                    referencedLine.Edges[idx])).Length().Value;
             }
             return length;
         }
@@ -519,16 +520,20 @@ namespace OpenLR.OsmSharp
                 graph.GetVertex(arc.Value.Key, out latitude, out longitude);
                 var to = new GeoCoordinate(latitude, longitude);
 
-                List<GeoCoordinate> coordinates = null;
-                if (arc.Value.Value.Forward)
-                {
-                    coordinates = arc.Value.Value.GetCoordinates(from, to);
+                var coordinates = new List<GeoCoordinate>();
+                ICoordinateCollection shape = null;
+                if(graph.GetEdgeShape(arc.Key, arc.Value.Key, out shape) &&
+                    shape != null)
+                { // a non-null shape.
+                    coordinates.Add(from);
+                    coordinates.AddRange(shape.ToArray());
+                    coordinates.Add(to);
                 }
                 else
-                {
-                    coordinates = arc.Value.Value.GetCoordinates(to, from);
+                { // no shape, only add from/to.
+                    coordinates.Add(from);
+                    coordinates.Add(to);
                 }
-
                 if (coordinates != null && coordinates.Count > 0)
                 {
                     for (int idx = 1; idx < coordinates.Count; idx++)
@@ -547,6 +552,21 @@ namespace OpenLR.OsmSharp
         }
 
         /// <summary>
+        /// Returns an array containing all coordinates in the given collection.
+        /// </summary>
+        /// <param name="collection"></param>
+        /// <returns></returns>
+        public static GeoCoordinate[] ToArray(this ICoordinateCollection collection)
+        {
+            var coordinates = new List<GeoCoordinate>();
+            while(collection.MoveNext())
+            {
+                coordinates.Add(new GeoCoordinate(collection.Latitude, collection.Longitude));
+            }
+            return coordinates.ToArray();
+        }
+
+        /// <summary>
         /// Returns a list of coordinates representing the geometry of the edge.
         /// </summary>
         /// <typeparam name="TEdge">The type of edge.</typeparam>
@@ -561,7 +581,13 @@ namespace OpenLR.OsmSharp
             var from = new GeoCoordinate(latitude, longitude);
             graph.GetVertex(edge.Item2, out latitude, out longitude);
             var to = new GeoCoordinate(latitude, longitude);
-            return edge.Item3.GetCoordinates(from, to);
+            ICoordinateCollection shape;
+            if(graph.GetEdgeShape(edge.Item1, edge.Item2, out shape) &&
+                shape != null)
+            {
+                return edge.Item3.GetCoordinates(shape.ToSimpleArray(), from, to);
+            }
+            return edge.Item3.GetCoordinates(new GeoCoordinateSimple[0], from, to);
         }
 
         /// <summary>
@@ -597,21 +623,6 @@ namespace OpenLR.OsmSharp
             }
             coordinates.Add(to);
             return coordinates;
-        }
-
-        /// <summary>
-        /// Returns a list of coordinates representing the geometry of the edge.
-        /// </summary>
-        /// <typeparam name="TEdge"></typeparam>
-        /// <param name="edge"></param>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        /// <returns></returns>
-        public static Meter Length<TEdge>(this TEdge edge, GeoCoordinate from, GeoCoordinate to)
-            where TEdge : IGraphEdgeData
-        {
-            var coordinates = edge.GetCoordinates(from, to);
-            return coordinates.Length();
         }
 
         /// <summary>
@@ -760,13 +771,13 @@ namespace OpenLR.OsmSharp
             reverseEdge.Tags = edge.Tags;
             reverseEdge.Forward = !edge.Forward;
             reverseEdge.Distance = edge.Distance;
-            reverseEdge.Coordinates = null;
-            if (edge.Coordinates != null)
-            {
-                var reverse = new GeoCoordinateSimple[edge.Coordinates.Length];
-                edge.Coordinates.CopyToReverse(reverse, 0);
-                reverseEdge.Coordinates = reverse;
-            }
+            //reverseEdge.Coordinates = null;
+            //if (edge.Coordinates != null)
+            //{
+            //    var reverse = new GeoCoordinateSimple[edge.Coordinates.Length];
+            //    edge.Coordinates.CopyToReverse(reverse, 0);
+            //    reverseEdge.Coordinates = reverse;
+            //}
             return reverseEdge;
         }
     }

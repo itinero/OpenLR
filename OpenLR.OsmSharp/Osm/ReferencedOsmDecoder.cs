@@ -198,7 +198,7 @@ namespace OpenLR.OsmSharp.Osm
                 var toVertex = path.VertexId;
 
                 bool found = false;
-                foreach (var arc in this.Graph.GetArcs(fromVertex))
+                foreach (var arc in this.Graph.GetEdges(fromVertex))
                 {
                     if (arc.Key == toVertex)
                     { // there is a candidate arc.

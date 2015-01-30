@@ -57,30 +57,26 @@ namespace OpenLR.Tests.Referenced.Osm
             uint vertex1 = graphDataSource.AddVertex(49.60851f, 6.12683f);
             uint vertex2 = graphDataSource.AddVertex(49.60398f, 6.12838f);
             uint vertex3 = graphDataSource.AddVertex(49.60305f, 6.12817f);
-            graphDataSource.AddArc(vertex1, vertex2, new LiveEdge()
+            graphDataSource.AddEdge(vertex1, vertex2, new LiveEdge()
             {
-                Coordinates = null,
                 Distance = 10,
                 Forward = true,
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
             }, null);
-            graphDataSource.AddArc(vertex2, vertex1, new LiveEdge()
+            graphDataSource.AddEdge(vertex2, vertex1, new LiveEdge()
             {
-                Coordinates = null,
                 Distance = 10,
                 Forward = true,
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
             }, null);
-            graphDataSource.AddArc(vertex2, vertex3, new LiveEdge()
+            graphDataSource.AddEdge(vertex2, vertex3, new LiveEdge()
             {
-                Coordinates = null,
                 Distance = 10,
                 Forward = true,
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
             }, null);
-            graphDataSource.AddArc(vertex3, vertex2, new LiveEdge()
+            graphDataSource.AddEdge(vertex3, vertex2, new LiveEdge()
             {
-                Coordinates = null,
                 Distance = 10,
                 Forward = true,
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))

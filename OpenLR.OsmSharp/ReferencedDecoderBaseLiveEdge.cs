@@ -76,7 +76,7 @@ namespace OpenLR.OsmSharp
             foreach (var arc in arcs)
             {
                 // check if arc was removed already.
-                if (!this.Graph.HasArc(arc.Key, arc.Value.Key))
+                if (!this.Graph.HasEdge(arc.Key, arc.Value.Key))
                 { // this arc was already removed, probably the reverse one.
                     continue;
                 }
@@ -86,11 +86,7 @@ namespace OpenLR.OsmSharp
                 var fromCoordinates = new GeoCoordinate(latitude, longitude);
                 this.Graph.GetVertex(arc.Value.Key, out latitude, out longitude);
                 var toCoordinates = new GeoCoordinate(latitude, longitude);
-                var arcCoordinates = new List<GeoCoordinateSimple>();
-                if (arc.Value.Value.Coordinates != null)
-                { // there are coordinates.
-                    arcCoordinates.AddRange(arc.Value.Value.Coordinates);
-                }
+                var arcCoordinates = this.Graph.GetEdgeShape(arc.Key, arc.Value.Key);
 
                 // search along the line.
                 var closestDistance = double.MaxValue;
@@ -101,7 +97,7 @@ namespace OpenLR.OsmSharp
                 var distanceTotal = 0.0;
                 var distance = 0.0;
                 var previous = fromCoordinates;
-                for (int idx = 0; idx < arcCoordinates.Count; idx++)
+                for (int idx = 0; idx < arcCoordinates.Length; idx++)
                 {
                     var current = new GeoCoordinate(arcCoordinates[idx].Latitude, arcCoordinates[idx].Longitude);
                     distanceTotal = distanceTotal + current.DistanceReal(previous).Value;
@@ -114,7 +110,7 @@ namespace OpenLR.OsmSharp
                     previous = fromCoordinates;
                     GeoCoordinateLine line;
                     double distanceToSegment = 0;
-                    for (int idx = 0; idx < arcCoordinates.Count; idx++)
+                    for (int idx = 0; idx < arcCoordinates.Length; idx++)
                     {
                         var current = new GeoCoordinate(
                             arcCoordinates[idx].Latitude, arcCoordinates[idx].Longitude);
@@ -161,7 +157,7 @@ namespace OpenLR.OsmSharp
 
                             closestDistance = distance;
                             closestRatio = position;
-                            closestPosition = arcCoordinates.Count;
+                            closestPosition = arcCoordinates.Length;
                             closestLocation = new GeoCoordinate(projectedPoint);
                         }
                     }
@@ -198,34 +194,30 @@ namespace OpenLR.OsmSharp
                     // add new edges forward/backward.
                     this.Graph.AddEdge(arc.Key, newId, new LiveEdge()
                     {
-                        Coordinates = coordinatesBefore.Count > 0 ? coordinatesBefore.ToArray() : null,
                         Distance = (float)distanceBefore,
                         Forward = arc.Value.Value.Forward,
                         Tags = arc.Value.Value.Tags
-                    });
+                    }, coordinatesBefore.Count > 0 ? coordinatesBefore.ToArray() : null);
                     coordinatesBefore.Reverse();
                     this.Graph.AddEdge(newId, arc.Key, new LiveEdge()
                     {
-                        Coordinates = coordinatesBefore.Count > 0 ? coordinatesBefore.ToArray() : null,
                         Distance = (float)distanceBefore,
                         Forward = !arc.Value.Value.Forward,
                         Tags = arc.Value.Value.Tags
-                    });
+                    }, coordinatesBefore.Count > 0 ? coordinatesBefore.ToArray() : null);
                     this.Graph.AddEdge(newId, arc.Value.Key, new LiveEdge()
                     {
-                        Coordinates = coordinatesAfter.Count > 0 ? coordinatesAfter.ToArray() : null,
                         Distance = (float)distanceAfter,
                         Forward = arc.Value.Value.Forward,
                         Tags = arc.Value.Value.Tags
-                    });
+                    }, coordinatesAfter.Count > 0 ? coordinatesAfter.ToArray() : null);
                     coordinatesAfter.Reverse();
                     this.Graph.AddEdge(arc.Value.Key, newId, new LiveEdge()
                     {
-                        Coordinates = coordinatesAfter.Count > 0 ? coordinatesAfter.ToArray() : null,
                         Distance = (float)distanceAfter,
                         Forward = !arc.Value.Value.Forward,
                         Tags = arc.Value.Value.Tags
-                    });
+                    }, coordinatesAfter.Count > 0 ? coordinatesAfter.ToArray() : null);
 
                     // add candidates for the new vertex.
                     var edgeCandidates = this.FindCandidateEdgesFor(newId, forward, lrp.FormOfWay.Value, lrp.FuntionalRoadClass.Value, (Degree)lrp.Bearing.Value);

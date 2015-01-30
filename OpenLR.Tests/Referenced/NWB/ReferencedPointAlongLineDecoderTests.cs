@@ -51,9 +51,8 @@ namespace OpenLR.Tests.Referenced.NWB
             var graphDataSource = new DynamicGraphRouterDataSource<LiveEdge>(tags);
             var vertex1 = graphDataSource.AddVertex(49.60597f, 6.12829f);
             var vertex2 = graphDataSource.AddVertex(49.60521f, 6.12779f);
-            graphDataSource.AddArc(vertex1, vertex2, new LiveEdge()
+            graphDataSource.AddEdge(vertex1, vertex2, new LiveEdge()
             {
-                Coordinates = null,
                 Distance = 10,
                 Forward = true,
                 Tags = tags.Add(new TagsCollection(
@@ -63,9 +62,8 @@ namespace OpenLR.Tests.Referenced.NWB
                     Tag.Create(NWBMapping.RIJRICHTNG, string.Empty),
                     Tag.Create(NWBMapping.HECTOLTTR, string.Empty)))
             }, null);
-            graphDataSource.AddArc(vertex2, vertex1, new LiveEdge()
+            graphDataSource.AddEdge(vertex2, vertex1, new LiveEdge()
             {
-                Coordinates = null,
                 Distance = 10,
                 Forward = true,
                 Tags = tags.Add(new TagsCollection(

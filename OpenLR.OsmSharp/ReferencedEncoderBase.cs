@@ -208,7 +208,7 @@ namespace OpenLR.OsmSharp
         /// <returns></returns>
         public bool IsVertexValid(long vertex)
         {
-            var arcs = this.Graph.GetArcs(vertex);
+            var arcs = this.Graph.GetEdges(vertex);
 
             // filter out non-traversable arcs.
             var traversableArcs = arcs.Where((arc) =>
@@ -339,14 +339,10 @@ namespace OpenLR.OsmSharp
             }
             else
             { // encode last point to first point.
-                edge = closest.Item3.ToReverse();
-
-                // Next OsmSharp version: use closest.Value.Value.Reverse()?
                 var reverseEdge = new LiveEdge();
                 reverseEdge.Tags = closest.Item3.Tags;
                 reverseEdge.Forward = !closest.Item3.Forward;
                 reverseEdge.Distance = closest.Item3.Distance;
-                reverseEdge.Coordinates = closest.Item3.Coordinates;
 
                 edge = reverseEdge;
                 from = closest.Item2;
@@ -413,7 +409,6 @@ namespace OpenLR.OsmSharp
                             reverseEdge.Tags = edge.Tags;
                             reverseEdge.Forward = !edge.Forward;
                             reverseEdge.Distance = edge.Distance;
-                            reverseEdge.Coordinates = edge.Coordinates;
 
                             edge = reverseEdge;
                             edges.Add(edge);
@@ -777,7 +772,7 @@ namespace OpenLR.OsmSharp
                 var to = vertices[edgeIdx + 1];
 
                 bool found = false;
-                foreach (var edge in encoder.Graph.GetArcs(from))
+                foreach (var edge in encoder.Graph.GetEdges(from))
                 {
                     if (edge.Key == to &&
                         edge.Value.Equals(edges[edgeIdx]))
@@ -851,7 +846,6 @@ namespace OpenLR.OsmSharp
                             reverseEdge.Tags = edge.Tags;
                             reverseEdge.Forward = !edge.Forward;
                             reverseEdge.Distance = edge.Distance;
-                            reverseEdge.Coordinates = edge.Coordinates;
 
                             edge = reverseEdge;
                             newEdges.Add(edge);

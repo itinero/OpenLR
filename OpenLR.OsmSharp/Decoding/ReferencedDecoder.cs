@@ -6,6 +6,7 @@ using OpenLR.Referenced;
 using OpenLR.Referenced.Decoding;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
+using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Units.Angle;
 using OsmSharp.Units.Distance;
@@ -203,9 +204,9 @@ namespace OpenLR.OsmSharp.Decoding
         /// <param name="vertexTo"></param>
         /// <param name="forward">When true the edge is forward relative to the vertices, false the edge is backward.</param>
         /// <returns></returns>
-        protected Degree GetBearing(long vertexFrom, TEdge edge, long vertexTo, bool forward)
+        protected Degree GetBearing(long vertexFrom, TEdge edge, GeoCoordinateSimple[] edgeShape, long vertexTo, bool forward)
         {
-            return _mainDecoder.GetBearing(vertexFrom, edge, vertexTo, forward);
+            return _mainDecoder.GetBearing(vertexFrom, edge, edgeShape, vertexTo, forward);
         }
     }
 }

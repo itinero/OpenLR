@@ -32,16 +32,14 @@ namespace OpenLR.Tests.Referenced.Osm
             var graphDataSource = new DynamicGraphRouterDataSource<LiveEdge>(tags);
             uint vertex1 = graphDataSource.AddVertex(49.60597f, 6.12829f);
             uint vertex2 = graphDataSource.AddVertex(49.60521f, 6.12779f);
-            graphDataSource.AddArc(vertex1, vertex2, new LiveEdge()
+            graphDataSource.AddEdge(vertex1, vertex2, new LiveEdge()
             {
-                Coordinates = null,
                 Distance = 10,
                 Forward = true,
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
             }, null);
-            graphDataSource.AddArc(vertex2, vertex1, new LiveEdge()
+            graphDataSource.AddEdge(vertex2, vertex1, new LiveEdge()
             {
-                Coordinates = null,
                 Distance = 10,
                 Forward = true,
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
@@ -53,7 +51,6 @@ namespace OpenLR.Tests.Referenced.Osm
             referencedLocation.Edges = new LiveEdge[1];
             referencedLocation.Edges[0] = new LiveEdge()
             {
-                Coordinates = null,
                 Distance = 10,
                 Forward = true,
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
@@ -88,7 +85,6 @@ namespace OpenLR.Tests.Referenced.Osm
             referencedLocation.Edges = new LiveEdge[1];
             referencedLocation.Edges[0] = new LiveEdge()
             {
-                Coordinates = null,
                 Distance = 10,
                 Forward = true,
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
@@ -118,7 +114,6 @@ namespace OpenLR.Tests.Referenced.Osm
             referencedLocation.Edges = new LiveEdge[1];
             referencedLocation.Edges[0] = new LiveEdge()
             {
-                Coordinates = null,
                 Distance = 10,
                 Forward = true,
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
@@ -158,15 +153,13 @@ namespace OpenLR.Tests.Referenced.Osm
             var vertex2 = graphDataSource.AddVertex(49.60521f, 6.12779f);
             var edge1 = new LiveEdge()
             {
-                Coordinates = null,
                 Distance = 10,
                 Forward = true,
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
             };
-            graphDataSource.AddArc(vertex1, vertex2, edge1, null);
-            graphDataSource.AddArc(vertex2, vertex1, new LiveEdge()
+            graphDataSource.AddEdge(vertex1, vertex2, edge1, null);
+            graphDataSource.AddEdge(vertex2, vertex1, new LiveEdge()
             {
-                Coordinates = null,
                 Distance = 10,
                 Forward = true,
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
@@ -185,7 +178,6 @@ namespace OpenLR.Tests.Referenced.Osm
             Assert.AreEqual(1, referencedLocation.Vertices[0]);
             Assert.AreEqual(2, referencedLocation.Vertices[1]);
             Assert.AreEqual(1, referencedLocation.Edges.Length);
-            Assert.AreEqual(edge1.Coordinates, referencedLocation.Edges[0].Coordinates);
             Assert.AreEqual(edge1.Distance, referencedLocation.Edges[0].Distance);
             Assert.AreEqual(edge1.Forward, referencedLocation.Edges[0].Forward);
             Assert.AreEqual(edge1.Tags, referencedLocation.Edges[0].Tags);
@@ -222,19 +214,18 @@ namespace OpenLR.Tests.Referenced.Osm
             var vertex5 = graphDataSource.AddVertex(51.05940000000000f, 3.7225627899169926f);
             var edge = new LiveEdge() // all edge are identical.
             {
-                Coordinates = null,
                 Distance = 100,
                 Forward = true,
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
             };
-            graphDataSource.AddArc(vertex1, vertex2, edge, null);
-            graphDataSource.AddArc(vertex2, vertex1, edge.ToReverse(), null);
-            graphDataSource.AddArc(vertex1, vertex3, edge, null);
-            graphDataSource.AddArc(vertex3, vertex1, edge.ToReverse(), null);
-            graphDataSource.AddArc(vertex3, vertex5, edge, null);
-            graphDataSource.AddArc(vertex5, vertex3, edge.ToReverse(), null);
-            graphDataSource.AddArc(vertex3, vertex4, edge, null);
-            graphDataSource.AddArc(vertex4, vertex3, edge.ToReverse(), null);
+            graphDataSource.AddEdge(vertex1, vertex2, edge, null);
+            graphDataSource.AddEdge(vertex2, vertex1, edge.ToReverse(), null);
+            graphDataSource.AddEdge(vertex1, vertex3, edge, null);
+            graphDataSource.AddEdge(vertex3, vertex1, edge.ToReverse(), null);
+            graphDataSource.AddEdge(vertex3, vertex5, edge, null);
+            graphDataSource.AddEdge(vertex5, vertex3, edge.ToReverse(), null);
+            graphDataSource.AddEdge(vertex3, vertex4, edge, null);
+            graphDataSource.AddEdge(vertex4, vertex3, edge.ToReverse(), null);
 
             // create a referenced location and encode it.
             var graph = new BasicRouterDataSource<LiveEdge>(graphDataSource);
@@ -250,11 +241,9 @@ namespace OpenLR.Tests.Referenced.Osm
             Assert.AreEqual(1, referencedLocation.Vertices[1]);
             Assert.AreEqual(2, referencedLocation.Vertices[2]);
             Assert.AreEqual(2, referencedLocation.Edges.Length);
-            Assert.AreEqual(edge.Coordinates, referencedLocation.Edges[0].Coordinates);
             Assert.AreEqual(edge.Distance, referencedLocation.Edges[0].Distance);
             Assert.AreEqual(!edge.Forward, referencedLocation.Edges[0].Forward); // edge was reversed.
             Assert.AreEqual(edge.Tags, referencedLocation.Edges[0].Tags);
-            Assert.AreEqual(edge.Coordinates, referencedLocation.Edges[1].Coordinates);
             Assert.AreEqual(edge.Distance, referencedLocation.Edges[1].Distance);
             Assert.AreEqual(edge.Forward, referencedLocation.Edges[1].Forward);
             Assert.AreEqual(edge.Tags, referencedLocation.Edges[1].Tags);
@@ -291,19 +280,18 @@ namespace OpenLR.Tests.Referenced.Osm
             var vertex5 = graphDataSource.AddVertex(51.05940000000000f, 3.7254400000000000f);
             var edge = new LiveEdge() // all edge are identical.
             {
-                Coordinates = null,
                 Distance = 100,
                 Forward = true,
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
             };
-            graphDataSource.AddArc(vertex1, vertex2, edge, null);
-            graphDataSource.AddArc(vertex2, vertex1, edge.ToReverse(), null);
-            graphDataSource.AddArc(vertex1, vertex3, edge, null);
-            graphDataSource.AddArc(vertex3, vertex1, edge.ToReverse(), null);
-            graphDataSource.AddArc(vertex2, vertex5, edge, null);
-            graphDataSource.AddArc(vertex5, vertex2, edge.ToReverse(), null);
-            graphDataSource.AddArc(vertex2, vertex4, edge, null);
-            graphDataSource.AddArc(vertex4, vertex2, edge.ToReverse(), null);
+            graphDataSource.AddEdge(vertex1, vertex2, edge, null);
+            graphDataSource.AddEdge(vertex2, vertex1, edge.ToReverse(), null);
+            graphDataSource.AddEdge(vertex1, vertex3, edge, null);
+            graphDataSource.AddEdge(vertex3, vertex1, edge.ToReverse(), null);
+            graphDataSource.AddEdge(vertex2, vertex5, edge, null);
+            graphDataSource.AddEdge(vertex5, vertex2, edge.ToReverse(), null);
+            graphDataSource.AddEdge(vertex2, vertex4, edge, null);
+            graphDataSource.AddEdge(vertex4, vertex2, edge.ToReverse(), null);
 
             // create a referenced location and encode it.
             var graph = new BasicRouterDataSource<LiveEdge>(graphDataSource);
@@ -319,11 +307,9 @@ namespace OpenLR.Tests.Referenced.Osm
             Assert.AreEqual(1, referencedLocation.Vertices[1]);
             Assert.AreEqual(2, referencedLocation.Vertices[2]);
             Assert.AreEqual(2, referencedLocation.Edges.Length);
-            Assert.AreEqual(edge.Coordinates, referencedLocation.Edges[0].Coordinates);
             Assert.AreEqual(edge.Distance, referencedLocation.Edges[0].Distance);
             Assert.AreEqual(!edge.Forward, referencedLocation.Edges[0].Forward); // edge was reversed.
             Assert.AreEqual(edge.Tags, referencedLocation.Edges[0].Tags);
-            Assert.AreEqual(edge.Coordinates, referencedLocation.Edges[1].Coordinates);
             Assert.AreEqual(edge.Distance, referencedLocation.Edges[1].Distance);
             Assert.AreEqual(edge.Forward, referencedLocation.Edges[1].Forward);
             Assert.AreEqual(edge.Tags, referencedLocation.Edges[1].Tags);
@@ -360,19 +346,18 @@ namespace OpenLR.Tests.Referenced.Osm
             var vertex5 = graphDataSource.AddVertex(51.05940000000000f, 3.7225627899169926f);
             var edge = new LiveEdge() // all edge are identical.
             {
-                Coordinates = null,
                 Distance = 100,
                 Forward = true,
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
             };
-            graphDataSource.AddArc(vertex1, vertex2, edge, null);
-            graphDataSource.AddArc(vertex2, vertex1, edge.ToReverse(), null);
-            graphDataSource.AddArc(vertex1, vertex3, edge, null);
-            graphDataSource.AddArc(vertex3, vertex1, edge.ToReverse(), null);
-            graphDataSource.AddArc(vertex3, vertex5, edge, null);
-            graphDataSource.AddArc(vertex5, vertex3, edge.ToReverse(), null);
-            graphDataSource.AddArc(vertex3, vertex4, edge, null);
-            graphDataSource.AddArc(vertex4, vertex3, edge.ToReverse(), null);
+            graphDataSource.AddEdge(vertex1, vertex2, edge, null);
+            graphDataSource.AddEdge(vertex2, vertex1, edge.ToReverse(), null);
+            graphDataSource.AddEdge(vertex1, vertex3, edge, null);
+            graphDataSource.AddEdge(vertex3, vertex1, edge.ToReverse(), null);
+            graphDataSource.AddEdge(vertex3, vertex5, edge, null);
+            graphDataSource.AddEdge(vertex5, vertex3, edge.ToReverse(), null);
+            graphDataSource.AddEdge(vertex3, vertex4, edge, null);
+            graphDataSource.AddEdge(vertex4, vertex3, edge.ToReverse(), null);
 
             // create a referenced location and encode it.
             var graph = new BasicRouterDataSource<LiveEdge>(graphDataSource);
@@ -388,11 +373,9 @@ namespace OpenLR.Tests.Referenced.Osm
             Assert.AreEqual(1, referencedLocation.Vertices[1]);
             Assert.AreEqual(2, referencedLocation.Vertices[2]);
             Assert.AreEqual(2, referencedLocation.Edges.Length);
-            Assert.AreEqual(edge.Coordinates, referencedLocation.Edges[0].Coordinates);
             Assert.AreEqual(edge.Distance, referencedLocation.Edges[0].Distance);
             Assert.AreEqual(!edge.Forward, referencedLocation.Edges[0].Forward); // edge was reversed.
             Assert.AreEqual(edge.Tags, referencedLocation.Edges[0].Tags);
-            Assert.AreEqual(edge.Coordinates, referencedLocation.Edges[1].Coordinates);
             Assert.AreEqual(edge.Distance, referencedLocation.Edges[1].Distance);
             Assert.AreEqual(edge.Forward, referencedLocation.Edges[1].Forward);
             Assert.AreEqual(edge.Tags, referencedLocation.Edges[1].Tags);
@@ -429,19 +412,18 @@ namespace OpenLR.Tests.Referenced.Osm
             var vertex5 = graphDataSource.AddVertex(51.05940000000000f, 3.7254400000000000f);
             var edge = new LiveEdge() // all edge are identical.
             {
-                Coordinates = null,
                 Distance = 100,
                 Forward = true,
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
             };
-            graphDataSource.AddArc(vertex1, vertex2, edge, null);
-            graphDataSource.AddArc(vertex2, vertex1, edge.ToReverse(), null);
-            graphDataSource.AddArc(vertex1, vertex3, edge, null);
-            graphDataSource.AddArc(vertex3, vertex1, edge.ToReverse(), null);
-            graphDataSource.AddArc(vertex2, vertex5, edge, null);
-            graphDataSource.AddArc(vertex5, vertex2, edge.ToReverse(), null);
-            graphDataSource.AddArc(vertex2, vertex4, edge, null);
-            graphDataSource.AddArc(vertex4, vertex2, edge.ToReverse(), null);
+            graphDataSource.AddEdge(vertex1, vertex2, edge, null);
+            graphDataSource.AddEdge(vertex2, vertex1, edge.ToReverse(), null);
+            graphDataSource.AddEdge(vertex1, vertex3, edge, null);
+            graphDataSource.AddEdge(vertex3, vertex1, edge.ToReverse(), null);
+            graphDataSource.AddEdge(vertex2, vertex5, edge, null);
+            graphDataSource.AddEdge(vertex5, vertex2, edge.ToReverse(), null);
+            graphDataSource.AddEdge(vertex2, vertex4, edge, null);
+            graphDataSource.AddEdge(vertex4, vertex2, edge.ToReverse(), null);
 
             // create a referenced location and encode it.
             var graph = new BasicRouterDataSource<LiveEdge>(graphDataSource);
@@ -457,11 +439,9 @@ namespace OpenLR.Tests.Referenced.Osm
             Assert.AreEqual(1, referencedLocation.Vertices[1]);
             Assert.AreEqual(2, referencedLocation.Vertices[2]);
             Assert.AreEqual(2, referencedLocation.Edges.Length);
-            Assert.AreEqual(edge.Coordinates, referencedLocation.Edges[0].Coordinates);
             Assert.AreEqual(edge.Distance, referencedLocation.Edges[0].Distance);
             Assert.AreEqual(!edge.Forward, referencedLocation.Edges[0].Forward); // edge was reversed.
             Assert.AreEqual(edge.Tags, referencedLocation.Edges[0].Tags);
-            Assert.AreEqual(edge.Coordinates, referencedLocation.Edges[1].Coordinates);
             Assert.AreEqual(edge.Distance, referencedLocation.Edges[1].Distance);
             Assert.AreEqual(edge.Forward, referencedLocation.Edges[1].Forward);
             Assert.AreEqual(edge.Tags, referencedLocation.Edges[1].Tags);
@@ -483,15 +463,13 @@ namespace OpenLR.Tests.Referenced.Osm
             var vertex2 = graphDataSource.AddVertex(49.60521f, 6.12779f);
             var edge1 = new LiveEdge()
             {
-                Coordinates = null,
                 Distance = 10,
                 Forward = true,
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
             };
-            graphDataSource.AddArc(vertex1, vertex2, edge1, null);
-            graphDataSource.AddArc(vertex2, vertex1, new LiveEdge()
+            graphDataSource.AddEdge(vertex1, vertex2, edge1, null);
+            graphDataSource.AddEdge(vertex2, vertex1, new LiveEdge()
             {
-                Coordinates = null,
                 Distance = 10,
                 Forward = true,
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
@@ -552,19 +530,18 @@ namespace OpenLR.Tests.Referenced.Osm
             var vertex5 = graphDataSource.AddVertex(51.05940000000000f, 3.7225627899169926f);
             var edge = new LiveEdge() // all edge are identical.
             {
-                Coordinates = null,
                 Distance = 100,
                 Forward = true,
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
             };
-            graphDataSource.AddArc(vertex1, vertex2, edge, null);
-            graphDataSource.AddArc(vertex2, vertex1, edge.ToReverse(), null);
-            graphDataSource.AddArc(vertex1, vertex3, edge, null);
-            graphDataSource.AddArc(vertex3, vertex1, edge.ToReverse(), null);
-            graphDataSource.AddArc(vertex3, vertex5, edge, null);
-            graphDataSource.AddArc(vertex5, vertex3, edge.ToReverse(), null);
-            graphDataSource.AddArc(vertex3, vertex4, edge, null);
-            graphDataSource.AddArc(vertex4, vertex3, edge.ToReverse(), null);
+            graphDataSource.AddEdge(vertex1, vertex2, edge, null);
+            graphDataSource.AddEdge(vertex2, vertex1, edge.ToReverse(), null);
+            graphDataSource.AddEdge(vertex1, vertex3, edge, null);
+            graphDataSource.AddEdge(vertex3, vertex1, edge.ToReverse(), null);
+            graphDataSource.AddEdge(vertex3, vertex5, edge, null);
+            graphDataSource.AddEdge(vertex5, vertex3, edge.ToReverse(), null);
+            graphDataSource.AddEdge(vertex3, vertex4, edge, null);
+            graphDataSource.AddEdge(vertex4, vertex3, edge.ToReverse(), null);
 
             // create a referenced location and encode it.
             var graph = new BasicRouterDataSource<LiveEdge>(graphDataSource);
@@ -624,19 +601,18 @@ namespace OpenLR.Tests.Referenced.Osm
             var vertex5 = graphDataSource.AddVertex(51.05940000000000f, 3.7254400000000000f);
             var edge = new LiveEdge() // all edge are identical.
             {
-                Coordinates = null,
                 Distance = 100,
                 Forward = true,
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
             };
-            graphDataSource.AddArc(vertex1, vertex2, edge, null);
-            graphDataSource.AddArc(vertex2, vertex1, edge.ToReverse(), null);
-            graphDataSource.AddArc(vertex1, vertex3, edge, null);
-            graphDataSource.AddArc(vertex3, vertex1, edge.ToReverse(), null);
-            graphDataSource.AddArc(vertex2, vertex5, edge, null);
-            graphDataSource.AddArc(vertex5, vertex2, edge.ToReverse(), null);
-            graphDataSource.AddArc(vertex2, vertex4, edge, null);
-            graphDataSource.AddArc(vertex4, vertex2, edge.ToReverse(), null);
+            graphDataSource.AddEdge(vertex1, vertex2, edge, null);
+            graphDataSource.AddEdge(vertex2, vertex1, edge.ToReverse(), null);
+            graphDataSource.AddEdge(vertex1, vertex3, edge, null);
+            graphDataSource.AddEdge(vertex3, vertex1, edge.ToReverse(), null);
+            graphDataSource.AddEdge(vertex2, vertex5, edge, null);
+            graphDataSource.AddEdge(vertex5, vertex2, edge.ToReverse(), null);
+            graphDataSource.AddEdge(vertex2, vertex4, edge, null);
+            graphDataSource.AddEdge(vertex4, vertex2, edge.ToReverse(), null);
 
             // create a referenced location and encode it.
             var graph = new BasicRouterDataSource<LiveEdge>(graphDataSource);
@@ -687,15 +663,14 @@ namespace OpenLR.Tests.Referenced.Osm
             var vertex3 = graphDataSource.AddVertex(51.05849821468899f, 3.7225627899169926f);
             var edge = new LiveEdge() // all edge are identical.
             {
-                Coordinates = null,
                 Distance = 100,
                 Forward = true,
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
             };
-            graphDataSource.AddArc(vertex1, vertex2, edge, null);
-            graphDataSource.AddArc(vertex2, vertex1, edge.ToReverse(), null);
-            graphDataSource.AddArc(vertex1, vertex3, edge, null);
-            graphDataSource.AddArc(vertex3, vertex1, edge.ToReverse(), null);
+            graphDataSource.AddEdge(vertex1, vertex2, edge, null);
+            graphDataSource.AddEdge(vertex2, vertex1, edge.ToReverse(), null);
+            graphDataSource.AddEdge(vertex1, vertex3, edge, null);
+            graphDataSource.AddEdge(vertex3, vertex1, edge.ToReverse(), null);
 
             // create a referenced location and encode it.
             var graph = new BasicRouterDataSource<LiveEdge>(graphDataSource);
@@ -713,11 +688,9 @@ namespace OpenLR.Tests.Referenced.Osm
             Assert.AreEqual(1, referencedLocation.Vertices[1]);
             Assert.AreEqual(2, referencedLocation.Vertices[2]);
             Assert.AreEqual(2, referencedLocation.Edges.Length);
-            Assert.AreEqual(edge.Coordinates, referencedLocation.Edges[0].Coordinates);
             Assert.AreEqual(edge.Distance, referencedLocation.Edges[0].Distance);
             Assert.AreEqual(!edge.Forward, referencedLocation.Edges[0].Forward); // edge was reversed.
             Assert.AreEqual(edge.Tags, referencedLocation.Edges[0].Tags);
-            Assert.AreEqual(edge.Coordinates, referencedLocation.Edges[1].Coordinates);
             Assert.AreEqual(edge.Distance, referencedLocation.Edges[1].Distance);
             Assert.AreEqual(edge.Forward, referencedLocation.Edges[1].Forward);
             Assert.AreEqual(edge.Tags, referencedLocation.Edges[1].Tags);
@@ -745,15 +718,14 @@ namespace OpenLR.Tests.Referenced.Osm
             var vertex3 = graphDataSource.AddVertex(51.05849821468899f, 3.7225627899169926f);
             var edge = new LiveEdge() // all edge are identical.
             {
-                Coordinates = null,
                 Distance = 100,
                 Forward = true,
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
             };
-            graphDataSource.AddArc(vertex1, vertex2, edge, null);
-            graphDataSource.AddArc(vertex2, vertex1, edge.ToReverse(), null);
-            graphDataSource.AddArc(vertex1, vertex3, edge, null);
-            graphDataSource.AddArc(vertex3, vertex1, edge.ToReverse(), null);
+            graphDataSource.AddEdge(vertex1, vertex2, edge, null);
+            graphDataSource.AddEdge(vertex2, vertex1, edge.ToReverse(), null);
+            graphDataSource.AddEdge(vertex1, vertex3, edge, null);
+            graphDataSource.AddEdge(vertex3, vertex1, edge.ToReverse(), null);
 
             // create a referenced location and encode it.
             var graph = new BasicRouterDataSource<LiveEdge>(graphDataSource);
@@ -771,11 +743,9 @@ namespace OpenLR.Tests.Referenced.Osm
             Assert.AreEqual(1, referencedLocation.Vertices[1]);
             Assert.AreEqual(2, referencedLocation.Vertices[2]);
             Assert.AreEqual(2, referencedLocation.Edges.Length);
-            Assert.AreEqual(edge.Coordinates, referencedLocation.Edges[0].Coordinates);
             Assert.AreEqual(edge.Distance, referencedLocation.Edges[0].Distance);
             Assert.AreEqual(!edge.Forward, referencedLocation.Edges[0].Forward); // edge was reversed.
             Assert.AreEqual(edge.Tags, referencedLocation.Edges[0].Tags);
-            Assert.AreEqual(edge.Coordinates, referencedLocation.Edges[1].Coordinates);
             Assert.AreEqual(edge.Distance, referencedLocation.Edges[1].Distance);
             Assert.AreEqual(edge.Forward, referencedLocation.Edges[1].Forward);
             Assert.AreEqual(edge.Tags, referencedLocation.Edges[1].Tags);
@@ -803,13 +773,12 @@ namespace OpenLR.Tests.Referenced.Osm
             //var vertex3 = graphDataSource.AddVertex(51.05849821468899f, 3.7240000000000000f);
             var edge = new LiveEdge() // all edge are identical.
             {
-                Coordinates = null,
                 Distance = 100,
                 Forward = true,
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
             };
-            graphDataSource.AddArc(vertex1, vertex2, edge, null);
-            graphDataSource.AddArc(vertex2, vertex1, edge.ToReverse(), null);
+            graphDataSource.AddEdge(vertex1, vertex2, edge, null);
+            graphDataSource.AddEdge(vertex2, vertex1, edge.ToReverse(), null);
 
             // create a referenced location and encode it.
             var graph = new BasicRouterDataSource<LiveEdge>(graphDataSource);
@@ -827,7 +796,6 @@ namespace OpenLR.Tests.Referenced.Osm
             Assert.AreEqual(1, referencedLocation.Vertices[0]);
             Assert.AreEqual(2, referencedLocation.Vertices[1]);
             Assert.AreEqual(1, referencedLocation.Edges.Length);
-            Assert.AreEqual(edge.Coordinates, referencedLocation.Edges[0].Coordinates);
             Assert.AreEqual(edge.Distance, referencedLocation.Edges[0].Distance);
             Assert.AreEqual(edge.Forward, referencedLocation.Edges[0].Forward);
             Assert.AreEqual(edge.Tags, referencedLocation.Edges[0].Tags);
@@ -855,13 +823,12 @@ namespace OpenLR.Tests.Referenced.Osm
             //var vertex3 = graphDataSource.AddVertex(51.05849821468899f, 3.7225627899169926f);
             var edge = new LiveEdge() // all edge are identical.
             {
-                Coordinates = null,
                 Distance = 100,
                 Forward = true,
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
             };
-            graphDataSource.AddArc(vertex1, vertex2, edge, null);
-            graphDataSource.AddArc(vertex2, vertex1, edge.ToReverse(), null);
+            graphDataSource.AddEdge(vertex1, vertex2, edge, null);
+            graphDataSource.AddEdge(vertex2, vertex1, edge.ToReverse(), null);
 
             // create a referenced location and encode it.
             var graph = new BasicRouterDataSource<LiveEdge>(graphDataSource);
@@ -878,7 +845,6 @@ namespace OpenLR.Tests.Referenced.Osm
             Assert.AreEqual(1, referencedLocation.Vertices[0]);
             Assert.AreEqual(2, referencedLocation.Vertices[1]);
             Assert.AreEqual(1, referencedLocation.Edges.Length);
-            Assert.AreEqual(edge.Coordinates, referencedLocation.Edges[0].Coordinates);
             Assert.AreEqual(edge.Distance, referencedLocation.Edges[0].Distance);
             Assert.AreEqual(edge.Forward, referencedLocation.Edges[0].Forward); // edge was reversed.
             Assert.AreEqual(edge.Tags, referencedLocation.Edges[0].Tags);

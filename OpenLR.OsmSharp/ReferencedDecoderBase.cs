@@ -447,7 +447,7 @@ namespace OpenLR.OsmSharp
         public virtual IEnumerable<CandidateEdge> FindCandidateEdgesFor(long vertex, bool forward, FormOfWay fow, FunctionalRoadClass frc, Degree bearing)
         {
             var relevantEdges = new List<CandidateEdge>();
-            foreach (var arc in this.Graph.GetArcs(vertex))
+            foreach (var arc in this.Graph.GetEdges(vertex))
             {
                 var tags = this.Graph.TagsIndex.Get(arc.Value.Tags);
 
@@ -463,7 +463,8 @@ namespace OpenLR.OsmSharp
                         if (score.Value > 0)
                         { // ok, there is a match.
                             // check bearing.
-                            var localBearing = this.GetBearing(vertex, arc.Value, arc.Key, true);
+                            var shape = this.Graph.GetEdgeShape(vertex, arc.Key);
+                            var localBearing = this.GetBearing(vertex, arc.Value, shape, arc.Key, true);
                             var localBearingDiff = (float)System.Math.Abs(localBearing.SmallestDifference(bearing));
 
                             relevantEdges.Add(new CandidateEdge()

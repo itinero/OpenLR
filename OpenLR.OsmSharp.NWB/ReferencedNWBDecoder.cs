@@ -114,7 +114,7 @@ namespace OpenLR.OsmSharp.NWB
                 uint toVertex = (uint)path.VertexId;
 
                 var edgeDistance = double.MaxValue;
-                var arcs = this.Graph.GetArcs(fromVertex);
+                var arcs = this.Graph.GetEdges(fromVertex);
                 LiveEdge? edge = null;
                 foreach (var arc in arcs)
                 {

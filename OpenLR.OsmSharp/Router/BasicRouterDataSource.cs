@@ -1,5 +1,7 @@
-﻿using OsmSharp.Collections.Tags.Index;
+﻿using OsmSharp.Collections.Coordinates.Collections;
+using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Math.Geo;
+using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
@@ -32,7 +34,7 @@ namespace OpenLR.OsmSharp.Router
         /// <summary>
         /// Holds the new arcs.
         /// </summary>
-        private List<KeyValuePair<long, KeyValuePair<long, TEdge>>> _newEdges;
+        private List<KeyValuePair<long, KeyValuePair<long, Tuple<TEdge, ICoordinateCollection>>>> _newEdges;
 
         /// <summary>
         /// Holds the removed arcs.
@@ -47,7 +49,7 @@ namespace OpenLR.OsmSharp.Router
         {
             _datasource = datasource;
 
-            _newEdges = new List<KeyValuePair<long, KeyValuePair<long, TEdge>>>();
+            _newEdges = new List<KeyValuePair<long, KeyValuePair<long, Tuple<TEdge, ICoordinateCollection>>>>();
             _removedArcs = new HashSet<Arc>();
             _newVertices = new Dictionary<long, GeoCoordinate>();
         }
@@ -99,8 +101,32 @@ namespace OpenLR.OsmSharp.Router
         /// <param name="edge"></param>
         public void AddEdge(long vertex1, long vertex2, TEdge edge)
         {
-            _newEdges.Add(new KeyValuePair<long, KeyValuePair<long, TEdge>>(
-                vertex1, new KeyValuePair<long, TEdge>(vertex2, edge)));
+            _newEdges.Add(new KeyValuePair<long, KeyValuePair<long, Tuple<TEdge, ICoordinateCollection>>>(
+                vertex1, new KeyValuePair<long, Tuple<TEdge, ICoordinateCollection>>(vertex2, new Tuple<TEdge, ICoordinateCollection>(edge, null))));
+        }
+
+        /// <summary>
+        /// Adds a new arc.
+        /// </summary>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
+        /// <param name="edge"></param>
+        public void AddEdge(long vertex1, long vertex2, TEdge edge, GeoCoordinateSimple[] shape)
+        {
+            _newEdges.Add(new KeyValuePair<long, KeyValuePair<long, Tuple<TEdge, ICoordinateCollection>>>(
+                vertex1, new KeyValuePair<long, Tuple<TEdge, ICoordinateCollection>>(vertex2, new Tuple<TEdge, ICoordinateCollection>(edge, new CoordinateArrayCollection<GeoCoordinateSimple>(shape)))));
+        }
+
+        /// <summary>
+        /// Adds a new arc.
+        /// </summary>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
+        /// <param name="edge"></param>
+        public void AddEdge(long vertex1, long vertex2, TEdge edge, ICoordinateCollection shape)
+        {
+            _newEdges.Add(new KeyValuePair<long, KeyValuePair<long, Tuple<TEdge, ICoordinateCollection>>>(
+                vertex1, new KeyValuePair<long, Tuple<TEdge,ICoordinateCollection>>(vertex2, new Tuple<TEdge, ICoordinateCollection>(edge, shape))));
         }
 
         /// <summary>
@@ -147,7 +173,7 @@ namespace OpenLR.OsmSharp.Router
                     inBoxNewVertices.Contains(arc.Vertex2))
                 { // ok, vertices are contained.
                     arcs.Add(new KeyValuePair<long, KeyValuePair<long, TEdge>>(newArc.Key,
-                        new KeyValuePair<long, TEdge>(newArc.Value.Key, newArc.Value.Value)));
+                        new KeyValuePair<long, TEdge>(newArc.Value.Key, newArc.Value.Value.Item1)));
                 }
             }
             return arcs.ToArray();
@@ -238,7 +264,7 @@ namespace OpenLR.OsmSharp.Router
         /// </summary>
         /// <param name="vertexId"></param>
         /// <returns></returns>
-        public KeyValuePair<long, TEdge>[] GetArcs(long vertexId)
+        public KeyValuePair<long, TEdge>[] GetEdges(long vertexId)
         {
             var baseArcs = new List<KeyValuePair<long, TEdge>>();
             if(vertexId > 0)
@@ -275,10 +301,64 @@ namespace OpenLR.OsmSharp.Router
                 };
                 if (arc.Vertex1 == vertexId)
                 { // ok, vertices are contained.
-                    arcs.Add(new KeyValuePair<long, TEdge>(newArc.Value.Key, newArc.Value.Value));
+                    arcs.Add(new KeyValuePair<long, TEdge>(newArc.Value.Key, newArc.Value.Value.Item1));
                 }
             }
             return arcs.ToArray();
+        }
+        
+        /// <summary>
+        /// Returns the edge shape between the two given vertices.
+        /// </summary>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
+        /// <param name="shape"></param>
+        public bool GetEdgeShape(long vertex1, long vertex2, out ICoordinateCollection shape)
+        {
+            if (vertex1 > 0 && vertex2 > 0)
+            {
+                if (_datasource.ContainsEdge((uint)vertex1, (uint)vertex2))
+                { // has the arc.
+                    if(!_removedArcs.Contains(new Arc()
+                    {
+                        Vertex1 = vertex1,
+                        Vertex2 = vertex2
+                    }))
+                    { // edge was not removed, only now return it's shape from the source.
+                        return _datasource.GetEdgeShape((uint)vertex1, (uint)vertex2, out shape);
+                    }
+                }
+            }
+
+            // also check new arcs.
+            foreach (var newArc in _newEdges)
+            {
+                if (newArc.Key == vertex1 &&
+                    newArc.Value.Key == vertex2)
+                {
+                    shape = newArc.Value.Value.Item2;
+                    return true;
+                }
+            }
+            shape = null;
+            return false;
+        }
+
+        /// <summary>
+        /// Returns the edge shape or an empty array if no shape was found.
+        /// </summary>
+        /// <param name="vertex1"></param>
+        /// <param name="vertex2"></param>
+        /// <returns></returns>
+        public GeoCoordinateSimple[] GetEdgeShape(long vertex1, long vertex2)
+        {
+            ICoordinateCollection shape;
+            if(this.GetEdgeShape(vertex1, vertex2, out shape) &&
+                shape != null)
+            {
+                return shape.ToSimpleArray();
+            }
+            return new GeoCoordinateSimple[0];
         }
 
         /// <summary>
@@ -315,7 +395,7 @@ namespace OpenLR.OsmSharp.Router
         /// <param name="vertexId"></param>
         /// <param name="neighbour"></param>
         /// <returns></returns>
-        public bool HasArc(long vertexId, long neighbour)
+        public bool HasEdge(long vertexId, long neighbour)
         {
             if (vertexId > 0 && neighbour > 0)
             {

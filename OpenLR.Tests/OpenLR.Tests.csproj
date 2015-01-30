@@ -33,6 +33,10 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Antlr3.Runtime.PCL.3.5.0.2\lib\portable-win+net40+sl40+wp\Antlr3.Runtime.dll</HintPath>
+    </Reference>
     <Reference Include="GeoAPI, Version=1.7.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\GeoAPI.1.7.2\lib\net403-client\GeoAPI.dll</HintPath>
@@ -44,6 +48,10 @@
     <Reference Include="NetTopologySuite.IO.GeoJSON">
       <HintPath>..\packages\NetTopologySuite.IO.GeoJSON.1.13.2\lib\net403-client\NetTopologySuite.IO.GeoJSON.dll</HintPath>
     </Reference>
+    <Reference Include="NetTopologySuite.IO.GeoTools, Version=1.13.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NetTopologySuite.IO.GeoTools.1.13.2\lib\net403-client\NetTopologySuite.IO.GeoTools.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -51,25 +59,29 @@
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
     </Reference>
-    <Reference Include="OsmSharp, Version=4.2.0.9999, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="OsmSharp, Version=4.3.0.940, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\OsmSharp.supported.via\OsmSharp.dll</HintPath>
+      <HintPath>..\packages\OsmSharp.4.3.0.940-beta\lib\net45\OsmSharp.dll</HintPath>
     </Reference>
-    <Reference Include="OsmSharp.Osm, Version=4.2.0.9999, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="OsmSharp.Osm, Version=4.3.0.940, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\OsmSharp.supported.via\OsmSharp.Osm.dll</HintPath>
+      <HintPath>..\packages\OsmSharp.4.3.0.940-beta\lib\net45\OsmSharp.Osm.dll</HintPath>
     </Reference>
-    <Reference Include="OsmSharp.Routing, Version=4.2.0.9999, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="OsmSharp.Routing, Version=4.3.0.940, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\OsmSharp.supported.via\OsmSharp.Routing.dll</HintPath>
+      <HintPath>..\packages\OsmSharp.4.3.0.940-beta\lib\net45\OsmSharp.Routing.dll</HintPath>
     </Reference>
-    <Reference Include="OsmSharp.UI, Version=4.2.0.9999, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="OsmSharp.Routing.Shape, Version=0.1.0.24, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\OsmSharp.supported.via\OsmSharp.UI.dll</HintPath>
+      <HintPath>..\packages\OsmSharp.Routing.Shape.0.1.0.24-beta\lib\net45\OsmSharp.Routing.Shape.dll</HintPath>
     </Reference>
-    <Reference Include="OsmSharp.WinForms.UI, Version=4.2.0.9999, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="OsmSharp.UI, Version=4.3.0.940, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\OsmSharp.supported.via\OsmSharp.WinForms.UI.dll</HintPath>
+      <HintPath>..\packages\OsmSharp.4.3.0.940-beta\lib\net45\OsmSharp.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="OsmSharp.WinForms.UI, Version=4.3.0.940, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\OsmSharp.4.3.0.940-beta\lib\net45\OsmSharp.WinForms.UI.dll</HintPath>
     </Reference>
     <Reference Include="PowerCollections, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

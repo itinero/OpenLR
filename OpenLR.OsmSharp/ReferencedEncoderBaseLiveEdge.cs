@@ -66,7 +66,7 @@ namespace OpenLR.OsmSharp
                 else
                 { // continue search.
                     // add unsettled neighbours.
-                    var arcs = this.Graph.GetArcs(current.Vertex);
+                    var arcs = this.Graph.GetEdges(current.Vertex);
                     foreach (var arc in arcs)
                     {
                         if (!excludeSet.Contains(arc.Key) &&

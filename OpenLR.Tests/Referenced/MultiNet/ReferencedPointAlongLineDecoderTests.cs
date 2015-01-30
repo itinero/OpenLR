@@ -52,18 +52,16 @@ namespace OpenLR.Tests.Referenced.MultiNet
             var graphDataSource = new DynamicGraphRouterDataSource<LiveEdge>(tags);
             var vertex1 = graphDataSource.AddVertex(49.60597f, 6.12829f);
             var vertex2 = graphDataSource.AddVertex(49.60521f, 6.12779f);
-            graphDataSource.AddArc(vertex1, vertex2, new LiveEdge()
+            graphDataSource.AddEdge(vertex1, vertex2, new LiveEdge()
             {
-                Coordinates = null,
                 Distance = 10,
                 Forward = true,
                 Tags = tags.Add(new TagsCollection(
                     Tag.Create("FRC", "2"),
                     Tag.Create("FOW", "3")))
             }, null);
-            graphDataSource.AddArc(vertex2, vertex1, new LiveEdge()
+            graphDataSource.AddEdge(vertex2, vertex1, new LiveEdge()
             {
-                Coordinates = null,
                 Distance = 10,
                 Forward = true,
                 Tags = tags.Add(new TagsCollection(
