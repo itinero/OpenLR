@@ -95,6 +95,34 @@ namespace OpenLR.Referenced
         }
 
         /// <summary>
+        /// Gets the referenced line encoder.
+        /// </summary>
+        protected virtual ReferencedLineEncoder<TEdge> GetReferencedLineEncoder()
+        {
+            return new ReferencedLineEncoder<TEdge>(this, this.LocationEncoder.CreateLineLocationEncoder());
+        }
+
+        /// <summary>
+        /// Encodes a referenced line location into an unreferenced location.
+        /// </summary>
+        /// <param name="lineLocation"></param>
+        /// <returns></returns>
+        public virtual LineLocation EncodeReferenced(ReferencedLine<TEdge> lineLocation)
+        {
+            return this.GetReferencedLineEncoder().EncodeReferenced(lineLocation);
+        }
+
+        /// <summary>
+        /// Encodes a line location.
+        /// </summary>
+        /// <param name="lineLocation"></param>
+        /// <returns></returns>
+        public virtual string Encode(ReferencedLine<TEdge> lineLocation)
+        {
+            return this.GetReferencedLineEncoder().Encode(lineLocation);
+        }
+
+        /// <summary>
         /// Encodes the given location.
         /// </summary>
         /// <param name="location"></param>
@@ -103,7 +131,11 @@ namespace OpenLR.Referenced
         {
             if (location == null) { throw new ArgumentNullException("location"); }
 
-            if (location is ReferencedPointAlongLine<TEdge>)
+            if (location is ReferencedLine<TEdge>)
+            {
+                return this.Encode(location as ReferencedLine<TEdge>);
+            }
+            else if (location is ReferencedPointAlongLine<TEdge>)
             {
                 return this.Encode(location as ReferencedPointAlongLine<TEdge>);
             }
