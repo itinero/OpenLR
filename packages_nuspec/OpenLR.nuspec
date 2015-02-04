@@ -6,14 +6,14 @@
         <title>OpenLR - OpenLR Encoding/decoding library.</title>
         <authors>Ben Abelshausen, VIA</authors>
         <owners>Ben Abelshausen</owners>
-        <licenseUrl></licenseUrl>
+        <licenseUrl>http://via.nl/</licenseUrl>
         <projectUrl>https://github.com/OsmSharp/OpenLR</projectUrl>
         <iconUrl>http://www.osmsharp.com/sites/default/files/OpenLR_logo64.png</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>OpenLR Encoding/decoding library.</description>
-        <summary>OpenLR Encoding/decoding library using OsmSharp.</summary>
+        <summary>OpenLR Encoding/decoding library.</summary>
         <copyright>Ben Abelshausen</copyright>
-        <tags>routing, openlr</tags>
+        <tags>routing, openlr, osmsharp</tags>
       <dependencies>
         <dependency id="OsmSharp" version="4.3.0.949-beta" />
         <dependency id="OsmSharp.Routing.Shape" version="0.1.0.31-beta" />
