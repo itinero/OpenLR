@@ -15,15 +15,18 @@
         <copyright>Ben Abelshausen</copyright>
         <tags>routing, openlr</tags>
       <dependencies>
-        <dependency id="OsmSharp" version="4.0.5.667" />
-        <dependency id="NetTopologySuite" version="1.13.2" />
-        <dependency id="NetTopologySuite.IO.GeoTools" version="1.13.2" />
+        <dependency id="OsmSharp" version="4.3.0.949-beta" />
+        <dependency id="OsmSharp.Routing.Shape" version="0.1.0.31-beta" />
+        <dependency id="GeoAPI" version="1.7.3.1" />
+        <dependency id="NetTopologySuite" version="1.13.3.2" />
+        <dependency id="NetTopologySuite.IO" version="1.13.3.2" />
+        <dependency id="NetTopologySuite.IO.GeoJSON" version="1.13.3.2" />
       </dependencies>
     </metadata>
     <files>
       <file src="Output\OpenLR.dll" target="lib\net45\OpenLR.dll" />
       <file src="Output\OpenLR.Binary.dll" target="lib\net45\OpenLR.Binary.dll" />
+      <file src="Output\OpenLR.Referenced.dll" target="lib\net45\OpenLR.Referenced.dll" />
       <file src="Output\OpenLR.XML.dll" target="lib\net45\OpenLR.XML.dll" />
-      <file src="Output\OpenLR.OsmSharp.dll" target="lib\net45\OpenLR.OsmSharp.dll" />
     </files>
 </package>
