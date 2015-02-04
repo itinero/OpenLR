@@ -50,7 +50,7 @@ namespace OpenLR.Referenced.Router
             }
 
             // initialize the heap/visit list.
-            var heap = new BinairyHeap<PathSegment<long>>(100);
+            var heap = new BinaryHeap<PathSegment<long>>(100);
             var visited = new HashSet<long>();
             visited.Add(from.Vertex);
 
@@ -149,7 +149,7 @@ namespace OpenLR.Referenced.Router
             if (toPaths.Count == 0) { return null; }
 
             // initialize the heap/visit list.
-            var heap = new BinairyHeap<PathSegment>(MAX_SETTLES);
+            var heap = new BinaryHeap<PathSegment>(MAX_SETTLES);
             var visited = new HashSet<long>();
 
             // queue the from-paths.
@@ -277,7 +277,7 @@ namespace OpenLR.Referenced.Router
             }
 
             // initialize the heap/visit list.
-            var heap = new BinairyHeap<PathSegment>(100);
+            var heap = new BinaryHeap<PathSegment>(100);
             var visited = new HashSet<long>();
 
             // set the target.

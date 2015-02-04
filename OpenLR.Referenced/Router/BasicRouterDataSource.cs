@@ -144,13 +144,13 @@ namespace OpenLR.Referenced.Router
             {
                 // check if the arc was removed.
                 var arc = new Arc() {
-                    Vertex1 = baseArc.Key, 
-                    Vertex2 = baseArc.Value.Key
+                    Vertex1 = baseArc.Vertex1, 
+                    Vertex2 = baseArc.Vertex2
                 };
                 if (!_removedArcs.Contains(arc))
                 { // the arc was not removed, also return it.
-                    arcs.Add(new KeyValuePair<long, KeyValuePair<long, TEdge>>(baseArc.Key,
-                        new KeyValuePair<long, TEdge>(baseArc.Value.Key, baseArc.Value.Value)));
+                    arcs.Add(new KeyValuePair<long, KeyValuePair<long, TEdge>>(baseArc.Vertex1,
+                        new KeyValuePair<long, TEdge>(baseArc.Vertex2, baseArc.EdgeData)));
                 }
             }
 
@@ -319,7 +319,7 @@ namespace OpenLR.Referenced.Router
         {
             if (vertex1 > 0 && vertex2 > 0)
             {
-                if (_datasource.ContainsEdge((uint)vertex1, (uint)vertex2))
+                if (_datasource.ContainsEdges((uint)vertex1, (uint)vertex2))
                 { // has the arc.
                     if(!_removedArcs.Contains(new Arc()
                     {
@@ -401,7 +401,7 @@ namespace OpenLR.Referenced.Router
         {
             if (vertexId > 0 && neighbour > 0)
             {
-                if (_datasource.ContainsEdge((uint)vertexId, (uint)neighbour))
+                if (_datasource.ContainsEdges((uint)vertexId, (uint)neighbour))
                 { // has the arc.
                     return !_removedArcs.Contains(new Arc()
                     {

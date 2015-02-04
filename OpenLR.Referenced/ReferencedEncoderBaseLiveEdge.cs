@@ -46,7 +46,7 @@ namespace OpenLR.Referenced
             settled.Add(targetVertex);
 
             // initialize heap.
-            var heap = new BinairyHeap<PathSegment>(10);
+            var heap = new BinaryHeap<PathSegment>(10);
             heap.Push(new PathSegment(vertex), 0);
 
             // find the path to the closest valid vertex.
