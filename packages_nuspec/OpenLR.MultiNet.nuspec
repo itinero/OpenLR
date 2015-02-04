@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>OpenLR.MultiNet</id>
+        <version>$version$</version>
+        <title>OpenLR - OpenLR Encoding/decoding for TomTom MultiNet.</title>
+        <authors>Ben Abelshausen, VIA, BeMobile</authors>
+        <owners>Ben Abelshausen</owners>
+        <licenseUrl>http://via.nl/</licenseUrl>
+        <projectUrl>https://github.com/OsmSharp/OpenLR</projectUrl>
+        <iconUrl>http://www.osmsharp.com/sites/default/files/OpenLR_logo64.png</iconUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>OpenLR Encoding/decoding library for TomTom MultiNet.</description>
+        <summary>OpenLR Encoding/decoding library for TomTom MultiNet.</summary>
+        <copyright>Ben Abelshausen</copyright>
+        <tags>routing, openlr, osmsharp</tags>
+      <dependencies>
+        <dependency id="OpenLR" version="0.1.1.171-beta" />
+      </dependencies>
+    </metadata>
+    <files>
+      <file src="Output\OpenLR.Referenced.MultiNet.dll" target="lib\net45\OpenLR.Referenced.MultiNet.dll" />
+    </files>
+</package>
