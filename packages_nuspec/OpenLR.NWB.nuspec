@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
-        <id>OpenLR.MultiNet</id>
+        <id>OpenLR.NWB</id>
         <version>$version$</version>
         <title>OpenLR - OpenLR Encoding/decoding for NWB.</title>
         <authors>Ben Abelshausen, VIA, BeMobile</authors>
