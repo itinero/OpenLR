@@ -702,8 +702,8 @@ namespace OpenLR.Referenced
             var shortestPath = encoder.FindShortestPath(startPaths, endPaths, true);
             if(shortestPath == null)
             { // routing failed,.
-                throw new BuildLocationFailedException("Projection of location {0} on the closest edge failed.",
-                    endLocation);
+                throw new BuildLocationFailedException("A route between start {0} and end point {1} was not found.",
+                    startLocation, endLocation);
             }
 
             // convert to edge and vertex-array.

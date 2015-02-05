@@ -503,7 +503,7 @@ namespace OpenLR.Referenced
         public static Tuple<long, long, TEdge> GetClosestEdge<TEdge>(this BasicRouterDataSource<TEdge> graph, GeoCoordinate location, Meter maxDistance)
             where TEdge : IGraphEdgeData
         { // create the search box.
-            var boxSizeStart = 0.001;
+            var boxSizeStart = 0.0001;
             var boxSizeMax = 0.2;
             var result = graph.GetClosestEdge<TEdge>(location, maxDistance, boxSizeStart);
             while(result == null && boxSizeStart <= boxSizeMax)
