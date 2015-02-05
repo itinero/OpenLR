@@ -503,12 +503,42 @@ namespace OpenLR.Referenced
         public static Tuple<long, long, TEdge> GetClosestEdge<TEdge>(this BasicRouterDataSource<TEdge> graph, GeoCoordinate location, Meter maxDistance)
             where TEdge : IGraphEdgeData
         { // create the search box.
-            var searchBoxSize = 0.001;
+            var boxSizeStart = 0.001;
+            var boxSizeMax = 0.2;
+            var result = graph.GetClosestEdge<TEdge>(location, maxDistance, boxSizeStart);
+            while(result == null && boxSizeStart <= boxSizeMax)
+            {
+                boxSizeStart = boxSizeStart * 2;
+                result = graph.GetClosestEdge<TEdge>(location, maxDistance, boxSizeStart);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Returns the edge that is closest to the given location.
+        /// </summary>
+        /// <typeparam name="TEdge">The type of edge.</typeparam>
+        /// <param name="graph">The graph to search.</param>
+        /// <param name="location">The location.</param>
+        /// <param name="maxDistance">The maximum distance.</param>
+        /// <param name="boxSize">The search box size.</param>
+        /// <returns>Returns an edge or an edge from 0 to 0 if none is found.</returns>
+        public static Tuple<long, long, TEdge> GetClosestEdge<TEdge>(this BasicRouterDataSource<TEdge> graph, GeoCoordinate location, Meter maxDistance, double boxSize)
+            where TEdge : IGraphEdgeData
+        {
             Tuple<long, long, TEdge> bestEdge = null;
 
             var searchBox = new GeoCoordinateBox(
-                new GeoCoordinate(location.Latitude - searchBoxSize, location.Longitude - searchBoxSize),
-                new GeoCoordinate(location.Latitude + searchBoxSize, location.Longitude + searchBoxSize));
+                new GeoCoordinate(location.Latitude - boxSize, location.Longitude - boxSize),
+                new GeoCoordinate(location.Latitude + boxSize, location.Longitude + boxSize));
+
+            var maxDistanceBox = searchBox;
+            if (maxDistance.Value < double.MaxValue)
+            {
+                maxDistanceBox = new GeoCoordinateBox(
+                    location.OffsetWithDirection(maxDistance, OsmSharp.Math.Geo.Meta.DirectionEnum.East).OffsetWithDirection(maxDistance, OsmSharp.Math.Geo.Meta.DirectionEnum.South),
+                    location.OffsetWithDirection(maxDistance, OsmSharp.Math.Geo.Meta.DirectionEnum.West).OffsetWithDirection(maxDistance, OsmSharp.Math.Geo.Meta.DirectionEnum.North));
+            }
             var arcs = graph.GetEdges(searchBox);
 
             float latitude, longitude;
@@ -522,7 +552,7 @@ namespace OpenLR.Referenced
 
                 var coordinates = new List<GeoCoordinate>();
                 ICoordinateCollection shape = null;
-                if(graph.GetEdgeShape(arc.Key, arc.Value.Key, out shape) &&
+                if (graph.GetEdgeShape(arc.Key, arc.Value.Key, out shape) &&
                     shape != null)
                 { // a non-null shape.
                     coordinates.Add(from);
@@ -538,12 +568,15 @@ namespace OpenLR.Referenced
                 {
                     for (int idx = 1; idx < coordinates.Count; idx++)
                     {
-                        var line = new GeoCoordinateLine(coordinates[idx - 1], coordinates[idx], true, true);
-                        var distance = line.Distance(location);
-                        if (distance < bestDistance)
+                        if (maxDistanceBox.IntersectsPotentially(coordinates[idx - 1], coordinates[idx]))
                         {
-                            bestEdge = new Tuple<long,long,TEdge>(arc.Key, arc.Value.Key, arc.Value.Value);
-                            bestDistance = distance;
+                            var line = new GeoCoordinateLine(coordinates[idx - 1], coordinates[idx], true, true);
+                            var distance = line.Distance(location);
+                            if (distance < bestDistance)
+                            {
+                                bestEdge = new Tuple<long, long, TEdge>(arc.Key, arc.Value.Key, arc.Value.Value);
+                                bestDistance = distance;
+                            }
                         }
                     }
                 }

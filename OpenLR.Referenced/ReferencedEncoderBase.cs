@@ -555,7 +555,7 @@ namespace OpenLR.Referenced
             if (endLocation == null) { throw new ArgumentNullException("endLocation"); }
 
             // search start and end location hooks.
-            var startEdge = encoder.Graph.GetClosestEdge<LiveEdge>(startLocation);
+            var startEdge = encoder.Graph.GetClosestEdge<LiveEdge>(startLocation, tolerance);
             if(startEdge == null)
             { // no closest edge found within tolerance, encoding has failed!
                 throw new BuildLocationFailedException("Location {0} is too far from the network used for encoding with used tolerance {1}",
@@ -627,7 +627,7 @@ namespace OpenLR.Referenced
                 }
             }
 
-            var endEdge = encoder.Graph.GetClosestEdge<LiveEdge>(endLocation);
+            var endEdge = encoder.Graph.GetClosestEdge<LiveEdge>(endLocation, tolerance);
             if (endEdge == null)
             { // no closest edge found within tolerance, encoding has failed!
                 throw new BuildLocationFailedException("Location {0} is too far from the network used for encoding with used tolerance {1}",
