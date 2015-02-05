@@ -926,7 +926,7 @@ namespace OpenLR.Tests.Referenced.Osm
             Assert.AreEqual(edge.Forward, referencedLocation.Edges[1].Forward);
             Assert.AreEqual(edge.Tags, referencedLocation.Edges[1].Tags);
             Assert.AreEqual(25, referencedLocation.PositiveOffsetPercentage, 1);
-            Assert.AreEqual(25, referencedLocation.NegativeOffsetPercentage);
+            Assert.AreEqual(25, referencedLocation.NegativeOffsetPercentage, 1);
         }
     }
 }

@@ -584,34 +584,44 @@ namespace OpenLR.Referenced
                 var tags = encoder.Graph.TagsIndex.Get(startEdge.Item3.Tags);
                 var oneway = encoder.Vehicle.IsOneWay(tags);
 
-                // build path from vertex1->(location)
-                if(oneway == null || (oneway.Value ^ !startEdge.Item3.Forward))
-                { // edge is in the correct direction.
-                    var weightBefore = encoder.Vehicle.Weight(tags, (float)bestStartOffset.Value);
-                    if (startEdge.Item3.Forward)
-                    {
+                // weightBefore: vertex1->{x}
+                var weightBefore = encoder.Vehicle.Weight(tags, (float)bestStartOffset.Value);
+                // weightAfter: {x}->vertex2.
+                var weightAfter = encoder.Vehicle.Weight(encoder.Graph.TagsIndex.Get(startEdge.Item3.Tags), (float)(startEdgeLength.Value - bestStartOffset.Value));
+
+                if (startEdge.Item3.Forward)
+                { // edge is forward.
+                    // vertex1->{x}->vertex2
+
+                    // consider the part {x}->vertex1 x being the source.
+                    if (oneway == null || !oneway.Value)
+                    {  // edge cannot be oneway forward.
                         startPaths.Add(new PathSegment(startEdge.Item1, weightBefore, startEdge.Item3.ToReverse(),
                             new PathSegment(-1)));
                     }
-                    else
-                    {
-                        startPaths.Add(new PathSegment(startEdge.Item1, weightBefore, startEdge.Item3,
-                            new PathSegment(-1)));
-                    }
-                }
 
-                // build path from vertex (location)->vertex2
-                if (oneway == null || (oneway.Value ^ startEdge.Item3.Forward))
-                { // edge is in the correct direction.
-                    var weightAfter = encoder.Vehicle.Weight(encoder.Graph.TagsIndex.Get(startEdge.Item3.Tags), (float)(startEdgeLength.Value - bestStartOffset.Value));
-                    if (startEdge.Item3.Forward)
-                    {
+                    // consider the part {x}->vertex2 x being the source.
+                    if (oneway == null || oneway.Value)
+                    { // edge cannot be oneway backward.
                         startPaths.Add(new PathSegment(startEdge.Item2, weightAfter, startEdge.Item3,
                             new PathSegment(-1)));
                     }
-                    else
-                    {
-                        startPaths.Add(new PathSegment(startEdge.Item2, weightAfter, startEdge.Item3.ToReverse(),
+                }
+                else
+                { // edge is backward.
+                    // vertex1->{x}->vertex2
+
+                    // consider the part {x}->vertex1 x being the source.
+                    if (oneway == null || oneway.Value)
+                    {  // edge cannot be oneway forward but edge is backward.
+                        startPaths.Add(new PathSegment(startEdge.Item1, weightBefore, startEdge.Item3.ToReverse(),
+                            new PathSegment(-1)));
+                    }
+
+                    // consider the part {x}->vertex2 x being the source.
+                    if (oneway == null || !oneway.Value)
+                    { // edge cannot be oneway backward but edge is backward.
+                        startPaths.Add(new PathSegment(startEdge.Item2, weightAfter, startEdge.Item3,
                             new PathSegment(-1)));
                     }
                 }
@@ -645,35 +655,44 @@ namespace OpenLR.Referenced
             { // point is somewhere in between.
                 var tags = encoder.Graph.TagsIndex.Get(endEdge.Item3.Tags);
                 var oneway = encoder.Vehicle.IsOneWay(tags);
+                // weightBefore: vertex1->{x}
+                var weightBefore = encoder.Vehicle.Weight(tags, (float)bestEndOffset.Value);
+                // weightAfter: {x}->vertex2.
+                var weightAfter = encoder.Vehicle.Weight(encoder.Graph.TagsIndex.Get(endEdge.Item3.Tags), (float)(endEdgeLength.Value - bestEndOffset.Value));
 
-                // build path from vertex1->(location)
-                if (oneway == null || (oneway.Value ^ !endEdge.Item3.Forward))
-                { // edge is in the correct direction.
-                    var weightBefore = encoder.Vehicle.Weight(tags, (float)bestEndOffset.Value);
-                    if (endEdge.Item3.Forward)
-                    {
-                        endPaths.Add(new PathSegment(-1, weightBefore, endEdge.Item3.ToReverse(),
-                            new PathSegment(endEdge.Item1)));
-                    }
-                    else
-                    {
+                if (endEdge.Item3.Forward)
+                { // edge is forward.
+                    // vertex1->{x}->vertex2
+
+                    // consider vertex1->{x} x being the target.
+                    if (oneway == null || oneway.Value)
+                    {  // edge cannot be oneway backward.
                         endPaths.Add(new PathSegment(-1, weightBefore, endEdge.Item3,
                             new PathSegment(endEdge.Item1)));
                     }
-                }
 
-                // build path from vertex (location)->vertex2
-                if (oneway == null || (oneway.Value ^ endEdge.Item3.Forward))
-                { // edge is in the correct direction.
-                    var weightAfter = encoder.Vehicle.Weight(encoder.Graph.TagsIndex.Get(endEdge.Item3.Tags), (float)(endEdgeLength.Value - bestEndOffset.Value));
-                    if (endEdge.Item3.Forward)
-                    {
-                        endPaths.Add(new PathSegment(-1, weightAfter, endEdge.Item3,
+                    // consider vertex2->{x} x being the target.
+                    if(oneway ==null || !oneway.Value)
+                    { // edge cannot be onway forward.
+                        endPaths.Add(new PathSegment(-1, weightAfter, endEdge.Item3.ToReverse(),
                             new PathSegment(endEdge.Item2)));
                     }
-                    else
-                    {
-                        endPaths.Add(new PathSegment(-1, weightAfter, endEdge.Item3.ToReverse(),
+                }
+                else
+                { // edge is backward.
+                    // vertex1->{x}->vertex2
+
+                    // consider vertex1->{x} x being the target.
+                    if (oneway == null || !oneway.Value)
+                    {  // edge cannot be oneway backward.
+                        endPaths.Add(new PathSegment(-1, weightBefore, endEdge.Item3.ToReverse(),
+                            new PathSegment(endEdge.Item1)));
+                    }
+
+                    // consider vertex2->{x} x being the target.
+                    if (oneway == null || oneway.Value)
+                    { // edge cannot be onway forward.
+                        endPaths.Add(new PathSegment(-1, weightAfter, endEdge.Item3,
                             new PathSegment(endEdge.Item2)));
                     }
                 }

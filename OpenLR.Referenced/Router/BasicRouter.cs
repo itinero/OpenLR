@@ -203,7 +203,7 @@ namespace OpenLR.Referenced.Router
                     { // ok, this path is better!
                         if (foundToPath.From != null)
                         {
-                            bestToTarget = new PathSegment(foundToPath.Vertex, foundToPath.Weight + current.Weight, foundToPath.Edge.ToReverse(), current);
+                            bestToTarget = new PathSegment(foundToPath.Vertex, foundToPath.Weight + current.Weight, foundToPath.Edge, current);
                         }
                         else
                         {
