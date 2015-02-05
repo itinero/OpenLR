@@ -685,14 +685,14 @@ namespace OpenLR.Referenced
                     // consider vertex1->{x} x being the target.
                     if (oneway == null || !oneway.Value)
                     {  // edge cannot be oneway backward.
-                        endPaths.Add(new PathSegment(-1, weightBefore, endEdge.Item3.ToReverse(),
+                        endPaths.Add(new PathSegment(-1, weightBefore, endEdge.Item3,
                             new PathSegment(endEdge.Item1)));
                     }
 
                     // consider vertex2->{x} x being the target.
                     if (oneway == null || oneway.Value)
                     { // edge cannot be onway forward.
-                        endPaths.Add(new PathSegment(-1, weightAfter, endEdge.Item3,
+                        endPaths.Add(new PathSegment(-1, weightAfter, endEdge.Item3.ToReverse(),
                             new PathSegment(endEdge.Item2)));
                     }
                 }

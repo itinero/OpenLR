@@ -155,8 +155,8 @@ namespace OpenLR.Referenced.Locations
                 var edgeShape = this.EdgeShapes[idx];
                 if (edgeShape != null)
                 {
-                    if (edge.Forward)
-                    {
+                    //if (edge.Forward)
+                    //{
                         for (int coordIdx = 0; coordIdx < edgeShape.Length; coordIdx++)
                         {
                             coordinates.Add(new Coordinate()
@@ -165,18 +165,18 @@ namespace OpenLR.Referenced.Locations
                                 Y = edgeShape[coordIdx].Latitude
                             });
                         }
-                    }
-                    else
-                    {
-                        for (int coordIdx = edgeShape.Length - 1; coordIdx >= 0; coordIdx--)
-                        {
-                            coordinates.Add(new Coordinate()
-                            {
-                                X = edgeShape[coordIdx].Longitude,
-                                Y = edgeShape[coordIdx].Latitude
-                            });
-                        }
-                    }
+                    //}
+                    //else
+                    //{
+                    //    for (int coordIdx = edgeShape.Length - 1; coordIdx >= 0; coordIdx--)
+                    //    {
+                    //        coordinates.Add(new Coordinate()
+                    //        {
+                    //            X = edgeShape[coordIdx].Longitude,
+                    //            Y = edgeShape[coordIdx].Latitude
+                    //        });
+                    //    }
+                    //}
                 }
 
                 var tags = _graph.TagsIndex.Get(edge.Tags);

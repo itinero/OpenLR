@@ -255,7 +255,7 @@ namespace OpenLR.Referenced.Router
                     }
                 }
             }
-            return null;
+            return bestToTarget;
         }
 
         /// <summary>
