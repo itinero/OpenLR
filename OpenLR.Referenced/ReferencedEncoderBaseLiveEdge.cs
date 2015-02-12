@@ -113,8 +113,14 @@ namespace OpenLR.Referenced
         public override PathSegment FindShortestPath(long from, long to, bool searchForward)
         {
             var router = this.GetRouter();
-            return router.Calculate(this.Graph, this.Vehicle,
+            var result = router.Calculate(this.Graph, this.Vehicle,
                 from, to, searchForward);
+            if(result == null)
+            {
+                result = router.Calculate(this.Graph, this.Vehicle,
+                    from, to, searchForward, BasicRouter.MAX_SETTLES * 8);
+            }
+            return result;
         }
 
         /// <summary>
@@ -127,8 +133,14 @@ namespace OpenLR.Referenced
         public override PathSegment FindShortestPath(List<PathSegment> fromPaths, List<PathSegment> toPaths, bool searchForward)
         {
             var router = this.GetRouter();
-            return router.Calculate(this.Graph, this.Vehicle,
+            var result = router.Calculate(this.Graph, this.Vehicle,
                 fromPaths, toPaths, searchForward);
+            if (result == null)
+            {
+                result = router.Calculate(this.Graph, this.Vehicle,
+                    fromPaths, toPaths, searchForward, BasicRouter.MAX_SETTLES * 8);
+            }
+            return result;
         }
     }
 }

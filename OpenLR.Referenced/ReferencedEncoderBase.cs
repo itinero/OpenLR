@@ -351,21 +351,6 @@ namespace OpenLR.Referenced
             if (useForward)
             { // encode first point to last point.
                 edge = closest.Item3;
-                //if (!closest.Value.Value.Forward)
-                //{ // use reverse edge.
-                //    var reverseEdge = new LiveEdge();
-                //    reverseEdge.Tags = closest.Value.Value.Tags;
-                //    reverseEdge.Forward = !closest.Value.Value.Forward;
-                //    reverseEdge.Distance = closest.Value.Value.Distance;
-                //    reverseEdge.Coordinates = null;
-                //    if (closest.Value.Value.Coordinates != null)
-                //    {
-                //        var reverse = new GeoCoordinateSimple[closest.Value.Value.Coordinates.Length];
-                //        closest.Value.Value.Coordinates.CopyToReverse(reverse, 0);
-                //        reverseEdge.Coordinates = reverse;
-                //    }
-                //    edge = reverseEdge;
-                //}
                 from = closest.Item1;
                 to = closest.Item2;
             }
