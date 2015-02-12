@@ -5,7 +5,7 @@ using OpenLR.Referenced.Router;
 using OpenLR.Referenced;
 using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Graph.Routing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -142,11 +142,11 @@ namespace OpenLR.Referenced.Locations
         {
             var featureCollection = new FeatureCollection();
             var geometryFactory = new GeometryFactory();
-            
+
             // build coordinates list.
+            var coordinates = new List<Coordinate>();
             for (int idx = 0; idx < this.Edges.Length; idx++)
             {
-                var coordinates = new List<Coordinate>();
                 float latitude, longitude;
                 _graph.GetVertex(this.Vertices[idx], out latitude, out longitude);
                 coordinates.Add(new Coordinate(longitude, latitude));
@@ -155,28 +155,14 @@ namespace OpenLR.Referenced.Locations
                 var edgeShape = this.EdgeShapes[idx];
                 if (edgeShape != null)
                 {
-                    //if (edge.Forward)
-                    //{
-                        for (int coordIdx = 0; coordIdx < edgeShape.Length; coordIdx++)
+                    for (int coordIdx = 0; coordIdx < edgeShape.Length; coordIdx++)
+                    {
+                        coordinates.Add(new Coordinate()
                         {
-                            coordinates.Add(new Coordinate()
-                            {
-                                X = edgeShape[coordIdx].Longitude,
-                                Y = edgeShape[coordIdx].Latitude
-                            });
-                        }
-                    //}
-                    //else
-                    //{
-                    //    for (int coordIdx = edgeShape.Length - 1; coordIdx >= 0; coordIdx--)
-                    //    {
-                    //        coordinates.Add(new Coordinate()
-                    //        {
-                    //            X = edgeShape[coordIdx].Longitude,
-                    //            Y = edgeShape[coordIdx].Latitude
-                    //        });
-                    //    }
-                    //}
+                            X = edgeShape[coordIdx].Longitude,
+                            Y = edgeShape[coordIdx].Latitude
+                        });
+                    }
                 }
 
                 var tags = _graph.TagsIndex.Get(edge.Tags);

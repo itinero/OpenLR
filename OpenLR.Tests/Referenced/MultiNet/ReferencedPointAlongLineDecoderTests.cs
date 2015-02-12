@@ -9,7 +9,6 @@ using OpenLR.Referenced.Router;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Graph.Router.Dykstra;
 using OsmSharp.Routing.Osm.Graphs;
 
 namespace OpenLR.Tests.Referenced.MultiNet

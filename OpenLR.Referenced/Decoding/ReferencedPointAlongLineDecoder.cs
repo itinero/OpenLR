@@ -8,7 +8,7 @@ using OpenLR.Referenced.Scoring;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Units.Angle;
 using OsmSharp.Units.Distance;
 using System;

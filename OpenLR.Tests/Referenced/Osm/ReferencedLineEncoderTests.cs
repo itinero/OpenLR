@@ -11,7 +11,7 @@ using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Graph.Router.Dykstra;
+using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Osm.Graphs;
 
 namespace OpenLR.Tests.Referenced.Osm
@@ -64,7 +64,7 @@ namespace OpenLR.Tests.Referenced.Osm
 
             // encode location.
             var encoder = new LineEncoder();
-            var router = new DykstraRoutingLive();
+            var router = new Dykstra();
             var mainEncoder = new ReferencedOsmEncoder(graph, null);
             var referencedEncoder = new ReferencedLineEncoder<LiveEdge>(mainEncoder, encoder);
             var location = referencedEncoder.EncodeReferenced(referencedLocation);
@@ -459,7 +459,6 @@ namespace OpenLR.Tests.Referenced.Osm
 
             // encode location.
             var encoder = new LineEncoder();
-            var router = new DykstraRoutingLive();
             var mainEncoder = new ReferencedOsmEncoder(graph, null);
             var referencedEncoder = new ReferencedLineEncoder<LiveEdge>(mainEncoder, encoder);
             var referencedLocation = mainEncoder.BuildLineLocation(new long[] { vertex1, vertex2 }, new LiveEdge[] { edge1 }, 0, 0);
@@ -523,7 +522,6 @@ namespace OpenLR.Tests.Referenced.Osm
 
             // encode location.
             var encoder = new LineEncoder();
-            var router = new DykstraRoutingLive();
             var mainEncoder = new ReferencedOsmEncoder(graph, null);
             var referencedEncoder = new ReferencedLineEncoder<LiveEdge>(mainEncoder, encoder);
             var referencedLocation = mainEncoder.BuildLineLocation(new long[] { vertex1, vertex2 }, new LiveEdge[] { edge }, 0, 0);
@@ -590,7 +588,6 @@ namespace OpenLR.Tests.Referenced.Osm
 
             // encode location.
             var encoder = new LineEncoder();
-            var router = new DykstraRoutingLive();
             var mainEncoder = new ReferencedOsmEncoder(graph, null);
             var referencedEncoder = new ReferencedLineEncoder<LiveEdge>(mainEncoder, encoder);
             var referencedLocation = mainEncoder.BuildLineLocation(new long[] { vertex3, vertex1 }, new LiveEdge[] { edge.ToReverse() }, 0, 0);

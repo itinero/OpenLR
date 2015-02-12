@@ -1,7 +1,7 @@
 ﻿using OpenLR.Referenced.Router;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Osm.PBF.Streams;
-using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;

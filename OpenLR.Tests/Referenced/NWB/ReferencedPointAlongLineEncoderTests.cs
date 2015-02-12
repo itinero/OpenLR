@@ -9,7 +9,6 @@ using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Graph.Router.Dykstra;
 using OsmSharp.Routing.Osm.Graphs;
 
 namespace OpenLR.Tests.Referenced.NWB
@@ -76,7 +75,6 @@ namespace OpenLR.Tests.Referenced.NWB
 
             // encode location.
             var encoder = new PointAlongLineEncoder();
-            var router = new DykstraRoutingLive();
             var mainEncoder = new ReferencedNWBEncoder(graph, null);
             var referencedEncoder = new ReferencedPointAlongLineEncoder<LiveEdge>(mainEncoder, encoder);
             var location = referencedEncoder.EncodeReferenced(referencedPointAlongLineLocation);

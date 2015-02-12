@@ -1,7 +1,7 @@
 ﻿using OpenLR.Encoding;
 using OpenLR.Referenced.Router;
 using OsmSharp.Collections.PriorityQueues;
-using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Shape;
 using System;

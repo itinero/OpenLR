@@ -9,7 +9,7 @@ using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Graph.Router.Dykstra;
+using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Osm.Graphs;
 
 namespace OpenLR.Tests.Referenced.Osm
@@ -62,7 +62,7 @@ namespace OpenLR.Tests.Referenced.Osm
 
             // encode location.
             var encoder = new PointAlongLineEncoder();
-            var router = new DykstraRoutingLive();
+            var router = new Dykstra();
             var mainEncoder = new ReferencedOsmEncoder(graph, null);
             var referencedEncoder = new ReferencedPointAlongLineEncoder<LiveEdge>(mainEncoder, encoder);
             var location = referencedEncoder.EncodeReferenced(referencedPointAlongLineLocation);

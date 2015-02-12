@@ -2,7 +2,7 @@
 using OpenLR.Referenced.Decoding.Candidates;
 using OsmSharp.Collections.PriorityQueues;
 using OsmSharp.Routing;
-using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Osm.Graphs;
 using System;
@@ -19,7 +19,7 @@ namespace OpenLR.Referenced.Router
         /// <summary>
         /// Holds the maximum settles.
         /// </summary>
-        private const uint MAX_SETTLES = 5000;
+        public const uint MAX_SETTLES = 5000;
 
         /// <summary>
         /// Calculates a path between the two candidates using the information in the candidates.
@@ -30,9 +30,25 @@ namespace OpenLR.Referenced.Router
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <param name="minimum"></param>
-        /// <returns></returns>
         public PathSegment<long> Calculate(BasicRouterDataSource<LiveEdge> graph, IRoutingInterpreter interpreter,
             Vehicle vehicle, CandidateVertexEdge<LiveEdge> from, CandidateVertexEdge<LiveEdge> to, FunctionalRoadClass minimum)
+        {
+            return this.Calculate(graph, interpreter, vehicle, from, to, minimum, MAX_SETTLES);
+        }
+
+        /// <summary>
+        /// Calculates a path between the two candidates using the information in the candidates.
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <param name="interpreter"></param>
+        /// <param name="vehicle"></param>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="minimum"></param>
+        /// <param name="maxSettles"></param>
+        /// <returns></returns>
+        public PathSegment<long> Calculate(BasicRouterDataSource<LiveEdge> graph, IRoutingInterpreter interpreter,
+            Vehicle vehicle, CandidateVertexEdge<LiveEdge> from, CandidateVertexEdge<LiveEdge> to, FunctionalRoadClass minimum, uint maxSettles)
         {
             // first check for the simple stuff.
             if (from.Vertex == to.Vertex)
@@ -84,7 +100,7 @@ namespace OpenLR.Referenced.Router
                 }
 
                 // check if the maximum settled vertex count has been reached.
-                if(visited.Count >= MAX_SETTLES)
+                if(visited.Count >= maxSettles)
                 { // stop search, target will not be found.
                     break;
                 }
@@ -141,15 +157,30 @@ namespace OpenLR.Referenced.Router
         /// <param name="fromPaths">The paths to the source.</param>
         /// <param name="toPaths">The paths to the target.</param>
         /// <param name="searchForward">Flag indicating search direction.</param>
-        /// <returns></returns>
         public PathSegment Calculate(BasicRouterDataSource<LiveEdge> graph, Vehicle vehicle, 
             List<PathSegment> fromPaths, List<PathSegment> toPaths, bool searchForward)
+        {
+            return this.Calculate(graph, vehicle, fromPaths, toPaths, searchForward, MAX_SETTLES);
+        }
+
+        /// <summary>
+        /// Calculates the shortest path between the two given 'virtual' vertices described by pre-calculate path segments.
+        /// </summary>
+        /// <param name="graph">The graph.</param>
+        /// <param name="vehicle">The vehicle profile.</param>
+        /// <param name="fromPaths">The paths to the source.</param>
+        /// <param name="toPaths">The paths to the target.</param>
+        /// <param name="searchForward">Flag indicating search direction.</param>
+        /// <param name="maxSettles"></param>
+        /// <returns></returns>
+        public PathSegment Calculate(BasicRouterDataSource<LiveEdge> graph, Vehicle vehicle,
+            List<PathSegment> fromPaths, List<PathSegment> toPaths, bool searchForward, uint maxSettles)
         {
             if (fromPaths.Count == 0) { return null; }
             if (toPaths.Count == 0) { return null; }
 
             // initialize the heap/visit list.
-            var heap = new BinaryHeap<PathSegment>(MAX_SETTLES);
+            var heap = new BinaryHeap<PathSegment>(maxSettles);
             var visited = new HashSet<long>();
 
             // queue the from-paths.
@@ -217,7 +248,7 @@ namespace OpenLR.Referenced.Router
                 }
 
                 // check if the maximum settled vertex count has been reached.
-                if (visited.Count >= MAX_SETTLES)
+                if (visited.Count >= maxSettles)
                 { // stop search, target will not be found.
                     break;
                 }
@@ -266,9 +297,24 @@ namespace OpenLR.Referenced.Router
         /// <param name="from">The source vertex.</param>
         /// <param name="to">The target vertex.</param>
         /// <param name="searchForward">Flag indicating search direction.</param>
-        /// <returns></returns>
         public PathSegment Calculate(BasicRouterDataSource<LiveEdge> graph, Vehicle vehicle, 
             long from, long to, bool searchForward)
+        {
+            return this.Calculate(graph, vehicle, from, to, searchForward, MAX_SETTLES);
+        }
+
+        /// <summary>
+        /// Calculates the shortest path between the two given vertices.
+        /// </summary>
+        /// <param name="graph">The graph.</param>
+        /// <param name="vehicle">The vehicle profile.</param>
+        /// <param name="from">The source vertex.</param>
+        /// <param name="to">The target vertex.</param>
+        /// <param name="searchForward">Flag indicating search direction.</param>
+        /// <param name="maxSettles"></param>
+        /// <returns></returns>
+        public PathSegment Calculate(BasicRouterDataSource<LiveEdge> graph, Vehicle vehicle, 
+            long from, long to, bool searchForward, uint maxSettles)
         {
             // first check for the simple stuff.
             if (from == to)
@@ -309,7 +355,7 @@ namespace OpenLR.Referenced.Router
                 }
 
                 // check if the maximum settled vertex count has been reached.
-                if (visited.Count >= MAX_SETTLES)
+                if (visited.Count >= maxSettles)
                 { // stop search, target will not be found.
                     break;
                 }

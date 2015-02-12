@@ -88,29 +88,29 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
     </Reference>
-    <Reference Include="OsmSharp, Version=4.3.0.952, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="OsmSharp, Version=4.3.0.960, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\OsmSharp.4.3.0.952-beta\lib\net45\OsmSharp.dll</HintPath>
+      <HintPath>..\packages\OsmSharp.4.3.0.960-beta\lib\net45\OsmSharp.dll</HintPath>
     </Reference>
-    <Reference Include="OsmSharp.Osm, Version=4.3.0.952, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="OsmSharp.Osm, Version=4.3.0.960, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\OsmSharp.4.3.0.952-beta\lib\net45\OsmSharp.Osm.dll</HintPath>
+      <HintPath>..\packages\OsmSharp.4.3.0.960-beta\lib\net45\OsmSharp.Osm.dll</HintPath>
     </Reference>
-    <Reference Include="OsmSharp.Routing, Version=4.3.0.952, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="OsmSharp.Routing, Version=4.3.0.960, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\OsmSharp.4.3.0.952-beta\lib\net45\OsmSharp.Routing.dll</HintPath>
+      <HintPath>..\packages\OsmSharp.4.3.0.960-beta\lib\net45\OsmSharp.Routing.dll</HintPath>
     </Reference>
-    <Reference Include="OsmSharp.Routing.Shape, Version=0.1.0.34, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="OsmSharp.Routing.Shape, Version=0.1.0.40, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\OsmSharp.Routing.Shape.0.1.0.34-beta\lib\net45\OsmSharp.Routing.Shape.dll</HintPath>
+      <HintPath>..\packages\OsmSharp.Routing.Shape.0.1.0.40-beta\lib\net45\OsmSharp.Routing.Shape.dll</HintPath>
     </Reference>
-    <Reference Include="OsmSharp.UI, Version=4.3.0.952, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="OsmSharp.UI, Version=4.3.0.960, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\OsmSharp.4.3.0.952-beta\lib\net45\OsmSharp.UI.dll</HintPath>
+      <HintPath>..\packages\OsmSharp.4.3.0.960-beta\lib\net45\OsmSharp.UI.dll</HintPath>
     </Reference>
-    <Reference Include="OsmSharp.WinForms.UI, Version=4.3.0.952, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="OsmSharp.WinForms.UI, Version=4.3.0.960, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\OsmSharp.4.3.0.952-beta\lib\net45\OsmSharp.WinForms.UI.dll</HintPath>
+      <HintPath>..\packages\OsmSharp.4.3.0.960-beta\lib\net45\OsmSharp.WinForms.UI.dll</HintPath>
     </Reference>
     <Reference Include="PowerCollections, Version=1.0.0.0, Culture=neutral, PublicKeyToken=2573bf8a1bdddcd5, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

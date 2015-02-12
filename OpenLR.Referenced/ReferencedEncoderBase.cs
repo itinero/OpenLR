@@ -14,7 +14,7 @@ using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Units.Angle;
 using OsmSharp.Units.Distance;

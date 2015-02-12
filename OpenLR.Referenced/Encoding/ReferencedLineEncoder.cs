@@ -5,7 +5,7 @@ using OpenLR.Referenced.Locations;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Units.Distance;
 using System;
 using System.Collections.Generic;
