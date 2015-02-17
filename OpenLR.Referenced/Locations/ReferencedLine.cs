@@ -172,6 +172,7 @@ namespace OpenLR.Referenced.Locations
                 coordinates.Add(new Coordinate(longitude, latitude));
 
                 featureCollection.Add(new Feature(geometryFactory.CreateLineString(coordinates.ToArray()), table));
+                coordinates.Clear();
             }
             return featureCollection;
         }
