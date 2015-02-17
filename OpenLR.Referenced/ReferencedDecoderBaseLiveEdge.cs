@@ -76,17 +76,17 @@ namespace OpenLR.Referenced
             foreach (var arc in arcs)
             {
                 // check if arc was removed already.
-                if (!this.Graph.HasEdge(arc.Key, arc.Value.Key))
+                if (!this.Graph.HasEdge(arc.Item1, arc.Item2))
                 { // this arc was already removed, probably the reverse one.
                     continue;
                 }
 
                 // get from/to coordinates.
-                this.Graph.GetVertex(arc.Key, out latitude, out longitude);
+                this.Graph.GetVertex(arc.Item1, out latitude, out longitude);
                 var fromCoordinates = new GeoCoordinate(latitude, longitude);
-                this.Graph.GetVertex(arc.Value.Key, out latitude, out longitude);
+                this.Graph.GetVertex(arc.Item2, out latitude, out longitude);
                 var toCoordinates = new GeoCoordinate(latitude, longitude);
-                var arcCoordinates = this.Graph.GetEdgeShape(arc.Key, arc.Value.Key);
+                var arcCoordinates = this.Graph.GetEdgeShape(arc.Item1, arc.Item2);
 
                 // search along the line.
                 var closestDistance = double.MaxValue;
@@ -171,15 +171,15 @@ namespace OpenLR.Referenced
                         (float)System.Math.Max(0, (1.0 - (distance / this.MaxVertexDistance.Value))), 1);
 
                     // add intermediate vertex.
-                    this.Graph.RemoveEdge(arc.Key, arc.Value.Key);
-                    this.Graph.RemoveEdge(arc.Value.Key, arc.Key);
+                    this.Graph.RemoveEdge(arc.Item1, arc.Item2);
+                    this.Graph.RemoveEdge(arc.Item2, arc.Item1);
 
                     // add a new vertex.
                     long newId = this.Graph.AddVertex((float)closestLocation.Latitude, (float)closestLocation.Longitude);
 
                     // build distance before/after.
-                    var distanceBefore = arc.Value.Value.Distance * closestRatio;
-                    var distanceAfter = arc.Value.Value.Distance - distanceBefore;
+                    var distanceBefore = arc.Item3.Distance * closestRatio;
+                    var distanceAfter = arc.Item3.Distance - distanceBefore;
 
                     // build coordinates before/after.
                     var coordinatesBefore = new List<GeoCoordinateSimple>(arcCoordinates.TakeWhile((x, idx) =>
@@ -192,31 +192,31 @@ namespace OpenLR.Referenced
                     }));
 
                     // add new edges forward/backward.
-                    this.Graph.AddEdge(arc.Key, newId, new LiveEdge()
+                    this.Graph.AddEdge(arc.Item1, newId, new LiveEdge()
                     {
                         Distance = (float)distanceBefore,
-                        Forward = arc.Value.Value.Forward,
-                        Tags = arc.Value.Value.Tags
+                        Forward = arc.Item3.Forward,
+                        Tags = arc.Item3.Tags
                     }, coordinatesBefore.Count > 0 ? coordinatesBefore.ToArray() : null);
                     coordinatesBefore.Reverse();
-                    this.Graph.AddEdge(newId, arc.Key, new LiveEdge()
+                    this.Graph.AddEdge(newId, arc.Item1, new LiveEdge()
                     {
                         Distance = (float)distanceBefore,
-                        Forward = !arc.Value.Value.Forward,
-                        Tags = arc.Value.Value.Tags
+                        Forward = !arc.Item3.Forward,
+                        Tags = arc.Item3.Tags
                     }, coordinatesBefore.Count > 0 ? coordinatesBefore.ToArray() : null);
-                    this.Graph.AddEdge(newId, arc.Value.Key, new LiveEdge()
+                    this.Graph.AddEdge(newId, arc.Item2, new LiveEdge()
                     {
                         Distance = (float)distanceAfter,
-                        Forward = arc.Value.Value.Forward,
-                        Tags = arc.Value.Value.Tags
+                        Forward = arc.Item3.Forward,
+                        Tags = arc.Item3.Tags
                     }, coordinatesAfter.Count > 0 ? coordinatesAfter.ToArray() : null);
                     coordinatesAfter.Reverse();
-                    this.Graph.AddEdge(arc.Value.Key, newId, new LiveEdge()
+                    this.Graph.AddEdge(arc.Item2, newId, new LiveEdge()
                     {
                         Distance = (float)distanceAfter,
-                        Forward = !arc.Value.Value.Forward,
-                        Tags = arc.Value.Value.Tags
+                        Forward = !arc.Item3.Forward,
+                        Tags = arc.Item3.Tags
                     }, coordinatesAfter.Count > 0 ? coordinatesAfter.ToArray() : null);
 
                     // add candidates for the new vertex.

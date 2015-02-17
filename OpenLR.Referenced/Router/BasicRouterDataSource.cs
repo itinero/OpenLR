@@ -136,10 +136,10 @@ namespace OpenLR.Referenced.Router
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        public KeyValuePair<long, KeyValuePair<long, TEdge>>[] GetEdges(GeoCoordinateBox box)
+        public Tuple<long, long, TEdge, ICoordinateCollection>[] GetEdges(GeoCoordinateBox box)
         {
             var baseArcs = _datasource.GetEdges(box);
-            var arcs = new List<KeyValuePair<long, KeyValuePair<long, TEdge>>>();
+            var arcs = new List<Tuple<long, long, TEdge, ICoordinateCollection>>();
             foreach(var baseArc in baseArcs)
             {
                 // check if the arc was removed.
@@ -149,8 +149,8 @@ namespace OpenLR.Referenced.Router
                 };
                 if (!_removedArcs.Contains(arc))
                 { // the arc was not removed, also return it.
-                    arcs.Add(new KeyValuePair<long, KeyValuePair<long, TEdge>>(baseArc.Vertex1,
-                        new KeyValuePair<long, TEdge>(baseArc.Vertex2, baseArc.EdgeData)));
+                    arcs.Add(new Tuple<long, long, TEdge, ICoordinateCollection>(
+                        baseArc.Vertex1, baseArc.Vertex2, baseArc.EdgeData, baseArc.Intermediates));
                 }
             }
 
@@ -174,8 +174,8 @@ namespace OpenLR.Referenced.Router
                 if (inBoxNewVertices.Contains(arc.Vertex1) ||
                     inBoxNewVertices.Contains(arc.Vertex2))
                 { // ok, vertices are contained.
-                    arcs.Add(new KeyValuePair<long, KeyValuePair<long, TEdge>>(newArc.Key,
-                        new KeyValuePair<long, TEdge>(newArc.Value.Key, newArc.Value.Value.Item1)));
+                    arcs.Add(new Tuple<long, long, TEdge, ICoordinateCollection>(
+                        newArc.Key, newArc.Value.Key, newArc.Value.Value.Item1, newArc.Value.Value.Item2));
                 }
             }
             return arcs.ToArray();

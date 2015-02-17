@@ -545,15 +545,14 @@ namespace OpenLR.Referenced
             var bestDistance = maxDistance.Value;
             foreach (var arc in arcs)
             {
-                graph.GetVertex(arc.Key, out latitude, out longitude);
+                graph.GetVertex(arc.Item1, out latitude, out longitude);
                 var from = new GeoCoordinate(latitude, longitude);
-                graph.GetVertex(arc.Value.Key, out latitude, out longitude);
+                graph.GetVertex(arc.Item2, out latitude, out longitude);
                 var to = new GeoCoordinate(latitude, longitude);
 
                 var coordinates = new List<GeoCoordinate>();
-                ICoordinateCollection shape = null;
-                if (graph.GetEdgeShape(arc.Key, arc.Value.Key, out shape) &&
-                    shape != null)
+                ICoordinateCollection shape = arc.Item4;
+                if (shape != null)
                 { // a non-null shape.
                     coordinates.Add(from);
                     coordinates.AddRange(shape.ToArray());
@@ -574,7 +573,7 @@ namespace OpenLR.Referenced
                             var distance = line.Distance(location);
                             if (distance < bestDistance)
                             {
-                                bestEdge = new Tuple<long, long, TEdge>(arc.Key, arc.Value.Key, arc.Value.Value);
+                                bestEdge = new Tuple<long, long, TEdge>(arc.Item1, arc.Item2, arc.Item3);
                                 bestDistance = distance;
                             }
                         }
@@ -592,6 +591,7 @@ namespace OpenLR.Referenced
         public static GeoCoordinate[] ToArray(this ICoordinateCollection collection)
         {
             var coordinates = new List<GeoCoordinate>();
+            collection.Reset();
             while(collection.MoveNext())
             {
                 coordinates.Add(new GeoCoordinate(collection.Latitude, collection.Longitude));

@@ -401,7 +401,7 @@ namespace OpenLR.Referenced
             var arcs = this.Graph.GetEdges(box);
             foreach (var arc in arcs)
             {
-                long vertex = arc.Key;
+                long vertex = arc.Item1;
                 if (!candidates.Contains(vertex))
                 {
                     this.Graph.GetVertex(vertex, out latitude, out longitude);
@@ -416,7 +416,7 @@ namespace OpenLR.Referenced
                         });
                     }
                 }
-                vertex = arc.Value.Key;
+                vertex = arc.Item2;
                 if (!candidates.Contains(vertex))
                 {
                     this.Graph.GetVertex(vertex, out latitude, out longitude);
