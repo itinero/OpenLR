@@ -327,7 +327,12 @@ namespace OpenLR.Referenced.Router
                         Vertex2 = vertex2
                     }))
                     { // edge was not removed, only now return it's shape from the source.
-                        return _datasource.GetEdgeShape((uint)vertex1, (uint)vertex2, out shape);
+                        if(_datasource.GetEdgeShape((uint)vertex1, (uint)vertex2, out shape))
+                        {
+                            shape.Reset();
+                            return true;
+                        }
+                        return false;
                     }
                 }
             }
@@ -339,6 +344,7 @@ namespace OpenLR.Referenced.Router
                     newArc.Value.Key == vertex2)
                 {
                     shape = newArc.Value.Value.Item2;
+                    shape.Reset();
                     return true;
                 }
             }
@@ -358,6 +364,7 @@ namespace OpenLR.Referenced.Router
             if(this.GetEdgeShape(vertex1, vertex2, out shape) &&
                 shape != null)
             {
+                shape.Reset();
                 return shape.ToSimpleArray();
             }
             return new GeoCoordinateSimple[0];
