@@ -2,32 +2,28 @@
 using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 using OpenLR.Referenced.Router;
-using OpenLR.Referenced;
 using OsmSharp.Math.Geo.Simple;
-using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Graph.Routing;
+using OsmSharp.Routing.Osm.Graphs;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace OpenLR.Referenced.Locations
 {
     /// <summary>
     /// Represents a referenced line location with a graph as a reference.
     /// </summary>
-    public class ReferencedLine<TEdge> : ReferencedLocation
-        where TEdge : IGraphEdgeData
+    public class ReferencedLine : ReferencedLocation
     {
         /// <summary>
         /// Holds the graph.
         /// </summary>
-        private BasicRouterDataSource<TEdge> _graph;
+        private BasicRouterDataSource<LiveEdge> _graph;
 
         /// <summary>
         /// Creates a new referenced line.
         /// </summary>
         /// <param name="graph"></param>
-        public ReferencedLine(BasicRouterDataSource<TEdge> graph)
+        public ReferencedLine(BasicRouterDataSource<LiveEdge> graph)
         {
             _graph = graph;
         }
@@ -40,7 +36,7 @@ namespace OpenLR.Referenced.Locations
         /// <summary>
         /// Gets or sets the edges.
         /// </summary>
-        public TEdge[] Edges { get; set; }
+        public LiveEdge[] Edges { get; set; }
 
         /// <summary>
         /// Gets or sets the edge shapes.
@@ -61,7 +57,7 @@ namespace OpenLR.Referenced.Locations
         /// Adds another line location to this one.
         /// </summary>
         /// <param name="location"></param>
-        public void Add(ReferencedLine<TEdge> location)
+        public void Add(ReferencedLine location)
         {
             if(this.Vertices[this.Vertices.Length - 1] == location.Vertices[0])
             { // there is a match.
@@ -75,7 +71,7 @@ namespace OpenLR.Referenced.Locations
                 this.Vertices = vertices;
 
                 // merge edges.
-                var edges = new TEdge[this.Edges.Length + location.Edges.Length];
+                var edges = new LiveEdge[this.Edges.Length + location.Edges.Length];
                 this.Edges.CopyTo(edges, 0);
                 location.Edges.CopyTo(edges, this.Edges.Length);
                 this.Edges = edges;

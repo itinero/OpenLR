@@ -17,16 +17,14 @@ namespace OpenLR.Referenced.Decoding
     /// <summary>
     /// Represents a referenced line location decoder.
     /// </summary>
-    /// <typeparam name="TEdge"></typeparam>
-    public class ReferencedLineDecoder<TEdge> : ReferencedDecoder<ReferencedLine<TEdge>, LineLocation, TEdge>
-        where TEdge : IGraphEdgeData
+    public class ReferencedLineDecoder : ReferencedDecoder<ReferencedLine, LineLocation>
     {
         /// <summary>
         /// Creates a line location graph decoder.
         /// </summary>
         /// <param name="mainDecoder"></param>
         /// <param name="rawDecoder"></param>
-        public ReferencedLineDecoder(ReferencedDecoderBase<TEdge> mainDecoder, OpenLR.Decoding.LocationDecoder<LineLocation> rawDecoder)
+        public ReferencedLineDecoder(ReferencedDecoderBase mainDecoder, OpenLR.Decoding.LocationDecoder<LineLocation> rawDecoder)
             : base(mainDecoder, rawDecoder)
         {
 
@@ -37,10 +35,10 @@ namespace OpenLR.Referenced.Decoding
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
-        public override ReferencedLine<TEdge> Decode(LineLocation location)
+        public override ReferencedLine Decode(LineLocation location)
         {
             // get candidate vertices and edges.
-            var candidates = new List<SortedSet<CandidateVertexEdge<TEdge>>>();
+            var candidates = new List<SortedSet<CandidateVertexEdge>>();
             var lrps = new List<LocationReferencePoint>();
 
             // loop over all lrps.
@@ -58,7 +56,7 @@ namespace OpenLR.Referenced.Decoding
             candidates.Add(this.FindCandidatesFor(location.Last, true));
 
             // keep the total pathsegment.
-            ReferencedLine<TEdge> lineLocation = null;
+            ReferencedLine lineLocation = null;
 
             // find a route between each pair of sequential points.
             var previous = lrps[0];
@@ -69,22 +67,22 @@ namespace OpenLR.Referenced.Decoding
                 var currentCandidates = candidates[idx];
 
                 // build a list of combined scores.
-                var combinedScoresSet = new SortedSet<CombinedScore<TEdge>>(new CombinedScoreComparer<TEdge>());
+                var combinedScoresSet = new SortedSet<CombinedScore>(new CombinedScoreComparer());
                 foreach (var previousCandidate in previousCandidates)
                 {
                     foreach (var currentCandidate in currentCandidates)
                     {
-                        combinedScoresSet.Add(new CombinedScore<TEdge>()
+                        combinedScoresSet.Add(new CombinedScore()
                             {
                                 Source = previousCandidate,
                                 Target = currentCandidate
                             });
                     }
                 }
-                var combinedScores = new List<CombinedScore<TEdge>>(combinedScoresSet);
+                var combinedScores = new List<CombinedScore>(combinedScoresSet);
 
                 // find the best candidate route.
-                CandidateRoute<TEdge> best = null;
+                CandidateRoute best = null;
                 while (combinedScores.Count > 0)
                 {
                     // get the first pair.

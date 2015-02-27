@@ -86,7 +86,7 @@ namespace OpenLR.Tests.Referenced.Osm
             var decoder = new LineLocationDecoder();
             var router = new BasicRouter();
             var mainDecoder = new ReferencedOsmDecoder(graph, new BinaryDecoder());
-            var referencedDecoder = new ReferencedLineDecoder<LiveEdge>(mainDecoder, decoder);
+            var referencedDecoder = new ReferencedLineDecoder(mainDecoder, decoder);
             var referencedLocation = referencedDecoder.Decode(location);
 
             // confirm result.

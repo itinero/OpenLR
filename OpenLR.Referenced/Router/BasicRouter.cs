@@ -31,7 +31,7 @@ namespace OpenLR.Referenced.Router
         /// <param name="to"></param>
         /// <param name="minimum"></param>
         public PathSegment<long> Calculate(BasicRouterDataSource<LiveEdge> graph, IRoutingInterpreter interpreter,
-            Vehicle vehicle, CandidateVertexEdge<LiveEdge> from, CandidateVertexEdge<LiveEdge> to, FunctionalRoadClass minimum)
+            Vehicle vehicle, CandidateVertexEdge from, CandidateVertexEdge to, FunctionalRoadClass minimum)
         {
             return this.Calculate(graph, interpreter, vehicle, from, to, minimum, MAX_SETTLES);
         }
@@ -48,7 +48,7 @@ namespace OpenLR.Referenced.Router
         /// <param name="maxSettles"></param>
         /// <returns></returns>
         public PathSegment<long> Calculate(BasicRouterDataSource<LiveEdge> graph, IRoutingInterpreter interpreter,
-            Vehicle vehicle, CandidateVertexEdge<LiveEdge> from, CandidateVertexEdge<LiveEdge> to, FunctionalRoadClass minimum, uint maxSettles)
+            Vehicle vehicle, CandidateVertexEdge from, CandidateVertexEdge to, FunctionalRoadClass minimum, uint maxSettles)
         {
             // first check for the simple stuff.
             if (from.Vertex == to.Vertex)

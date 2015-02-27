@@ -12,18 +12,17 @@ namespace OpenLR.Referenced.Decoding.Scoring
     /// <summary>
     /// Represents a combined score.
     /// </summary>
-    internal class CombinedScore<TEdge>
-        where TEdge : IGraphEdgeData
+    internal class CombinedScore
     {
         /// <summary>
         /// Gets or sets the source candidate.
         /// </summary>
-        public CandidateVertexEdge<TEdge> Source { get; set; }
+        public CandidateVertexEdge Source { get; set; }
 
         /// <summary>
         /// Gets or sets the target candidate.
         /// </summary>
-        public CandidateVertexEdge<TEdge> Target { get; set; }
+        public CandidateVertexEdge Target { get; set; }
 
         /// <summary>
         /// Returns the score.
@@ -43,7 +42,7 @@ namespace OpenLR.Referenced.Decoding.Scoring
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            var other = (obj as CombinedScore<TEdge>);
+            var other = (obj as CombinedScore);
             return other != null && 
                 other.Target.Equals(this.Target) && 
                 other.Source.Equals(this.Source) && 

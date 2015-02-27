@@ -22,16 +22,14 @@ namespace OpenLR.Referenced.Decoding
     /// <summary>
     /// Represents a referenced point along line location decoder.
     /// </summary>
-    /// <typeparam name="TEdge"></typeparam>
-    public class ReferencedPointAlongLineDecoder<TEdge> : ReferencedDecoder<ReferencedPointAlongLine<TEdge>, PointAlongLineLocation, TEdge>
-        where TEdge : IGraphEdgeData
+    public class ReferencedPointAlongLineDecoder : ReferencedDecoder<ReferencedPointAlongLine, PointAlongLineLocation>
     {
         /// <summary>
         /// Creates a point along line location graph decoder.
         /// </summary>
         /// <param name="mainDecoder"></param>
         /// <param name="rawDecoder"></param>
-        public ReferencedPointAlongLineDecoder(ReferencedDecoderBase<TEdge> mainDecoder, OpenLR.Decoding.LocationDecoder<PointAlongLineLocation> rawDecoder)
+        public ReferencedPointAlongLineDecoder(ReferencedDecoderBase mainDecoder, OpenLR.Decoding.LocationDecoder<PointAlongLineLocation> rawDecoder)
             : base(mainDecoder, rawDecoder)
         {
 
@@ -42,10 +40,10 @@ namespace OpenLR.Referenced.Decoding
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
-        public override ReferencedPointAlongLine<TEdge> Decode(PointAlongLineLocation location)
+        public override ReferencedPointAlongLine Decode(PointAlongLineLocation location)
         {
-            CandidateRoute<TEdge> best = null;
-            CombinedScore<TEdge> bestCombinedEdge = null;
+            CandidateRoute best = null;
+            CombinedScore bestCombinedEdge = null;
             var vertexDistance = this.MaxVertexDistance.Value;
             while ((best == null || best.Route == null) && vertexDistance <= this.MaxVertexDistance.Value)
             {
@@ -53,7 +51,7 @@ namespace OpenLR.Referenced.Decoding
                 this.ResetCreatedCandidates();
 
                 // get candidate vertices and edges.
-                var candidates = new List<SortedSet<CandidateVertexEdge<TEdge>>>();
+                var candidates = new List<SortedSet<CandidateVertexEdge>>();
                 var lrps = new List<LocationReferencePoint>();
                 var fromBearingReference = (Degree)location.First.Bearing;
                 var toBearingReference = (Degree)location.Last.Bearing;
@@ -78,14 +76,14 @@ namespace OpenLR.Referenced.Decoding
                 }
 
                 // build a list of combined scores.
-                var combinedScoresSet = new SortedSet<CombinedScore<TEdge>>(new CombinedScoreComparer<TEdge>());
+                var combinedScoresSet = new SortedSet<CombinedScore>(new CombinedScoreComparer());
                 foreach (var previousCandidate in candidates[0])
                 {
                     foreach (var currentCandidate in candidates[1])
                     {
                         if (previousCandidate.Vertex != currentCandidate.Vertex)
                         { // make sure vertices are different.
-                            combinedScoresSet.Add(new CombinedScore<TEdge>()
+                            combinedScoresSet.Add(new CombinedScore()
                             {
                                 Source = previousCandidate,
                                 Target = currentCandidate
@@ -95,7 +93,7 @@ namespace OpenLR.Referenced.Decoding
                 }
 
                 // find the best candidate route.
-                var combinedScores = new List<CombinedScore<TEdge>>(combinedScoresSet);
+                var combinedScores = new List<CombinedScore>(combinedScoresSet);
                 while (combinedScores.Count > 0)
                 {
                     // get the first pair.
@@ -169,7 +167,7 @@ namespace OpenLR.Referenced.Decoding
             var latitudeReference = offsetLocation.Latitude;
 
             // create the referenced location.
-            var pointAlongLineLocation = new ReferencedPointAlongLine<TEdge>();
+            var pointAlongLineLocation = new ReferencedPointAlongLine();
             pointAlongLineLocation.Score = totalScore;
             pointAlongLineLocation.Route = best.Route;
             pointAlongLineLocation.Latitude = latitudeReference;

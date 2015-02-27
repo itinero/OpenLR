@@ -14,16 +14,14 @@ namespace OpenLR.Referenced.Decoding
     /// <summary>
     /// Represents a referenced grid location decoder.
     /// </summary>
-    /// <typeparam name="TEdge"></typeparam>
-    public class ReferencedGridDecoder<TEdge> : ReferencedDecoder<ReferencedGrid, GridLocation, TEdge>
-        where TEdge : IGraphEdgeData
+    public class ReferencedGridDecoder : ReferencedDecoder<ReferencedGrid, GridLocation>
     {
         /// <summary>
         /// Creates a grid location graph decoder.
         /// </summary>
         /// <param name="mainDecoder"></param>
         /// <param name="rawDecoder"></param>
-        public ReferencedGridDecoder(ReferencedDecoderBase<TEdge> mainDecoder, OpenLR.Decoding.LocationDecoder<GridLocation> rawDecoder)
+        public ReferencedGridDecoder(ReferencedDecoderBase mainDecoder, OpenLR.Decoding.LocationDecoder<GridLocation> rawDecoder)
             : base(mainDecoder, rawDecoder)
         {
 

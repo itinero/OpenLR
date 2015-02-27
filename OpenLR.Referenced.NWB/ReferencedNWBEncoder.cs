@@ -14,7 +14,7 @@ namespace OpenLR.Referenced.NWB
     /// <summary>
     /// An implementation of a referenced encoder based on the Nationaal Wegenbestand (NWB) in the netherlands.
     /// </summary>
-    public class ReferencedNWBEncoder : ReferencedEncoderBaseLiveEdge
+    public class ReferencedNWBEncoder : ReferencedEncoderBase
     {
         /// <summary>
         /// Creates a new referenced live edge decoder.

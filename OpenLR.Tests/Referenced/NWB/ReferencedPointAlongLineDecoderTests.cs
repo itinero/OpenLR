@@ -79,7 +79,7 @@ namespace OpenLR.Tests.Referenced.NWB
             var decoder = new PointAlongLineDecoder();
             var router = new BasicRouter();
             var mainDecoder = new ReferencedNWBDecoder(graph, new BinaryDecoder());
-            var referencedDecoder = new ReferencedPointAlongLineDecoder<LiveEdge>(mainDecoder, decoder);
+            var referencedDecoder = new ReferencedPointAlongLineDecoder(mainDecoder, decoder);
             var referencedLocation = referencedDecoder.Decode(location);
 
             // confirm result.

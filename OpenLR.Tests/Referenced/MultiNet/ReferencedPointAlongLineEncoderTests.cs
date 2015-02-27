@@ -46,8 +46,8 @@ namespace OpenLR.Tests.Referenced.MultiNet
 
             // create a referenced location and encode it.
             var graph = new BasicRouterDataSource<LiveEdge>(graphDataSource);
-            var referencedPointAlongLineLocation = new ReferencedPointAlongLine<LiveEdge>();
-            referencedPointAlongLineLocation.Route = new ReferencedLine<LiveEdge>(graph);
+            var referencedPointAlongLineLocation = new ReferencedPointAlongLine();
+            referencedPointAlongLineLocation.Route = new ReferencedLine(graph);
             referencedPointAlongLineLocation.Route.Edges = new LiveEdge[1];
             referencedPointAlongLineLocation.Route.Edges[0] = new LiveEdge()
             {
@@ -69,7 +69,7 @@ namespace OpenLR.Tests.Referenced.MultiNet
             // encode location.
             var encoder = new PointAlongLineEncoder();
             var mainEncoder = new ReferencedMultiNetEncoder(graph, null);
-            var referencedEncoder = new ReferencedPointAlongLineEncoder<LiveEdge>(mainEncoder, encoder);
+            var referencedEncoder = new ReferencedPointAlongLineEncoder(mainEncoder, encoder);
             var location = referencedEncoder.EncodeReferenced(referencedPointAlongLineLocation);
 
             // test result.

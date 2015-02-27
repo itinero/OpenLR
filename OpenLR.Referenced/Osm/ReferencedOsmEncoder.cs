@@ -15,7 +15,7 @@ namespace OpenLR.Referenced.Osm
     /// <summary>
     /// An implementation of a referenced encoder based on OSM. 
     /// </summary>
-    public class ReferencedOsmEncoder : ReferencedEncoderBaseLiveEdge
+    public class ReferencedOsmEncoder : ReferencedEncoderBase
     {
         /// <summary>
         /// Creates a new referenced live edge decoder.

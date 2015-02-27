@@ -48,7 +48,7 @@ namespace OpenLR.Tests.Referenced.Osm
 
             // create a referenced location and encode it.
             var graph = new BasicRouterDataSource<LiveEdge>(graphDataSource);
-            var referencedLocation  = new ReferencedLine<LiveEdge>(graph);
+            var referencedLocation  = new ReferencedLine(graph);
             referencedLocation.Edges = new LiveEdge[1];
             referencedLocation.Edges[0] = new LiveEdge()
             {
@@ -66,7 +66,7 @@ namespace OpenLR.Tests.Referenced.Osm
             var encoder = new LineEncoder();
             var router = new Dykstra();
             var mainEncoder = new ReferencedOsmEncoder(graph, null);
-            var referencedEncoder = new ReferencedLineEncoder<LiveEdge>(mainEncoder, encoder);
+            var referencedEncoder = new ReferencedLineEncoder(mainEncoder, encoder);
             var location = referencedEncoder.EncodeReferenced(referencedLocation);
 
             // test result.
@@ -84,7 +84,7 @@ namespace OpenLR.Tests.Referenced.Osm
             Assert.AreEqual(23, location.Last.Bearing);
 
             // encode location with a point on the first point.
-            referencedLocation = new ReferencedLine<LiveEdge>(graph);
+            referencedLocation = new ReferencedLine(graph);
             referencedLocation.Edges = new LiveEdge[1];
             referencedLocation.Edges[0] = new LiveEdge()
             {
@@ -115,7 +115,7 @@ namespace OpenLR.Tests.Referenced.Osm
             Assert.AreEqual(6.12779f, location.Last.Coordinate.Longitude);
 
             // encode location with a point on the last point.
-            referencedLocation = new ReferencedLine<LiveEdge>(graph);
+            referencedLocation = new ReferencedLine(graph);
             referencedLocation.Edges = new LiveEdge[1];
             referencedLocation.Edges[0] = new LiveEdge()
             {
@@ -460,7 +460,7 @@ namespace OpenLR.Tests.Referenced.Osm
             // encode location.
             var encoder = new LineEncoder();
             var mainEncoder = new ReferencedOsmEncoder(graph, null);
-            var referencedEncoder = new ReferencedLineEncoder<LiveEdge>(mainEncoder, encoder);
+            var referencedEncoder = new ReferencedLineEncoder(mainEncoder, encoder);
             var referencedLocation = mainEncoder.BuildLineLocation(new long[] { vertex1, vertex2 }, new LiveEdge[] { edge1 }, 0, 0);
             var location = referencedEncoder.EncodeReferenced(referencedLocation);
 
@@ -523,7 +523,7 @@ namespace OpenLR.Tests.Referenced.Osm
             // encode location.
             var encoder = new LineEncoder();
             var mainEncoder = new ReferencedOsmEncoder(graph, null);
-            var referencedEncoder = new ReferencedLineEncoder<LiveEdge>(mainEncoder, encoder);
+            var referencedEncoder = new ReferencedLineEncoder(mainEncoder, encoder);
             var referencedLocation = mainEncoder.BuildLineLocation(new long[] { vertex1, vertex2 }, new LiveEdge[] { edge }, 0, 0);
             var location = referencedEncoder.EncodeReferenced(referencedLocation);
 
@@ -589,7 +589,7 @@ namespace OpenLR.Tests.Referenced.Osm
             // encode location.
             var encoder = new LineEncoder();
             var mainEncoder = new ReferencedOsmEncoder(graph, null);
-            var referencedEncoder = new ReferencedLineEncoder<LiveEdge>(mainEncoder, encoder);
+            var referencedEncoder = new ReferencedLineEncoder(mainEncoder, encoder);
             var referencedLocation = mainEncoder.BuildLineLocation(new long[] { vertex3, vertex1 }, new LiveEdge[] { edge.ToReverse() }, 0, 0);
             var location = referencedEncoder.EncodeReferenced(referencedLocation);
 

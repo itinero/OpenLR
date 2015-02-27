@@ -6,6 +6,7 @@ using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Routing;
+using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Units.Angle;
 using System;
 
@@ -14,22 +15,21 @@ namespace OpenLR.Referenced.Encoding
     /// <summary>
     /// Represents a dynamic graph encoder: Encodes a reference OpenLR location into an unreferenced location.
     /// </summary>
-    public abstract class ReferencedEncoder<TReferencedLocation, TLocation, TEdge> : ReferencedLocationEncoder<TReferencedLocation, TLocation>
-        where TEdge : IGraphEdgeData
+    public abstract class ReferencedEncoder<TReferencedLocation, TLocation> : ReferencedLocationEncoder<TReferencedLocation, TLocation>
         where TReferencedLocation : ReferencedLocation
         where TLocation : ILocation
     {
         /// <summary>
         /// Holds the main encoder.
         /// </summary>
-        private ReferencedEncoderBase<TEdge> _mainEncoder;
+        private ReferencedEncoderBase _mainEncoder;
 
         /// <summary>
         /// Creates a new dynamic graph encoder.
         /// </summary>
         /// <param name="mainEncoder"></param>
         /// <param name="rawEncoder"></param>
-        public ReferencedEncoder(ReferencedEncoderBase<TEdge> mainEncoder, OpenLR.Encoding.LocationEncoder<TLocation> rawEncoder)
+        public ReferencedEncoder(ReferencedEncoderBase mainEncoder, OpenLR.Encoding.LocationEncoder<TLocation> rawEncoder)
             : base(rawEncoder)
         {
             _mainEncoder = mainEncoder;
@@ -38,7 +38,7 @@ namespace OpenLR.Referenced.Encoding
         /// <summary>
         /// Returns the main encoder.
         /// </summary>
-        public ReferencedEncoderBase<TEdge> MainEncoder
+        public ReferencedEncoderBase MainEncoder
         {
             get
             {
@@ -98,7 +98,7 @@ namespace OpenLR.Referenced.Encoding
         /// <param name="vertexTo"></param>
         /// <param name="forward">When true the edge is forward relative to the vertices, false the edge is backward.</param>
         /// <returns></returns>
-        protected Degree GetBearing(long vertexFrom, TEdge edge, GeoCoordinateSimple[] edgeShape, long vertexTo, bool forward)
+        protected Degree GetBearing(long vertexFrom, LiveEdge edge, GeoCoordinateSimple[] edgeShape, long vertexTo, bool forward)
         {
             return _mainEncoder.GetBearing(vertexFrom, edge, edgeShape, vertexTo, forward);
         }

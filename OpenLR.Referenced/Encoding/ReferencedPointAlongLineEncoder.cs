@@ -15,16 +15,14 @@ namespace OpenLR.Referenced.Encoding
     /// <summary>
     /// Represents a referenced point along line location decoder.
     /// </summary>
-    /// <typeparam name="TEdge"></typeparam>
-    public class ReferencedPointAlongLineEncoder<TEdge> : ReferencedEncoder<ReferencedPointAlongLine<TEdge>, PointAlongLineLocation, TEdge>
-        where TEdge : IGraphEdgeData
+    public class ReferencedPointAlongLineEncoder : ReferencedEncoder<ReferencedPointAlongLine, PointAlongLineLocation>
     {
         /// <summary>
         /// Creates a point along line referenced encoder.
         /// </summary>
         /// <param name="mainEncoder"></param>
         /// <param name="rawEncoder"></param>
-        public ReferencedPointAlongLineEncoder(ReferencedEncoderBase<TEdge> mainEncoder, OpenLR.Encoding.LocationEncoder<PointAlongLineLocation> rawEncoder)
+        public ReferencedPointAlongLineEncoder(ReferencedEncoderBase mainEncoder, OpenLR.Encoding.LocationEncoder<PointAlongLineLocation> rawEncoder)
             : base(mainEncoder, rawEncoder)
         {
 
@@ -35,7 +33,7 @@ namespace OpenLR.Referenced.Encoding
         /// </summary>
         /// <param name="referencedLocation"></param>
         /// <returns></returns>
-        public override PointAlongLineLocation EncodeReferenced(ReferencedPointAlongLine<TEdge> referencedLocation)
+        public override PointAlongLineLocation EncodeReferenced(ReferencedPointAlongLine referencedLocation)
         {
             try
             {

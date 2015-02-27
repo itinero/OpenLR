@@ -29,7 +29,7 @@ namespace OpenLR.Tests.Referenced.Real.Osm
 
             // decodes a location.
             var location = referencedDecoder.Decode(data);
-            var lineLocation = location as ReferencedLine<LiveEdge>;
+            var lineLocation = location as ReferencedLine;
             var lineLocationGeometry = lineLocation.ToGeometry();
 
             // write GeoJSON.
@@ -54,7 +54,7 @@ namespace OpenLR.Tests.Referenced.Real.Osm
 
             // decodes a location.
             var location = referencedDecoder.Decode(data);
-            var lineLocation = location as ReferencedLine<LiveEdge>;
+            var lineLocation = location as ReferencedLine;
             var lineLocationGeometry = lineLocation.ToGeometry();
 
             // write GeoJSON.
@@ -79,7 +79,7 @@ namespace OpenLR.Tests.Referenced.Real.Osm
 
             // decodes a location.
             var location = referencedDecoder.Decode(data);
-            var lineLocation = location as ReferencedLine<LiveEdge>;
+            var lineLocation = location as ReferencedLine;
             var lineLocationGeometry = lineLocation.ToGeometry();
 
             // write GeoJSON.
@@ -103,7 +103,7 @@ namespace OpenLR.Tests.Referenced.Real.Osm
 
             // decodes a location.
             var location = referencedDecoder.Decode(data);
-            var lineLocation = location as ReferencedLine<LiveEdge>;
+            var lineLocation = location as ReferencedLine;
             var lineLocationGeometry = lineLocation.ToGeometry();
 
             // write GeoJSON.

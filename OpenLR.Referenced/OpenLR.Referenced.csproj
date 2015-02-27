@@ -167,7 +167,6 @@
     <Compile Include="ReferencedEncoderBase.cs" />
     <Compile Include="Osm\ReferencedOsmDecoder.cs" />
     <Compile Include="Osm\ReferencedOsmEncoder.cs" />
-    <Compile Include="ReferencedEncoderBaseLiveEdge.cs" />
     <Compile Include="ReferencedEncodingException.cs" />
     <Compile Include="Router\BasicRouter.cs" />
     <Compile Include="Router\BasicRouterDataSource.cs" />

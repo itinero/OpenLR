@@ -20,7 +20,7 @@ namespace OpenLR.Referenced
     /// <summary>
     /// A reference decoder base class for live edges.
     /// </summary>
-    public abstract class ReferencedDecoderBaseLiveEdge : ReferencedDecoderBase<LiveEdge>
+    public abstract class ReferencedDecoderBaseLiveEdge : ReferencedDecoderBase
     {
         /// <summary>
         /// Creates a new referenced live edge decoder.
@@ -54,7 +54,7 @@ namespace OpenLR.Referenced
         /// <param name="forward"></param>
         /// <param name="maxVertexDistance"></param>
         /// <returns></returns>
-        public override SortedSet<CandidateVertexEdge<LiveEdge>> CreateCandidatesFor(LocationReferencePoint lrp, bool forward, Meter maxVertexDistance)
+        public override SortedSet<CandidateVertexEdge> CreateCandidatesFor(LocationReferencePoint lrp, bool forward, Meter maxVertexDistance)
         {
             // convert to geo coordinate.
             var lrpLocation = new GeoCoordinate(lrp.Coordinate.Latitude, lrp.Coordinate.Longitude);
@@ -63,7 +63,7 @@ namespace OpenLR.Referenced
 
             // build candidates list.
             var candidates = new HashSet<long>();
-            var scoredCandidates = new SortedSet<CandidateVertexEdge<LiveEdge>>(new CandidateVertexEdgeComparer<LiveEdge>());
+            var scoredCandidates = new SortedSet<CandidateVertexEdge>(new CandidateVertexEdgeComparer());
 
             float latitude, longitude;
 
@@ -223,7 +223,7 @@ namespace OpenLR.Referenced
                     var edgeCandidates = this.FindCandidateEdgesFor(newId, forward, lrp.FormOfWay.Value, lrp.FuntionalRoadClass.Value, (Degree)lrp.Bearing.Value);
                     foreach (var edgeCandidate in edgeCandidates)
                     {
-                        scoredCandidates.Add(new CandidateVertexEdge<LiveEdge>()
+                        scoredCandidates.Add(new CandidateVertexEdge()
                         {
                             Edge = edgeCandidate.Edge,
                             Vertex = newId,

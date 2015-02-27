@@ -14,16 +14,14 @@ namespace OpenLR.Referenced.Decoding
     /// <summary>
     /// Represents a referenced rectangle location decoder.
     /// </summary>
-    /// <typeparam name="TEdge"></typeparam>
-    public class ReferencedRectangleDecoder<TEdge> : ReferencedDecoder<ReferencedRectangle, RectangleLocation, TEdge>
-        where TEdge : IGraphEdgeData
+    public class ReferencedRectangleDecoder : ReferencedDecoder<ReferencedRectangle, RectangleLocation>
     {
         /// <summary>
         /// Creates a rectangle location graph decoder.
         /// </summary>
         /// <param name="mainDecoder"></param>
         /// <param name="rawDecoder"></param>
-        public ReferencedRectangleDecoder(ReferencedDecoderBase<TEdge> mainDecoder, OpenLR.Decoding.LocationDecoder<RectangleLocation> rawDecoder)
+        public ReferencedRectangleDecoder(ReferencedDecoderBase mainDecoder, OpenLR.Decoding.LocationDecoder<RectangleLocation> rawDecoder)
             : base(mainDecoder, rawDecoder)
         {
 

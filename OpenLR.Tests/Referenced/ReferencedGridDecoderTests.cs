@@ -30,7 +30,7 @@ namespace OpenLR.Tests.Referenced
             location.Columns = 5;
 
             // decode the location
-            var referencedDecoder = new ReferencedGridDecoder<LiveEdge>(null, null);
+            var referencedDecoder = new ReferencedGridDecoder(null, null);
             var referencedLocation = referencedDecoder.Decode(location);
 
             // confirm result.

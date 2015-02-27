@@ -3,6 +3,7 @@ using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Utilities;
 using OpenLR.Locations;
+using OpenLR.Referenced.Locations;
 using OpenLR.Referenced.Router;
 using OsmSharp;
 using OsmSharp.Collections.Coordinates.Collections;
@@ -227,8 +228,7 @@ namespace OpenLR.Referenced
         /// <param name="referencedPointALongLineLocation"></param>
         /// <param name="baseEncoder"></param>
         /// <returns></returns>
-        public static FeatureCollection ToFeatures<TEdge>(this OpenLR.Referenced.Locations.ReferencedPointAlongLine<TEdge> referencedPointALongLineLocation, ReferencedEncoderBase<TEdge> baseEncoder)
-            where TEdge : IGraphEdgeData
+        public static FeatureCollection ToFeatures(this ReferencedPointAlongLine referencedPointALongLineLocation, ReferencedEncoderBase baseEncoder)
         {
             // create the geometry factory.
             var geometryFactory = new GeometryFactory();
@@ -254,8 +254,7 @@ namespace OpenLR.Referenced
         /// <param name="referencedPointALongLineLocation"></param>
         /// <param name="baseEncoder"></param>
         /// <returns></returns>
-        public static Meter Length<TEdge>(this OpenLR.Referenced.Locations.ReferencedPointAlongLine<TEdge> referencedPointALongLineLocation, ReferencedEncoderBase<TEdge> baseEncoder)
-            where TEdge : IGraphEdgeData
+        public static Meter Length(this ReferencedPointAlongLine referencedPointALongLineLocation, ReferencedEncoderBase baseEncoder)
         {
             return referencedPointALongLineLocation.Route.Length(baseEncoder);
         }
@@ -266,13 +265,12 @@ namespace OpenLR.Referenced
         /// <param name="referencedLine"></param>
         /// <param name="baseEncoder"></param>
         /// <returns></returns>
-        public static Meter Length<TEdge>(this OpenLR.Referenced.Locations.ReferencedLine<TEdge> referencedLine, ReferencedEncoderBase<TEdge> baseEncoder)
-            where TEdge : IGraphEdgeData
+        public static Meter Length(this ReferencedLine referencedLine, ReferencedEncoderBase baseEncoder)
         {
             var length = 0.0;
             for (int idx = 0; idx < referencedLine.Edges.Length; idx++)
             {
-                length = length + baseEncoder.Graph.GetCoordinates(new Tuple<long,long,TEdge>(
+                length = length + baseEncoder.Graph.GetCoordinates(new Tuple<long, long, LiveEdge>(
                     referencedLine.Vertices[idx], referencedLine.Vertices[idx + 1],
                     referencedLine.Edges[idx])).Length().Value;
             }
@@ -285,8 +283,7 @@ namespace OpenLR.Referenced
         /// <param name="referencedPointALongLineLocation"></param>
         /// <param name="baseEncoder"></param>
         /// <returns></returns>
-        public static List<GeoCoordinate> GetCoordinates<TEdge>(this OpenLR.Referenced.Locations.ReferencedPointAlongLine<TEdge> referencedPointALongLineLocation, ReferencedEncoderBase<TEdge> baseEncoder)
-            where TEdge : IGraphEdgeData
+        public static List<GeoCoordinate> GetCoordinates(this ReferencedPointAlongLine referencedPointALongLineLocation, ReferencedEncoderBase baseEncoder)
         {
             var coordinates = new List<GeoCoordinate>();
             for (int idx = 0; idx < referencedPointALongLineLocation.Route.Edges.Length; idx++)
@@ -311,8 +308,7 @@ namespace OpenLR.Referenced
         /// <param name="referencedPointALongLineLocation"></param>
         /// <param name="baseEncoder"></param>
         /// <returns></returns>
-        public static List<GeoCoordinate> GetCoordinates<TEdge>(this OpenLR.Referenced.Locations.ReferencedLine<TEdge> referencedPointALongLineLocation, ReferencedEncoderBase<TEdge> baseEncoder)
-            where TEdge : IGraphEdgeData
+        public static List<GeoCoordinate> GetCoordinates(this ReferencedLine referencedPointALongLineLocation, ReferencedEncoderBase baseEncoder)
         {
             var coordinates = new List<GeoCoordinate>();
             for (int idx = 0; idx < referencedPointALongLineLocation.Edges.Length; idx++)
@@ -337,8 +333,7 @@ namespace OpenLR.Referenced
         /// <param name="referencedPointALongLineLocation"></param>
         /// <param name="baseDecoder"></param>
         /// <returns></returns>
-        public static FeatureCollection ToFeatures<TEdge>(this OpenLR.Referenced.Locations.ReferencedPointAlongLine<TEdge> referencedPointALongLineLocation, ReferencedDecoderBase<TEdge> baseDecoder)
-            where TEdge : IGraphEdgeData
+        public static FeatureCollection ToFeatures(this ReferencedPointAlongLine referencedPointALongLineLocation, ReferencedDecoderBase baseDecoder)
         {
             // create the geometry factory.
             var geometryFactory = new GeometryFactory();
@@ -482,34 +477,30 @@ namespace OpenLR.Referenced
         /// <summary>
         /// Returns the edge that is closest to the given location.
         /// </summary>
-        /// <typeparam name="TEdge">The type of edge.</typeparam>
         /// <param name="graph">The graph to search.</param>
         /// <param name="location">The location.</param>
         /// <returns>Returns an edge or an edge from 0 to 0 if none is found.</returns>
-        public static Tuple<long, long, TEdge> GetClosestEdge<TEdge>(this BasicRouterDataSource<TEdge> graph, GeoCoordinate location)
-            where TEdge : IGraphEdgeData
+        public static Tuple<long, long, LiveEdge> GetClosestEdge(this BasicRouterDataSource<LiveEdge> graph, GeoCoordinate location)
         {
-            return graph.GetClosestEdge<TEdge>(location, double.MaxValue);
+            return graph.GetClosestEdge(location, double.MaxValue);
         }
 
         /// <summary>
         /// Returns the edge that is closest to the given location.
         /// </summary>
-        /// <typeparam name="TEdge">The type of edge.</typeparam>
         /// <param name="graph">The graph to search.</param>
         /// <param name="location">The location.</param>
         /// <param name="maxDistance">The maximum distance.</param>
         /// <returns>Returns an edge or an edge from 0 to 0 if none is found.</returns>
-        public static Tuple<long, long, TEdge> GetClosestEdge<TEdge>(this BasicRouterDataSource<TEdge> graph, GeoCoordinate location, Meter maxDistance)
-            where TEdge : IGraphEdgeData
+        public static Tuple<long, long, LiveEdge> GetClosestEdge(this BasicRouterDataSource<LiveEdge> graph, GeoCoordinate location, Meter maxDistance)
         { // create the search box.
             var boxSizeStart = 0.0001;
             var boxSizeMax = 0.2;
-            var result = graph.GetClosestEdge<TEdge>(location, maxDistance, boxSizeStart);
+            var result = graph.GetClosestEdge(location, maxDistance, boxSizeStart);
             while(result == null && boxSizeStart <= boxSizeMax)
             {
                 boxSizeStart = boxSizeStart * 2;
-                result = graph.GetClosestEdge<TEdge>(location, maxDistance, boxSizeStart);
+                result = graph.GetClosestEdge(location, maxDistance, boxSizeStart);
             }
             return result;
         }
@@ -517,16 +508,14 @@ namespace OpenLR.Referenced
         /// <summary>
         /// Returns the edge that is closest to the given location.
         /// </summary>
-        /// <typeparam name="TEdge">The type of edge.</typeparam>
         /// <param name="graph">The graph to search.</param>
         /// <param name="location">The location.</param>
         /// <param name="maxDistance">The maximum distance.</param>
         /// <param name="boxSize">The search box size.</param>
         /// <returns>Returns an edge or an edge from 0 to 0 if none is found.</returns>
-        public static Tuple<long, long, TEdge> GetClosestEdge<TEdge>(this BasicRouterDataSource<TEdge> graph, GeoCoordinate location, Meter maxDistance, double boxSize)
-            where TEdge : IGraphEdgeData
+        public static Tuple<long, long, LiveEdge> GetClosestEdge(this BasicRouterDataSource<LiveEdge> graph, GeoCoordinate location, Meter maxDistance, double boxSize)
         {
-            Tuple<long, long, TEdge> bestEdge = null;
+            Tuple<long, long, LiveEdge> bestEdge = null;
 
             var searchBox = new GeoCoordinateBox(
                 new GeoCoordinate(location.Latitude - boxSize, location.Longitude - boxSize),
@@ -573,7 +562,7 @@ namespace OpenLR.Referenced
                             var distance = line.Distance(location);
                             if (distance < bestDistance)
                             {
-                                bestEdge = new Tuple<long, long, TEdge>(arc.Item1, arc.Item2, arc.Item3);
+                                bestEdge = new Tuple<long, long, LiveEdge>(arc.Item1, arc.Item2, arc.Item3);
                                 bestDistance = distance;
                             }
                         }
@@ -602,12 +591,10 @@ namespace OpenLR.Referenced
         /// <summary>
         /// Returns a list of coordinates representing the geometry of the edge.
         /// </summary>
-        /// <typeparam name="TEdge">The type of edge.</typeparam>
         /// <param name="graph">The graph.</param>
         /// <param name="edge">The edge-tuple with (from-vertex, to-vertex, edgedata).</param>
         /// <returns></returns>
-        public static List<GeoCoordinate> GetCoordinates<TEdge>(this BasicRouterDataSource<TEdge> graph, Tuple<long, long, TEdge> edge)
-            where TEdge : IGraphEdgeData
+        public static List<GeoCoordinate> GetCoordinates(this BasicRouterDataSource<LiveEdge> graph, Tuple<long, long, LiveEdge> edge)
         {
             float latitude, longitude;
             graph.GetVertex(edge.Item1, out latitude, out longitude);
@@ -626,14 +613,12 @@ namespace OpenLR.Referenced
         /// <summary>
         /// Returns a list of coordinates representing the geometry of the edge.
         /// </summary>
-        /// <typeparam name="TEdge"></typeparam>
         /// <param name="edge"></param>
         /// <param name="edgeShape"></param>
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        public static List<GeoCoordinate> GetCoordinates<TEdge>(this TEdge edge, GeoCoordinateSimple[] edgeShape, GeoCoordinate from, GeoCoordinate to)
-            where TEdge : IGraphEdgeData
+        public static List<GeoCoordinate> GetCoordinates(this LiveEdge edge, GeoCoordinateSimple[] edgeShape, GeoCoordinate from, GeoCoordinate to)
         {
             var coordinates = new List<GeoCoordinate>();
             coordinates.Add(from);

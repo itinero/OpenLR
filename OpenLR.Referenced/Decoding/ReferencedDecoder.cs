@@ -11,28 +11,28 @@ using OsmSharp.Routing.Graph;
 using OsmSharp.Units.Angle;
 using OsmSharp.Units.Distance;
 using System.Collections.Generic;
+using OsmSharp.Routing.Osm.Graphs;
 
 namespace OpenLR.Referenced.Decoding
 {
     /// <summary>
     /// Represents a dynamic graph decoder: Decodes a raw OpenLR location into a location referenced to a dynamic graph.
     /// </summary>
-    public abstract class ReferencedDecoder<TReferencedLocation, TLocation, TEdge> : ReferencedLocationDecoder<TReferencedLocation, TLocation>
-        where TEdge : IGraphEdgeData
+    public abstract class ReferencedDecoder<TReferencedLocation, TLocation> : ReferencedLocationDecoder<TReferencedLocation, TLocation>
         where TReferencedLocation : ReferencedLocation
         where TLocation : ILocation
     {
         /// <summary>
         /// Holds the main decoder.
         /// </summary>
-        private ReferencedDecoderBase<TEdge> _mainDecoder;
+        private ReferencedDecoderBase _mainDecoder;
 
         /// <summary>
         /// Creates a new dynamic graph decoder.
         /// </summary>
         /// <param name="mainDecoder"></param>
         /// <param name="rawDecoder"></param>
-        public ReferencedDecoder(ReferencedDecoderBase<TEdge> mainDecoder, OpenLR.Decoding.LocationDecoder<TLocation> rawDecoder)
+        public ReferencedDecoder(ReferencedDecoderBase mainDecoder, OpenLR.Decoding.LocationDecoder<TLocation> rawDecoder)
             : base(rawDecoder)
         {
             _mainDecoder = mainDecoder;
@@ -62,7 +62,7 @@ namespace OpenLR.Referenced.Decoding
         /// <param name="lrp"></param>
         /// <param name="forward"></param>
         /// <returns></returns>
-        protected SortedSet<CandidateVertexEdge<TEdge>> FindCandidatesFor(LocationReferencePoint lrp, bool forward)
+        protected SortedSet<CandidateVertexEdge> FindCandidatesFor(LocationReferencePoint lrp, bool forward)
         {
             return _mainDecoder.FindCandidatesFor(lrp, forward);
         }
@@ -74,7 +74,7 @@ namespace OpenLR.Referenced.Decoding
         /// <param name="forward"></param>
         /// <param name="maxVertexDistance"></param>
         /// <returns></returns>
-        protected SortedSet<CandidateVertexEdge<TEdge>> FindCandidatesFor(LocationReferencePoint lrp, bool forward, Meter maxVertexDistance)
+        protected SortedSet<CandidateVertexEdge> FindCandidatesFor(LocationReferencePoint lrp, bool forward, Meter maxVertexDistance)
         {
             return _mainDecoder.FindCandidatesFor(lrp, forward, maxVertexDistance);
         }
@@ -93,7 +93,7 @@ namespace OpenLR.Referenced.Decoding
         /// <param name="lrp"></param>
         /// <param name="forward"></param>
         /// <returns></returns>
-        protected SortedSet<CandidateVertexEdge<TEdge>> CreateCandidatesFor(LocationReferencePoint lrp, bool forward)
+        protected SortedSet<CandidateVertexEdge> CreateCandidatesFor(LocationReferencePoint lrp, bool forward)
         {
             return _mainDecoder.CreateCandidatesFor(lrp, forward);
         }
@@ -105,7 +105,7 @@ namespace OpenLR.Referenced.Decoding
         /// <param name="forward"></param>
         /// <param name="maxVertexDistance"></param>
         /// <returns></returns>
-        protected SortedSet<CandidateVertexEdge<TEdge>> CreateCandidatesFor(LocationReferencePoint lrp, bool forward, Meter maxVertexDistance)
+        protected SortedSet<CandidateVertexEdge> CreateCandidatesFor(LocationReferencePoint lrp, bool forward, Meter maxVertexDistance)
         {
             return _mainDecoder.CreateCandidatesFor(lrp, forward, maxVertexDistance);
         }
@@ -119,7 +119,7 @@ namespace OpenLR.Referenced.Decoding
         /// <param name="frc"></param>
         /// <param name="bearing"></param>
         /// <returns></returns>
-        protected IEnumerable<ReferencedDecoderBase<TEdge>.CandidateEdge> FindCandidateEdgesFor(long vertex, bool forward, FormOfWay fow, FunctionalRoadClass frc, Degree bearing)
+        protected IEnumerable<ReferencedDecoderBase.CandidateEdge> FindCandidateEdgesFor(long vertex, bool forward, FormOfWay fow, FunctionalRoadClass frc, Degree bearing)
         {
             return _mainDecoder.FindCandidateEdgesFor(vertex, forward, fow, frc, bearing);
         }
@@ -143,7 +143,7 @@ namespace OpenLR.Referenced.Decoding
         /// <param name="to"></param>
         /// <param name="minimum">The minimum FRC.</param>
         /// <returns></returns>
-        protected CandidateRoute<TEdge> FindCandidateRoute(CandidateVertexEdge<TEdge> from, CandidateVertexEdge<TEdge> to, FunctionalRoadClass minimum)
+        protected CandidateRoute FindCandidateRoute(CandidateVertexEdge from, CandidateVertexEdge to, FunctionalRoadClass minimum)
         {
             return _mainDecoder.FindCandiateRoute(from, to, minimum);
         }
@@ -169,7 +169,7 @@ namespace OpenLR.Referenced.Decoding
         /// <param name="offsetEdgeLength"></param>
         /// <param name="edgeLength"></param>
         /// <returns></returns>
-        protected List<GeoCoordinate> GetCoordinates(ReferencedLine<TEdge> route, double offsetRatio,
+        protected List<GeoCoordinate> GetCoordinates(ReferencedLine route, double offsetRatio,
             out int offsetEdgeIdx, out GeoCoordinate offsetLocation, out Meter offsetLength, out Meter offsetEdgeLength, out Meter edgeLength)
         {
             return _mainDecoder.GetCoordinates(route, offsetRatio, out offsetEdgeIdx, out offsetLocation, out offsetLength, out offsetEdgeLength, out edgeLength);
@@ -180,7 +180,7 @@ namespace OpenLR.Referenced.Decoding
         /// </summary>
         /// <param name="route"></param>
         /// <returns></returns>
-        protected Meter GetDistance(ReferencedLine<TEdge> route)
+        protected Meter GetDistance(ReferencedLine route)
         {
             return _mainDecoder.GetDistance(route);
         }
@@ -205,7 +205,7 @@ namespace OpenLR.Referenced.Decoding
         /// <param name="vertexTo"></param>
         /// <param name="forward">When true the edge is forward relative to the vertices, false the edge is backward.</param>
         /// <returns></returns>
-        protected Degree GetBearing(long vertexFrom, TEdge edge, GeoCoordinateSimple[] edgeShape, long vertexTo, bool forward)
+        protected Degree GetBearing(long vertexFrom, LiveEdge edge, GeoCoordinateSimple[] edgeShape, long vertexTo, bool forward)
         {
             return _mainDecoder.GetBearing(vertexFrom, edge, edgeShape, vertexTo, forward);
         }

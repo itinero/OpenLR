@@ -171,14 +171,14 @@ namespace OpenLR.Referenced.Osm
         /// <param name="to"></param>
         /// <param name="minimum">The minimum FRC.</param>
         /// <returns></returns>
-        public override CandidateRoute<LiveEdge> FindCandiateRoute(CandidateVertexEdge<LiveEdge> from, CandidateVertexEdge<LiveEdge> to, FunctionalRoadClass minimum)
+        public override CandidateRoute FindCandiateRoute(CandidateVertexEdge from, CandidateVertexEdge to, FunctionalRoadClass minimum)
         {
             var path = this.GetRouter().Calculate(this.Graph, new OsmRoutingInterpreter(), Vehicle.Car, from, to, minimum);
 
             // if no route is found, score is 0.
             if (path == null)
             {
-                return new CandidateRoute<LiveEdge>()
+                return new CandidateRoute()
                 {
                     Route = null,
                     Score = Score.New(Score.CANDIDATE_ROUTE, "Candidate route quality.", 0, 1)
@@ -227,9 +227,9 @@ namespace OpenLR.Referenced.Osm
                 edgeShapes[i] = this.Graph.GetEdgeShape(vertices[i], vertices[i + 1]);
             }
 
-            return new CandidateRoute<LiveEdge>()
+            return new CandidateRoute()
             {
-                Route = new ReferencedLine<LiveEdge>(this.Graph)
+                Route = new ReferencedLine(this.Graph)
                 {
                     Edges = edges.ToArray(),
                     EdgeShapes = edgeShapes,

@@ -10,8 +10,7 @@ namespace OpenLR.Referenced.Decoding.Candidates
     /// <summary>
     /// A comparer for vertex edge candidates.
     /// </summary>
-    public class CandidateVertexEdgeComparer<TEdge> : IComparer<CandidateVertexEdge<TEdge>>
-        where TEdge : IGraphEdgeData
+    public class CandidateVertexEdgeComparer : IComparer<CandidateVertexEdge>
     {
         /// <summary>
         /// Compares the two given vertex-edge candidates.
@@ -19,7 +18,7 @@ namespace OpenLR.Referenced.Decoding.Candidates
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <returns></returns>
-        public int Compare(CandidateVertexEdge<TEdge> x, CandidateVertexEdge<TEdge> y)
+        public int Compare(CandidateVertexEdge x, CandidateVertexEdge y)
         {
             var comparison = y.Score.Value.CompareTo(x.Score.Value);
             if(comparison == 0)

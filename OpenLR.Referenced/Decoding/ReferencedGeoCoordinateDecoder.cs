@@ -14,16 +14,14 @@ namespace OpenLR.Referenced.Decoding
     /// <summary>
     /// Represents a referenced geo coordinate location decoder.
     /// </summary>
-    /// <typeparam name="TEdge"></typeparam>
-    public class ReferencedGeoCoordinateDecoder<TEdge> : ReferencedDecoder<ReferencedGeoCoordinate, GeoCoordinateLocation, TEdge>
-        where TEdge : IGraphEdgeData
+    public class ReferencedGeoCoordinateDecoder : ReferencedDecoder<ReferencedGeoCoordinate, GeoCoordinateLocation>
     {
         /// <summary>
         /// Creates a geo coordinate location referenced decoder.
         /// </summary>
         /// <param name="mainDecoder"></param>
         /// <param name="rawDecoder"></param>
-        public ReferencedGeoCoordinateDecoder(ReferencedDecoderBase<TEdge> mainDecoder, OpenLR.Decoding.LocationDecoder<GeoCoordinateLocation> rawDecoder)
+        public ReferencedGeoCoordinateDecoder(ReferencedDecoderBase mainDecoder, OpenLR.Decoding.LocationDecoder<GeoCoordinateLocation> rawDecoder)
             : base(mainDecoder, rawDecoder)
         {
 

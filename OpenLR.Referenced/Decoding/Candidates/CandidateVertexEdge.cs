@@ -1,13 +1,13 @@
 ﻿using OpenLR.Referenced.Scoring;
 using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.Osm.Graphs;
 
 namespace OpenLR.Referenced.Decoding.Candidates
 {
     /// <summary>
     /// Represents a candidate vertex/edge pair and associated score.
     /// </summary>
-    public class CandidateVertexEdge<TEdge>
-        where TEdge : IGraphEdgeData
+    public class CandidateVertexEdge
     {
         /// <summary>
         /// The combined score of vertex and edge.
@@ -22,7 +22,7 @@ namespace OpenLR.Referenced.Decoding.Candidates
         /// <summary>
         /// Gets or sets the candidate edge.
         /// </summary>
-        public TEdge Edge { get; set; }
+        public LiveEdge Edge { get; set; }
 
         /// <summary>
         /// Gets or sets the vertex this edge leads to.
@@ -36,7 +36,7 @@ namespace OpenLR.Referenced.Decoding.Candidates
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            var other = (obj as CandidateVertexEdge<TEdge>);
+            var other = (obj as CandidateVertexEdge);
             return other != null && other.Vertex == this.Vertex && other.TargetVertex == this.TargetVertex && other.Edge.Equals(this.Edge) && other.Score == this.Score;
         }
 

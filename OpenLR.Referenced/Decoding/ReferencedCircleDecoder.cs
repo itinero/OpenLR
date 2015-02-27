@@ -14,16 +14,14 @@ namespace OpenLR.Referenced.Decoding
     /// <summary>
     /// Represents a referenced circle location decoder.
     /// </summary>
-    /// <typeparam name="TEdge"></typeparam>
-    public class ReferencedCircleDecoder<TEdge> : ReferencedDecoder<ReferencedCircle, CircleLocation, TEdge>
-        where TEdge : IGraphEdgeData
+    public class ReferencedCircleDecoder : ReferencedDecoder<ReferencedCircle, CircleLocation>
     {
         /// <summary>
         /// Creates a circle location graph decoder.
         /// </summary>
         /// <param name="mainDecoder"></param>
         /// <param name="rawDecoder"></param>
-        public ReferencedCircleDecoder(ReferencedDecoderBase<TEdge> mainDecoder, OpenLR.Decoding.LocationDecoder<CircleLocation> rawDecoder)
+        public ReferencedCircleDecoder(ReferencedDecoderBase mainDecoder, OpenLR.Decoding.LocationDecoder<CircleLocation> rawDecoder)
             : base(mainDecoder, rawDecoder)
         {
 

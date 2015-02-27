@@ -9,8 +9,7 @@ namespace OpenLR.Referenced.Locations
     /// <summary>
     /// Represents a referenced point along line location with a graph as a reference.
     /// </summary>
-    public class ReferencedPointAlongLine<TEdge> : ReferencedLocation
-        where TEdge : IGraphEdgeData
+    public class ReferencedPointAlongLine : ReferencedLocation
     {
         /// <summary>
         /// Gets or sets the latitude.
@@ -25,7 +24,7 @@ namespace OpenLR.Referenced.Locations
         /// <summary>
         /// Gets or sets the route (vertex->edge->vertex->edge->vertex) associated with this location.
         /// </summary>
-        public ReferencedLine<TEdge> Route { get; set; }
+        public ReferencedLine Route { get; set; }
 
         /// <summary>
         /// Gets or sets the orientation.

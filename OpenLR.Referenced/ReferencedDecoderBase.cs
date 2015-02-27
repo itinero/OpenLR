@@ -18,14 +18,14 @@ using OsmSharp.Units.Distance;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OsmSharp.Routing.Osm.Graphs;
 
 namespace OpenLR.Referenced
 {
     /// <summary>
     /// A referenced decoder implementation.
     /// </summary>
-    public abstract class ReferencedDecoderBase<TEdge> : OpenLR.Referenced.Decoding.ReferencedDecoder
-        where TEdge : IGraphEdgeData
+    public abstract class ReferencedDecoderBase : OpenLR.Referenced.Decoding.ReferencedDecoder
     {
         /// <summary>
         /// Holds the maximum vertex distance.
@@ -35,42 +35,42 @@ namespace OpenLR.Referenced
         /// <summary>
         /// Holds the basic router datasource.
         /// </summary>
-        private readonly BasicRouterDataSource<TEdge> _graph;
+        private readonly BasicRouterDataSource<LiveEdge> _graph;
 
         /// <summary>
         /// Holds the referenced circle decoder.
         /// </summary>
-        private readonly ReferencedCircleDecoder<TEdge> _referencedCircleDecoder;
+        private readonly ReferencedCircleDecoder _referencedCircleDecoder;
 
         /// <summary>
         /// Holds the referenced geo coordinate decoder.
         /// </summary>
-        private readonly ReferencedGeoCoordinateDecoder<TEdge> _referencedGeoCoordinateDecoder;
+        private readonly ReferencedGeoCoordinateDecoder _referencedGeoCoordinateDecoder;
 
         /// <summary>
         /// Holds the referenced grid decoder.
         /// </summary>
-        private readonly ReferencedGridDecoder<TEdge> _referencedGridDecoder;
+        private readonly ReferencedGridDecoder _referencedGridDecoder;
 
         /// <summary>
         /// Holds the referenced line decoder.
         /// </summary>
-        private readonly ReferencedLineDecoder<TEdge> _referencedLineDecoder;
+        private readonly ReferencedLineDecoder _referencedLineDecoder;
 
         /// <summary>
         /// Holds the referenced point along line decoder.
         /// </summary>
-        private readonly ReferencedPointAlongLineDecoder<TEdge> _referencedPointAlongLineDecoder;
+        private readonly ReferencedPointAlongLineDecoder _referencedPointAlongLineDecoder;
 
         /// <summary>
         /// Holds the referenced polygon decoder.
         /// </summary>
-        private readonly ReferencedPolygonDecoder<TEdge> _referencedPolygonDecoder;
+        private readonly ReferencedPolygonDecoder _referencedPolygonDecoder;
 
         /// <summary>
         /// Holds the referenced rectangle decoder.
         /// </summary>
-        private readonly ReferencedRectangleDecoder<TEdge> _referencedRectangleDecoder;
+        private readonly ReferencedRectangleDecoder _referencedRectangleDecoder;
 
         /// <summary>
         /// The vehicle profile to use for decoding.
@@ -84,7 +84,7 @@ namespace OpenLR.Referenced
         /// <param name="vehicle"></param>
         /// <param name="locationDecoder"></param>
         /// <param name="maxVertexDistance"></param>
-        public ReferencedDecoderBase(BasicRouterDataSource<TEdge> graph, Vehicle vehicle, Decoder locationDecoder, Meter maxVertexDistance)
+        public ReferencedDecoderBase(BasicRouterDataSource<LiveEdge> graph, Vehicle vehicle, Decoder locationDecoder, Meter maxVertexDistance)
             :base(locationDecoder)
         {
             _graph = graph;
@@ -106,7 +106,7 @@ namespace OpenLR.Referenced
         /// <param name="graph"></param>
         /// <param name="vehicle"></param>
         /// <param name="locationDecoder"></param>
-        public ReferencedDecoderBase(BasicRouterDataSource<TEdge> graph, Vehicle vehicle, Decoder locationDecoder)
+        public ReferencedDecoderBase(BasicRouterDataSource<LiveEdge> graph, Vehicle vehicle, Decoder locationDecoder)
             :base(locationDecoder)
         {
             _graph = graph;
@@ -133,7 +133,7 @@ namespace OpenLR.Referenced
         /// <summary>
         /// Returns the graph.
         /// </summary>
-        protected BasicRouterDataSource<TEdge> Graph
+        protected BasicRouterDataSource<LiveEdge> Graph
         {
             get
             {
@@ -166,59 +166,59 @@ namespace OpenLR.Referenced
         /// <summary>
         /// Holds the referenced circle decoder.
         /// </summary>
-        protected virtual ReferencedCircleDecoder<TEdge> GetReferencedCircleDecoder()
+        protected virtual ReferencedCircleDecoder GetReferencedCircleDecoder()
         {
-            return new ReferencedCircleDecoder<TEdge>(this, this.LocationDecoder.CreateCircleLocationDecoder());
+            return new ReferencedCircleDecoder(this, this.LocationDecoder.CreateCircleLocationDecoder());
         }
 
         /// <summary>
         /// Holds the referenced geo coordinate decoder.
         /// </summary>
-        protected virtual ReferencedGeoCoordinateDecoder<TEdge> GetReferencedGeoCoordinateDecoder()
+        protected virtual ReferencedGeoCoordinateDecoder GetReferencedGeoCoordinateDecoder()
         {
-            return new ReferencedGeoCoordinateDecoder<TEdge>(this, this.LocationDecoder.CreateGeoCoordinateLocationDecoder());
+            return new ReferencedGeoCoordinateDecoder(this, this.LocationDecoder.CreateGeoCoordinateLocationDecoder());
         }
 
         /// <summary>
         /// Holds the referenced grid decoder.
         /// </summary>
-        protected virtual ReferencedGridDecoder<TEdge> GetReferencedGridDecoder()
+        protected virtual ReferencedGridDecoder GetReferencedGridDecoder()
         {
-            return new ReferencedGridDecoder<TEdge>(this, this.LocationDecoder.CreateGridLocationDecoder());
+            return new ReferencedGridDecoder(this, this.LocationDecoder.CreateGridLocationDecoder());
         }
 
         /// <summary>
         /// Holds the referenced line decoder.
         /// </summary>
-        protected virtual ReferencedLineDecoder<TEdge> GetReferencedLineDecoder()
+        protected virtual ReferencedLineDecoder GetReferencedLineDecoder()
         {
-            return new ReferencedLineDecoder<TEdge>(this, this.LocationDecoder.CreateLineLocationDecoder());
+            return new ReferencedLineDecoder(this, this.LocationDecoder.CreateLineLocationDecoder());
         }
 
         /// <summary>
         /// Holds the referenced point along line decoder.
         /// </summary>
-        protected virtual ReferencedPointAlongLineDecoder<TEdge> GetReferencedPointAlongLineDecoder()
+        protected virtual ReferencedPointAlongLineDecoder GetReferencedPointAlongLineDecoder()
         {
-            return new ReferencedPointAlongLineDecoder<TEdge>(this, this.LocationDecoder.CreatePointAlongLineLocationDecoder());
+            return new ReferencedPointAlongLineDecoder(this, this.LocationDecoder.CreatePointAlongLineLocationDecoder());
         }
 
 
         /// <summary>
         /// Holds the referenced polygon decoder.
         /// </summary>
-        protected virtual ReferencedPolygonDecoder<TEdge> GetReferencedPolygonDecoder()
+        protected virtual ReferencedPolygonDecoder GetReferencedPolygonDecoder()
         {
-            return new ReferencedPolygonDecoder<TEdge>(this, this.LocationDecoder.CreatePolygonLocationDecoder());
+            return new ReferencedPolygonDecoder(this, this.LocationDecoder.CreatePolygonLocationDecoder());
         }
 
 
         /// <summary>
         /// Holds the referenced rectangle decoder.
         /// </summary>
-        protected virtual ReferencedRectangleDecoder<TEdge> GetReferencedRectangleDecoder()
+        protected virtual ReferencedRectangleDecoder GetReferencedRectangleDecoder()
         {
-            return new ReferencedRectangleDecoder<TEdge>(this, this.LocationDecoder.CreateRectangleLocationDecoder());
+            return new ReferencedRectangleDecoder(this, this.LocationDecoder.CreateRectangleLocationDecoder());
         }
 
         /// <summary>
@@ -315,7 +315,7 @@ namespace OpenLR.Referenced
         /// <param name="lrp"></param>
         /// <param name="forward"></param>
         /// <returns></returns>
-        public virtual SortedSet<CandidateVertexEdge<TEdge>> FindCandidatesFor(LocationReferencePoint lrp, bool forward)
+        public virtual SortedSet<CandidateVertexEdge> FindCandidatesFor(LocationReferencePoint lrp, bool forward)
         {
             return this.FindCandidatesFor(lrp, forward, _maxVertexDistance);
         }
@@ -327,16 +327,16 @@ namespace OpenLR.Referenced
         /// <param name="forward"></param>
         /// <param name="maxVertexDistance"></param>
         /// <returns></returns>
-        public virtual SortedSet<CandidateVertexEdge<TEdge>> FindCandidatesFor(LocationReferencePoint lrp, bool forward, Meter maxVertexDistance)
+        public virtual SortedSet<CandidateVertexEdge> FindCandidatesFor(LocationReferencePoint lrp, bool forward, Meter maxVertexDistance)
         {
-            var vertexEdgeCandidates = new SortedSet<CandidateVertexEdge<TEdge>>(new CandidateVertexEdgeComparer<TEdge>());
+            var vertexEdgeCandidates = new SortedSet<CandidateVertexEdge>(new CandidateVertexEdgeComparer());
             var vertexCandidates = this.FindCandidateVerticesFor(lrp, maxVertexDistance);
             foreach (var vertexCandidate in vertexCandidates)
             {
                 var edgeCandidates = this.FindCandidateEdgesFor(vertexCandidate.Vertex, forward, lrp.FormOfWay.Value, lrp.FuntionalRoadClass.Value, (Degree)lrp.Bearing.Value);
                 foreach (var edgeCandidate in edgeCandidates)
                 {
-                    vertexEdgeCandidates.Add(new CandidateVertexEdge<TEdge>()
+                    vertexEdgeCandidates.Add(new CandidateVertexEdge()
                     {
                         Edge = edgeCandidate.Edge,
                         Vertex = vertexCandidate.Vertex,
@@ -362,7 +362,7 @@ namespace OpenLR.Referenced
         /// <param name="lrp"></param>
         /// <param name="forward"></param>
         /// <returns></returns>
-        public virtual SortedSet<CandidateVertexEdge<TEdge>> CreateCandidatesFor(LocationReferencePoint lrp, bool forward)
+        public virtual SortedSet<CandidateVertexEdge> CreateCandidatesFor(LocationReferencePoint lrp, bool forward)
         {
             return this.CreateCandidatesFor(lrp, forward, _maxVertexDistance);
         }
@@ -374,7 +374,7 @@ namespace OpenLR.Referenced
         /// <param name="forward"></param>
         /// <param name="maxVertexDistance"></param>
         /// <returns></returns>
-        public abstract SortedSet<CandidateVertexEdge<TEdge>> CreateCandidatesFor(LocationReferencePoint lrp, bool forward, Meter maxVertexDistance);
+        public abstract SortedSet<CandidateVertexEdge> CreateCandidatesFor(LocationReferencePoint lrp, bool forward, Meter maxVertexDistance);
         
         /// <summary>
         /// Finds candidate vertices for a location reference point.
@@ -523,7 +523,7 @@ namespace OpenLR.Referenced
         /// <param name="to"></param>
         /// <param name="minimum">The minimum FRC.</param>
         /// <returns></returns>
-        public abstract CandidateRoute<TEdge> FindCandiateRoute(CandidateVertexEdge<TEdge> from, CandidateVertexEdge<TEdge> to, FunctionalRoadClass minimum);
+        public abstract CandidateRoute FindCandiateRoute(CandidateVertexEdge from, CandidateVertexEdge to, FunctionalRoadClass minimum);
 
         /// <summary>
         /// Returns the coordinate of the given vertex.
@@ -549,7 +549,7 @@ namespace OpenLR.Referenced
         /// </summary>
         /// <param name="route"></param>
         /// <returns></returns>
-        public virtual List<GeoCoordinate> GetCoordinates(Locations.ReferencedLine<TEdge> route)
+        public virtual List<GeoCoordinate> GetCoordinates(Locations.ReferencedLine route)
         {
             if (route == null) { throw new ArgumentNullException("route"); }
             if (route.Edges == null || route.Edges.Length == 0) { throw new ArgumentOutOfRangeException("route", "Route has no edges."); }
@@ -597,7 +597,7 @@ namespace OpenLR.Referenced
         /// <param name="offsetEdgeLength"></param>
         /// <param name="edgeLength"></param>
         /// <returns></returns>
-        public virtual List<GeoCoordinate> GetCoordinates(Locations.ReferencedLine<TEdge> route, double offsetRatio, 
+        public virtual List<GeoCoordinate> GetCoordinates(Locations.ReferencedLine route, double offsetRatio, 
             out int offsetEdgeIdx, out GeoCoordinate offsetLocation, out Meter offsetLength, out Meter offsetEdgeLength, out Meter edgeLength)
         {
             if (route == null) { throw new ArgumentNullException("route"); }
@@ -675,7 +675,7 @@ namespace OpenLR.Referenced
         /// </summary>
         /// <param name="route"></param>
         /// <returns></returns>
-        public virtual Meter GetDistance(Locations.ReferencedLine<TEdge> route)
+        public virtual Meter GetDistance(Locations.ReferencedLine route)
         {
             var coordinates = new List<GeoCoordinate>();
             coordinates.Add(this.GetCoordinate(route.Vertices[0]).ToGeoCoordinate());
@@ -723,7 +723,7 @@ namespace OpenLR.Referenced
         /// <param name="vertexTo"></param>
         /// <param name="forward">When true the edge is forward relative to the vertices, false the edge is backward.</param>
         /// <returns></returns>
-        public virtual Degree GetBearing(long vertexFrom, TEdge edge, GeoCoordinateSimple[] edgeShape, long vertexTo, bool forward)
+        public virtual Degree GetBearing(long vertexFrom, LiveEdge edge, GeoCoordinateSimple[] edgeShape, long vertexTo, bool forward)
         {
             var coordinates = new List<GeoCoordinate>();
             float latitude, longitude;
@@ -798,7 +798,7 @@ namespace OpenLR.Referenced
             /// <summary>
             /// Gets or sets the vertex.
             /// </summary>
-            public TEdge Edge { get; set; }
+            public LiveEdge Edge { get; set; }
 
             /// <summary>
             /// Gets or sets the target vertex.
