@@ -102,33 +102,33 @@ namespace OpenLR.Referenced.Encoding
         /// Adjusts the given location to use valid points.
         /// </summary>
         /// <param name="referencedLine">The line to check.</param>
-        private void AdjustToValid(ReferencedLine referencedLine)
+        public static void AdjustToValid(ReferencedEncoderBase encoder, ReferencedLine referencedLine)
         {
-            var length = (float)referencedLine.Length(this.MainEncoder).Value;
+            var length = (float)referencedLine.Length(encoder).Value;
             var positiveOffsetLength = (referencedLine.PositiveOffsetPercentage / 100) * length;
             var negativeOffsetLength = (referencedLine.NegativeOffsetPercentage / 100) * length;
             var excludeSet = new HashSet<long>();
-            if (!this.MainEncoder.IsVertexValid(referencedLine.Vertices[0]))
+            if (!encoder.IsVertexValid(referencedLine.Vertices[0]))
             { // from is not valid, try to find a valid point.
-                var pathToValid = this.MainEncoder.FindValidVertexFor(referencedLine.Vertices[0], referencedLine.Edges[0], referencedLine.Vertices[1],
+                var pathToValid = encoder.FindValidVertexFor(referencedLine.Vertices[0], referencedLine.Edges[0], referencedLine.Vertices[1],
                     excludeSet, false);
 
                 // build edges list.
                 if (pathToValid != null)
                 { // no path found, just leave things as is.
-                    var shortestRoute = this.MainEncoder.FindShortestPath(referencedLine.Vertices[1], pathToValid.Vertex, false);
+                    var shortestRoute = encoder.FindShortestPath(referencedLine.Vertices[1], pathToValid.Vertex, false);
                     while (shortestRoute != null && !shortestRoute.Contains(referencedLine.Vertices[0]))
                     { // the vertex that should be on this shortest route, isn't anymore.
                         // exclude the current target vertex, 
                         excludeSet.Add(pathToValid.Vertex);
                         // calulate a new path-to-valid.
-                        pathToValid = this.MainEncoder.FindValidVertexFor(referencedLine.Vertices[0], referencedLine.Edges[0], referencedLine.Vertices[1],
+                        pathToValid = encoder.FindValidVertexFor(referencedLine.Vertices[0], referencedLine.Edges[0], referencedLine.Vertices[1],
                             excludeSet, false);
                         if (pathToValid == null)
                         { // a new path was not found.
                             break;
                         }
-                        shortestRoute = this.MainEncoder.FindShortestPath(referencedLine.Vertices[1], pathToValid.Vertex, false);
+                        shortestRoute = encoder.FindShortestPath(referencedLine.Vertices[1], pathToValid.Vertex, false);
                     }
                     if (pathToValid != null)
                     { // no path found, just leave things as is.
@@ -159,35 +159,35 @@ namespace OpenLR.Referenced.Encoding
                         referencedLine.Vertices = vertexArray;
 
                         // adjust offset length.
-                        var newLength = (float)referencedLine.Length(this.MainEncoder).Value;
+                        var newLength = (float)referencedLine.Length(encoder).Value;
                         positiveOffsetLength = positiveOffsetLength + (newLength - length);
                         length = newLength;
                     }
                 }
             }
             excludeSet.Clear();
-            if (!this.MainEncoder.IsVertexValid(referencedLine.Vertices[referencedLine.Vertices.Length - 1]))
+            if (!encoder.IsVertexValid(referencedLine.Vertices[referencedLine.Vertices.Length - 1]))
             { // from is not valid, try to find a valid point.
                 var vertexCount = referencedLine.Vertices.Length;
-                var pathToValid = this.MainEncoder.FindValidVertexFor(referencedLine.Vertices[vertexCount - 1], referencedLine.Edges[
+                var pathToValid = encoder.FindValidVertexFor(referencedLine.Vertices[vertexCount - 1], referencedLine.Edges[
                     referencedLine.Edges.Length - 1].ToReverse(), referencedLine.Vertices[vertexCount - 2], excludeSet, true);
 
                 // build edges list.
                 if (pathToValid != null)
                 { // no path found, just leave things as is.
-                    var shortestRoute = this.MainEncoder.FindShortestPath(referencedLine.Vertices[vertexCount - 2], pathToValid.Vertex, true);
+                    var shortestRoute = encoder.FindShortestPath(referencedLine.Vertices[vertexCount - 2], pathToValid.Vertex, true);
                     while (shortestRoute != null && !shortestRoute.Contains(referencedLine.Vertices[vertexCount - 1]))
                     { // the vertex that should be on this shortest route, isn't anymore.
                         // exclude the current target vertex, 
                         excludeSet.Add(pathToValid.Vertex);
                         // calulate a new path-to-valid.
-                        pathToValid = this.MainEncoder.FindValidVertexFor(referencedLine.Vertices[vertexCount - 1], referencedLine.Edges[
+                        pathToValid = encoder.FindValidVertexFor(referencedLine.Vertices[vertexCount - 1], referencedLine.Edges[
                             referencedLine.Edges.Length - 1].ToReverse(), referencedLine.Vertices[vertexCount - 2], excludeSet, true);
                         if (pathToValid == null)
                         { // a new path was not found.
                             break;
                         }
-                        shortestRoute = this.MainEncoder.FindShortestPath(referencedLine.Vertices[vertexCount - 2], pathToValid.Vertex, true);
+                        shortestRoute = encoder.FindShortestPath(referencedLine.Vertices[vertexCount - 2], pathToValid.Vertex, true);
                     }
                     if (pathToValid != null)
                     { // no path found, just leave things as is.
@@ -211,7 +211,7 @@ namespace OpenLR.Referenced.Encoding
                         referencedLine.Vertices = vertexArray;
 
                         // adjust offset length.
-                        var newLength = (float)referencedLine.Length(this.MainEncoder).Value;
+                        var newLength = (float)referencedLine.Length(encoder).Value;
                         negativeOffsetLength = negativeOffsetLength + (newLength - length);
                         length = newLength;
                     }
@@ -226,7 +226,7 @@ namespace OpenLR.Referenced.Encoding
             referencedLine.EdgeShapes = new GeoCoordinateSimple[referencedLine.Edges.Length][];
             for (int i = 0; i < referencedLine.Edges.Length; i++)
             {
-                referencedLine.EdgeShapes[i] = this.MainEncoder.Graph.GetEdgeShape(
+                referencedLine.EdgeShapes[i] = encoder.Graph.GetEdgeShape(
                     referencedLine.Vertices[i], referencedLine.Vertices[i + 1]);
             }
         }
@@ -249,7 +249,7 @@ namespace OpenLR.Referenced.Encoding
                 if (this.ValidateForBinary) { this.ValidateBinary(referencedLocation); }
 
                 // Step – 2 Adjust start and end node of the location to represent valid map nodes.
-                this.AdjustToValid(referencedLocation);
+                ReferencedLineEncoder.AdjustToValid(this.MainEncoder, referencedLocation);
 
                 var coordinates = referencedLocation.GetCoordinates(this.MainEncoder);
                 var length = coordinates.Length();

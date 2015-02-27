@@ -42,7 +42,7 @@ namespace OpenLR.Tests.Referenced.Osm
             graphDataSource.AddEdge(vertex2, vertex1, new LiveEdge()
             {
                 Distance = 10,
-                Forward = true,
+                Forward = false,
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
             }, null);
 
@@ -228,7 +228,11 @@ namespace OpenLR.Tests.Referenced.Osm
             var graph = new BasicRouterDataSource<LiveEdge>(graphDataSource);
 
             var mainEncoder = new ReferencedOsmEncoder(graph, null);
-            var referencedLocation = mainEncoder.BuildLineLocation(new long[] { vertex1, vertex2 }, new LiveEdge[] { edge }, 0, 0);
+            var referencedLocation = mainEncoder.BuildLineLocation(new long[] { vertex1, vertex2 }, 
+                new LiveEdge[] { edge }, 0, 0);
+
+            // adjust the location to use valid points.
+            ReferencedLineEncoder.AdjustToValid(mainEncoder, referencedLocation);
 
             Assert.IsNotNull(referencedLocation);
             Assert.IsNotNull(referencedLocation.Vertices);
@@ -290,7 +294,11 @@ namespace OpenLR.Tests.Referenced.Osm
             var graph = new BasicRouterDataSource<LiveEdge>(graphDataSource);
 
             var mainEncoder = new ReferencedOsmEncoder(graph, null);
-            var referencedLocation = mainEncoder.BuildLineLocation(new long[] { vertex3, vertex1 }, new LiveEdge[] { edge.ToReverse() }, 0, 0);
+            var referencedLocation = mainEncoder.BuildLineLocation(new long[] { vertex3, vertex1 },
+                new LiveEdge[] { edge.ToReverse() }, 0, 0);
+
+            // adjust the location to use valid points.
+            ReferencedLineEncoder.AdjustToValid(mainEncoder, referencedLocation);
 
             Assert.IsNotNull(referencedLocation);
             Assert.IsNotNull(referencedLocation.Vertices);
@@ -352,7 +360,11 @@ namespace OpenLR.Tests.Referenced.Osm
             var graph = new BasicRouterDataSource<LiveEdge>(graphDataSource);
 
             var mainEncoder = new ReferencedOsmEncoder(graph, null);
-            var referencedLocation = mainEncoder.BuildLineLocation(new long[] { vertex1, vertex2 }, new LiveEdge[] { edge }, 20, 0);
+            var referencedLocation = mainEncoder.BuildLineLocation(new long[] { vertex1, vertex2 }, 
+                new LiveEdge[] { edge }, 20, 0);
+
+            // adjust the location to use valid points.
+            ReferencedLineEncoder.AdjustToValid(mainEncoder, referencedLocation);
 
             Assert.IsNotNull(referencedLocation);
             Assert.IsNotNull(referencedLocation.Vertices);
@@ -415,6 +427,9 @@ namespace OpenLR.Tests.Referenced.Osm
 
             var mainEncoder = new ReferencedOsmEncoder(graph, null);
             var referencedLocation = mainEncoder.BuildLineLocation(new long[] { vertex3, vertex1 }, new LiveEdge[] { edge.ToReverse() }, 0, 20);
+
+            // adjust the location to use valid points.
+            ReferencedLineEncoder.AdjustToValid(mainEncoder, referencedLocation);
 
             Assert.IsNotNull(referencedLocation);
             Assert.IsNotNull(referencedLocation.Vertices);
@@ -646,6 +661,9 @@ namespace OpenLR.Tests.Referenced.Osm
                 new GeoCoordinate(51.05849821468899f, 3.7240000000000000f),
                 new GeoCoordinate(51.05849821468899f, 3.7254400000000000f));
 
+            // adjust the location to use valid points.
+            ReferencedLineEncoder.AdjustToValid(mainEncoder, referencedLocation);
+
             Assert.IsNotNull(referencedLocation);
             Assert.IsNotNull(referencedLocation.Vertices);
             Assert.IsNotNull(referencedLocation.Edges);
@@ -694,10 +712,14 @@ namespace OpenLR.Tests.Referenced.Osm
             // create a referenced location and encode it.
             var graph = new BasicRouterDataSource<LiveEdge>(graphDataSource);
 
+            // build location.
             var mainEncoder = new ReferencedOsmEncoder(graph, null);
             var referencedLocation = mainEncoder.BuildLineLocation(
                 new GeoCoordinate(51.05849821468899f, 3.7225627899169926f),
                 new GeoCoordinate(51.05849821468899f, 3.7240000000000000f));
+
+            // adjust the location to use valid points.
+            ReferencedLineEncoder.AdjustToValid(mainEncoder, referencedLocation);
 
             Assert.IsNotNull(referencedLocation);
             Assert.IsNotNull(referencedLocation.Vertices);
@@ -751,6 +773,9 @@ namespace OpenLR.Tests.Referenced.Osm
                 new GeoCoordinate(51.05849821468899f, 3.7240000000000000f),
                 new GeoCoordinate(51.05849821468899f, 3.7254400000000000f));
 
+            // adjust the location to use valid points.
+            ReferencedLineEncoder.AdjustToValid(mainEncoder, referencedLocation);
+
             // WARNING: direction here is actually unpredictable, it's either edge 1->2 that is found in the initial search or 2->1.
             Assert.IsNotNull(referencedLocation);
             Assert.IsNotNull(referencedLocation.Vertices);
@@ -799,6 +824,9 @@ namespace OpenLR.Tests.Referenced.Osm
             var referencedLocation = mainEncoder.BuildLineLocation(
                 new GeoCoordinate(51.05849821468899f, 3.7225627899169926f),
                 new GeoCoordinate(51.05849821468899f, 3.7240000000000000f));
+
+            // adjust the location to use valid points.
+            ReferencedLineEncoder.AdjustToValid(mainEncoder, referencedLocation);
 
             Assert.IsNotNull(referencedLocation);
             Assert.IsNotNull(referencedLocation.Vertices);
@@ -850,6 +878,9 @@ namespace OpenLR.Tests.Referenced.Osm
             var referencedLocation = mainEncoder.BuildLineLocation(
                 new GeoCoordinate(51.05849821468899f, 3.7240000000000000f),
                 new GeoCoordinate(51.05849821468899f, 3.7254400000000000f));
+
+            // adjust the location to use valid points.
+            ReferencedLineEncoder.AdjustToValid(mainEncoder, referencedLocation);
 
             Assert.IsNotNull(referencedLocation);
             Assert.IsNotNull(referencedLocation.Vertices);
@@ -907,6 +938,9 @@ namespace OpenLR.Tests.Referenced.Osm
 
             var mainEncoder = new ReferencedOsmEncoder(graph, null);
             var referencedLocation = mainEncoder.BuildLineLocation(x, y);
+
+            // adjust the location to use valid points.
+            ReferencedLineEncoder.AdjustToValid(mainEncoder, referencedLocation);
 
             Assert.IsNotNull(referencedLocation);
             Assert.IsNotNull(referencedLocation.Vertices);

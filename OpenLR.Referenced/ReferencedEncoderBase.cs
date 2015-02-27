@@ -884,11 +884,11 @@ namespace OpenLR.Referenced
                 Edges = edges.Clone() as LiveEdge[],
                 Vertices = vertices.Clone() as long[]
             };
-            var length = (float)referencedLine.Length(encoder).Value;
-            var positiveOffsetLength = length * (positivePercentageOffset / 100.0f);
-            var negativeOffsetLength = length * (negativePercentageOffset / 100.0f);
-            referencedLine.NegativeOffsetPercentage = negativeOffsetLength;
-            referencedLine.PositiveOffsetPercentage = positiveOffsetLength;
+            //var length = (float)referencedLine.Length(encoder).Value;
+            //var positiveOffsetLength = length * (positivePercentageOffset / 100.0f);
+            //var negativeOffsetLength = length * (negativePercentageOffset / 100.0f);
+            referencedLine.NegativeOffsetPercentage = negativePercentageOffset;
+            referencedLine.PositiveOffsetPercentage = positivePercentageOffset;
 
             // fill shapes.
             referencedLine.EdgeShapes = new GeoCoordinateSimple[referencedLine.Edges.Length][];
