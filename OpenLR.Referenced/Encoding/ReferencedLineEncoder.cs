@@ -99,10 +99,11 @@ namespace OpenLR.Referenced.Encoding
         }
 
         /// <summary>
-        /// Adjusts the given location to use valid points.
+        /// Adjusts the given location to use valid LR-points.
         /// </summary>
+        /// <param name="encoder">The encoder.</param>
         /// <param name="referencedLine">The line to check.</param>
-        public static void AdjustToValid(ReferencedEncoderBase encoder, ReferencedLine referencedLine)
+        public static void AdjustToValidPoints(ReferencedEncoderBase encoder, ReferencedLine referencedLine)
         {
             var length = (float)referencedLine.Length(encoder).Value;
             var positiveOffsetLength = (referencedLine.PositiveOffsetPercentage / 100) * length;
@@ -232,6 +233,45 @@ namespace OpenLR.Referenced.Encoding
         }
 
         /// <summary>
+        /// Adjusts the given location by inserting intermediate LR-points if needed.
+        /// </summary>
+        /// <param name="encoder">The encoder.</param>
+        /// <param name="referencedLine">The line to check.</param>
+        /// <param name="points">The indexes of the LR-points.</param>
+        /// 
+        public static void AdjustToValidDistances(ReferencedEncoderBase encoder, ReferencedLine referencedLine, List<int> points)
+        {
+            ReferencedLineEncoder.AdjustToValidDistance(encoder, referencedLine, points, points[0], points[points.Count - 1]);
+        }
+
+        /// <summary>
+        /// Adjusts the given location by inserting an intermediate LR-point at the point representing pointIdx.
+        /// </summary>
+        /// <param name="encoder">The encoder.</param>
+        /// <param name="referencedLine">The line to check.</param>
+        /// <param name="points">The indexes of the LR-points.</param>
+        /// <param name="start">The starting vertex.</param>
+        /// <param name="count">The number of vertices in this range.</param>
+        public static void AdjustToValidDistance(ReferencedEncoderBase encoder, ReferencedLine referencedLine, List<int> points, int start, int count)
+        {
+            if (count == 0) { return; }
+
+            // calculate length to begin with.
+            var coordinates = referencedLine.GetCoordinates(encoder, start, count);
+            var length = coordinates.Length().Value;
+            if (length > 15000)
+            { // too long.
+                // find the best intermediate point.
+                int bestPoint = 0;
+                throw new NotImplementedException();
+
+                //// test the two distances.
+                //ReferencedLineEncoder.AdjustToValidDistance(encoder, referencedLine, points, start, bestPoint - start);
+                //ReferencedLineEncoder.AdjustToValidDistance(encoder, referencedLine, points, bestPoint, count - (bestPoint - start));
+            }
+        }
+
+        /// <summary>
         /// Encodes a line location.
         /// </summary>
         /// <param name="referencedLocation"></param>
@@ -249,7 +289,29 @@ namespace OpenLR.Referenced.Encoding
                 if (this.ValidateForBinary) { this.ValidateBinary(referencedLocation); }
 
                 // Step – 2 Adjust start and end node of the location to represent valid map nodes.
-                ReferencedLineEncoder.AdjustToValid(this.MainEncoder, referencedLocation);
+                ReferencedLineEncoder.AdjustToValidPoints(this.MainEncoder, referencedLocation);
+                // keep a list of LR-point.
+                var points = new List<int>(new int[] { 0, referencedLocation.Vertices.Length -1});
+
+                // Step – 3     Determine coverage of the location by a shortest-path.
+                // Step – 4     Check whether the calculated shortest-path covers the location completely. 
+                //              Go to step 5 if the location is not covered completely, go to step 7 if the location is covered.
+                // Step – 5     Determine the position of a new intermediate location reference point so that the part of the 
+                //              location between the start of the shortest-path calculation and the new intermediate is covered 
+                //              completely by a shortest-path.
+                // Step – 6     Go to step 3 and restart shortest path calculation between the new intermediate location reference 
+                //              point and the end of the location.
+                // Step – 7     Concatenate the calculated shortest-paths for a complete coverage of the location and form an 
+                //              ordered list of location reference points (from the start to the end of the location).
+
+                // Step – 8     Check validity of the location reference path. If the location reference path is invalid then go 
+                //              to step 9, if the location reference path is valid then go to step 10.
+                // Step – 9     Add a sufficient number of additional intermediate location reference points if the distance 
+                //              between two location reference points exceeds the maximum distance. Remove the start/end LR-point 
+                //              if the positive/negative offset value exceeds the length of the corresponding path.
+                ReferencedLineEncoder.AdjustToValidDistances(this.MainEncoder, referencedLocation, points);
+
+                // Step – 10    Create physical representation of the location reference.
 
                 var coordinates = referencedLocation.GetCoordinates(this.MainEncoder);
                 var length = coordinates.Length();

@@ -305,22 +305,34 @@ namespace OpenLR.Referenced
         /// <summary>
         /// Converts the referenced line location to features.
         /// </summary>
-        /// <param name="referencedPointALongLineLocation"></param>
-        /// <param name="baseEncoder"></param>
+        /// <param name="referencedLine">The referenced line.</param>
+        /// <param name="encoder">The encoder.</param>
         /// <returns></returns>
-        public static List<GeoCoordinate> GetCoordinates(this ReferencedLine referencedPointALongLineLocation, ReferencedEncoderBase baseEncoder)
+        public static List<GeoCoordinate> GetCoordinates(this ReferencedLine referencedLine, ReferencedEncoderBase encoder)
+        {
+            return referencedLine.GetCoordinates(encoder, 0, referencedLine.Vertices.Length);
+        }
+
+        /// <summary>
+        /// Converts the referenced line location to features.
+        /// </summary>
+        /// <param name="referencedLine">The referenced line.</param>
+        /// <param name="encoder">The encoder.</param>
+        /// <param name="start">The start vertex.</param>
+        /// <param name="count">The vertices to return coordinates for.</param>
+        /// <returns></returns>
+        public static List<GeoCoordinate> GetCoordinates(this ReferencedLine referencedLine, ReferencedEncoderBase encoder, int start, int count)
         {
             var coordinates = new List<GeoCoordinate>();
-            for (int idx = 0; idx < referencedPointALongLineLocation.Edges.Length; idx++)
+            for (int idx = start; idx < start + count; idx++)
             {
-                var from = baseEncoder.GetVertexLocation(referencedPointALongLineLocation.Vertices[idx]).ToGeoCoordinate();
-                var to = baseEncoder.GetVertexLocation(referencedPointALongLineLocation.Vertices[idx + 1]).ToGeoCoordinate();
-                var edgeCoordinates = referencedPointALongLineLocation.Edges[idx].GetCoordinates(
-                    referencedPointALongLineLocation.EdgeShapes[idx], from, to);
+                var fromLocation = encoder.GetVertexLocation(referencedLine.Vertices[idx]).ToGeoCoordinate();
+                var toLocation = encoder.GetVertexLocation(referencedLine.Vertices[idx + 1]).ToGeoCoordinate();
+                var edgeCoordinates = referencedLine.Edges[idx].GetCoordinates(
+                    referencedLine.EdgeShapes[idx], fromLocation, toLocation);
                 if (coordinates.Count > 0)
                 {
                     coordinates.RemoveAt(coordinates.Count - 1);
-
                 }
                 coordinates.AddRange(edgeCoordinates);
             }

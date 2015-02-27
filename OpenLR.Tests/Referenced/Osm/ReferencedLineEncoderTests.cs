@@ -232,7 +232,7 @@ namespace OpenLR.Tests.Referenced.Osm
                 new LiveEdge[] { edge }, 0, 0);
 
             // adjust the location to use valid points.
-            ReferencedLineEncoder.AdjustToValid(mainEncoder, referencedLocation);
+            ReferencedLineEncoder.AdjustToValidPoints(mainEncoder, referencedLocation);
 
             Assert.IsNotNull(referencedLocation);
             Assert.IsNotNull(referencedLocation.Vertices);
@@ -298,7 +298,7 @@ namespace OpenLR.Tests.Referenced.Osm
                 new LiveEdge[] { edge.ToReverse() }, 0, 0);
 
             // adjust the location to use valid points.
-            ReferencedLineEncoder.AdjustToValid(mainEncoder, referencedLocation);
+            ReferencedLineEncoder.AdjustToValidPoints(mainEncoder, referencedLocation);
 
             Assert.IsNotNull(referencedLocation);
             Assert.IsNotNull(referencedLocation.Vertices);
@@ -364,7 +364,7 @@ namespace OpenLR.Tests.Referenced.Osm
                 new LiveEdge[] { edge }, 20, 0);
 
             // adjust the location to use valid points.
-            ReferencedLineEncoder.AdjustToValid(mainEncoder, referencedLocation);
+            ReferencedLineEncoder.AdjustToValidPoints(mainEncoder, referencedLocation);
 
             Assert.IsNotNull(referencedLocation);
             Assert.IsNotNull(referencedLocation.Vertices);
@@ -429,7 +429,7 @@ namespace OpenLR.Tests.Referenced.Osm
             var referencedLocation = mainEncoder.BuildLineLocation(new long[] { vertex3, vertex1 }, new LiveEdge[] { edge.ToReverse() }, 0, 20);
 
             // adjust the location to use valid points.
-            ReferencedLineEncoder.AdjustToValid(mainEncoder, referencedLocation);
+            ReferencedLineEncoder.AdjustToValidPoints(mainEncoder, referencedLocation);
 
             Assert.IsNotNull(referencedLocation);
             Assert.IsNotNull(referencedLocation.Vertices);
@@ -662,7 +662,7 @@ namespace OpenLR.Tests.Referenced.Osm
                 new GeoCoordinate(51.05849821468899f, 3.7254400000000000f));
 
             // adjust the location to use valid points.
-            ReferencedLineEncoder.AdjustToValid(mainEncoder, referencedLocation);
+            ReferencedLineEncoder.AdjustToValidPoints(mainEncoder, referencedLocation);
 
             Assert.IsNotNull(referencedLocation);
             Assert.IsNotNull(referencedLocation.Vertices);
@@ -719,7 +719,7 @@ namespace OpenLR.Tests.Referenced.Osm
                 new GeoCoordinate(51.05849821468899f, 3.7240000000000000f));
 
             // adjust the location to use valid points.
-            ReferencedLineEncoder.AdjustToValid(mainEncoder, referencedLocation);
+            ReferencedLineEncoder.AdjustToValidPoints(mainEncoder, referencedLocation);
 
             Assert.IsNotNull(referencedLocation);
             Assert.IsNotNull(referencedLocation.Vertices);
@@ -774,7 +774,7 @@ namespace OpenLR.Tests.Referenced.Osm
                 new GeoCoordinate(51.05849821468899f, 3.7254400000000000f));
 
             // adjust the location to use valid points.
-            ReferencedLineEncoder.AdjustToValid(mainEncoder, referencedLocation);
+            ReferencedLineEncoder.AdjustToValidPoints(mainEncoder, referencedLocation);
 
             // WARNING: direction here is actually unpredictable, it's either edge 1->2 that is found in the initial search or 2->1.
             Assert.IsNotNull(referencedLocation);
@@ -826,7 +826,7 @@ namespace OpenLR.Tests.Referenced.Osm
                 new GeoCoordinate(51.05849821468899f, 3.7240000000000000f));
 
             // adjust the location to use valid points.
-            ReferencedLineEncoder.AdjustToValid(mainEncoder, referencedLocation);
+            ReferencedLineEncoder.AdjustToValidPoints(mainEncoder, referencedLocation);
 
             Assert.IsNotNull(referencedLocation);
             Assert.IsNotNull(referencedLocation.Vertices);
@@ -880,7 +880,7 @@ namespace OpenLR.Tests.Referenced.Osm
                 new GeoCoordinate(51.05849821468899f, 3.7254400000000000f));
 
             // adjust the location to use valid points.
-            ReferencedLineEncoder.AdjustToValid(mainEncoder, referencedLocation);
+            ReferencedLineEncoder.AdjustToValidPoints(mainEncoder, referencedLocation);
 
             Assert.IsNotNull(referencedLocation);
             Assert.IsNotNull(referencedLocation.Vertices);
@@ -940,7 +940,7 @@ namespace OpenLR.Tests.Referenced.Osm
             var referencedLocation = mainEncoder.BuildLineLocation(x, y);
 
             // adjust the location to use valid points.
-            ReferencedLineEncoder.AdjustToValid(mainEncoder, referencedLocation);
+            ReferencedLineEncoder.AdjustToValidPoints(mainEncoder, referencedLocation);
 
             Assert.IsNotNull(referencedLocation);
             Assert.IsNotNull(referencedLocation.Vertices);
