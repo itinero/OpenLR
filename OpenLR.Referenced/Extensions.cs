@@ -324,7 +324,7 @@ namespace OpenLR.Referenced
         public static List<GeoCoordinate> GetCoordinates(this ReferencedLine referencedLine, ReferencedEncoderBase encoder, int start, int count)
         {
             var coordinates = new List<GeoCoordinate>();
-            for (int idx = start; idx < start + count; idx++)
+            for (int idx = start; idx < start + count - 1; idx++)
             {
                 var fromLocation = encoder.GetVertexLocation(referencedLine.Vertices[idx]).ToGeoCoordinate();
                 var toLocation = encoder.GetVertexLocation(referencedLine.Vertices[idx + 1]).ToGeoCoordinate();
@@ -658,16 +658,29 @@ namespace OpenLR.Referenced
         /// <summary>
         /// Calculates the real length in meters.
         /// </summary>
-        /// <param name="coordinates"></param>
+        /// <param name="coordinates">The coordinates.</param>
         /// <returns></returns>
         public static Meter Length(this List<GeoCoordinate> coordinates)
         {
-            Meter length = 0;
-            for (int idx = 0; idx < coordinates.Count - 1; idx++)
+            return Extensions.Length(coordinates, 0, coordinates.Count);
+        }
+
+        /// <summary>
+        /// Calculates the real length in meters.
+        /// </summary>
+        /// <param name="coordinates">The coordinates.</param>
+        /// <param name="start">The start index.</param>
+        /// <param name="count">The length.</param>
+        /// <returns></returns>
+        public static Meter Length(this List<GeoCoordinate> coordinates, int start, int count)
+        {
+            var meter = 0.0;
+            for (int idx = start; idx < start + count - 1; idx++)
             {
-                length = length + coordinates[idx].DistanceReal(coordinates[idx + 1]);
+                meter = meter + GeoCoordinate.DistanceEstimateInMeter(
+                    coordinates[idx], coordinates[idx + 1]);
             }
-            return length;
+            return meter;
         }
 
         /// <summary>
