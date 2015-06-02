@@ -384,7 +384,8 @@ namespace OpenLR.Referenced.Encoding
             }
             catch (Exception ex)
             { // unhandled exception!
-                throw new ReferencedEncodingException(referencedLocation, "Unhandled exception during ReferencedLineEncoder", ex);
+                throw new ReferencedEncodingException(referencedLocation, 
+                    string.Format("Unhandled exception during ReferencedLineEncoder: {0}", ex.ToString()), ex);
             }
         }
 
