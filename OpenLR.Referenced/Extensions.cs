@@ -585,6 +585,81 @@ namespace OpenLR.Referenced
         }
 
         /// <summary>
+        /// Returns the vertex that is closest to the given location.
+        /// </summary>
+        public static Tuple<long, double> GetClosestVertex(this BasicRouterDataSource<LiveEdge> graph, GeoCoordinate location)
+        {
+            return graph.GetClosestVertex(location, double.MaxValue);
+        }
+
+        /// <summary>
+        /// Returns the vertex that is closest to the given location.
+        /// </summary>
+        public static Tuple<long, double> GetClosestVertex(this BasicRouterDataSource<LiveEdge> graph, GeoCoordinate location, 
+            Meter maxDistance)
+        {
+            var boxSizeStart = 0.0001;
+            var boxSizeMax = 0.2;
+            var result = graph.GetClosestVertex(location, maxDistance, boxSizeStart);
+            while (result == null && boxSizeStart <= boxSizeMax)
+            {
+                boxSizeStart = boxSizeStart * 2;
+                result = graph.GetClosestVertex(location, maxDistance, boxSizeStart);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Returns the vertex that is closest to the given location.
+        /// </summary>
+        public static Tuple<long, double> GetClosestVertex(this BasicRouterDataSource<LiveEdge> graph, GeoCoordinate location, 
+            Meter maxDistance, double boxSize)
+        {
+            Tuple<long, double> bestVertex = null;
+
+            var searchBox = new GeoCoordinateBox(
+                new GeoCoordinate(location.Latitude - boxSize, location.Longitude - boxSize),
+                new GeoCoordinate(location.Latitude + boxSize, location.Longitude + boxSize));
+
+            var maxDistanceBox = searchBox;
+            if (maxDistance.Value < double.MaxValue)
+            {
+                maxDistanceBox = new GeoCoordinateBox(
+                    location.OffsetWithDirection(maxDistance, OsmSharp.Math.Geo.Meta.DirectionEnum.East).OffsetWithDirection(maxDistance, OsmSharp.Math.Geo.Meta.DirectionEnum.South),
+                    location.OffsetWithDirection(maxDistance, OsmSharp.Math.Geo.Meta.DirectionEnum.West).OffsetWithDirection(maxDistance, OsmSharp.Math.Geo.Meta.DirectionEnum.North));
+            }
+            var arcs = graph.GetEdges(searchBox);
+
+            float latitude, longitude;
+            var bestDistance = maxDistance.Value;
+            foreach (var arc in arcs)
+            {
+                graph.GetVertex(arc.Item1, out latitude, out longitude);
+                var vertexLocation = new GeoCoordinate(latitude, longitude);
+                var distance = vertexLocation.DistanceEstimate(location).Value;
+                if (distance < maxDistance.Value)
+                { // distance within tolerance.
+                    if(bestVertex == null || distance < bestVertex.Item2)
+                    { // better vertex.
+                        bestVertex = new Tuple<long, double>(arc.Item1, distance);
+                    }
+                }
+                graph.GetVertex(arc.Item2, out latitude, out longitude);
+                vertexLocation = new GeoCoordinate(latitude, longitude);
+                distance = vertexLocation.DistanceEstimate(location).Value;
+                if (distance < maxDistance.Value)
+                { // distance within tolerance.
+                    if (bestVertex == null || distance < bestVertex.Item2)
+                    { // better vertex.
+                        bestVertex = new Tuple<long, double>(arc.Item2, distance);
+                    }
+                }
+            }
+            return bestVertex;
+        }
+
+
+        /// <summary>
         /// Returns an array containing all coordinates in the given collection.
         /// </summary>
         /// <param name="collection"></param>

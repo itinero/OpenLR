@@ -210,7 +210,7 @@ namespace OpenLR.Referenced
         /// <remarks>This should only be used when sure the start and endlocation or very close to the network use for encoding.</remarks>
         public static ReferencedLine BuildLineLocation(this ReferencedEncoderBase encoder, GeoCoordinate startLocation, GeoCoordinate endLocation)
         {
-            return encoder.BuildLineLocation(startLocation, endLocation, 0.1);
+            return encoder.BuildLineLocation(startLocation, endLocation, 1);
         }
 
         /// <summary>
@@ -460,7 +460,7 @@ namespace OpenLR.Referenced
         }
 
         /// <summary>
-        /// Builds a line location along the shortest path between start and end location.
+        /// Builds a line location along the shortest path between start and end location while the start and end location are the exact location of vertices from the netwerk being encoded on.
         /// </summary>
         /// <param name="encoder">The encoder.</param>
         /// <param name="startLocation">The start location.</param>
@@ -469,75 +469,47 @@ namespace OpenLR.Referenced
         /// <param name="endOffsetPercentage">The offset of the end location.</param>
         /// <param name="tolerance">The tolerance value, the minimum distance between a given start or endlocation and the network used for encoding.</param>
         /// <returns></returns>
-        public static ReferencedLine BuildLineLocation(this ReferencedEncoderBase encoder, GeoCoordinate startLocation, float startOffsetPercentage,
+        public static ReferencedLine BuildLineLocationVertexExact(this ReferencedEncoderBase encoder, GeoCoordinate startLocation, float startOffsetPercentage,
             GeoCoordinate endLocation, float endOffsetPercentage, Meter tolerance)
         {
-            PointF2D bestProjected;
-            LinePointPosition bestPosition;
-            Meter bestStartOffset;
-            Meter bestEndOffset;
-            double epsilon = 0.1;
+            var epsilon = tolerance.Value;
 
             if (startLocation == null) { throw new ArgumentNullException("startLocation"); }
             if (endLocation == null) { throw new ArgumentNullException("endLocation"); }
 
             // search start and end location hooks.
-            var startEdge = encoder.Graph.GetClosestEdge(startLocation, tolerance);
-            if (startEdge == null)
-            { // no closest edge found within tolerance, encoding has failed!
+            var startVertex = encoder.Graph.GetClosestVertex(startLocation);
+            if (startVertex == null)
+            { // no closest vertex found within tolerance, encoding has failed!
                 throw new BuildLocationFailedException("Location {0} is too far from the network used for encoding with used tolerance {1}",
                     startLocation, tolerance);
             }
-            // project the startlocation on the edge.
-            var coordinates = encoder.Graph.GetCoordinates(startEdge);
-            var startEdgeLength = coordinates.Length();
-            if (!coordinates.ProjectOn(startLocation, out bestProjected, out bestPosition, out bestStartOffset))
-            { // projection failed,.
-                throw new BuildLocationFailedException("Projection of location {0} on the closest edge failed.",
-                    startLocation);
-            }
-            // construct from pathsegments.
+            // begin path with initial vertex.
             var startPaths = new List<PathSegment>();
-            if (bestStartOffset.Value < epsilon)
-            { // use the first vertex as start location.
-                startPaths.Add(new PathSegment(startEdge.Item1));
-            }
-            else if ((startEdgeLength.Value - bestStartOffset.Value) < epsilon)
-            { // use the last vertex as end start location.
-                startPaths.Add(new PathSegment(startEdge.Item2));
+            if (startVertex.Item2 < epsilon)
+            { // use the vertex as start location.
+                startPaths.Add(new PathSegment(startVertex.Item1));
             }
             else
-            { // point is somewhere in between, this is not acceptable here!
-                throw new Exception(string.Format("Start location is not a vertex in the network with an offset of {0}m", epsilon));
+            { // vertex is too far away, something is wrong.
+                throw new Exception(string.Format("Start location is not a vertex in the network within an offset of {0}m", epsilon));
             }
 
-            var endEdge = encoder.Graph.GetClosestEdge(endLocation, tolerance);
-            if (endEdge == null)
+            var endVertex = encoder.Graph.GetClosestVertex(endLocation);
+            if (endVertex == null)
             { // no closest edge found within tolerance, encoding has failed!
                 throw new BuildLocationFailedException("Location {0} is too far from the network used for encoding with used tolerance {1}",
                     endLocation, tolerance);
             }
-            // project the endlocation on the edge.
-            coordinates = encoder.Graph.GetCoordinates(endEdge);
-            var endEdgeLength = coordinates.Length();
-            if (!coordinates.ProjectOn(endLocation, out bestProjected, out bestPosition, out bestEndOffset))
-            { // projection failed.
-                throw new BuildLocationFailedException("Projection of location {0} on the closest edge failed.",
-                    endLocation);
-            }
             // construct from pathsegments.
             var endPaths = new List<PathSegment>();
-            if (bestEndOffset.Value < epsilon)
+            if (endVertex.Item2 < epsilon)
             { // use the first vertex as end location.
-                endPaths.Add(new PathSegment(endEdge.Item1));
-            }
-            else if ((endEdgeLength.Value - bestEndOffset.Value) < epsilon)
-            { // use the last vertex as end end location.
-                endPaths.Add(new PathSegment(endEdge.Item2));
+                endPaths.Add(new PathSegment(endVertex.Item1));
             }
             else
-            { // point is somewhere in between, this is not acceptable here!
-                throw new Exception(string.Format("Start location is not a vertex in the network with an offset of {0}m", epsilon));
+            { // vertex is too far away, something is wrong.
+                throw new Exception(string.Format("End location is not a vertex in the network within an offset of {0}m", epsilon));
             }
 
             // calculate shortest path.
