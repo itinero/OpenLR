@@ -19,7 +19,7 @@ namespace OpenLR.Referenced.Router
         /// <summary>
         /// Holds the maximum settles.
         /// </summary>
-        public const uint MAX_SETTLES = 5000;
+        public const uint MAX_SETTLES = 5000 * 8;
 
         /// <summary>
         /// Calculates a path between the two candidates using the information in the candidates.
@@ -66,7 +66,7 @@ namespace OpenLR.Referenced.Router
             }
 
             // initialize the heap/visit list.
-            var heap = new BinaryHeap<PathSegment<long>>(100);
+            var heap = new BinaryHeap<PathSegment<long>>(maxSettles / 4);
             var visited = new HashSet<long>();
             visited.Add(from.Vertex);
 

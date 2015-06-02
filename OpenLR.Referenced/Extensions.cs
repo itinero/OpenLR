@@ -506,10 +506,10 @@ namespace OpenLR.Referenced
         /// <returns>Returns an edge or an edge from 0 to 0 if none is found.</returns>
         public static Tuple<long, long, LiveEdge> GetClosestEdge(this BasicRouterDataSource<LiveEdge> graph, GeoCoordinate location, Meter maxDistance)
         { // create the search box.
-            var boxSizeStart = 0.0001;
-            var boxSizeMax = 0.2;
+            var boxSizeStart = 0.001;
+            var boxSizeMax = 0.02;
             var result = graph.GetClosestEdge(location, maxDistance, boxSizeStart);
-            while(result == null && boxSizeStart <= boxSizeMax)
+            while (result == null && boxSizeStart <= boxSizeMax)
             {
                 boxSizeStart = boxSizeStart * 2;
                 result = graph.GetClosestEdge(location, maxDistance, boxSizeStart);
@@ -598,15 +598,12 @@ namespace OpenLR.Referenced
         public static Tuple<long, double> GetClosestVertex(this BasicRouterDataSource<LiveEdge> graph, GeoCoordinate location, 
             Meter maxDistance)
         {
-            var boxSizeStart = 0.0001;
-            var boxSizeMax = 0.2;
-            var result = graph.GetClosestVertex(location, maxDistance, boxSizeStart);
-            while (result == null && boxSizeStart <= boxSizeMax)
-            {
-                boxSizeStart = boxSizeStart * 2;
-                result = graph.GetClosestVertex(location, maxDistance, boxSizeStart);
-            }
-            return result;
+            var offsetLocationNorth = location.OffsetWithDirection(maxDistance, OsmSharp.Math.Geo.Meta.DirectionEnum.North);
+            var offsetLocationEast = location.OffsetWithDirection(maxDistance, OsmSharp.Math.Geo.Meta.DirectionEnum.East);
+            var boxSize = (System.Math.Max(
+                System.Math.Abs(location.Latitude - offsetLocationNorth.Latitude),
+                System.Math.Abs(location.Longitude - offsetLocationEast.Longitude))) * 1.5;
+            return graph.GetClosestVertex(location, maxDistance, boxSize);
         }
 
         /// <summary>

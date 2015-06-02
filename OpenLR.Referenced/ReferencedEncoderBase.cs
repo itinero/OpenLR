@@ -381,7 +381,7 @@ namespace OpenLR.Referenced
             if (result == null)
             {
                 result = router.Calculate(this.Graph, this.Vehicle,
-                    from, to, searchForward, BasicRouter.MAX_SETTLES * 8);
+                    from, to, searchForward, BasicRouter.MAX_SETTLES);
             }
             return result;
         }
@@ -398,11 +398,11 @@ namespace OpenLR.Referenced
             var router = this.GetRouter();
             var result = router.Calculate(this.Graph, this.Vehicle,
                 fromPaths, toPaths, searchForward);
-            if (result == null)
-            {
-                result = router.Calculate(this.Graph, this.Vehicle,
-                    fromPaths, toPaths, searchForward, BasicRouter.MAX_SETTLES * 8);
-            }
+            //if (result == null)
+            //{
+            //    result = router.Calculate(this.Graph, this.Vehicle,
+            //        fromPaths, toPaths, searchForward, BasicRouter.MAX_SETTLES);
+            //}
             return result;
         }
     }
