@@ -266,7 +266,7 @@ namespace OpenLR.Referenced
                 // weightBefore: vertex1->{x}
                 var weightBefore = encoder.Vehicle.Weight(tags, (float)bestStartOffset.Value);
                 // weightAfter: {x}->vertex2.
-                var weightAfter = encoder.Vehicle.Weight(encoder.Graph.TagsIndex.Get(startEdge.Item3.Tags), (float)(startEdgeLength.Value - bestStartOffset.Value));
+                var weightAfter = encoder.Vehicle.Weight(tags, (float)(startEdgeLength.Value - bestStartOffset.Value));
 
                 if (startEdge.Item3.Forward)
                 { // edge is forward.
@@ -337,7 +337,7 @@ namespace OpenLR.Referenced
                 // weightBefore: vertex1->{x}
                 var weightBefore = encoder.Vehicle.Weight(tags, (float)bestEndOffset.Value);
                 // weightAfter: {x}->vertex2.
-                var weightAfter = encoder.Vehicle.Weight(encoder.Graph.TagsIndex.Get(endEdge.Item3.Tags), (float)(endEdgeLength.Value - bestEndOffset.Value));
+                var weightAfter = encoder.Vehicle.Weight(tags, (float)(endEdgeLength.Value - bestEndOffset.Value));
 
                 if (endEdge.Item3.Forward)
                 { // edge is forward.
@@ -377,30 +377,66 @@ namespace OpenLR.Referenced
                 }
             }
 
-            // calculate shortest path.
-            var shortestPath = encoder.FindShortestPath(startPaths, endPaths, true);
-            if (shortestPath == null)
-            { // routing failed,.
-                throw new BuildLocationFailedException("A route between start {0} and end point {1} was not found.",
-                    startLocation, endLocation);
-            }
-
-            // convert to edge and vertex-array.
+            // build a route.
             var vertices = new List<long>();
             var edges = new List<LiveEdge>();
-            vertices.Add(shortestPath.Vertex);
-            edges.Add(shortestPath.Edge);
-            while (shortestPath.From != null)
-            {
-                shortestPath = shortestPath.From;
-                vertices.Add(shortestPath.Vertex);
-                if (shortestPath.From != null)
-                {
-                    edges.Add(shortestPath.Edge);
+
+            if(startEdge.Item3.Equals(endEdge.Item3))
+            { // same identical edge.
+                if (bestEndOffset.Value > bestStartOffset.Value)
+                { // path from->to.
+                    vertices.Add(startEdge.Item1);
+                    vertices.Add(startEdge.Item2);
+                    edges.Add(startEdge.Item3);
+                }
+                else
+                { // path to->from.
+                    vertices.Add(startEdge.Item2);
+                    vertices.Add(startEdge.Item1);
+                    edges.Add((LiveEdge)startEdge.Item3.Reverse());
                 }
             }
-            vertices.Reverse();
-            edges.Reverse();
+            else if (startEdge.Item3.Equals(endEdge.Item3.Reverse()))
+            { // same edge but reversed.
+                var bestEndOffsetReversed = endEdgeLength.Value - bestEndOffset.Value;
+                if (bestEndOffsetReversed > bestStartOffset.Value)
+                { // path from->to.
+                    vertices.Add(startEdge.Item1);
+                    vertices.Add(startEdge.Item2);
+                    edges.Add(startEdge.Item3);
+                }
+                else
+                { // path to->from.
+                    vertices.Add(startEdge.Item2);
+                    vertices.Add(startEdge.Item1);
+                    edges.Add((LiveEdge)startEdge.Item3.Reverse());
+                }
+            }
+            else
+            { // route as usual.
+                // calculate shortest path.
+                var shortestPath = encoder.FindShortestPath(startPaths, endPaths, true);
+                if (shortestPath == null)
+                { // routing failed,.
+                    throw new BuildLocationFailedException("A route between start {0} and end point {1} was not found.",
+                        startLocation, endLocation);
+                }
+
+                // convert to edge and vertex-array.
+                vertices.Add(shortestPath.Vertex);
+                edges.Add(shortestPath.Edge);
+                while (shortestPath.From != null)
+                {
+                    shortestPath = shortestPath.From;
+                    vertices.Add(shortestPath.Vertex);
+                    if (shortestPath.From != null)
+                    {
+                        edges.Add(shortestPath.Edge);
+                    }
+                }
+                vertices.Reverse();
+                edges.Reverse();
+            }
 
             // extract vertices, edges and offsets.
             if (vertices[0] < 0)

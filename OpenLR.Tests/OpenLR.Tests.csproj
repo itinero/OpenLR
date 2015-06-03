@@ -172,6 +172,7 @@
     <Compile Include="Referenced\ReferencedGeoCoordinateDecoderTests.cs" />
     <Compile Include="Referenced\Osm\ReferencedLineDecoderTests.cs" />
     <Compile Include="Referenced\ReferencedRectangleDecoderTests.cs" />
+    <Compile Include="Referenced\Router\BasicRouterTests.cs" />
     <Compile Include="XmlSerializerTests.cs" />
   </ItemGroup>
   <ItemGroup>

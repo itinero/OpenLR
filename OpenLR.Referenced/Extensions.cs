@@ -689,7 +689,11 @@ namespace OpenLR.Referenced
             if(graph.GetEdgeShape(edge.Item1, edge.Item2, out shape) &&
                 shape != null)
             {
-                return edge.Item3.GetCoordinates(shape.ToSimpleArray(), from, to);
+                if(edge.Item3.Forward)
+                {
+                    return edge.Item3.GetCoordinates(shape.ToSimpleArray(), from, to);
+                }
+                return edge.Item3.GetCoordinates(shape.Reverse().ToSimpleArray(), from, to);
             }
             return edge.Item3.GetCoordinates(new GeoCoordinateSimple[0], from, to);
         }
