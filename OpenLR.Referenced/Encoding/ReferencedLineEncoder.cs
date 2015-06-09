@@ -416,7 +416,7 @@ namespace OpenLR.Referenced.Encoding
 
             // create location reference point.
             var lrp = new LocationReferencePoint();
-            lrp.Coordinate = this.GetVertexLocation(referencedLocation.Vertices[0]);
+            lrp.Coordinate = this.GetVertexLocation(referencedLocation.Vertices[idx]);
             lrp.FormOfWay = fow;
             lrp.FuntionalRoadClass = frc;
             if (idx + 1 < referencedLocation.Vertices.Length)
