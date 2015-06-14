@@ -589,7 +589,7 @@ namespace OpenLR.Referenced
         /// </summary>
         public static Tuple<long, double> GetClosestVertex(this BasicRouterDataSource<LiveEdge> graph, GeoCoordinate location)
         {
-            return graph.GetClosestVertex(location, double.MaxValue);
+            return graph.GetClosestVertex(location, 10000); // default of 10km.
         }
 
         /// <summary>
