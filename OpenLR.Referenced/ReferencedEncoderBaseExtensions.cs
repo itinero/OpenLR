@@ -500,13 +500,14 @@ namespace OpenLR.Referenced
         /// </summary>
         /// <param name="encoder">The encoder.</param>
         /// <param name="startLocation">The start location.</param>
-        /// <param name="startOffsetPercentage">The offset of the start location.</param>
+        /// <param name="startOffset">The offset of the start location in meters.</param>
         /// <param name="endLocation">The end location.</param>
-        /// <param name="endOffsetPercentage">The offset of the end location.</param>
+        /// <param name="endOffset">The offset of the end location in meters.</param>
         /// <param name="tolerance">The tolerance value, the minimum distance between a given start or endlocation and the network used for encoding.</param>
         /// <returns></returns>
-        public static ReferencedLine BuildLineLocationVertexExact(this ReferencedEncoderBase encoder, GeoCoordinate startLocation, float startOffsetPercentage,
-            GeoCoordinate endLocation, float endOffsetPercentage, Meter tolerance)
+        public static ReferencedLine BuildLineLocationVertexExact(this ReferencedEncoderBase encoder, 
+            GeoCoordinate startLocation, Meter startOffset,
+            GeoCoordinate endLocation, Meter endOffset, Meter tolerance)
         {
             var epsilon = tolerance.Value;
 
@@ -580,6 +581,8 @@ namespace OpenLR.Referenced
                 Vertices = vertices.ToArray()
             };
             var length = referencedLine.Length(encoder).Value;
+            var startOffsetPercentage = (float)(startOffset.Value / length) * 100.0f;
+            var endOffsetPercentage = (float)(endOffset.Value / length) * 100.0f;
             return encoder.BuildLineLocation(vertices.ToArray(), edges.ToArray(), startOffsetPercentage, endOffsetPercentage);
         }
 
