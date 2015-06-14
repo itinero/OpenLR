@@ -66,10 +66,12 @@ namespace OpenLR.Binary.Encoders
 
             if (location.PositiveOffsetPercentage.HasValue)
             { // positive offset percentage is present.
+                OffsetConvertor.EncodeFlag(true, data, position + 5, 1);
                 OffsetConvertor.Encode(location.PositiveOffsetPercentage.Value, data, position + 6);
             }
             if (location.NegativeOffsetPercentage.HasValue)
             { // positive offset percentage is present.
+                OffsetConvertor.EncodeFlag(true, data, position + 5, 2);
                 OffsetConvertor.Encode(location.PositiveOffsetPercentage.Value, data, position + 7);
             }
 
