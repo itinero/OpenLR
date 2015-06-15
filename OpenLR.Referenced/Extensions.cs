@@ -585,6 +585,101 @@ namespace OpenLR.Referenced
         }
 
         /// <summary>
+        /// Returns the edge that is closest to the given location.
+        /// </summary>
+        /// <param name="graph">The graph to search.</param>
+        /// <param name="location1">The location of one of the points of the edge.</param>
+        /// <param name="location2">The location of one of the points of the edge.</param>
+        /// <param name="maxDistance">The maximum distance.</param>
+        /// <returns>Returns an edge or an edge from 0 to 0 if none is found.</returns>
+        public static Tuple<long, long, LiveEdge> GetClosestEdge(this BasicRouterDataSource<LiveEdge> graph, GeoCoordinate location1, 
+            GeoCoordinate location2, Meter maxDistance)
+        { // create the search box.
+            var boxSizeStart = 0.001;
+            var boxSizeMax = 0.02;
+            var result = graph.GetClosestEdge(location1, location2, maxDistance, boxSizeStart);
+            while (result == null && boxSizeStart <= boxSizeMax)
+            {
+                boxSizeStart = boxSizeStart * 2;
+                result = graph.GetClosestEdge(location1, location2, maxDistance, boxSizeStart);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Returns the edge that is closest to the given location.
+        /// </summary>
+        /// <param name="graph">The graph to search.</param>
+        /// <param name="location1">The location of one of the points of the edge.</param>
+        /// <param name="location2">The location of one of the points of the edge.</param>
+        /// <param name="maxDistance">The maximum distance.</param>
+        /// <param name="boxSize">The search box size.</param>
+        /// <returns>Returns an edge or an edge from 0 to 0 if none is found.</returns>
+        /// <returns></returns>
+        public static Tuple<long, long, LiveEdge> GetClosestEdge(this BasicRouterDataSource<LiveEdge> graph, GeoCoordinate location1, 
+            GeoCoordinate location2, Meter maxDistance, double boxSize)
+        {
+            Tuple<long, long, LiveEdge> bestEdge = null;
+
+            var searchBox1 = new GeoCoordinateBox(
+                new GeoCoordinate(location1.Latitude - boxSize, location1.Longitude - boxSize),
+                new GeoCoordinate(location1.Latitude + boxSize, location1.Longitude + boxSize));
+            var searchBox2 = new GeoCoordinateBox(
+                new GeoCoordinate(location2.Latitude - boxSize, location2.Longitude - boxSize),
+                new GeoCoordinate(location2.Latitude + boxSize, location2.Longitude + boxSize));
+            var searchBox = searchBox1 + searchBox2;
+
+            var maxDistanceBox1 = searchBox1;
+            var maxDistanceBox2 = searchBox2;
+            if (maxDistance.Value < double.MaxValue)
+            {
+                maxDistanceBox1 = new GeoCoordinateBox(
+                    location1.OffsetWithDirection(maxDistance, OsmSharp.Math.Geo.Meta.DirectionEnum.East).OffsetWithDirection(
+                    maxDistance, OsmSharp.Math.Geo.Meta.DirectionEnum.South),
+                    location1.OffsetWithDirection(maxDistance, OsmSharp.Math.Geo.Meta.DirectionEnum.West).OffsetWithDirection(
+                    maxDistance, OsmSharp.Math.Geo.Meta.DirectionEnum.North));
+                maxDistanceBox2 = new GeoCoordinateBox(
+                    location2.OffsetWithDirection(maxDistance, OsmSharp.Math.Geo.Meta.DirectionEnum.East).OffsetWithDirection(
+                    maxDistance, OsmSharp.Math.Geo.Meta.DirectionEnum.South),
+                    location2.OffsetWithDirection(maxDistance, OsmSharp.Math.Geo.Meta.DirectionEnum.West).OffsetWithDirection(
+                    maxDistance, OsmSharp.Math.Geo.Meta.DirectionEnum.North));
+            }
+            var arcs = graph.GetEdges(searchBox);
+
+            float latitude, longitude;
+            var bestDistance = double.MaxValue;
+            foreach (var arc in arcs)
+            {
+                graph.GetVertex(arc.Item1, out latitude, out longitude);
+                var vertex1Location = new GeoCoordinate(latitude, longitude);
+                graph.GetVertex(arc.Item2, out latitude, out longitude);
+                var vertex2Location = new GeoCoordinate(latitude, longitude);
+
+                if(maxDistanceBox1.Contains(vertex1Location) &&
+                    maxDistanceBox2.Contains(vertex2Location))
+                { // both vertices within tolerance, add distances and check if better than the current.
+                    var distance = vertex1Location.Distance(location1) + vertex2Location.Distance(location2);
+                    if(distance < bestDistance)
+                    {
+                        bestEdge = new Tuple<long, long, LiveEdge>(arc.Item1, arc.Item2, arc.Item3);
+                        bestDistance = distance;
+                    }
+                }
+                else if (maxDistanceBox1.Contains(vertex2Location) &&
+                    maxDistanceBox2.Contains(vertex1Location))
+                { // both vertices within tolerance, add distances and check if better than the current.
+                    var distance = vertex1Location.Distance(location2) + vertex2Location.Distance(location1);
+                    if (distance < bestDistance)
+                    {
+                        bestEdge = new Tuple<long, long, LiveEdge>(arc.Item2, arc.Item1, (LiveEdge)arc.Item3.Reverse());
+                        bestDistance = distance;
+                    }
+                }
+            }
+            return bestEdge;
+        }
+
+        /// <summary>
         /// Returns the vertex that is closest to the given location.
         /// </summary>
         public static Tuple<long, double> GetClosestVertex(this BasicRouterDataSource<LiveEdge> graph, GeoCoordinate location)

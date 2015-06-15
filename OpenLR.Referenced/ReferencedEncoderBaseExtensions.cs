@@ -499,80 +499,243 @@ namespace OpenLR.Referenced
         /// Builds a line location along the shortest path between start and end location while the start and end location are the exact location of vertices from the netwerk being encoded on.
         /// </summary>
         /// <param name="encoder">The encoder.</param>
-        /// <param name="startLocation">The start location.</param>
+        /// <param name="startLocation1">The first point of the edge containing the start location.</param>
+        /// <param name="startLocation2">The second point of the edge containing the start location.</param>
         /// <param name="startOffset">The offset of the start location in meters.</param>
-        /// <param name="endLocation">The end location.</param>
+        /// <param name="endLocation1">The first point of the edge containing the end location.</param>
+        /// <param name="endLocation2">The second point of the edge containing the end location.</param>
         /// <param name="endOffset">The offset of the end location in meters.</param>
         /// <param name="tolerance">The tolerance value, the minimum distance between a given start or endlocation and the network used for encoding.</param>
         /// <returns></returns>
         public static ReferencedLine BuildLineLocationVertexExact(this ReferencedEncoderBase encoder, 
-            GeoCoordinate startLocation, Meter startOffset,
-            GeoCoordinate endLocation, Meter endOffset, Meter tolerance)
+            GeoCoordinate startLocation1, GeoCoordinate startLocation2, Meter startOffset,
+            GeoCoordinate endLocation1, GeoCoordinate endLocation2, Meter endOffset, Meter tolerance)
         {
             var epsilon = tolerance.Value;
 
-            if (startLocation == null) { throw new ArgumentNullException("startLocation"); }
-            if (endLocation == null) { throw new ArgumentNullException("endLocation"); }
+            if (startLocation1 == null) { throw new ArgumentNullException("startLocation1"); }
+            if (startLocation2 == null) { throw new ArgumentNullException("startLocation2"); }
+            if (endLocation1 == null) { throw new ArgumentNullException("endLocation1"); }
+            if (endLocation2 == null) { throw new ArgumentNullException("endLocation2"); }
 
             // search start and end location hooks.
-            var startVertex = encoder.Graph.GetClosestVertex(startLocation);
-            if (startVertex == null)
-            { // no closest vertex found within tolerance, encoding has failed!
-                throw new BuildLocationFailedException("Location {0} is too far from the network used for encoding with used tolerance {1}",
-                    startLocation, tolerance);
-            }
-            // begin path with initial vertex.
-            var startPaths = new List<PathSegment>();
-            if (startVertex.Item2 < epsilon)
-            { // use the vertex as start location.
-                startPaths.Add(new PathSegment(startVertex.Item1));
-            }
-            else
-            { // vertex is too far away, something is wrong.
-                throw new Exception(string.Format("Start location is not a vertex in the network within an offset of {0}m", epsilon));
-            }
-
-            var endVertex = encoder.Graph.GetClosestVertex(endLocation);
-            if (endVertex == null)
+            var startEdge = encoder.Graph.GetClosestEdge(startLocation1, startLocation2, tolerance);
+            if (startEdge == null)
             { // no closest edge found within tolerance, encoding has failed!
-                throw new BuildLocationFailedException("Location {0} is too far from the network used for encoding with used tolerance {1}",
-                    endLocation, tolerance);
+                throw new BuildLocationFailedException("Location {0}->{1} is too far from the network used for encoding with used tolerance {2}",
+                    startLocation1, startLocation2, tolerance);
             }
+            // project the startlocation on the edge.
+            var coordinates = encoder.Graph.GetCoordinates(startEdge);
+            var startEdgeLength = coordinates.Length();
             // construct from pathsegments.
-            var endPaths = new List<PathSegment>();
-            if (endVertex.Item2 < epsilon)
-            { // use the first vertex as end location.
-                endPaths.Add(new PathSegment(endVertex.Item1));
+            var startPaths = new List<PathSegment>();
+            if (startOffset.Value < epsilon)
+            { // use the first vertex as start location.
+                startPaths.Add(new PathSegment(startEdge.Item1));
+            }
+            else if ((startEdgeLength.Value - startOffset.Value) < epsilon)
+            { // use the last vertex as end start location.
+                startPaths.Add(new PathSegment(startEdge.Item2));
             }
             else
-            { // vertex is too far away, something is wrong.
-                throw new Exception(string.Format("End location is not a vertex in the network within an offset of {0}m", epsilon));
-            }
+            { // point is somewhere in between.
+                var tags = encoder.Graph.TagsIndex.Get(startEdge.Item3.Tags);
+                var oneway = encoder.Vehicle.IsOneWay(tags);
 
-            // calculate shortest path.
-            var shortestPath = encoder.FindShortestPath(startPaths, endPaths, true);
-            if (shortestPath == null)
-            { // routing failed,.
-                throw new BuildLocationFailedException("A route between start {0} and end point {1} was not found.",
-                    startLocation, endLocation);
-            }
+                // weightBefore: vertex1->{x}
+                var weightBefore = encoder.Vehicle.Weight(tags, (float)startOffset.Value);
+                // weightAfter: {x}->vertex2.
+                var weightAfter = encoder.Vehicle.Weight(tags, (float)(startEdgeLength.Value - startOffset.Value));
 
-            // convert to edge and vertex-array.
-            var vertices = new List<long>();
-            var edges = new List<LiveEdge>();
-            vertices.Add(shortestPath.Vertex);
-            edges.Add(shortestPath.Edge);
-            while (shortestPath.From != null)
-            {
-                shortestPath = shortestPath.From;
-                vertices.Add(shortestPath.Vertex);
-                if (shortestPath.From != null)
-                {
-                    edges.Add(shortestPath.Edge);
+                if (startEdge.Item3.Forward)
+                { // edge is forward.
+                    // vertex1->{x}->vertex2
+
+                    // consider the part {x}->vertex1 x being the source.
+                    if (oneway == null || !oneway.Value)
+                    {  // edge cannot be oneway forward.
+                        startPaths.Add(new PathSegment(startEdge.Item1, weightBefore, startEdge.Item3.ToReverse(),
+                            new PathSegment(-1)));
+                    }
+
+                    // consider the part {x}->vertex2 x being the source.
+                    if (oneway == null || oneway.Value)
+                    { // edge cannot be oneway backward.
+                        startPaths.Add(new PathSegment(startEdge.Item2, weightAfter, startEdge.Item3,
+                            new PathSegment(-1)));
+                    }
+                }
+                else
+                { // edge is backward.
+                    // vertex1->{x}->vertex2
+
+                    // consider the part {x}->vertex1 x being the source.
+                    if (oneway == null || oneway.Value)
+                    {  // edge cannot be oneway forward but edge is backward.
+                        startPaths.Add(new PathSegment(startEdge.Item1, weightBefore, startEdge.Item3.ToReverse(),
+                            new PathSegment(-1)));
+                    }
+
+                    // consider the part {x}->vertex2 x being the source.
+                    if (oneway == null || !oneway.Value)
+                    { // edge cannot be oneway backward but edge is backward.
+                        startPaths.Add(new PathSegment(startEdge.Item2, weightAfter, startEdge.Item3,
+                            new PathSegment(-1)));
+                    }
                 }
             }
-            vertices.Reverse();
-            edges.Reverse();
+
+            var endEdge = encoder.Graph.GetClosestEdge(endLocation1, endLocation2, tolerance);
+            if (endEdge == null)
+            { // no closest edge found within tolerance, encoding has failed!
+                throw new BuildLocationFailedException("Location {0}->{1} is too far from the network used for encoding with used tolerance {2}",
+                    endLocation1, endLocation2, tolerance);
+            }
+            // project the endlocation on the edge.
+            coordinates = encoder.Graph.GetCoordinates(endEdge);
+            var endEdgeLength = coordinates.Length();
+            // construct from pathsegments.
+            var endPaths = new List<PathSegment>();
+            if (endOffset.Value < epsilon)
+            { // use the first vertex as end location.
+                endPaths.Add(new PathSegment(endEdge.Item1));
+            }
+            else if ((endEdgeLength.Value - endOffset.Value) < epsilon)
+            { // use the last vertex as end end location.
+                endPaths.Add(new PathSegment(endEdge.Item2));
+            }
+            else
+            { // point is somewhere in between.
+                var tags = encoder.Graph.TagsIndex.Get(endEdge.Item3.Tags);
+                var oneway = encoder.Vehicle.IsOneWay(tags);
+                // weightBefore: vertex1->{x}
+                var weightBefore = encoder.Vehicle.Weight(tags, (float)endOffset.Value);
+                // weightAfter: {x}->vertex2.
+                var weightAfter = encoder.Vehicle.Weight(tags, (float)(endEdgeLength.Value - endOffset.Value));
+
+                if (endEdge.Item3.Forward)
+                { // edge is forward.
+                    // vertex1->{x}->vertex2
+
+                    // consider vertex1->{x} x being the target.
+                    if (oneway == null || oneway.Value)
+                    {  // edge cannot be oneway backward.
+                        endPaths.Add(new PathSegment(-1, weightBefore, endEdge.Item3,
+                            new PathSegment(endEdge.Item1)));
+                    }
+
+                    // consider vertex2->{x} x being the target.
+                    if (oneway == null || !oneway.Value)
+                    { // edge cannot be onway forward.
+                        endPaths.Add(new PathSegment(-1, weightAfter, endEdge.Item3.ToReverse(),
+                            new PathSegment(endEdge.Item2)));
+                    }
+                }
+                else
+                { // edge is backward.
+                    // vertex1->{x}->vertex2
+
+                    // consider vertex1->{x} x being the target.
+                    if (oneway == null || !oneway.Value)
+                    {  // edge cannot be oneway backward.
+                        endPaths.Add(new PathSegment(-1, weightBefore, endEdge.Item3,
+                            new PathSegment(endEdge.Item1)));
+                    }
+
+                    // consider vertex2->{x} x being the target.
+                    if (oneway == null || oneway.Value)
+                    { // edge cannot be onway forward.
+                        endPaths.Add(new PathSegment(-1, weightAfter, endEdge.Item3.ToReverse(),
+                            new PathSegment(endEdge.Item2)));
+                    }
+                }
+            }
+
+            // build a route.
+            var vertices = new List<long>();
+            var edges = new List<LiveEdge>();
+
+            if (startEdge.Item3.Equals(endEdge.Item3))
+            { // same identical edge.
+                if (endOffset.Value > startOffset.Value)
+                { // path from->to.
+                    vertices.Add(startEdge.Item1);
+                    vertices.Add(startEdge.Item2);
+                    edges.Add(startEdge.Item3);
+                }
+                else
+                { // path to->from.
+                    vertices.Add(startEdge.Item2);
+                    vertices.Add(startEdge.Item1);
+                    edges.Add((LiveEdge)startEdge.Item3.Reverse());
+                }
+            }
+            else if (startEdge.Item3.Equals(endEdge.Item3.Reverse()))
+            { // same edge but reversed.
+                var bestEndOffsetReversed = endEdgeLength.Value - endOffset.Value;
+                if (bestEndOffsetReversed > startOffset.Value)
+                { // path from->to.
+                    vertices.Add(startEdge.Item1);
+                    vertices.Add(startEdge.Item2);
+                    edges.Add(startEdge.Item3);
+                }
+                else
+                { // path to->from.
+                    vertices.Add(startEdge.Item2);
+                    vertices.Add(startEdge.Item1);
+                    edges.Add((LiveEdge)startEdge.Item3.Reverse());
+                }
+            }
+            else
+            { // route as usual.
+                // calculate shortest path.
+                var shortestPath = encoder.FindShortestPath(startPaths, endPaths, true);
+                if (shortestPath == null)
+                { // routing failed,.
+                    throw new BuildLocationFailedException("A route between start {0}->{1} [@{2}] and end point {3}->{4} [@{5}] was not found.",
+                        startLocation1, startLocation2, startOffset, endLocation1, endLocation2, endOffset);
+                }
+
+                // convert to edge and vertex-array.
+                vertices.Add(shortestPath.Vertex);
+                edges.Add(shortestPath.Edge);
+                while (shortestPath.From != null)
+                {
+                    shortestPath = shortestPath.From;
+                    vertices.Add(shortestPath.Vertex);
+                    if (shortestPath.From != null)
+                    {
+                        edges.Add(shortestPath.Edge);
+                    }
+                }
+                vertices.Reverse();
+                edges.Reverse();
+            }
+
+            // extract vertices, edges and offsets.
+            if (vertices[0] < 0)
+            { // replace the first virtual vertex with the real vertex.
+                if (vertices[1] == startEdge.Item1)
+                { // the virtual vertex should be item2.
+                    vertices[0] = startEdge.Item2;
+                }
+                else
+                { // the virtual vertex should be item1.
+                    vertices[0] = startEdge.Item1;
+                }
+            }
+            if (vertices[vertices.Count - 1] < 0)
+            { // replace the last virtual vertex with the real vertex.
+                if (vertices[vertices.Count - 2] == endEdge.Item1)
+                { // the virtual vertex should be item2.
+                    vertices[vertices.Count - 1] = endEdge.Item2;
+                }
+                else
+                { // the virtual vertex should be item1.
+                    vertices[vertices.Count - 1] = endEdge.Item1;
+                }
+            }
 
             // calculate offset.
             var referencedLine = new OpenLR.Referenced.Locations.ReferencedLine(encoder.Graph)
@@ -581,9 +744,42 @@ namespace OpenLR.Referenced
                 Vertices = vertices.ToArray()
             };
             var length = referencedLine.Length(encoder).Value;
-            var startOffsetPercentage = (float)(startOffset.Value / length) * 100.0f;
-            var endOffsetPercentage = (float)(endOffset.Value / length) * 100.0f;
-            return encoder.BuildLineLocation(vertices.ToArray(), edges.ToArray(), startOffsetPercentage, endOffsetPercentage);
+
+            // project again on the start edge.
+            var positivePercentageOffset = 0f;
+            var edgeLength = encoder.Graph.GetCoordinates(startEdge).Length();
+            // TODO: do not project but figure out if the first edge is reversed or not.
+            if(startEdge.Item1 == referencedLine.Vertices[0] && startEdge.Item2 == referencedLine.Vertices[1])
+            { // forward edge.
+                positivePercentageOffset = (float)System.Math.Max(System.Math.Min((startOffset.Value / length) * 100.0, 100), 0);
+            }
+            else if (startEdge.Item2 == referencedLine.Vertices[0] && startEdge.Item1 == referencedLine.Vertices[1])
+            { // backward edge.
+                positivePercentageOffset = (float)System.Math.Max(System.Math.Min((edgeLength.Value - startOffset.Value / length) * 100.0, 100), 0);
+            }
+            else
+            {
+                throw new BuildLocationFailedException("Routing failed: first edge in route is not edge that was started from.");
+            }
+
+            // project again on the end edge.
+            var negativePercentageOffset = 0f;
+            edgeLength = encoder.Graph.GetCoordinates(endEdge).Length();
+            // TODO: do not project but figure out if the first edge is reversed or not.
+            if (endEdge.Item1 == referencedLine.Vertices[referencedLine.Vertices.Length - 2] && endEdge.Item2 == referencedLine.Vertices[referencedLine.Vertices.Length - 1])
+            { // forward edge.
+                negativePercentageOffset = (float)System.Math.Max(System.Math.Min((endOffset.Value / length) * 100.0, 100), 0);
+            }
+            else if (endEdge.Item2 == referencedLine.Vertices[referencedLine.Vertices.Length - 1] && endEdge.Item1 == referencedLine.Vertices[referencedLine.Vertices.Length - 2])
+            { // backward edge.
+                negativePercentageOffset = (float)System.Math.Max(System.Math.Min((edgeLength.Value - endOffset.Value / length) * 100.0, 100), 0);
+            }
+            else
+            {
+                throw new BuildLocationFailedException("Routing failed: first edge in route is not edge that was started from.");
+            }
+
+            return encoder.BuildLineLocation(vertices.ToArray(), edges.ToArray(), positivePercentageOffset, negativePercentageOffset);
         }
 
         /// <summary>
