@@ -656,9 +656,19 @@ namespace OpenLR.Referenced
             var vertices = new List<long>();
             var edges = new List<LiveEdge>();
 
+            if (startEdge.Item3.Equals(endEdge.Item3.Reverse()))
+            { // same edge but reversed.
+                // invert end offset.
+                endOffset = encoder.Graph.GetCoordinates(startEdge).Length().Value - endOffset.Value;
+                
+                // use exactly the same edge.
+                endEdge = startEdge;
+            } 
+           
             if (startEdge.Item3.Equals(endEdge.Item3))
             { // same identical edge.
-                if (endOffset.Value > startOffset.Value)
+                var endOffsetFromStart = encoder.Graph.GetCoordinates(startEdge).Length().Value - endOffset.Value;
+                if (endOffsetFromStart > startOffset.Value)
                 { // path from->to.
                     vertices.Add(startEdge.Item1);
                     vertices.Add(startEdge.Item2);
@@ -666,25 +676,17 @@ namespace OpenLR.Referenced
                 }
                 else
                 { // path to->from.
+                    var reverseEdge = (LiveEdge)startEdge.Item3.Reverse();
                     vertices.Add(startEdge.Item2);
                     vertices.Add(startEdge.Item1);
-                    edges.Add((LiveEdge)startEdge.Item3.Reverse());
-                }
-            }
-            else if (startEdge.Item3.Equals(endEdge.Item3.Reverse()))
-            { // same edge but reversed.
-                var bestEndOffsetReversed = endEdgeLength.Value - endOffset.Value;
-                if (bestEndOffsetReversed > startOffset.Value)
-                { // path from->to.
-                    vertices.Add(startEdge.Item1);
-                    vertices.Add(startEdge.Item2);
-                    edges.Add(startEdge.Item3);
-                }
-                else
-                { // path to->from.
-                    vertices.Add(startEdge.Item2);
-                    vertices.Add(startEdge.Item1);
-                    edges.Add((LiveEdge)startEdge.Item3.Reverse());
+                    edges.Add(reverseEdge);
+
+                    // we need to reverse some stuff.
+                    startOffset = encoder.Graph.GetCoordinates(startEdge).Length().Value - startOffset.Value;
+                    startEdge = new Tuple<long, long, LiveEdge>(
+                        startEdge.Item2, startEdge.Item1, reverseEdge);
+                    endOffset = encoder.Graph.GetCoordinates(startEdge).Length().Value - endOffset.Value;
+                    endEdge = startEdge;
                 }
             }
             else
@@ -776,19 +778,19 @@ namespace OpenLR.Referenced
             {
                 negativePercentageOffset = 0f;
             }
-            else if (Math.Abs(endOffset.Value - length) < epsilon && endEdge.Item2 == referencedLine.Vertices[referencedLine.Vertices.Length - 2])
+            else if (Math.Abs(endOffset.Value - length) < epsilon && endEdge.Item1 == referencedLine.Vertices[referencedLine.Vertices.Length - 2])
             {
                 negativePercentageOffset = (float)((edgeLength.Value / length) * 100.0);
             }
             else if (endEdge.Item1 == referencedLine.Vertices[referencedLine.Vertices.Length - 2] && 
                      endEdge.Item2 == referencedLine.Vertices[referencedLine.Vertices.Length - 1])
             { // forward edge.
-                negativePercentageOffset = (float)System.Math.Max(System.Math.Min(((edgeLength.Value - endOffset.Value) / length) * 100.0, 100), 0);
+                negativePercentageOffset = (float)System.Math.Max(System.Math.Min((endOffset.Value / length) * 100.0, 100), 0);
             }
             else if (endEdge.Item1 == referencedLine.Vertices[referencedLine.Vertices.Length - 1] && 
                      endEdge.Item2 == referencedLine.Vertices[referencedLine.Vertices.Length - 2])
             { // backward edge.
-                negativePercentageOffset = (float)System.Math.Max(System.Math.Min((endOffset.Value / length) * 100.0, 100), 0);
+                negativePercentageOffset = (float)System.Math.Max(System.Math.Min(((edgeLength.Value - endOffset.Value) / length) * 100.0, 100), 0);
             }
             else 
             {
