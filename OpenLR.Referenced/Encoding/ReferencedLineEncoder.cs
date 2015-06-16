@@ -426,8 +426,8 @@ namespace OpenLR.Referenced.Encoding
             }
             else
             { // last point.
-                lrp.Bearing = (int)this.GetBearing(referencedLocation.Vertices[idx - 1], referencedLocation.Edges[idx - 2],
-                    referencedLocation.EdgeShapes[idx - 2], referencedLocation.Vertices[idx - 2], true).Value;
+                lrp.Bearing = (int)this.GetBearing(referencedLocation.Vertices[idx], referencedLocation.Edges[idx - 1],
+                    referencedLocation.EdgeShapes[idx - 1], referencedLocation.Vertices[idx - 1], true).Value;
             }
             return lrp;
         }
