@@ -749,15 +749,23 @@ namespace OpenLR.Referenced
             var positivePercentageOffset = 0f;
             var edgeLength = encoder.Graph.GetCoordinates(startEdge).Length();
             // TODO: do not project but figure out if the first edge is reversed or not.
-            if(startEdge.Item1 == referencedLine.Vertices[0] && startEdge.Item2 == referencedLine.Vertices[1])
+            if (startOffset.Value < epsilon && startEdge.Item1 == referencedLine.Vertices[0])
+            {
+                positivePercentageOffset = 0f;
+            }
+            else if (Math.Abs(startOffset.Value - length) < epsilon && startEdge.Item2 == referencedLine.Vertices[0])
+            {
+                positivePercentageOffset = (float)((edgeLength.Value / length) * 100.0);
+            }
+            else if(startEdge.Item1 == referencedLine.Vertices[0] && startEdge.Item2 == referencedLine.Vertices[1])
             { // forward edge.
                 positivePercentageOffset = (float)System.Math.Max(System.Math.Min((startOffset.Value / length) * 100.0, 100), 0);
             }
             else if (startEdge.Item2 == referencedLine.Vertices[0] && startEdge.Item1 == referencedLine.Vertices[1])
             { // backward edge.
-                positivePercentageOffset = (float)System.Math.Max(System.Math.Min((edgeLength.Value - startOffset.Value / length) * 100.0, 100), 0);
+                positivePercentageOffset = (float)System.Math.Max(System.Math.Min(((edgeLength.Value - startOffset.Value) / length) * 100.0, 100), 0);
             }
-            else
+            else 
             {
                 throw new BuildLocationFailedException("Routing failed: first edge in route is not edge that was started from.");
             }
@@ -766,15 +774,23 @@ namespace OpenLR.Referenced
             var negativePercentageOffset = 0f;
             edgeLength = encoder.Graph.GetCoordinates(endEdge).Length();
             // TODO: do not project but figure out if the first edge is reversed or not.
-            if (endEdge.Item1 == referencedLine.Vertices[referencedLine.Vertices.Length - 2] && endEdge.Item2 == referencedLine.Vertices[referencedLine.Vertices.Length - 1])
+            if (endOffset.Value < epsilon && endEdge.Item1 == referencedLine.Vertices[referencedLine.Vertices.Length - 1])
+            {
+                negativePercentageOffset = 0f;
+            }
+            else if (Math.Abs(startOffset.Value - length) < epsilon && startEdge.Item2 == referencedLine.Vertices[referencedLine.Vertices.Length - 2])
+            {
+                negativePercentageOffset = (float)((edgeLength.Value / length) * 100.0);
+            }
+            else if (endEdge.Item1 == referencedLine.Vertices[referencedLine.Vertices.Length - 2] && endEdge.Item2 == referencedLine.Vertices[referencedLine.Vertices.Length - 1])
             { // forward edge.
                 negativePercentageOffset = (float)System.Math.Max(System.Math.Min((endOffset.Value / length) * 100.0, 100), 0);
             }
             else if (endEdge.Item2 == referencedLine.Vertices[referencedLine.Vertices.Length - 1] && endEdge.Item1 == referencedLine.Vertices[referencedLine.Vertices.Length - 2])
             { // backward edge.
-                negativePercentageOffset = (float)System.Math.Max(System.Math.Min((edgeLength.Value - endOffset.Value / length) * 100.0, 100), 0);
+                negativePercentageOffset = (float)System.Math.Max(System.Math.Min(((edgeLength.Value - endOffset.Value) / length) * 100.0, 100), 0);
             }
-            else
+            else 
             {
                 throw new BuildLocationFailedException("Routing failed: first edge in route is not edge that was started from.");
             }
