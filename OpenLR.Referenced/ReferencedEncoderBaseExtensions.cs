@@ -747,6 +747,13 @@ namespace OpenLR.Referenced
             };
             var length = referencedLine.Length(encoder).Value;
 
+            if(length < epsilon)
+            { // the total length of the route is smaller than tolerance value, in this case the result can be anything.
+                // exception is the best option here, decrease tolerance value or expand too short locations.
+                throw new BuildLocationFailedException(
+                    "Cannot build location: Total length of perliminary location only {1}m, smaller than tolerance value {0}m.", epsilon, length);
+            }
+
             // project again on the start edge.
             var positivePercentageOffset = 0f;
             var edgeLength = encoder.Graph.GetCoordinates(startEdge).Length();
