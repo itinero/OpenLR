@@ -114,19 +114,42 @@ namespace OpenLR.Tests.Binary.Data
 
             data[0] = 0;
             OffsetConvertor.Encode(25, data, 0);
-            Assert.AreEqual(63, data[0]);
+            Assert.AreEqual(64, data[0]);
 
             data[0] = 0;
             OffsetConvertor.Encode(50, data, 0);
-            Assert.AreEqual(127, data[0]);
+            Assert.AreEqual(128, data[0]);
 
             data[0] = 0;
             OffsetConvertor.Encode(75, data, 0);
-            Assert.AreEqual(191, data[0]);
+            Assert.AreEqual(192, data[0]);
+
+            // regression-tests from actual data.
+            // 60 [23.44% - 23.83%]
+            data[0] = 0;
+            OffsetConvertor.Encode(23.8f, data, 0);
+            Assert.AreEqual(60, data[0]);
 
             data[0] = 0;
-            OffsetConvertor.Encode(100, data, 0);
-            Assert.AreEqual(255, data[0]);
+            OffsetConvertor.Encode(23.5f, data, 0);
+            Assert.AreEqual(60, data[0]);
+
+            // 185 [72.27% - 72.66%]
+            data[0] = 0;
+            OffsetConvertor.Encode(72.2f, data, 0);
+            Assert.AreEqual(184, data[0]);
+
+            data[0] = 0;
+            OffsetConvertor.Encode(72.3f, data, 0);
+            Assert.AreEqual(185, data[0]);
+
+            data[0] = 0;
+            OffsetConvertor.Encode(72.6f, data, 0);
+            Assert.AreEqual(185, data[0]);
+
+            data[0] = 0;
+            OffsetConvertor.Encode(72.7f, data, 0);
+            Assert.AreEqual(186, data[0]);
 
             data[0] = 0;
             Assert.Catch<ArgumentOutOfRangeException>(() =>
@@ -136,6 +159,10 @@ namespace OpenLR.Tests.Binary.Data
             Assert.Catch<ArgumentOutOfRangeException>(() =>
             {
                 OffsetConvertor.Encode(101, data, 0);
+            });
+            Assert.Catch<ArgumentOutOfRangeException>(() =>
+            {
+                OffsetConvertor.Encode(100, data, 0);
             });
         }
     }
