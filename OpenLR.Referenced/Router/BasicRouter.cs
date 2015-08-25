@@ -19,7 +19,7 @@ namespace OpenLR.Referenced.Router
         /// <summary>
         /// Holds the maximum settles.
         /// </summary>
-        public const uint MAX_SETTLES = 5000 * 8;
+        public const uint MAX_SETTLES = 100;
 
         /// <summary>
         /// Calculates a path between the two candidates using the information in the candidates.
@@ -210,82 +210,83 @@ namespace OpenLR.Referenced.Router
 
             // keep searching for the target.
             PathSegment bestToTarget = null;
-            while (true)
-            {
-                // get the next vertex.
-                var current = heap.Pop();
-                if (current == null)
-                { // there is nothing more in the queue, target will not be found.
-                    break;
-                }
-                if (visited.Contains(current.Vertex))
-                { // move to the next neighbour.
-                    continue;
-                }
-                visited.Add(current.Vertex);
+                while (true)
+                {
+                    // get the next vertex.
+                    var current = heap.Pop();
 
-                // check for the target.
-                PathSegment foundToPath;
-                if (toPathDictonary.TryGetValue(current.Vertex, out foundToPath))
-                { // target was found.
-                    toPathDictonary.Remove(current.Vertex);
-                    if (bestToTarget == null ||
-                        current.Weight + foundToPath.Weight < bestToTarget.Weight)
-                    { // ok, this path is better!
-                        if (foundToPath.From != null)
-                        {
-                            bestToTarget = new PathSegment(foundToPath.Vertex, foundToPath.Weight + current.Weight, foundToPath.Edge, current);
-                        }
-                        else
-                        {
-                            bestToTarget = current;
-                        }
+                    if (current == null)
+                    { // there is nothing more in the queue, target will not be found.
+                        break;
                     }
-                    if(toPathDictonary.Count == 0)
-                    { // no more targets let, this has to be it.
-                        return bestToTarget;
+                    if (visited.Contains(current.Vertex))
+                    { // move to the next neighbour.
+                        continue;
                     }
-                }
+                    visited.Add(current.Vertex);
 
-                // check if the maximum settled vertex count has been reached.
-                if (visited.Count >= maxSettles)
-                { // stop search, target will not be found.
-                    break;
-                }
-
-                // add the neighbours to queue.
-                var neighbours = graph.GetEdges(current.Vertex);
-                if (neighbours != null)
-                { // neighbours exist.
-                    foreach (var neighbour in neighbours)
-                    {
-                        // check if the neighbour was settled before.
-                        if (visited.Contains(neighbour.Key))
-                        { // move to the next neighbour.
-                            continue;
-                        }
-
-                        // get tags and check traversability and oneway.
-                        var tags = graph.TagsIndex.Get(neighbour.Value.Tags);
-                        if (vehicle.CanTraverse(tags))
-                        { // yay! can traverse.
-                            var onway = vehicle.IsOneWay(tags);
-                            if (onway == null ||
-                              !(onway.Value == neighbour.Value.Forward ^ searchForward))
+                    // check for the target.
+                    PathSegment foundToPath;
+                    if (toPathDictonary.TryGetValue(current.Vertex, out foundToPath))
+                    { // target was found.
+                        toPathDictonary.Remove(current.Vertex);
+                        if (bestToTarget == null ||
+                            current.Weight + foundToPath.Weight < bestToTarget.Weight)
+                        { // ok, this path is better!
+                            if (foundToPath.From != null)
                             {
-                                // create path to neighbour and queue it.
-                                var weight = vehicle.Weight(graph.TagsIndex.Get(neighbour.Value.Tags), neighbour.Value.Distance);
-                                var path = new PathSegment(neighbour.Key, current.Weight + weight, neighbour.Value, current);
-                                if (bestToTarget == null ||
-                                    path.Weight < bestToTarget.Weight)
-                                { // the weight of the neighbour is smaller than the first neighbour found.
-                                    heap.Push(path, (float)path.Weight);
+                                bestToTarget = new PathSegment(foundToPath.Vertex, foundToPath.Weight + current.Weight, foundToPath.Edge, current);
+                            }
+                            else
+                            {
+                                bestToTarget = current;
+                            }
+                        }
+                        if (toPathDictonary.Count == 0)
+                        { // no more targets let, this has to be it.
+                            return bestToTarget;
+                        }
+                    }
+
+                    // check if the maximum settled vertex count has been reached.
+                    if (visited.Count >= maxSettles)
+                    { // stop search, target will not be found.
+                        break;
+                    }
+
+                    // add the neighbours to queue.
+                    var neighbours = graph.GetEdges(current.Vertex);
+                    if (neighbours != null)
+                    { // neighbours exist.
+                        foreach (var neighbour in neighbours)
+                        {
+                            // check if the neighbour was settled before.
+                            if (visited.Contains(neighbour.Key))
+                            { // move to the next neighbour.
+                                continue;
+                            }
+
+                            // get tags and check traversability and oneway.
+                            var tags = graph.TagsIndex.Get(neighbour.Value.Tags);
+                            if (vehicle.CanTraverse(tags))
+                            { // yay! can traverse.
+                                var onway = vehicle.IsOneWay(tags);
+                                if (onway == null ||
+                                  !(onway.Value == neighbour.Value.Forward ^ searchForward))
+                                {
+                                    // create path to neighbour and queue it.
+                                    var weight = vehicle.Weight(graph.TagsIndex.Get(neighbour.Value.Tags), neighbour.Value.Distance);
+                                    var path = new PathSegment(neighbour.Key, current.Weight + weight, neighbour.Value, current);
+                                    if (bestToTarget == null ||
+                                        path.Weight < bestToTarget.Weight)
+                                    { // the weight of the neighbour is smaller than the first neighbour found.
+                                        heap.Push(path, (float)path.Weight);
+                                    }
                                 }
                             }
                         }
                     }
                 }
-            }
             return bestToTarget;
         }
 
