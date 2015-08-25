@@ -51,7 +51,10 @@ namespace OpenLR.Referenced.NWB
                 !tags.TryGetValue(NWBMapping.HECTOLTTR, out dvkletter_) ||
                 !tags.TryGetValue(NWBMapping.RIJRICHTNG, out rijrichting))
             { // not even a BAANSUBSRT tag!
-                return false;
+                // defaults: FRC5, OTHER.
+                fow = FormOfWay.Other;
+                frc = FunctionalRoadClass.Frc5;
+                return true;
             }
 
             // make sure everything is lowercase.
