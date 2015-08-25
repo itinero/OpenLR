@@ -381,7 +381,7 @@ namespace OpenLR.Referenced
             if (result == null)
             {
                 result = router.Calculate(this.Graph, this.Vehicle,
-                    from, to, searchForward, BasicRouter.MAX_SETTLES);
+                    from, to, searchForward, BasicRouter.MaxSettles);
             }
             return result;
         }

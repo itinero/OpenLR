@@ -4,6 +4,7 @@ using OpenLR.Binary;
 using OpenLR.Referenced;
 using OpenLR.Referenced.Locations;
 using OpenLR.Referenced.Osm;
+using OpenLR.Referenced.Router;
 using OsmSharp.Routing.Osm.Graphs;
 
 namespace OpenLR.Tests.Referenced.Real.Osm
@@ -102,9 +103,13 @@ namespace OpenLR.Tests.Referenced.Real.Osm
             var referencedDecoder = new ReferencedOsmDecoder(RealGraphOsm.GetRoutingGraph("puurs"), new BinaryDecoder());
 
             // decodes a location.
+            var maxSettlesOriginal = BasicRouter.MaxSettles;
+            BasicRouter.MaxSettles = 65536;
             var location = referencedDecoder.Decode(data);
+            Assert.IsNotNull(location);
             var lineLocation = location as ReferencedLine;
             var lineLocationGeometry = lineLocation.ToGeometry();
+            BasicRouter.MaxSettles = maxSettlesOriginal;
 
             // write GeoJSON.
             var geoJsonWriter = new GeoJsonWriter();

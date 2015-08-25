@@ -96,23 +96,26 @@ namespace OpenLR.Referenced.Decoding
                     // confirm first/last edge.
                     // TODO: this part.
 
-                    // check candidate.
-                    if (best == null)
-                    { // there was no previous candidate or candidate has no route.
-                        best = candidate;
-                    }
-                    else if (best.Score.Value < candidate.Score.Value)
-                    { // the new candidate is better.
-                        best = candidate;
-                    }
-                    else if (best.Score.Value > candidate.Score.Value)
-                    { // the current candidate is better.
-                        break;
-                    }
+                    if (candidate.Route != null)
+                    {
+                        // check candidate.
+                        if (best == null)
+                        { // there was no previous candidate or candidate has no route.
+                            best = candidate;
+                        }
+                        else if (best.Score.Value < candidate.Score.Value)
+                        { // the new candidate is better.
+                            best = candidate;
+                        }
+                        else if (best.Score.Value > candidate.Score.Value)
+                        { // the current candidate is better.
+                            break;
+                        }
 
-                    if (best.Score.Value == 1)
-                    { // stop search on a perfect scrore!
-                        break;
+                        if (best.Score.Value == 1)
+                        { // stop search on a perfect scrore!
+                            break;
+                        }
                     }
                 }
 

@@ -19,7 +19,7 @@ namespace OpenLR.Referenced.Router
         /// <summary>
         /// Holds the maximum settles.
         /// </summary>
-        public const uint MAX_SETTLES = 100;
+        public static uint MaxSettles = 100;
 
         /// <summary>
         /// Calculates a path between the two candidates using the information in the candidates.
@@ -33,7 +33,7 @@ namespace OpenLR.Referenced.Router
         public PathSegment<long> Calculate(BasicRouterDataSource<LiveEdge> graph, IRoutingInterpreter interpreter,
             Vehicle vehicle, CandidateVertexEdge from, CandidateVertexEdge to, FunctionalRoadClass minimum)
         {
-            return this.Calculate(graph, interpreter, vehicle, from, to, minimum, MAX_SETTLES);
+            return this.Calculate(graph, interpreter, vehicle, from, to, minimum, MaxSettles);
         }
 
         /// <summary>
@@ -160,7 +160,7 @@ namespace OpenLR.Referenced.Router
         public PathSegment Calculate(BasicRouterDataSource<LiveEdge> graph, Vehicle vehicle, 
             List<PathSegment> fromPaths, List<PathSegment> toPaths, bool searchForward)
         {
-            return this.Calculate(graph, vehicle, fromPaths, toPaths, searchForward, MAX_SETTLES);
+            return this.Calculate(graph, vehicle, fromPaths, toPaths, searchForward, MaxSettles);
         }
 
         /// <summary>
@@ -301,7 +301,7 @@ namespace OpenLR.Referenced.Router
         public PathSegment Calculate(BasicRouterDataSource<LiveEdge> graph, Vehicle vehicle, 
             long from, long to, bool searchForward)
         {
-            return this.Calculate(graph, vehicle, from, to, searchForward, MAX_SETTLES);
+            return this.Calculate(graph, vehicle, from, to, searchForward, MaxSettles);
         }
 
         /// <summary>
