@@ -57,7 +57,7 @@ namespace OpenLR.Binary.Data
         /// <param name="startIndex"></param>
         public static void Encode(float positiveOffsetPercentage, byte[] data, int startIndex)
         {
-            if (positiveOffsetPercentage < 0 || positiveOffsetPercentage >= 100) { throw new ArgumentOutOfRangeException("positiveOffsetPercentage", "The percentage has to be in the range [0-100]"); }
+            if (positiveOffsetPercentage < 0 || positiveOffsetPercentage >= 100) { throw new ArgumentOutOfRangeException("positiveOffsetPercentage", "The percentage has to be in the range [0-100["); }
 
             // calculate offset value.
             var offsetValue = (byte)(int)System.Math.Floor(256.0 * (positiveOffsetPercentage / 100));
