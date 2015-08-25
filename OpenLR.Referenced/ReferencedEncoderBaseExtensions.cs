@@ -35,169 +35,21 @@ namespace OpenLR.Referenced
                 throw new Exception("No network features found near the given location. Make sure the network covers the given location.");
             }
 
-            // check oneway.
-            var oneway = encoder.Vehicle.IsOneWay(encoder.Graph.TagsIndex.Get(closest.Item3.Tags));
-            var useForward = (oneway == null) || (oneway.Value == closest.Item3.Forward);
+            // get locations of edge.
+            var startLocation = encoder.GetVertexLocation(closest.Item1).ToGeoCoordinate();
+            var endLocation = encoder.GetVertexLocation(closest.Item2).ToGeoCoordinate();
 
-            // build location and make sure the vehicle can travel from from location to to location.
-            LiveEdge edge;
-            long from, to;
-            if (useForward)
-            { // encode first point to last point.
-                edge = closest.Item3;
-                from = closest.Item1;
-                to = closest.Item2;
-            }
-            else
-            { // encode last point to first point.
-                var reverseEdge = new LiveEdge();
-                reverseEdge.Tags = closest.Item3.Tags;
-                reverseEdge.Forward = !closest.Item3.Forward;
-                reverseEdge.Distance = closest.Item3.Distance;
+            // build a proper referenced line.
+            var referencedLine = encoder.BuildLineLocationVertexExact(startLocation, endLocation, 0, startLocation, endLocation, 0, 1);
 
-                edge = reverseEdge;
-                from = closest.Item2;
-                to = closest.Item1;
-            }
-
-            // OK, now we have a naive location, we need to check if it's valid.
-            // see: §C section 6 @ http://www.tomtom.com/lib/OpenLR/OpenLR-whitepaper.pdf
-            var referencedPointAlongLine = new OpenLR.Referenced.Locations.ReferencedPointAlongLine()
+            // build the point-along-line location.
+            return new ReferencedPointAlongLine()
             {
-                Route = new ReferencedLine(encoder.Graph)
-                {
-                    Edges = new LiveEdge[] { edge },
-                    Vertices = new long[] { from, to }
-                },
+                Route = referencedLine,
                 Latitude = location.Latitude,
-                Longitude = location.Longitude
+                Longitude = location.Longitude,
+                Orientation = Model.Orientation.NoOrientation
             };
-
-            // RULE1: distance should not exceed 15km.
-            var length = referencedPointAlongLine.Length(encoder);
-            if (length.Value >= 15000)
-            { // no implented this.
-                throw new NotImplementedException("Distance between the two closest valid points is too big, should insert intermediate point.");
-            }
-
-            // RULE2: no need to check, will be rounded.
-
-            // RULE3: ok, there are two points.
-
-            // RULE4: choosen points should be valid network points.
-            var excludeSet = new HashSet<long>();
-            if (!encoder.IsVertexValid(referencedPointAlongLine.Route.Vertices[0]))
-            { // from is not valid, try to find a valid point.
-                var pathToValid = encoder.FindValidVertexFor(referencedPointAlongLine.Route.Vertices[0], referencedPointAlongLine.Route.Edges[0], referencedPointAlongLine.Route.Vertices[1],
-                    excludeSet, false);
-
-                // build edges list.
-                if (pathToValid != null)
-                { // no path found, just leave things as is.
-                    var shortestRoute = encoder.FindShortestPath(referencedPointAlongLine.Route.Vertices[1], pathToValid.Vertex, false);
-                    while (shortestRoute != null && !shortestRoute.Contains(referencedPointAlongLine.Route.Vertices[0]))
-                    { // the vertex that should be on this shortest route, isn't anymore.
-                        // exclude the current target vertex, 
-                        excludeSet.Add(pathToValid.Vertex);
-                        // calulate a new path-to-valid.
-                        pathToValid = encoder.FindValidVertexFor(referencedPointAlongLine.Route.Vertices[0], referencedPointAlongLine.Route.Edges[0], referencedPointAlongLine.Route.Vertices[1],
-                            excludeSet, false);
-                        if (pathToValid == null)
-                        { // a new path was not found.
-                            break;
-                        }
-                        shortestRoute = encoder.FindShortestPath(referencedPointAlongLine.Route.Vertices[1], pathToValid.Vertex, false);
-                    }
-                    if (pathToValid != null)
-                    { // no path found, just leave things as is.
-                        var vertices = pathToValid.ToArray().Reverse().ToList();
-                        var edges = new List<LiveEdge>();
-                        for (int idx = 0; idx < vertices.Count - 1; idx++)
-                        { // loop over edges.
-                            edge = vertices[idx].Edge;
-                            // Next OsmSharp version: use closest.Value.Value.Reverse()?
-                            var reverseEdge = new LiveEdge();
-                            reverseEdge.Tags = edge.Tags;
-                            reverseEdge.Forward = !edge.Forward;
-                            reverseEdge.Distance = edge.Distance;
-
-                            edge = reverseEdge;
-                            edges.Add(edge);
-                        }
-
-                        // create new location.
-                        var edgesArray = new LiveEdge[edges.Count + referencedPointAlongLine.Route.Edges.Length];
-                        edges.CopyTo(0, edgesArray, 0, edges.Count);
-                        referencedPointAlongLine.Route.Edges.CopyTo(0, edgesArray, edges.Count, referencedPointAlongLine.Route.Edges.Length);
-                        var vertexArray = new long[vertices.Count - 1 + referencedPointAlongLine.Route.Vertices.Length];
-                        vertices.ConvertAll(x => (long)x.Vertex).CopyTo(0, vertexArray, 0, vertices.Count - 1);
-                        referencedPointAlongLine.Route.Vertices.CopyTo(0, vertexArray, vertices.Count - 1, referencedPointAlongLine.Route.Vertices.Length);
-
-                        referencedPointAlongLine.Route.Edges = edgesArray;
-                        referencedPointAlongLine.Route.Vertices = vertexArray;
-                    }
-                }
-            }
-            excludeSet.Clear();
-            if (!encoder.IsVertexValid(referencedPointAlongLine.Route.Vertices[referencedPointAlongLine.Route.Vertices.Length - 1]))
-            { // from is not valid, try to find a valid point.
-                var vertexCount = referencedPointAlongLine.Route.Vertices.Length;
-                var pathToValid = encoder.FindValidVertexFor(referencedPointAlongLine.Route.Vertices[vertexCount - 1], referencedPointAlongLine.Route.Edges[
-                    referencedPointAlongLine.Route.Edges.Length - 1].ToReverse(), referencedPointAlongLine.Route.Vertices[vertexCount - 2], excludeSet, true);
-
-                // build edges list.
-                if (pathToValid != null)
-                { // no path found, just leave things as is.
-                    var shortestRoute = encoder.FindShortestPath(referencedPointAlongLine.Route.Vertices[vertexCount - 2], pathToValid.Vertex, true);
-                    while (shortestRoute != null && !shortestRoute.Contains(referencedPointAlongLine.Route.Vertices[vertexCount - 1]))
-                    { // the vertex that should be on this shortest route, isn't anymore.
-                        // exclude the current target vertex, 
-                        excludeSet.Add(pathToValid.Vertex);
-                        // calulate a new path-to-valid.
-                        pathToValid = encoder.FindValidVertexFor(referencedPointAlongLine.Route.Vertices[vertexCount - 1], referencedPointAlongLine.Route.Edges[
-                            referencedPointAlongLine.Route.Edges.Length - 1].ToReverse(), referencedPointAlongLine.Route.Vertices[vertexCount - 2], excludeSet, true);
-                        if (pathToValid == null)
-                        { // a new path was not found.
-                            break;
-                        }
-                        shortestRoute = encoder.FindShortestPath(referencedPointAlongLine.Route.Vertices[vertexCount - 2], pathToValid.Vertex, true);
-                    }
-                    if (pathToValid != null)
-                    { // no path found, just leave things as is.
-                        var vertices = pathToValid.ToArray().ToList();
-                        var edges = new List<LiveEdge>();
-                        for (int idx = 1; idx < vertices.Count; idx++)
-                        { // loop over edges.
-                            edge = vertices[idx].Edge;
-                            //if (!edge.Forward)
-                            //{ // use reverse edge.
-                            //    edge = edge.ToReverse();
-                            //}
-                            edges.Add(edge);
-                        }
-
-                        // create new location.
-                        var edgesArray = new LiveEdge[edges.Count + referencedPointAlongLine.Route.Edges.Length];
-                        referencedPointAlongLine.Route.Edges.CopyTo(0, edgesArray, 0, referencedPointAlongLine.Route.Edges.Length);
-                        edges.CopyTo(0, edgesArray, referencedPointAlongLine.Route.Edges.Length, edges.Count);
-                        var vertexArray = new long[vertices.Count - 1 + referencedPointAlongLine.Route.Vertices.Length];
-                        referencedPointAlongLine.Route.Vertices.CopyTo(0, vertexArray, 0, referencedPointAlongLine.Route.Vertices.Length);
-                        vertices.ConvertAll(x => (long)x.Vertex).CopyTo(1, vertexArray, referencedPointAlongLine.Route.Vertices.Length, vertices.Count - 1);
-
-                        referencedPointAlongLine.Route.Edges = edgesArray;
-                        referencedPointAlongLine.Route.Vertices = vertexArray;
-                    }
-                }
-            }
-
-            // RULE1: check again, distance should not exceed 15km.
-            length = referencedPointAlongLine.Length(encoder);
-            if (length.Value >= 15000)
-            { // not implented this just yet.
-                throw new NotImplementedException("Distance between the two closest valid points is too big, should insert intermediate point.");
-            }
-
-            return referencedPointAlongLine;
         }
 
         /// <summary>
