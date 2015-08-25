@@ -324,12 +324,13 @@ namespace OpenLR.Referenced
         public static List<GeoCoordinate> GetCoordinates(this ReferencedLine referencedLine, ReferencedEncoderBase encoder, int start, int count)
         {
             var coordinates = new List<GeoCoordinate>();
+            if(count <= 0)
+            {
+                return coordinates;
+            }
+            coordinates.Add(encoder.GetVertexLocation(referencedLine.Vertices[start]).ToGeoCoordinate());
             for (var i = start; i < start + count - 1; i++)
             {
-                if (coordinates.Count == 0)
-                {
-                    coordinates.Add(encoder.GetVertexLocation(referencedLine.Vertices[i]).ToGeoCoordinate());
-                }
                 if (referencedLine.EdgeShapes[i] != null)
                 {
                     for (var j = 0; j < referencedLine.EdgeShapes[i].Length; j++)

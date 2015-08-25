@@ -257,7 +257,7 @@ namespace OpenLR.Referenced.Encoding
             // get start/end vertex.
             var vertexIdx1 = points[start];
             var vertexIdx2 = points[start + 1];
-            var count = vertexIdx2 - vertexIdx1;
+            var count = vertexIdx2 - vertexIdx1 + 1;
 
             // calculate length to begin with.
             var coordinates = referencedLine.GetCoordinates(encoder, vertexIdx1, count);
@@ -441,7 +441,24 @@ namespace OpenLR.Referenced.Encoding
         /// <returns></returns>
         private FunctionalRoadClass BuildLowestFrcToNext(ReferencedLine referencedLocation, int vertex1, int vertex2)
         {
-            return FunctionalRoadClass.Frc7;
+            FunctionalRoadClass? lowest = null;
+            for (var edge = vertex1; edge < vertex2; edge++)
+            {
+                var tags = this.GetTags(referencedLocation.Edges[edge].Tags);
+                FormOfWay fow;
+                FunctionalRoadClass frc;
+                if (!this.TryMatching(tags, out frc, out fow))
+                {
+                    throw new ReferencedEncodingException(referencedLocation, "Could not find frc and/or fow for the given tags.");
+                }
+                
+                if(!lowest.HasValue || 
+                    frc < lowest)
+                { 
+                    lowest = frc;
+                }
+            }
+            return lowest.Value;
         }
 
         /// <summary>
@@ -453,7 +470,7 @@ namespace OpenLR.Referenced.Encoding
         /// <returns></returns>
         private int BuildDistanceToNext(ReferencedLine referencedLocation, int vertexIdx1, int vertexIdx2)
         {
-            return (int)(referencedLocation.GetCoordinates(this.MainEncoder, vertexIdx1, vertexIdx2 - vertexIdx1).Length().Value);
+            return (int)(referencedLocation.GetCoordinates(this.MainEncoder, vertexIdx1, vertexIdx2 - vertexIdx1 + 1).Length().Value);
         }
     }
 }

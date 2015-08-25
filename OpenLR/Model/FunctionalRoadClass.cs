@@ -8,34 +8,34 @@
         /// <summary>
         /// Main road
         /// </summary>
-        Frc0,
+        Frc0 = 0,
         /// <summary>
         /// First class road
         /// </summary>
-        Frc1,
+        Frc1 = 1,
         /// <summary>
         /// Second class road
         /// </summary>
-        Frc2,
+        Frc2 = 2,
         /// <summary>
         /// Third class road
         /// </summary>
-        Frc3,
+        Frc3 = 3,
         /// <summary>
         /// Fourth class road
         /// </summary>
-        Frc4,
+        Frc4 = 4,
         /// <summary>
         /// Fifth class road
         /// </summary>
-        Frc5,
+        Frc5 = 5,
         /// <summary>
         /// Sixth class road
         /// </summary>
-        Frc6,
+        Frc6 = 6,
         /// <summary>
         /// Other class road
         /// </summary>
-        Frc7
+        Frc7 = 7
     }
 }
