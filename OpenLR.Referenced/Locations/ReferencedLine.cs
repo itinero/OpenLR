@@ -56,6 +56,32 @@ namespace OpenLR.Referenced.Locations
         public float NegativeOffsetPercentage { get; set; }
 
         /// <summary>
+        /// Creates a new object that is a copy of the current instance.
+        /// </summary>
+        /// <returns></returns>
+        public override object Clone()
+        {
+            GeoCoordinateSimple[][] edgeShapes = null;
+            if(this.EdgeShapes != null)
+            {
+                edgeShapes = new GeoCoordinateSimple[this.EdgeShapes.Length][];
+                for (var i = 0; i < edgeShapes.Length; i++)
+                {
+                    edgeShapes[i] = edgeShapes[i] == null ? null : edgeShapes[i].Clone() as GeoCoordinateSimple[];
+                }
+            }
+
+            return new ReferencedLine(_graph)
+            {
+                Edges = this.Edges == null ? null : this.Edges.Clone() as LiveEdge[],
+                Vertices = this.Vertices == null ? null : this.Vertices.Clone() as long[],
+                EdgeShapes = edgeShapes,
+                NegativeOffsetPercentage = this.NegativeOffsetPercentage,
+                PositiveOffsetPercentage = this.PositiveOffsetPercentage
+            };
+        }
+
+        /// <summary>
         /// Adds another line location to this one.
         /// </summary>
         /// <param name="location"></param>

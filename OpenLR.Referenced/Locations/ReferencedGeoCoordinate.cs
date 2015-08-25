@@ -22,5 +22,18 @@ namespace OpenLR.Referenced.Locations
         /// Gets or sets the longitude.
         /// </summary>
         public double Longitude { get; set; }
+
+        /// <summary>
+        /// Creates a new object that is a copy of the current instance.
+        /// </summary>
+        /// <returns></returns>
+        public override object Clone()
+        {
+            return new ReferencedGeoCoordinate()
+            {
+                Latitude = this.Latitude,
+                Longitude = this.Longitude
+            };
+        }
     }
 }

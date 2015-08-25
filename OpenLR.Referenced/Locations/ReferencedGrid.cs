@@ -46,6 +46,22 @@ namespace OpenLR.Referenced.Locations
         /// </summary>
         public int Columns { get; set; }
 
+        /// <summary>
+        /// Creates a new object that is a copy of the current instance.
+        /// </summary>
+        /// <returns></returns>
+        public override object Clone()
+        {
+            return new ReferencedGrid()
+            {
+                LowerLeftLatitude = this.LowerLeftLatitude,
+                LowerLeftLongitude = this.LowerLeftLongitude,
+                UpperRightLatitude = this.UpperRightLatitude,
+                UpperRightLongitude = this.UpperRightLongitude,
+                Rows = this.Rows,
+                Columns = this.Columns
+            };
+        }
 
         /// <summary>
         /// Converts this referenced location to a geometry.

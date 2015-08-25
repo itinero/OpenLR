@@ -27,5 +27,19 @@ namespace OpenLR.Referenced.Locations
         /// Gets or sets the radius.
         /// </summary>
         public int Radius { get; set; }
+
+        /// <summary>
+        /// Creates a new object that is a copy of the current instance.
+        /// </summary>
+        /// <returns></returns>
+        public override object Clone()
+        {
+            return new ReferencedCircle()
+            {
+                Latitude = this.Latitude,
+                Longitude = this.Longitude,
+                Radius = this.Radius
+            };
+        }
     }
 }

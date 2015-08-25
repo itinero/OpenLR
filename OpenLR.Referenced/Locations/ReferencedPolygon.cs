@@ -18,5 +18,21 @@ namespace OpenLR.Referenced.Locations
         /// Gets or sets the list of coordinates.
         /// </summary>
         public Coordinate[] Coordinates { get; set; }
+
+        /// <summary>
+        /// Creates a new object that is a copy of the current instance.
+        /// </summary>
+        /// <returns></returns>
+        public override object Clone()
+        {
+            if(this.Coordinates == null)
+            {
+                return new ReferencedPolygon();
+            }
+            return new ReferencedPolygon()
+            {
+                Coordinates = this.Coordinates.Clone() as Coordinate[]
+            };
+        }
     }
 }

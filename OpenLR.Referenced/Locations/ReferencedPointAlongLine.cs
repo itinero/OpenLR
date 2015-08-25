@@ -40,6 +40,34 @@ namespace OpenLR.Referenced.Locations
         /// Gets or sets the edge meta.
         /// </summary>
         public EdgeMeta EdgeMeta { get; set; }
+
+        /// <summary>
+        /// Creates a new object that is a copy of the current instance.
+        /// </summary>
+        /// <returns></returns>
+        public override object Clone()
+        {
+            if(this.Route == null)
+            {
+                return new ReferencedPointAlongLine()
+                {
+                    EdgeMeta = this.EdgeMeta,
+                    Latitude = this.Latitude,
+                    Longitude = this.Longitude,
+                    Orientation = this.Orientation,
+                    Score = this.Score
+                };
+            }
+            return new ReferencedPointAlongLine()
+            {
+                EdgeMeta = this.EdgeMeta,
+                Latitude = this.Latitude,
+                Longitude = this.Longitude,
+                Orientation = this.Orientation,
+                Route = this.Route.Clone() as ReferencedLine,
+                Score = this.Score
+            };
+        }
     }
 
     /// <summary>

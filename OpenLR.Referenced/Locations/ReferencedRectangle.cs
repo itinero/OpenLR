@@ -32,5 +32,20 @@ namespace OpenLR.Referenced.Locations
         /// Gets or sets the upper right longitude.
         /// </summary>
         public double UpperRightLongitude { get; set; }
+
+        /// <summary>
+        /// Creates a new object that is a copy of the current instance.
+        /// </summary>
+        /// <returns></returns>
+        public override object Clone()
+        {
+            return new ReferencedRectangle()
+            {
+                LowerLeftLatitude = this.LowerLeftLatitude,
+                LowerLeftLongitude = this.LowerLeftLongitude,
+                UpperRightLatitude = this.UpperRightLatitude,
+                UpperRightLongitude = this.UpperRightLongitude
+            };
+        }
     }
 }
