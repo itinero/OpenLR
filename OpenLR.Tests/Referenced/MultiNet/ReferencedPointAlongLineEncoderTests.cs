@@ -38,7 +38,7 @@ namespace OpenLR.Tests.Referenced.MultiNet
             graphDataSource.AddEdge(vertex2, vertex1, new LiveEdge()
             {
                 Distance = 10,
-                Forward = true,
+                Forward = false,
                 Tags = tags.Add(new TagsCollection(
                     Tag.Create("FRC", "2"),
                     Tag.Create("FOW", "3")))

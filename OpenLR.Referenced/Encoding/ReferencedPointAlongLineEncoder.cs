@@ -37,7 +37,38 @@ namespace OpenLR.Referenced.Encoding
         {
             try
             {
-                // initialize location.
+                // Step – 1: Check validity of the location and offsets to be encoded.
+                // validate connected and traversal.
+                referencedLocation.Route.ValidateConnected(this.MainEncoder);
+                // validate offsets.
+                referencedLocation.Route.ValidateOffsets(this.MainEncoder);
+                // validate for binary.
+                referencedLocation.Route.ValidateBinary(this.MainEncoder);
+
+                // Step – 2 Adjust start and end node of the location to represent valid map nodes.
+                referencedLocation.Route.AdjustToValidPoints(this.MainEncoder);
+                // keep a list of LR-point.
+                var points = new List<int>(new int[] { 0, referencedLocation.Route.Vertices.Length - 1 });
+
+                // Step – 3     Determine coverage of the location by a shortest-path.
+                // Step – 4     Check whether the calculated shortest-path covers the location completely. 
+                //              Go to step 5 if the location is not covered completely, go to step 7 if the location is covered.
+                // Step – 5     Determine the position of a new intermediate location reference point so that the part of the 
+                //              location between the start of the shortest-path calculation and the new intermediate is covered 
+                //              completely by a shortest-path.
+                // Step – 6     Go to step 3 and restart shortest path calculation between the new intermediate location reference 
+                //              point and the end of the location.
+                // Step – 7     Concatenate the calculated shortest-paths for a complete coverage of the location and form an 
+                //              ordered list of location reference points (from the start to the end of the location).
+
+                // Step – 8     Check validity of the location reference path. If the location reference path is invalid then go 
+                //              to step 9, if the location reference path is valid then go to step 10.
+                // Step – 9     Add a sufficient number of additional intermediate location reference points if the distance 
+                //              between two location reference points exceeds the maximum distance. Remove the start/end LR-point 
+                //              if the positive/negative offset value exceeds the length of the corresponding path.
+                referencedLocation.Route.AdjustToValidDistances(this.MainEncoder, points);
+
+                // Step – 10    Create physical representation of the location reference.
                 var location = new PointAlongLineLocation();
 
                 // match fow/frc for first edge.

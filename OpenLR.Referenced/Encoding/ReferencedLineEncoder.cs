@@ -3,7 +3,6 @@ using OpenLR.Model;
 using OpenLR.Referenced.Locations;
 using OsmSharp;
 using OsmSharp.Collections.Tags;
-using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Routing.Osm.Graphs;
 using System;
@@ -25,279 +24,7 @@ namespace OpenLR.Referenced.Encoding
         public ReferencedLineEncoder(ReferencedEncoderBase mainEncoder, OpenLR.Encoding.LocationEncoder<LineLocation> rawEncoder)
             : base(mainEncoder, rawEncoder)
         {
-            this.ValidateForBinary = true;
-        }
 
-        /// <summary>
-        /// Gets or sets the validate for binary flag.
-        /// </summary>
-        public bool ValidateForBinary { get; set; }
-
-        /// <summary>
-        /// Validates if the location is connected.
-        /// </summary>
-        /// <param name="line">The line to check.</param>
-        /// <returns></returns>
-        private void ValidateConnected(ReferencedLine line)
-        {
-            var edges = line.Edges;
-            var vertices = line.Vertices;
-
-            // 1: Is the path connected?
-            // 2: Is the path traversable?
-            for (int edgeIdx = 0; edgeIdx < edges.Length; edgeIdx++)
-            {
-                var from = vertices[edgeIdx];
-                var to = vertices[edgeIdx + 1];
-
-                bool found = false;
-                foreach (var edge in this.MainEncoder.Graph.GetEdges(from))
-                {
-                    if (edge.Key == to &&
-                        edge.Value.Equals(edges[edgeIdx]))
-                    { // edge was found, is valid.
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found)
-                { // edge is not found, path not connected.
-                    throw new ArgumentOutOfRangeException(string.Format("Edge {0} cannot be found between vertex {1} and {2}. The given path is not connected.",
-                        edges[edgeIdx].ToInvariantString(), from, to));
-                }
-                // check whether the edge can traversed.
-                var tags = this.MainEncoder.Graph.TagsIndex.Get(edges[edgeIdx].Tags);
-                if (!this.MainEncoder.Vehicle.CanTraverse(tags))
-                { // oeps, cannot be traversed.
-                    throw new ArgumentOutOfRangeException(string.Format("Edge at index {0} cannot be traversed by vehicle {1}.", edgeIdx, this.MainEncoder.Vehicle.UniqueName));
-                }
-                // check whether the edge can be traversed in the correct direction.
-                var oneway = this.MainEncoder.Vehicle.IsOneWay(tags);
-                var canMoveForward = (oneway == null) || (oneway.Value == edges[edgeIdx].Forward);
-                if (!canMoveForward)
-                { // path cannot be traversed in this direction.
-                    throw new ArgumentOutOfRangeException(string.Format("Edge at index {0} cannot be traversed by vehicle {1} in the direction given.", edgeIdx, this.MainEncoder.Vehicle.UniqueName));
-                }
-            }
-        }
-
-        /// <summary>
-        /// Validates the offsets.
-        /// </summary>
-        /// <param name="line">The line to check.</param>
-        private void ValidateOffsets(ReferencedLine line)
-        {
-
-        }
-
-        /// <summary>
-        /// Validates the location for encoding in binary format.
-        /// </summary>
-        /// <param name="line">The line to check.</param>
-        private void ValidateBinary(ReferencedLine line)
-        {
-
-        }
-
-        /// <summary>
-        /// Adjusts the given location to use valid LR-points.
-        /// </summary>
-        /// <param name="encoder">The encoder.</param>
-        /// <param name="referencedLine">The line to check.</param>
-        public static void AdjustToValidPoints(ReferencedEncoderBase encoder, ReferencedLine referencedLine)
-        {
-            var length = (float)referencedLine.Length(encoder).Value;
-            var positiveOffsetLength = (referencedLine.PositiveOffsetPercentage / 100) * length;
-            var negativeOffsetLength = (referencedLine.NegativeOffsetPercentage / 100) * length;
-            var excludeSet = new HashSet<long>();
-            if (!encoder.IsVertexValid(referencedLine.Vertices[0]))
-            { // from is not valid, try to find a valid point.
-                var pathToValid = encoder.FindValidVertexFor(referencedLine.Vertices[0], referencedLine.Edges[0], referencedLine.Vertices[1],
-                    excludeSet, false);
-
-                // build edges list.
-                if (pathToValid != null)
-                { // no path found, just leave things as is.
-                    var shortestRoute = encoder.FindShortestPath(referencedLine.Vertices[1], pathToValid.Vertex, false);
-                    while (shortestRoute != null && !shortestRoute.Contains(referencedLine.Vertices[0]))
-                    { // the vertex that should be on this shortest route, isn't anymore.
-                        // exclude the current target vertex, 
-                        excludeSet.Add(pathToValid.Vertex);
-                        // calulate a new path-to-valid.
-                        pathToValid = encoder.FindValidVertexFor(referencedLine.Vertices[0], referencedLine.Edges[0], referencedLine.Vertices[1],
-                            excludeSet, false);
-                        if (pathToValid == null)
-                        { // a new path was not found.
-                            break;
-                        }
-                        shortestRoute = encoder.FindShortestPath(referencedLine.Vertices[1], pathToValid.Vertex, false);
-                    }
-                    if (pathToValid != null)
-                    { // no path found, just leave things as is.
-                        var newVertices = pathToValid.ToArray().Reverse().ToList();
-                        var newEdges = new List<LiveEdge>();
-                        for (int idx = 0; idx < newVertices.Count - 1; idx++)
-                        { // loop over edges.
-                            var edge = newVertices[idx].Edge;
-                            // Next OsmSharp version: use closest.Value.Value.Reverse()?
-                            var reverseEdge = new LiveEdge();
-                            reverseEdge.Tags = edge.Tags;
-                            reverseEdge.Forward = !edge.Forward;
-                            reverseEdge.Distance = edge.Distance;
-
-                            edge = reverseEdge;
-                            newEdges.Add(edge);
-                        }
-
-                        // create new location.
-                        var edgesArray = new LiveEdge[newEdges.Count + referencedLine.Edges.Length];
-                        newEdges.CopyTo(0, edgesArray, 0, newEdges.Count);
-                        referencedLine.Edges.CopyTo(0, edgesArray, newEdges.Count, referencedLine.Edges.Length);
-                        var vertexArray = new long[newVertices.Count - 1 + referencedLine.Vertices.Length];
-                        newVertices.ConvertAll(x => (long)x.Vertex).CopyTo(0, vertexArray, 0, newVertices.Count - 1);
-                        referencedLine.Vertices.CopyTo(0, vertexArray, newVertices.Count - 1, referencedLine.Vertices.Length);
-
-                        referencedLine.Edges = edgesArray;
-                        referencedLine.Vertices = vertexArray;
-
-                        // adjust offset length.
-                        var newLength = (float)referencedLine.Length(encoder).Value;
-                        positiveOffsetLength = positiveOffsetLength + (newLength - length);
-                        length = newLength;
-                    }
-                }
-            }
-            excludeSet.Clear();
-            if (!encoder.IsVertexValid(referencedLine.Vertices[referencedLine.Vertices.Length - 1]))
-            { // from is not valid, try to find a valid point.
-                var vertexCount = referencedLine.Vertices.Length;
-                var pathToValid = encoder.FindValidVertexFor(referencedLine.Vertices[vertexCount - 1], referencedLine.Edges[
-                    referencedLine.Edges.Length - 1].ToReverse(), referencedLine.Vertices[vertexCount - 2], excludeSet, true);
-
-                // build edges list.
-                if (pathToValid != null)
-                { // no path found, just leave things as is.
-                    var shortestRoute = encoder.FindShortestPath(referencedLine.Vertices[vertexCount - 2], pathToValid.Vertex, true);
-                    while (shortestRoute != null && !shortestRoute.Contains(referencedLine.Vertices[vertexCount - 1]))
-                    { // the vertex that should be on this shortest route, isn't anymore.
-                        // exclude the current target vertex, 
-                        excludeSet.Add(pathToValid.Vertex);
-                        // calulate a new path-to-valid.
-                        pathToValid = encoder.FindValidVertexFor(referencedLine.Vertices[vertexCount - 1], referencedLine.Edges[
-                            referencedLine.Edges.Length - 1].ToReverse(), referencedLine.Vertices[vertexCount - 2], excludeSet, true);
-                        if (pathToValid == null)
-                        { // a new path was not found.
-                            break;
-                        }
-                        shortestRoute = encoder.FindShortestPath(referencedLine.Vertices[vertexCount - 2], pathToValid.Vertex, true);
-                    }
-                    if (pathToValid != null)
-                    { // no path found, just leave things as is.
-                        var newVertices = pathToValid.ToArray().ToList();
-                        var newEdges = new List<LiveEdge>();
-                        for (int idx = 1; idx < newVertices.Count; idx++)
-                        { // loop over edges.
-                            var edge = newVertices[idx].Edge;
-                            newEdges.Add(edge);
-                        }
-
-                        // create new location.
-                        var edgesArray = new LiveEdge[newEdges.Count + referencedLine.Edges.Length];
-                        referencedLine.Edges.CopyTo(0, edgesArray, 0, referencedLine.Edges.Length);
-                        newEdges.CopyTo(0, edgesArray, referencedLine.Edges.Length, newEdges.Count);
-                        var vertexArray = new long[newVertices.Count - 1 + referencedLine.Vertices.Length];
-                        referencedLine.Vertices.CopyTo(0, vertexArray, 0, referencedLine.Vertices.Length);
-                        newVertices.ConvertAll(x => (long)x.Vertex).CopyTo(1, vertexArray, referencedLine.Vertices.Length, newVertices.Count - 1);
-
-                        referencedLine.Edges = edgesArray;
-                        referencedLine.Vertices = vertexArray;
-
-                        // adjust offset length.
-                        var newLength = (float)referencedLine.Length(encoder).Value;
-                        negativeOffsetLength = negativeOffsetLength + (newLength - length);
-                        length = newLength;
-                    }
-                }
-            }
-
-            // update offset percentags.
-            referencedLine.PositiveOffsetPercentage = (float)((positiveOffsetLength / length) * 100.0);
-            referencedLine.NegativeOffsetPercentage = (float)((negativeOffsetLength / length) * 100.0);
-
-            // fill shapes.
-            referencedLine.EdgeShapes = new GeoCoordinateSimple[referencedLine.Edges.Length][];
-            for (int i = 0; i < referencedLine.Edges.Length; i++)
-            {
-                referencedLine.EdgeShapes[i] = encoder.Graph.GetEdgeShape(
-                    referencedLine.Vertices[i], referencedLine.Vertices[i + 1]);
-            }
-        }
-
-        /// <summary>
-        /// Adjusts the given location by inserting intermediate LR-points if needed.
-        /// </summary>
-        /// <param name="encoder">The encoder.</param>
-        /// <param name="referencedLine">The line to check.</param>
-        /// <param name="points">The indexes of the LR-points.</param>
-        /// 
-        public static void AdjustToValidDistances(ReferencedEncoderBase encoder, ReferencedLine referencedLine, List<int> points)
-        {
-            ReferencedLineEncoder.AdjustToValidDistance(encoder, referencedLine, points, 0);
-        }
-
-        /// <summary>
-        /// Adjusts the given location by inserting an intermediate LR-point at the point representing pointIdx.
-        /// </summary>
-        /// <param name="encoder">The encoder.</param>
-        /// <param name="referencedLine">The line to check.</param>
-        /// <param name="points">The indexes of the LR-points.</param>
-        /// <param name="start">The starting vertex.</param>
-        public static void AdjustToValidDistance(ReferencedEncoderBase encoder, ReferencedLine referencedLine, List<int> points, int start)
-        {
-            // get start/end vertex.
-            var vertexIdx1 = points[start];
-            var vertexIdx2 = points[start + 1];
-            var count = vertexIdx2 - vertexIdx1 + 1;
-
-            // calculate length to begin with.
-            var coordinates = referencedLine.GetCoordinates(encoder, vertexIdx1, count);
-            var length = coordinates.Length().Value;
-            if (length > 15000)
-            { // too long.
-                // find the best intermediate point.
-                var intermediatePoints = new SortedDictionary<double, int>();
-                for (int idx = vertexIdx1 + 1; idx < vertexIdx1 + count - 2; idx++)
-                {
-                    var score = 0.0;
-                    if(encoder.IsVertexValid(referencedLine.Vertices[idx]))
-                    { // a valid vertex is obviously a better choice!
-                        score = score + 4096;
-                    }
-
-                    // the length is good when close to 15000 but not over.
-                    var lengthBefore = referencedLine.GetCoordinates(encoder, vertexIdx1, idx - vertexIdx1 + 1).Length();
-                    if (lengthBefore.Value < 15000)
-                    { // not over!
-                        score = score + (1024 * (lengthBefore.Value / 15000));
-                    }
-                    var lengthAfter = referencedLine.GetCoordinates(encoder, idx, count - idx).Length();
-                    if (lengthAfter.Value < 15000)
-                    { // not over!
-                        score = score + (1024 * (lengthAfter.Value / 15000));
-                    }
-
-                    // add to sorted dictionary.
-                    intermediatePoints[8192 - score] = idx;
-                }
-
-                // select the best point and insert it in between.
-                var bestPoint = intermediatePoints.First().Value;
-                points.Insert(start + 1, bestPoint);
-
-                // test the two distances.
-                ReferencedLineEncoder.AdjustToValidDistance(encoder, referencedLine, points, start + 1);
-                ReferencedLineEncoder.AdjustToValidDistance(encoder, referencedLine, points, start);
-            }
         }
 
         /// <summary>
@@ -311,14 +38,14 @@ namespace OpenLR.Referenced.Encoding
             {
                 // Step – 1: Check validity of the location and offsets to be encoded.
                 // validate connected and traversal.
-                this.ValidateConnected(referencedLocation);
+                referencedLocation.ValidateConnected(this.MainEncoder);
                 // validate offsets.
-                this.ValidateOffsets(referencedLocation);
+                referencedLocation.ValidateOffsets(this.MainEncoder);
                 // validate for binary.
-                if (this.ValidateForBinary) { this.ValidateBinary(referencedLocation); }
+                referencedLocation.ValidateBinary(this.MainEncoder);
 
                 // Step – 2 Adjust start and end node of the location to represent valid map nodes.
-                ReferencedLineEncoder.AdjustToValidPoints(this.MainEncoder, referencedLocation);
+                referencedLocation.AdjustToValidPoints(this.MainEncoder);
                 // keep a list of LR-point.
                 var points = new List<int>(new int[] { 0, referencedLocation.Vertices.Length -1});
 
@@ -338,7 +65,7 @@ namespace OpenLR.Referenced.Encoding
                 // Step – 9     Add a sufficient number of additional intermediate location reference points if the distance 
                 //              between two location reference points exceeds the maximum distance. Remove the start/end LR-point 
                 //              if the positive/negative offset value exceeds the length of the corresponding path.
-                ReferencedLineEncoder.AdjustToValidDistances(this.MainEncoder, referencedLocation, points);
+                referencedLocation.AdjustToValidDistances(this.MainEncoder, points);
 
                 // Step – 10    Create physical representation of the location reference.
                 var coordinates = referencedLocation.GetCoordinates(this.MainEncoder);

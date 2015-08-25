@@ -40,7 +40,7 @@ namespace OpenLR.Tests.Referenced.NWB
             graphDataSource.AddEdge(vertex2, vertex1, new LiveEdge()
             {
                 Distance = 10,
-                Forward = true,
+                Forward = false,
                 Tags = tags.Add(new TagsCollection(
                     Tag.Create("BAANSUBSRT", "VBD"),
                     Tag.Create("WEGBEHSRT", "R"),
