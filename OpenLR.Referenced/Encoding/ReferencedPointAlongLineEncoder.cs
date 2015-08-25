@@ -99,7 +99,7 @@ namespace OpenLR.Referenced.Encoding
                 // initialize from point, to point and create the coordinate list.
                 var from = new GeoCoordinate(location.First.Coordinate.Latitude, location.First.Coordinate.Longitude);
                 var to = new GeoCoordinate(location.Last.Coordinate.Latitude, location.Last.Coordinate.Longitude);
-                var coordinates = referencedLocation.GetCoordinates(this.MainEncoder);
+                var coordinates = referencedLocation.Route.GetCoordinates(this.MainEncoder);
 
                 // calculate bearing.
                 location.First.Bearing = (int)this.GetBearing(referencedLocation.Route.Vertices[0], referencedLocation.Route.Edges[0],
@@ -111,6 +111,14 @@ namespace OpenLR.Referenced.Encoding
                 // calculate length.
                 var lengthInMeter = coordinates.Length();
                 location.First.DistanceToNext = (int)lengthInMeter.Value;
+
+                var refLength = 0.0;
+                for(int i = 0; i < referencedLocation.Route.Edges.Length;i++)
+                {
+                    refLength = refLength + referencedLocation.Route.Edges[i].Distance;
+                    var test = referencedLocation.Route.GetCoordinates(this.MainEncoder, 0, i + 2);
+                    var testLength = test.Length();
+                }
 
                 // calculate orientation and side of road.
                 PointF2D bestProjected;

@@ -278,31 +278,6 @@ namespace OpenLR.Referenced
         }
 
         /// <summary>
-        /// Converts the referenced point along the line location to features.
-        /// </summary>
-        /// <param name="referencedPointALongLineLocation"></param>
-        /// <param name="baseEncoder"></param>
-        /// <returns></returns>
-        public static List<GeoCoordinate> GetCoordinates(this ReferencedPointAlongLine referencedPointALongLineLocation, ReferencedEncoderBase baseEncoder)
-        {
-            var coordinates = new List<GeoCoordinate>();
-            for (int idx = 0; idx < referencedPointALongLineLocation.Route.Edges.Length; idx++)
-            {
-                var from = baseEncoder.GetVertexLocation(referencedPointALongLineLocation.Route.Vertices[idx]).ToGeoCoordinate();
-                var to = baseEncoder.GetVertexLocation(referencedPointALongLineLocation.Route.Vertices[idx + 1]).ToGeoCoordinate();
-                var edgeCoordinates = referencedPointALongLineLocation.Route.Edges[idx].GetCoordinates(
-                    referencedPointALongLineLocation.Route.EdgeShapes[idx], from, to);
-                if (coordinates.Count > 0)
-                {
-                    coordinates.RemoveAt(coordinates.Count - 1);
-
-                }
-                coordinates.AddRange(edgeCoordinates);
-            }
-            return coordinates;
-        }
-
-        /// <summary>
         /// Converts the referenced line location to features.
         /// </summary>
         /// <param name="referencedLine">The referenced line.</param>
@@ -853,8 +828,7 @@ namespace OpenLR.Referenced
             var meter = 0.0;
             for (int idx = start; idx < start + count - 1; idx++)
             {
-                meter = meter + GeoCoordinate.DistanceEstimateInMeter(
-                    coordinates[idx], coordinates[idx + 1]);
+                meter = meter + coordinates[idx].DistanceReal(coordinates[idx + 1]).Value;
             }
             return meter;
         }
