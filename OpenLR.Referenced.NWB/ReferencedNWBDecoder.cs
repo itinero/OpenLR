@@ -23,11 +23,6 @@ namespace OpenLR.Referenced.NWB
     public class ReferencedNWBDecoder : ReferencedDecoderBaseLiveEdge
     {
         /// <summary>
-        /// Holds the maximum vertex distance.
-        /// </summary>
-        private Meter _maxVertexDistance = 40;
-
-        /// <summary>
         /// Creates a new referenced live edge decoder.
         /// </summary>
         /// <param name="graph"></param>
@@ -45,9 +40,9 @@ namespace OpenLR.Referenced.NWB
         /// <param name="locationDecoder"></param>
         /// <param name="maxVertexDistance"></param>
         public ReferencedNWBDecoder(BasicRouterDataSource<LiveEdge> graph, Decoder locationDecoder, Meter maxVertexDistance)
-            : base(graph, new global::OsmSharp.Routing.Shape.Vehicles.Car("RIJRICHTING", "H", "T", string.Empty), locationDecoder)
+            : base(graph, new global::OsmSharp.Routing.Shape.Vehicles.Car("RIJRICHTING", "H", "T", string.Empty), locationDecoder, maxVertexDistance)
         {
-            _maxVertexDistance = maxVertexDistance;
+
         }
 
         /// <summary>
@@ -57,7 +52,7 @@ namespace OpenLR.Referenced.NWB
         /// <returns></returns>
         public override IEnumerable<CandidateVertex> FindCandidateVerticesFor(LocationReferencePoint lrp)
         {
-            return this.FindCandidateVerticesFor(lrp, _maxVertexDistance);
+            return this.FindCandidateVerticesFor(lrp, this.MaxVertexDistance);
         }
 
         /// <summary>
