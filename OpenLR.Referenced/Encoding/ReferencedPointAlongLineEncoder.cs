@@ -106,6 +106,11 @@ namespace OpenLR.Referenced.Encoding
 
                 // calculate offset.
                 location.PositiveOffsetPercentage = (float)(bestOffset.Value / lengthInMeter.Value) * 100.0f;
+                if(location.PositiveOffsetPercentage >= 100)
+                { // should be in the range of [0-100[.
+                    // encoding should always work even if not 100% accurate in this case.
+                    location.PositiveOffsetPercentage = 99;
+                }
 
                 return location;
             }

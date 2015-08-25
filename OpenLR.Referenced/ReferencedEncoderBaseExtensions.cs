@@ -21,15 +21,13 @@ namespace OpenLR.Referenced
         /// <summary>
         /// Builds a point along line location.
         /// </summary>
-        /// <param name="encoder">The encoder.</param>
-        /// <param name="location">The location.</param>
         /// <returns></returns>
-        public static ReferencedPointAlongLine BuildPointAlongLine(this ReferencedEncoderBase encoder, GeoCoordinate location)
+        public static ReferencedPointAlongLine BuildPointAlongLine(this ReferencedEncoderBase encoder, GeoCoordinate location, double boxSize = 0.1)
         {
             if (location == null) { throw new ArgumentNullException("location"); }
 
             // get the closest edge that can be traversed to the given location.
-            var closest = encoder.Graph.GetClosestEdge(location);
+            var closest = encoder.Graph.GetClosestEdge(location, double.MaxValue, boxSize);
             if (closest == null)
             { // no location could be found. 
                 throw new Exception("No network features found near the given location. Make sure the network covers the given location.");

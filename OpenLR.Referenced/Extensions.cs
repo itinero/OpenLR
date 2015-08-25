@@ -534,8 +534,8 @@ namespace OpenLR.Referenced
             Tuple<long, long, LiveEdge> bestEdge = null;
 
             var searchBox = new GeoCoordinateBox(
-                new GeoCoordinate(location.Latitude - boxSize, location.Longitude - boxSize),
-                new GeoCoordinate(location.Latitude + boxSize, location.Longitude + boxSize));
+                new GeoCoordinate(location.Latitude - (boxSize / 2), location.Longitude - boxSize),
+                new GeoCoordinate(location.Latitude + (boxSize / 2), location.Longitude + boxSize));
 
             var maxDistanceBox = searchBox;
             if (maxDistance.Value < double.MaxValue)
