@@ -248,6 +248,21 @@ namespace OpenLR.Referenced
             return featureCollection;
         }
 
+        private static NetTopologySuite.IO.GeoJsonWriter _geojsonWriter = null; 
+
+        /// <summary>
+        /// Converts the given feature collection into it's equivalent GeoJSON representation.
+        /// </summary>
+        /// <returns></returns>
+        public static string ToGeoJson(this FeatureCollection features)
+        {
+            if (_geojsonWriter == null)
+            {
+                _geojsonWriter = new NetTopologySuite.IO.GeoJsonWriter();
+            }
+            return _geojsonWriter.Write(features);
+        }
+
         /// <summary>
         /// Converts the referenced point along the line location to features.
         /// </summary>

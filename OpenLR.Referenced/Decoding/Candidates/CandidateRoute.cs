@@ -23,5 +23,15 @@ namespace OpenLR.Referenced.Decoding.Candidates
         /// Gets or sets the score.
         /// </summary>
         public Score Score { get; set; }
+
+        /// <summary>
+        /// Returns a description of this candidate.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return string.Format("{0}: {1}",
+                this.Route.ToString(), this.Score.ToString());
+        }
     }
 }
