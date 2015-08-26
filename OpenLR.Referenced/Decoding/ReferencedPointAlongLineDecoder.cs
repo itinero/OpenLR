@@ -104,6 +104,9 @@ namespace OpenLR.Referenced.Decoding
                     var candidate = this.FindCandidateRoute(combinedScore.Source, combinedScore.Target,
                         lrps[0].LowestFunctionalRoadClassToNext.Value);
 
+                    // bring score of from/to also into the mix.
+                    candidate.Score = candidate.Score + combinedScore.Score;
+
                     // verify bearing by adding it to the score.
                     if (candidate != null && candidate.Route != null)
                     { // calculate bearing and compare with reference bearing.
