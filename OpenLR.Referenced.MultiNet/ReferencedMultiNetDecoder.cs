@@ -60,172 +60,265 @@ namespace OpenLR.Referenced.MultiNet
             }
 
             float frcOneDifferent = 0.8f;
-            float frcTwoDifferent = 0.8f;
+            float frcTwoDifferent = 0.6f;
             float frcMoreDifferent = 0.4f;
 
+            var frcScore = 0.0f;
             switch (frcString)
             {
                 case "0": // main road.
                     if(frc == FunctionalRoadClass.Frc0)
                     {
-                        return 1;
+                        frcScore = 1;
                     }
                     else if(frc == FunctionalRoadClass.Frc1)
                     {
-                        return frcOneDifferent;
+                        frcScore = frcOneDifferent;
                     }
                     else if(frc == FunctionalRoadClass.Frc2)
                     {
-                        return frcTwoDifferent;
+                        frcScore = frcTwoDifferent;
                     }
                     else
                     {
-                        return frcMoreDifferent;
+                        frcScore = frcMoreDifferent;
                     }
+                    break;
                 case "1": // first class road.
                     if (frc == FunctionalRoadClass.Frc1)
                     {
-                        return 1;
+                        frcScore = 1;
                     }
                     else if(frc == FunctionalRoadClass.Frc0 || 
                         frc == FunctionalRoadClass.Frc2)
                     {
-                        return frcOneDifferent;
+                        frcScore = frcOneDifferent;
                     }
                     else if(frc == FunctionalRoadClass.Frc3)
                     {
-                        return frcTwoDifferent;
+                        frcScore = frcTwoDifferent;
                     }
                     else
                     {
-                        return frcMoreDifferent;
+                        frcScore = frcMoreDifferent;
                     }
+                    break;
                 case "2": // second class road.
                     if (frc == FunctionalRoadClass.Frc2)
                     {
-                        return 1;
+                        frcScore = 1;
                     }
                     else if (frc == FunctionalRoadClass.Frc1 ||
                         frc == FunctionalRoadClass.Frc3)
                     {
-                        return frcOneDifferent;
+                        frcScore = frcOneDifferent;
                     }
                     else if (frc == FunctionalRoadClass.Frc4 ||
                         frc == FunctionalRoadClass.Frc0)
                     {
-                        return frcTwoDifferent;
+                        frcScore = frcTwoDifferent;
                     }
                     else
                     {
-                        return frcMoreDifferent;
+                        frcScore = frcMoreDifferent;
                     }
+                    break;
                 case "3":
                     if (frc == FunctionalRoadClass.Frc3)
                     {
-                        return 1;
+                        frcScore = 1;
                     }
                     else if (frc == FunctionalRoadClass.Frc2 ||
                         frc == FunctionalRoadClass.Frc4)
                     {
-                        return frcOneDifferent;
+                        frcScore = frcOneDifferent;
                     }
                     else if (frc == FunctionalRoadClass.Frc1 ||
                         frc == FunctionalRoadClass.Frc5)
                     {
-                        return frcTwoDifferent;
+                        frcScore = frcTwoDifferent;
                     }
                     else
                     {
-                        return frcMoreDifferent;
+                        frcScore = frcMoreDifferent;
                     }
+                    break;
                 case "4":
                     if (frc == FunctionalRoadClass.Frc4)
                     {
-                        return 1;
+                        frcScore = 1;
                     }
                     else if (frc == FunctionalRoadClass.Frc3 ||
                         frc == FunctionalRoadClass.Frc5)
                     {
-                        return frcOneDifferent;
+                        frcScore = frcOneDifferent;
                     }
                     else if (frc == FunctionalRoadClass.Frc2 ||
                         frc == FunctionalRoadClass.Frc6)
                     {
-                        return frcTwoDifferent;
+                        frcScore = frcTwoDifferent;
                     }
                     else
                     {
-                        return frcMoreDifferent;
+                        frcScore = frcMoreDifferent;
                     }
+                    break;
                 case "5":
                     if (frc == FunctionalRoadClass.Frc5)
                     {
-                        return 1;
+                        frcScore = 1;
                     }
                     else if (frc == FunctionalRoadClass.Frc4 ||
                         frc == FunctionalRoadClass.Frc6)
                     {
-                        return frcOneDifferent;
+                        frcScore = frcOneDifferent;
                     }
                     else if (frc == FunctionalRoadClass.Frc3 ||
                         frc == FunctionalRoadClass.Frc7)
                     {
-                        return frcTwoDifferent;
+                        frcScore = frcTwoDifferent;
                     }
                     else
                     {
-                        return frcMoreDifferent;
+                        frcScore = frcMoreDifferent;
                     }
+                    break;
                 case "6":
                     if (frc == FunctionalRoadClass.Frc6)
                     {
-                        return 1;
+                        frcScore = 1;
                     }
                     else if (frc == FunctionalRoadClass.Frc5 ||
                         frc == FunctionalRoadClass.Frc7)
                     {
-                        return frcOneDifferent;
+                        frcScore = frcOneDifferent;
                     }
                     else if (frc == FunctionalRoadClass.Frc4)
                     {
-                        return frcTwoDifferent;
+                        frcScore = frcTwoDifferent;
                     }
                     else
                     {
-                        return frcMoreDifferent;
+                        frcScore = frcMoreDifferent;
                     }
+                    break;
                 case "7":
                     if (frc == FunctionalRoadClass.Frc7)
                     {
-                        return 1;
+                        frcScore = 1;
                     }
                     else if (frc == FunctionalRoadClass.Frc6)
                     {
-                        return frcOneDifferent;
+                        frcScore = frcOneDifferent;
                     }
                     else if (frc == FunctionalRoadClass.Frc5)
                     {
-                        return frcTwoDifferent;
+                        frcScore = frcTwoDifferent;
                     }
                     else
                     {
-                        return frcMoreDifferent;
+                        frcScore = frcMoreDifferent;
                     }
+                    break;
                 case "8":
                     if (frc == FunctionalRoadClass.Frc7)
                     {
-                        return frcOneDifferent;
+                        frcScore = frcOneDifferent;
                     }
                     else if (frc == FunctionalRoadClass.Frc6)
                     {
-                        return frcTwoDifferent;
+                        frcScore = frcTwoDifferent;
                     }
                     else
                     {
-                        return frcMoreDifferent;
+                        frcScore = frcMoreDifferent;
                     }
+                    break;
             }
-            return 0;
+            
+            float fowOneDifferent = 0.8f;
+            float fowMoreDifferent = 0.4f;
+
+            var fowScore = 0.0f;
+            string fowString;
+            if (tags.TryGetValue("FOW", out fowString))
+            {
+                fowScore = 0.2f;
+                switch (fowString)
+                {
+                    case "1":
+                        if(fow == FormOfWay.Motorway)
+                        {
+                            fowScore = 1;
+                        }
+                        else if(fow == FormOfWay.MultipleCarriageWay)
+                        {
+                            fowScore = fowOneDifferent;
+                        }
+                        break;
+                    case "2":
+                        if (fow == FormOfWay.MultipleCarriageWay)
+                        {
+                            fowScore = 1;
+                        }
+                        else if (fow == FormOfWay.Motorway ||
+                            fow == FormOfWay.SingleCarriageWay)
+                        {
+                            fowScore = fowOneDifferent;
+                        }
+                        break;
+                    case "3":
+                        if (fow == FormOfWay.SingleCarriageWay)
+                        {
+                            fowScore = 1;
+                        }
+                        else if (fow == FormOfWay.MultipleCarriageWay)
+                        {
+                            fowScore = fowOneDifferent;
+                        }
+                        break;
+                    case "4":
+                        if (fow == FormOfWay.Roundabout)
+                        {
+                            fowScore = 1;
+                        }
+                        fowScore = fowMoreDifferent;
+                        break;
+                    case "8":
+                        if (fow == FormOfWay.TrafficSquare)
+                        {
+                            fowScore = 1;
+                        }
+                        fowScore = fowMoreDifferent;
+                        break;
+                    case "10":
+                        if (fow == FormOfWay.SlipRoad)
+                        {
+                            fowScore = 1;
+                        }
+                        fowScore = fowMoreDifferent;
+                        break;
+                    case "6":
+                    case "7":
+                    case "9":
+                    case "11":
+                    case "12":
+                    case "14":
+                    case "15":
+                        if(fow == FormOfWay.Other)
+                        {
+                            fowScore = fowOneDifferent;
+                        }
+                        break;
+                    default:
+                        if(fow == FormOfWay.Undefined)
+                        {
+                            fowScore = fowMoreDifferent;
+                        }
+                        break;
+                }
+            }
+            return frcScore + fowScore;
         }
 
         /// <summary>

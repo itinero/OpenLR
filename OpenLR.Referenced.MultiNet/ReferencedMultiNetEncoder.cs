@@ -96,20 +96,19 @@ namespace OpenLR.Referenced.MultiNet
                     case "4":
                         fow = FormOfWay.Roundabout;
                         break;
-                    case "5":
-                        fow = FormOfWay.Undefined;
+                    case "8":
+                        fow = FormOfWay.TrafficSquare;
+                        break;
+                    case "10":
+                        fow = FormOfWay.SlipRoad;
                         break;
                     case "6":
                     case "7":
-                    case "8":
-                        fow = FormOfWay.Other;
-                        break;
                     case "9":
-                        fow = FormOfWay.SlipRoad;
-                        break;
-                    case "10":
                     case "11":
                     case "12":
+                    case "14":
+                    case "15":
                         fow = FormOfWay.Other;
                         break;
                 }

@@ -459,7 +459,7 @@ namespace OpenLR.Referenced
                         (forward && oneway.Value == arc.Value.Forward) ||
                         (!forward && oneway.Value != arc.Value.Forward))
                     {
-                        var score = Score.New(Score.MATCH_ARC, "Metric indicating a match with fow, frc etc...", this.MatchArc(tags, fow, frc), 1);
+                        var score = Score.New(Score.MATCH_ARC, "Metric indicating a match with fow, frc etc...", this.MatchArc(tags, fow, frc), 2);
                         if (score.Value > 0)
                         { // ok, there is a match.
                             // check bearing.

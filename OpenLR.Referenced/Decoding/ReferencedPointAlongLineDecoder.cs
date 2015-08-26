@@ -119,22 +119,22 @@ namespace OpenLR.Referenced.Decoding
 
                         // add deviation-score.
                         candidate.Score = candidate.Score * deviation;
-                    }
 
-                    // check candidate.
-                    if (best == null)
-                    { // there was no previous candidate.
-                        best = candidate;
-                        bestCombinedEdge = combinedScore;
-                    }
-                    else if (best.Score.Value < candidate.Score.Value)
-                    { // the new candidate is better.
-                        best = candidate;
-                        bestCombinedEdge = combinedScore;
-                    }
-                    else if (best.Score.Value > candidate.Score.Value)
-                    { // the current candidate is better.
-                        break;
+                        // check candidate.
+                        if (best == null)
+                        { // there was no previous candidate.
+                            best = candidate;
+                            bestCombinedEdge = combinedScore;
+                        }
+                        else if (best.Score.Value < candidate.Score.Value)
+                        { // the new candidate is better.
+                            best = candidate;
+                            bestCombinedEdge = combinedScore;
+                        }
+                        else if (best.Score.Value > candidate.Score.Value)
+                        { // the current candidate is better.
+                            break;
+                        }
                     }
                 }
 
