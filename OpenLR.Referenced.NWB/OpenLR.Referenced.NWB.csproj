@@ -130,6 +130,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SharedAssemblyVersion.cs">
+      <Link>Properties\SharedAssemblyVersion.cs</Link>
+    </Compile>
     <Compile Include="NWBMapping.cs" />
     <Compile Include="ReferencedNWBDecoder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
