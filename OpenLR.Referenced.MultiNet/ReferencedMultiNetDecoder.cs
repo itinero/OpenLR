@@ -211,6 +211,19 @@ namespace OpenLR.Referenced.MultiNet
                     {
                         return frcMoreDifferent;
                     }
+                case "8":
+                    if (frc == FunctionalRoadClass.Frc7)
+                    {
+                        return frcOneDifferent;
+                    }
+                    else if (frc == FunctionalRoadClass.Frc6)
+                    {
+                        return frcTwoDifferent;
+                    }
+                    else
+                    {
+                        return frcMoreDifferent;
+                    }
             }
             return 0;
         }
