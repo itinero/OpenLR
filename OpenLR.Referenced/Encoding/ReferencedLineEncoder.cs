@@ -76,28 +76,23 @@ namespace OpenLR.Referenced.Encoding
                 var location = new LineLocation();
 
                 // build lrp's.
-                var lrps = new List<LocationReferencePoint>();
-                var lrpIdx = points[0];
-                var lrp = this.BuildLrp(referencedLocation, lrpIdx);
-                lrps.Add(lrp);
-                for (int idx = 1; idx < points.Count; idx++)
+                var locationReferencePoints = new List<LocationReferencePoint>();
+                for(var idx = 0; idx < points.Count - 1; idx++)
                 {
-                    lrp.LowestFunctionalRoadClassToNext = this.BuildLowestFrcToNext(referencedLocation, lrpIdx, points[idx]);
-                    lrp.DistanceToNext = this.BuildDistanceToNext(referencedLocation, lrpIdx, points[idx]);
-
-                    lrpIdx = points[idx];
-                    lrp = this.BuildLrp(referencedLocation, lrpIdx);
-                    lrps.Add(lrp);
+                    locationReferencePoints.Add(this.MainEncoder.BuildLocationReferencePoint(
+                        referencedLocation, points[idx], points[idx + 1]));
                 }
+                locationReferencePoints.Add(this.MainEncoder.BuildLocationReferencePointLast(
+                    referencedLocation, points[points.Count - 2]));
 
                 // build location.
-                location.First = lrps[0];
-                location.Intermediate = new LocationReferencePoint[lrps.Count - 2];
-                for(int idx = 1; idx < lrps.Count - 1; idx++)
+                location.First = locationReferencePoints[0];
+                location.Intermediate = new LocationReferencePoint[locationReferencePoints.Count - 2];
+                for(var idx = 1; idx < locationReferencePoints.Count - 1; idx++)
                 {
-                    location.Intermediate[idx - 1] = lrps[idx];
+                    location.Intermediate[idx - 1] = locationReferencePoints[idx];
                 }
-                location.Last = lrps[lrps.Count - 1];
+                location.Last = locationReferencePoints[locationReferencePoints.Count - 1];
 
                 // set offsets.
                 location.PositiveOffsetPercentage = referencedLocation.PositiveOffsetPercentage;
@@ -114,90 +109,6 @@ namespace OpenLR.Referenced.Encoding
                 throw new ReferencedEncodingException(referencedLocation, 
                     string.Format("Unhandled exception during ReferencedLineEncoder: {0}", ex.ToString()), ex);
             }
-        }
-
-        /// <summary>
-        /// Builds a location referenced point for the vertex at the given index.
-        /// </summary>
-        /// <param name="referencedLocation">The referenced location.</param>
-        /// <param name="idx">The index.</param>
-        /// <returns></returns>
-        private LocationReferencePoint BuildLrp(ReferencedLine referencedLocation, int idx)
-        {
-            // get all relevant info from tags.
-            FormOfWay fow;
-            FunctionalRoadClass frc;
-            TagsCollectionBase tags;
-            if(idx < referencedLocation.Edges.Length)
-            { // not the last point.
-                tags = this.GetTags(referencedLocation.Edges[idx].Tags);
-            }
-            else
-            { // last point.
-                tags = this.GetTags(referencedLocation.Edges[idx - 1].Tags);
-            }
-            if (!this.TryMatching(tags, out frc, out fow))
-            {
-                throw new ReferencedEncodingException(referencedLocation, "Could not find frc and/or fow for the given tags.");
-            }
-
-            // create location reference point.
-            var lrp = new LocationReferencePoint();
-            lrp.Coordinate = this.GetVertexLocation(referencedLocation.Vertices[idx]);
-            lrp.FormOfWay = fow;
-            lrp.FuntionalRoadClass = frc;
-            if (idx + 1 < referencedLocation.Vertices.Length)
-            { // not the last point.
-                lrp.Bearing = (int)this.GetBearing(referencedLocation.Vertices[idx], referencedLocation.Edges[idx],
-                    referencedLocation.EdgeShapes[idx], referencedLocation.Vertices[idx + 1], false).Value;
-            }
-            else
-            { // last point.
-                lrp.Bearing = (int)this.GetBearing(referencedLocation.Vertices[idx], referencedLocation.Edges[idx - 1],
-                    referencedLocation.EdgeShapes[idx - 1], referencedLocation.Vertices[idx - 1], true).Value;
-            }
-            return lrp;
-        }
-
-        /// <summary>
-        /// Builds the lowest frc to next from all edges between the two given verices indexes.
-        /// </summary>
-        /// <param name="referencedLocation">The referenced location.</param>
-        /// <param name="vertex1">The first vertex.</param>
-        /// <param name="vertex2">The last vertex.</param>
-        /// <returns></returns>
-        private FunctionalRoadClass BuildLowestFrcToNext(ReferencedLine referencedLocation, int vertex1, int vertex2)
-        {
-            FunctionalRoadClass? lowest = null;
-            for (var edge = vertex1; edge < vertex2; edge++)
-            {
-                var tags = this.GetTags(referencedLocation.Edges[edge].Tags);
-                FormOfWay fow;
-                FunctionalRoadClass frc;
-                if (!this.TryMatching(tags, out frc, out fow))
-                {
-                    throw new ReferencedEncodingException(referencedLocation, "Could not find frc and/or fow for the given tags.");
-                }
-                
-                if(!lowest.HasValue || 
-                    frc < lowest)
-                { 
-                    lowest = frc;
-                }
-            }
-            return lowest.Value;
-        }
-
-        /// <summary>
-        /// Builds the lowest frc to next from all edges between the two given verices indexes.
-        /// </summary>
-        /// <param name="referencedLocation">The referenced location.</param>
-        /// <param name="vertexIdx1">The first vertex.</param>
-        /// <param name="vertexIdx2">The last vertex.</param>
-        /// <returns></returns>
-        private int BuildDistanceToNext(ReferencedLine referencedLocation, int vertexIdx1, int vertexIdx2)
-        {
-            return (int)(referencedLocation.GetCoordinates(this.MainEncoder, vertexIdx1, vertexIdx2 - vertexIdx1 + 1).Length().Value);
         }
     }
 }

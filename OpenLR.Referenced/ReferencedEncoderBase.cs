@@ -195,41 +195,79 @@ namespace OpenLR.Referenced
         public abstract bool? IsOneway(TagsCollectionBase tags);
 
         /// <summary>
-        /// Returns the bearing calculate between two given vertices along the given edge.
+        /// Builds a location referenced point for the vertex at the given start-index.
         /// </summary>
-        /// <param name="vertexFrom"></param>
-        /// <param name="edge"></param>
-        /// <param name="edgeShape"></param>
-        /// <param name="vertexTo"></param>
-        /// <param name="forward">When true the edge is forward relative to the vertices, false the edge is backward.</param>
         /// <returns></returns>
-        public virtual Degree GetBearing(long vertexFrom, LiveEdge edge, GeoCoordinateSimple[] edgeShape, long vertexTo, bool forward)
+        public LocationReferencePoint BuildLocationReferencePoint(ReferencedLine referencedLocation, int start, int end)
         {
-            var coordinates = new List<GeoCoordinate>();
-            float latitude, longitude;
-            this.Graph.GetVertex(vertexFrom, out latitude, out longitude);
-            coordinates.Add(new GeoCoordinate(latitude, longitude));
+            FormOfWay fow;
+            FunctionalRoadClass frc;
 
-            if (edgeShape != null)
-            { // there are intermediates, add them in the correct order.
-                if (forward)
+            // get all coordinates along the sequence starting at 'start' and ending at 'end'.
+            var coordinates = referencedLocation.GetCoordinates(this, start, end - start + 1);
+
+            // create location reference point.
+            var locationReferencePoint = new LocationReferencePoint();
+            locationReferencePoint.Coordinate = this.GetVertexLocation(referencedLocation.Vertices[start]);
+            var tags = this.GetTags(referencedLocation.Edges[start].Tags);
+            if (!this.TryMatching(tags, out frc, out fow))
+            {
+                throw new ReferencedEncodingException(referencedLocation,
+                    "Could not find frc and/or fow for the given tags.");
+            }
+            locationReferencePoint.FormOfWay = fow;
+            locationReferencePoint.FuntionalRoadClass = frc;
+            locationReferencePoint.Bearing = (int)BearingEncoder.EncodeBearing(coordinates).Value;
+            locationReferencePoint.DistanceToNext = (int)coordinates.Length().Value;
+            FunctionalRoadClass? lowest = null;
+            for (var edge = start; edge < end; edge++)
+            {
+                tags = this.GetTags(referencedLocation.Edges[edge].Tags);
+                if (!this.TryMatching(tags, out frc, out fow))
                 {
-                    coordinates.AddRange(edgeShape.Select<GeoCoordinateSimple, GeoCoordinate>(x => { 
-                        return new GeoCoordinate(x.Latitude, x.Longitude); 
-                    }));
+                    throw new ReferencedEncodingException(referencedLocation,
+                        "Could not find frc and/or fow for the given tags.");
                 }
-                else
+
+                if (!lowest.HasValue ||
+                    frc < lowest)
                 {
-                    coordinates.AddRange(edgeShape.Reverse().Select<GeoCoordinateSimple, GeoCoordinate>(x => { 
-                        return new GeoCoordinate(x.Latitude, x.Longitude); 
-                    }));
+                    lowest = frc;
                 }
             }
+            locationReferencePoint.LowestFunctionalRoadClassToNext = lowest;
 
-            this.Graph.GetVertex(vertexTo, out latitude, out longitude);
-            coordinates.Add(new GeoCoordinate(latitude, longitude));
+            return locationReferencePoint;
+        }
 
-            return BearingEncoder.EncodeBearing(coordinates);
+        /// <summary>
+        /// Builds a location referenced point for the last vertex.
+        /// </summary>
+        /// <returns></returns>
+        public LocationReferencePoint BuildLocationReferencePointLast(ReferencedLine referencedLocation, int before)
+        {
+            FormOfWay fow;
+            FunctionalRoadClass frc;
+
+            var end = referencedLocation.Vertices.Length - 1;
+
+            // get all coordinates along the sequence starting at 'before' and ending at 'end'.
+            var coordinates = referencedLocation.GetCoordinates(this, before, end - before + 1);
+
+            // create location reference point.
+            var locationReferencedPoint = new LocationReferencePoint();
+            locationReferencedPoint.Coordinate = this.GetVertexLocation(referencedLocation.Vertices[end]);
+            var tags = this.GetTags(referencedLocation.Edges[end - 1].Tags);
+            if (!this.TryMatching(tags, out frc, out fow))
+            {
+                throw new ReferencedEncodingException(referencedLocation,
+                    "Could not find frc and/or fow for the given tags.");
+            }
+            locationReferencedPoint.FormOfWay = fow;
+            locationReferencedPoint.FuntionalRoadClass = frc;
+            locationReferencedPoint.Bearing = (int)BearingEncoder.EncodeBearing(coordinates, true).Value;
+
+            return locationReferencedPoint;
         }
 
         /// <summary>

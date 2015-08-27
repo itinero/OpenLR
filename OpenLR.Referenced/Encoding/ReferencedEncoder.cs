@@ -89,18 +89,18 @@ namespace OpenLR.Referenced.Encoding
             return _mainEncoder.IsOneway(tags);
         }
 
-        /// <summary>
-        /// Returns the bearing calculate between two given vertices along the given edge.
-        /// </summary>
-        /// <param name="vertexFrom"></param>
-        /// <param name="edge"></param>
-        /// <param name="edgeShape"></param>
-        /// <param name="vertexTo"></param>
-        /// <param name="forward">When true the edge is forward relative to the vertices, false the edge is backward.</param>
-        /// <returns></returns>
-        protected Degree GetBearing(long vertexFrom, LiveEdge edge, GeoCoordinateSimple[] edgeShape, long vertexTo, bool forward)
-        {
-            return _mainEncoder.GetBearing(vertexFrom, edge, edgeShape, vertexTo, forward);
-        }
+        ///// <summary>
+        ///// Returns the bearing calculate between two given vertices along the given edge.
+        ///// </summary>
+        ///// <param name="vertexFrom"></param>
+        ///// <param name="edge"></param>
+        ///// <param name="edgeShape"></param>
+        ///// <param name="vertexTo"></param>
+        ///// <param name="forward">When true the edge is forward relative to the vertices, false the edge is backward.</param>
+        ///// <returns></returns>
+        //protected Degree GetBearing(long vertexFrom, LiveEdge edge, GeoCoordinateSimple[] edgeShape, long vertexTo, bool forward)
+        //{
+        //    return _mainEncoder.GetBearing(vertexFrom, edge, edgeShape, vertexTo, forward);
+        //}
     }
 }

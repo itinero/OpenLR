@@ -23,7 +23,7 @@ namespace OpenLR.Referenced.Encoding
         /// <returns></returns>
         public static Degree EncodeBearing(List<GeoCoordinate> coordinates)
         {
-            double distance = 0;
+            var distance = 0.0;
             var previous = coordinates[0];
             PointF2D bearingPosition = null;
             for (int idx = 1; idx < coordinates.Count; idx++)
@@ -34,8 +34,8 @@ namespace OpenLR.Referenced.Encoding
                 if (currentDistance > Parameters.BEARDIST)
                 { // the coordinate to calculate the beardist is in this segment!
                     // calculate where.
-                    double relativeDistance = Parameters.BEARDIST - distance;
-                    double relativeOffset = relativeDistance / currentSegmentDistance;
+                    var relativeDistance = Parameters.BEARDIST - distance;
+                    var relativeOffset = relativeDistance / currentSegmentDistance;
 
                     bearingPosition = previous + ((current - previous) * relativeOffset);
                     break;
@@ -44,7 +44,8 @@ namespace OpenLR.Referenced.Encoding
                 previous = current;
             }
             if (bearingPosition == null)
-            { // use the toCoordinate as the last 'current'.// if edge is too short use target coordinate.
+            { // use the toCoordinate as the last 'current'.
+                // if edge is too short use target coordinate.
                 bearingPosition = coordinates[coordinates.Count - 1];
             }
 
@@ -68,6 +69,21 @@ namespace OpenLR.Referenced.Encoding
             var direction = new VectorF2D(xMeters, yMeters).Normalize();
 
             return direction.Angle(north);
+        }
+
+        /// <summary>
+        /// Encodes a bearing based on the list of coordinates and the BEARDIST parameter.
+        /// </summary>
+        /// <param name="coordinates"></param>
+        /// <param name="startAtEnd"></param>
+        /// <returns></returns>
+        public static Degree EncodeBearing(List<GeoCoordinate> coordinates, bool startAtEnd)
+        {
+            if(startAtEnd)
+            {
+                return BearingEncoder.EncodeBearing(new List<GeoCoordinate>(coordinates.Reverse<GeoCoordinate>()));
+            }
+            return BearingEncoder.EncodeBearing(coordinates);
         }
     }
 }

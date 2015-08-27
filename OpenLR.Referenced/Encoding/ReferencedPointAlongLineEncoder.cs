@@ -66,59 +66,21 @@ namespace OpenLR.Referenced.Encoding
                 // Step – 9     Add a sufficient number of additional intermediate location reference points if the distance 
                 //              between two location reference points exceeds the maximum distance. Remove the start/end LR-point 
                 //              if the positive/negative offset value exceeds the length of the corresponding path.
-                referencedLocation.Route.AdjustToValidDistances(this.MainEncoder, points);
+
+                // WARNING: the OpenLR-spec says that there cannot be intermediate points on an PointAlongLineLocation.
+                //              this means that if the route found here is > 15.000m it cannot be encoding.
+                //              assumed is that the OpenLR-spec assumes that this will never happen (?)
+                // referencedLocation.Route.AdjustToValidDistances(this.MainEncoder, points);
 
                 // Step – 10    Create physical representation of the location reference.
-                var location = new PointAlongLineLocation();
-
-                // match fow/frc for first edge.
-                FormOfWay fow;
-                FunctionalRoadClass frc;
-                var tags = this.GetTags(referencedLocation.Route.Edges[0].Tags);
-                if(!this.TryMatching(tags, out frc, out fow))
-                {
-                    throw new ReferencedEncodingException(referencedLocation, "Could not find frc and/or fow for the given tags.");
-                }
-                location.First = new Model.LocationReferencePoint();
-                location.First.Coordinate = this.GetVertexLocation(referencedLocation.Route.Vertices[0]);
-                location.First.FormOfWay = fow;
-                location.First.FuntionalRoadClass = frc;
-                location.First.LowestFunctionalRoadClassToNext = location.First.FuntionalRoadClass;
-
-                // match for last edge.
-                tags = this.GetTags(referencedLocation.Route.Edges[referencedLocation.Route.Edges.Length - 1].Tags);
-                if (!this.TryMatching(tags, out frc, out fow))
-                {
-                    throw new ReferencedEncodingException(referencedLocation, "Could not find frc and/or fow for the given tags.");
-                }
-                location.Last = new Model.LocationReferencePoint();
-                location.Last.Coordinate = this.GetVertexLocation(referencedLocation.Route.Vertices[referencedLocation.Route.Vertices.Length - 1]);
-                location.Last.FormOfWay = fow;
-                location.Last.FuntionalRoadClass = frc;
-
-                // initialize from point, to point and create the coordinate list.
-                var from = new GeoCoordinate(location.First.Coordinate.Latitude, location.First.Coordinate.Longitude);
-                var to = new GeoCoordinate(location.Last.Coordinate.Latitude, location.Last.Coordinate.Longitude);
                 var coordinates = referencedLocation.Route.GetCoordinates(this.MainEncoder);
-
-                // calculate bearing.
-                location.First.Bearing = (int)this.GetBearing(referencedLocation.Route.Vertices[0], referencedLocation.Route.Edges[0],
-                    referencedLocation.Route.EdgeShapes[0], referencedLocation.Route.Vertices[1], false).Value;
-                location.Last.Bearing = (int)this.GetBearing(referencedLocation.Route.Vertices[referencedLocation.Route.Vertices.Length - 1],
-                    referencedLocation.Route.Edges[referencedLocation.Route.Edges.Length - 1], referencedLocation.Route.EdgeShapes[referencedLocation.Route.Edges.Length - 1], 
-                    referencedLocation.Route.Vertices[referencedLocation.Route.Vertices.Length - 2], true).Value;
-
-                // calculate length.
                 var lengthInMeter = coordinates.Length();
-                location.First.DistanceToNext = (int)lengthInMeter.Value;
 
-                var refLength = 0.0;
-                for(int i = 0; i < referencedLocation.Route.Edges.Length;i++)
-                {
-                    refLength = refLength + referencedLocation.Route.Edges[i].Distance;
-                    var test = referencedLocation.Route.GetCoordinates(this.MainEncoder, 0, i + 2);
-                    var testLength = test.Length();
-                }
+                var location = new PointAlongLineLocation();
+                location.First = this.MainEncoder.BuildLocationReferencePoint(
+                    referencedLocation.Route, 0, 1);
+                location.Last = this.MainEncoder.BuildLocationReferencePointLast(
+                    referencedLocation.Route, 0);
 
                 // calculate orientation and side of road.
                 PointF2D bestProjected;
