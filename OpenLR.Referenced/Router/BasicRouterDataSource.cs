@@ -114,6 +114,11 @@ namespace OpenLR.Referenced.Router
         /// <param name="shape"></param>
         public void AddEdge(long vertex1, long vertex2, TEdge edge, GeoCoordinateSimple[] shape)
         {
+            if(shape == null)
+            {
+                this.AddEdge(vertex1, vertex2, edge);
+                return;
+            }
             _newEdges.Add(new KeyValuePair<long, KeyValuePair<long, Tuple<TEdge, ICoordinateCollection>>>(
                 vertex1, new KeyValuePair<long, Tuple<TEdge, ICoordinateCollection>>(vertex2, new Tuple<TEdge, ICoordinateCollection>(edge, new CoordinateArrayCollection<GeoCoordinateSimple>(shape)))));
         }

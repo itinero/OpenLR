@@ -78,10 +78,10 @@ namespace OpenLR.Referenced.Encoding
 
                 var location = new PointAlongLineLocation();
                 location.First = this.MainEncoder.BuildLocationReferencePoint(
-                    referencedLocation.Route, 0, 1);
+                    referencedLocation.Route, 0, referencedLocation.Route.Vertices.Length - 1);
                 location.Last = this.MainEncoder.BuildLocationReferencePointLast(
                     referencedLocation.Route, 0);
-
+                
                 // calculate orientation and side of road.
                 PointF2D bestProjected;
                 LinePointPosition bestPosition;

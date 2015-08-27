@@ -335,6 +335,48 @@ namespace OpenLR.Referenced
         }
 
         /// <summary>
+        /// Converts the referenced line location to features.
+        /// </summary>
+        /// <param name="referencedLine">The referenced line.</param>
+        /// <param name="decoder">The decoder.</param>
+        /// <returns></returns>
+        public static List<GeoCoordinate> GetCoordinates(this ReferencedLine referencedLine, ReferencedDecoderBase decoder)
+        {
+            return referencedLine.GetCoordinates(decoder, 0, referencedLine.Vertices.Length);
+        }
+
+        /// <summary>
+        /// Converts the referenced line location to features.
+        /// </summary>
+        /// <param name="referencedLine">The referenced line.</param>
+        /// <param name="decoder">The decoder.</param>
+        /// <param name="start">The start vertex.</param>
+        /// <param name="count">The vertices to return coordinates for.</param>
+        /// <returns></returns>
+        public static List<GeoCoordinate> GetCoordinates(this ReferencedLine referencedLine, ReferencedDecoderBase decoder, int start, int count)
+        {
+            var coordinates = new List<GeoCoordinate>();
+            if (count <= 0)
+            {
+                return coordinates;
+            }
+            coordinates.Add(decoder.GetVertexLocation(referencedLine.Vertices[start]).ToGeoCoordinate());
+            for (var i = start; i < start + count - 1; i++)
+            {
+                if (referencedLine.EdgeShapes[i] != null)
+                {
+                    for (var j = 0; j < referencedLine.EdgeShapes[i].Length; j++)
+                    {
+                        coordinates.Add(new GeoCoordinate(
+                            referencedLine.EdgeShapes[i][j].Latitude, referencedLine.EdgeShapes[i][j].Longitude));
+                    }
+                }
+                coordinates.Add(decoder.GetVertexLocation(referencedLine.Vertices[i + 1]).ToGeoCoordinate());
+            }
+            return coordinates;
+        }
+
+        /// <summary>
         /// Converts the referenced point along the line location to features.
         /// </summary>
         /// <param name="referencedPointALongLineLocation"></param>
@@ -857,7 +899,8 @@ namespace OpenLR.Referenced
         /// <param name="bestPosition"></param>
         /// <param name="bestOffset"></param>
         /// <returns></returns>
-        public static bool ProjectOn(this List<GeoCoordinate> coordinates, PointF2D point, out PointF2D bestProjected, out LinePointPosition bestPosition, out Meter bestOffset)
+        public static bool ProjectOn(this List<GeoCoordinate> coordinates, PointF2D point, out PointF2D bestProjected, 
+            out LinePointPosition bestPosition, out Meter bestOffset)
         {
             // check first point.
             var pointGeo = new GeoCoordinate(point);

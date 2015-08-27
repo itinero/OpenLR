@@ -26,7 +26,7 @@ namespace OpenLR.Referenced.NWB
         /// <summary>
         /// Holds the name of the hecto letter field.
         /// </summary>
-        public static string HECTOLTTR = "HECTOLTTR";
+        public static string HECTOLTTR = "HECTO_LTTR";
 
         /// <summary>
         /// Holds the name of the rijrichting field.
@@ -44,11 +44,11 @@ namespace OpenLR.Referenced.NWB
         {
             fow = FormOfWay.Undefined;
             frc = FunctionalRoadClass.Frc7;
-            string baansubsrt, wegbeerder, wegnummer, rijrichting, dvkletter_;
-            if (!tags.TryGetValue(NWBMapping.BAANSUBSRT, out baansubsrt) ||
-                !tags.TryGetValue(NWBMapping.WEGBEHSRT, out wegbeerder) ||
-                !tags.TryGetValue(NWBMapping.WEGNUMMER, out wegnummer) ||
-                !tags.TryGetValue(NWBMapping.HECTOLTTR, out dvkletter_) ||
+            string baansubsrt = string.Empty, wegbeerder = string.Empty, wegnummer = string.Empty, rijrichting = string.Empty, dvkletter_ = string.Empty;
+            if (!tags.TryGetValue(NWBMapping.BAANSUBSRT, out baansubsrt) &
+                !tags.TryGetValue(NWBMapping.WEGBEHSRT, out wegbeerder) &
+                !tags.TryGetValue(NWBMapping.WEGNUMMER, out wegnummer) &
+                !tags.TryGetValue(NWBMapping.HECTOLTTR, out dvkletter_) &
                 !tags.TryGetValue(NWBMapping.RIJRICHTNG, out rijrichting))
             { // not even a BAANSUBSRT tag!
                 // defaults: FRC5, OTHER.
@@ -58,7 +58,7 @@ namespace OpenLR.Referenced.NWB
             }
 
             // make sure everything is lowercase.
-            char? dvkletter = null; // assume dkv letter is the suffix use for exists etc. see: http://www.wegenwiki.nl/Hectometerpaal#Suffix
+            char? dvkletter = null; // assume dkv letter is the suffix used for exits etc. see: http://www.wegenwiki.nl/Hectometerpaal#Suffix
             if (!string.IsNullOrWhiteSpace(wegbeerder)) { wegbeerder = wegbeerder.ToLowerInvariant(); }
             if (!string.IsNullOrWhiteSpace(baansubsrt)) { baansubsrt = baansubsrt.ToLowerInvariant(); }
             if (!string.IsNullOrWhiteSpace(wegnummer)) { wegnummer = wegnummer.ToLowerInvariant(); if (!string.IsNullOrEmpty(dvkletter_)) dvkletter = dvkletter_[0]; }
