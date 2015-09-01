@@ -619,6 +619,20 @@ namespace OpenLR.Referenced
         }
 
         /// <summary>
+        /// Gets the location of the given vertex.
+        /// </summary>
+        /// <returns></returns>
+        public static GeoCoordinate GetCoordinate(this BasicRouterDataSource<LiveEdge> graph, uint vertex)
+        {
+            float latitude, longitude;
+            if(graph.GetVertex(vertex, out latitude, out longitude))
+            {
+                return new GeoCoordinate(latitude, longitude);
+            }
+            throw new ArgumentOutOfRangeException("Vertex does not exit.");
+        }
+
+        /// <summary>
         /// Returns the edge that is closest to the given location.
         /// </summary>
         /// <param name="graph">The graph to search.</param>
@@ -669,16 +683,16 @@ namespace OpenLR.Referenced
                 {
                     for (int idx = 1; idx < coordinates.Count; idx++)
                     {
-                        if (maxDistanceBox.IntersectsPotentially(coordinates[idx - 1], coordinates[idx]))
-                        {
+                        //if (maxDistanceBox.IntersectsPotentially(coordinates[idx - 1], coordinates[idx]))
+                        //{
                             var line = new GeoCoordinateLine(coordinates[idx - 1], coordinates[idx], true, true);
-                            var distance = line.Distance(location);
+                            var distance = line.DistanceReal(location).Value;
                             if (distance < bestDistance)
                             {
                                 bestEdge = new Tuple<long, long, LiveEdge>(arc.Item1, arc.Item2, arc.Item3);
                                 bestDistance = distance;
                             }
-                        }
+                        //}
                     }
                 }
             }

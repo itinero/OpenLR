@@ -49,7 +49,16 @@ namespace OpenLR.Referenced
             var endLocation = encoder.GetVertexLocation(closest.Item2).ToGeoCoordinate();
 
             // build a proper referenced line.
-            var referencedLine = encoder.BuildLineLocationVertexExact(startLocation, endLocation, 0, startLocation, endLocation, 0, 1);
+            var referencedLine = new ReferencedLine(encoder.Graph);
+            referencedLine.Vertices = new long[] { closest.Item1, closest.Item2 };
+            referencedLine.Edges = new LiveEdge[] { closest.Item3 };
+            referencedLine.PositiveOffsetPercentage = 0;
+            referencedLine.NegativeOffsetPercentage = 0;
+            referencedLine.EdgeShapes = new GeoCoordinateSimple[][] 
+            {
+                encoder.Graph.GetEdgeShape(
+                    referencedLine.Vertices[0], referencedLine.Vertices[1])
+            };
 
             // build the point-along-line location.
             return new ReferencedPointAlongLine()
