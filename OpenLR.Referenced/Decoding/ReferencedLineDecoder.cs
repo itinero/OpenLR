@@ -43,17 +43,17 @@ namespace OpenLR.Referenced.Decoding
 
             // loop over all lrps.
             lrps.Add(location.First);
-            candidates.Add(this.FindCandidatesFor(location.First, true));
+            candidates.Add(this.MainDecoder.FindCandidatesFor(location.First, true));
             if (location.Intermediate != null)
             { // there are intermediates.
                 for (int idx = 0; idx < location.Intermediate.Length; idx++)
                 {
                     lrps.Add(location.Intermediate[idx]);
-                    candidates.Add(this.FindCandidatesFor(location.Intermediate[idx], true));
+                    candidates.Add(this.MainDecoder.FindCandidatesFor(location.Intermediate[idx], true));
                 }
             }
             lrps.Add(location.Last);
-            candidates.Add(this.FindCandidatesFor(location.Last, true));
+            candidates.Add(this.MainDecoder.FindCandidatesFor(location.Last, true));
 
             // keep the total pathsegment.
             ReferencedLine lineLocation = null;
@@ -90,7 +90,7 @@ namespace OpenLR.Referenced.Decoding
                     combinedScores.RemoveAt(0);
 
                     // find a route.
-                    var candidate = this.FindCandidateRoute(combinedScore.Source, combinedScore.Target,
+                    var candidate = this.MainDecoder.FindCandidateRoute(combinedScore.Source, combinedScore.Target,
                         previous.LowestFunctionalRoadClassToNext.Value);
 
                     // confirm first/last edge.

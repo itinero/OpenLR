@@ -48,7 +48,7 @@ namespace OpenLR.Referenced.Decoding
             while ((best == null || best.Route == null) && vertexDistance <= this.MaxVertexDistance.Value)
             {
                 // reset the graph.
-                this.ResetCreatedCandidates();
+                this.MainDecoder.ResetCreatedCandidates();
 
                 // get candidate vertices and edges.
                 var candidates = new List<SortedSet<CandidateVertexEdge>>();
@@ -58,20 +58,20 @@ namespace OpenLR.Referenced.Decoding
 
                 // loop over all lrps.
                 lrps.Add(location.First);
-                candidates.Add(this.FindCandidatesFor(location.First, true, vertexDistance));
+                candidates.Add(this.MainDecoder.FindCandidatesFor(location.First, true, vertexDistance));
                 lrps.Add(location.Last);
-                candidates.Add(this.FindCandidatesFor(location.Last, false, vertexDistance));
+                candidates.Add(this.MainDecoder.FindCandidatesFor(location.Last, false, vertexDistance));
 
                 // resolve points if one of the locations still hasn't been found.
                 if ((vertexDistance * 2) > this.MaxVertexDistance.Value)
                 { // this is the maximum distance that will be tested.
                     if (candidates[0].Count == 0)
                     { // explicitly resolve from.
-                        candidates[0] = this.CreateCandidatesFor(location.First, true, vertexDistance);
+                        candidates[0] = this.MainDecoder.CreateCandidatesFor(location.First, true, vertexDistance);
                     }
                     else if (candidates[1].Count == 0)
                     { // explicitly remove to.
-                        candidates[1] = this.CreateCandidatesFor(location.Last, false, vertexDistance);
+                        candidates[1] = this.MainDecoder.CreateCandidatesFor(location.Last, false, vertexDistance);
                     }
                 }
 
@@ -101,7 +101,7 @@ namespace OpenLR.Referenced.Decoding
                     combinedScores.Remove(combinedScore);
 
                     // find a route.
-                    var candidate = this.FindCandidateRoute(combinedScore.Source, combinedScore.Target,
+                    var candidate = this.MainDecoder.FindCandidateRoute(combinedScore.Source, combinedScore.Target,
                         lrps[0].LowestFunctionalRoadClassToNext.Value);
 
                     // bring score of from/to also into the mix.
@@ -111,7 +111,7 @@ namespace OpenLR.Referenced.Decoding
                     if (candidate != null && candidate.Route != null)
                     { // calculate bearing and compare with reference bearing.
                         // calculate distance and compare with distancetonext.
-                        var distance = this.GetDistance(candidate.Route).Value;
+                        var distance = candidate.Route.GetCoordinates(this.MainDecoder).Length().Value;
                         var expectedDistance = location.First.DistanceToNext;
                         var distanceDiff = System.Math.Abs(distance - expectedDistance);
                         var deviation = Score.New(Score.DISTANCE_COMPARISON, "Compares expected location distance with decoded location distance (1=prefect, 0=difference bigger than total distance)",
@@ -164,7 +164,8 @@ namespace OpenLR.Referenced.Decoding
             Meter offsetLength;
             Meter offsetEdgeLength;
             Meter edgeLength;
-            var coordinates = this.GetCoordinates(best.Route, offsetRatio, out offsetEdgeIdx, out offsetLocation, out offsetLength, out offsetEdgeLength, out edgeLength);
+            var coordinates = best.Route.GetCoordinates(this.MainDecoder, offsetRatio, 
+                out offsetEdgeIdx, out offsetLocation, out offsetLength, out offsetEdgeLength, out edgeLength);
 
             var longitudeReference = offsetLocation.Longitude;
             var latitudeReference = offsetLocation.Latitude;

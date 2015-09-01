@@ -171,7 +171,7 @@ namespace OpenLR.Referenced.Osm
         /// <param name="to"></param>
         /// <param name="minimum">The minimum FRC.</param>
         /// <returns></returns>
-        public override CandidateRoute FindCandiateRoute(CandidateVertexEdge from, CandidateVertexEdge to, FunctionalRoadClass minimum)
+        public override CandidateRoute FindCandidateRoute(CandidateVertexEdge from, CandidateVertexEdge to, FunctionalRoadClass minimum)
         {
             var path = this.GetRouter().Calculate(this.Graph, new OsmRoutingInterpreter(), Vehicle.Car, from, to, minimum);
 

@@ -6,19 +6,16 @@ using OpenLR.Referenced.Decoding.Candidates;
 using OpenLR.Referenced.Encoding;
 using OpenLR.Referenced.Router;
 using OpenLR.Referenced.Scoring;
-using OpenLR.Referenced;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Routing;
-using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Graph.Routing;
+using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Units.Angle;
 using OsmSharp.Units.Distance;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using OsmSharp.Routing.Osm.Graphs;
 
 namespace OpenLR.Referenced
 {
@@ -27,63 +24,20 @@ namespace OpenLR.Referenced
     /// </summary>
     public abstract class ReferencedDecoderBase : OpenLR.Referenced.Decoding.ReferencedDecoder
     {
-        /// <summary>
-        /// Holds the maximum vertex distance.
-        /// </summary>
-        private Meter _maxVertexDistance = 40;
-
-        /// <summary>
-        /// Holds the basic router datasource.
-        /// </summary>
+        private readonly Meter _maxVertexDistance = 40;
         private readonly BasicRouterDataSource<LiveEdge> _graph;
-
-        /// <summary>
-        /// Holds the referenced circle decoder.
-        /// </summary>
         private readonly ReferencedCircleDecoder _referencedCircleDecoder;
-
-        /// <summary>
-        /// Holds the referenced geo coordinate decoder.
-        /// </summary>
         private readonly ReferencedGeoCoordinateDecoder _referencedGeoCoordinateDecoder;
-
-        /// <summary>
-        /// Holds the referenced grid decoder.
-        /// </summary>
         private readonly ReferencedGridDecoder _referencedGridDecoder;
-
-        /// <summary>
-        /// Holds the referenced line decoder.
-        /// </summary>
         private readonly ReferencedLineDecoder _referencedLineDecoder;
-
-        /// <summary>
-        /// Holds the referenced point along line decoder.
-        /// </summary>
         private readonly ReferencedPointAlongLineDecoder _referencedPointAlongLineDecoder;
-
-        /// <summary>
-        /// Holds the referenced polygon decoder.
-        /// </summary>
         private readonly ReferencedPolygonDecoder _referencedPolygonDecoder;
-
-        /// <summary>
-        /// Holds the referenced rectangle decoder.
-        /// </summary>
         private readonly ReferencedRectangleDecoder _referencedRectangleDecoder;
-
-        /// <summary>
-        /// The vehicle profile to use for decoding.
-        /// </summary>
         private readonly Vehicle _vehicle;
 
         /// <summary>
         /// Creates a new referenced decoder.
         /// </summary>
-        /// <param name="graph"></param>
-        /// <param name="vehicle"></param>
-        /// <param name="locationDecoder"></param>
-        /// <param name="maxVertexDistance"></param>
         public ReferencedDecoderBase(BasicRouterDataSource<LiveEdge> graph, Vehicle vehicle, Decoder locationDecoder, Meter maxVertexDistance)
             :base(locationDecoder)
         {
@@ -103,9 +57,6 @@ namespace OpenLR.Referenced
         /// <summary>
         /// Creates a new referenced decoder.
         /// </summary>
-        /// <param name="graph"></param>
-        /// <param name="vehicle"></param>
-        /// <param name="locationDecoder"></param>
         public ReferencedDecoderBase(BasicRouterDataSource<LiveEdge> graph, Vehicle vehicle, Decoder locationDecoder)
             :base(locationDecoder)
         {
@@ -523,7 +474,7 @@ namespace OpenLR.Referenced
         /// <param name="to"></param>
         /// <param name="minimum">The minimum FRC.</param>
         /// <returns></returns>
-        public abstract CandidateRoute FindCandiateRoute(CandidateVertexEdge from, CandidateVertexEdge to, FunctionalRoadClass minimum);
+        public abstract CandidateRoute FindCandidateRoute(CandidateVertexEdge from, CandidateVertexEdge to, FunctionalRoadClass minimum);
 
         /// <summary>
         /// Returns the coordinate of the given vertex.
@@ -542,176 +493,6 @@ namespace OpenLR.Referenced
                 Latitude = latitude,
                 Longitude = longitude
             };
-        }
-
-        /// <summary>
-        /// Returns the list of coordinates for the given route.
-        /// </summary>
-        /// <param name="route"></param>
-        /// <returns></returns>
-        public virtual List<GeoCoordinate> GetCoordinates(Locations.ReferencedLine route)
-        {
-            if (route == null) { throw new ArgumentNullException("route"); }
-            if (route.Edges == null || route.Edges.Length == 0) { throw new ArgumentOutOfRangeException("route", "Route has no edges."); }
-            if (route.Vertices == null || route.Vertices.Length == 0) { throw new ArgumentOutOfRangeException("route", "Route has no vertices."); }
-            if (route.Vertices.Length != route.Edges.Length + 1) { throw new ArgumentOutOfRangeException("route", "Route is invalid: there should be n vertices and n-1 edges."); }
-
-            // loop over all coordinates and collect offsetLocation and offsetEdgeIdx.
-            var coordinates = new List<GeoCoordinate>();
-            coordinates.Add(this.GetCoordinate(route.Vertices[0]).ToGeoCoordinate());
-            for (int edgeIdx = 0; edgeIdx < route.Edges.Length; edgeIdx++)
-            {
-                var edge = route.Edges[edgeIdx];
-                var edgeShape = route.EdgeShapes[edgeIdx];
-                if (edgeShape != null)
-                { // there are intermediate coordinates.
-                    if (edge.Forward)
-                    { // the edge is forward.
-                        for (int idx = 0; idx < edgeShape.Length; idx++)
-                        {
-                            coordinates.Add(new GeoCoordinate(edgeShape[idx].Latitude, edgeShape[idx].Longitude));
-                        }
-                    }
-                    else
-                    { // the edge is backward.
-                        for (int idx = edgeShape.Length - 1; idx >= 0; idx--)
-                        {
-                            coordinates.Add(new GeoCoordinate(edgeShape[idx].Latitude, edgeShape[idx].Longitude));
-                        }
-                    }
-                }
-                coordinates.Add(this.GetCoordinate(route.Vertices[edgeIdx + 1]).ToGeoCoordinate());
-            }
-            return coordinates;
-        }
-
-
-        /// <summary>
-        /// Returns the list of coordinates for the given route.
-        /// </summary>
-        /// <param name="route"></param>
-        /// <param name="offsetRatio"></param>
-        /// <param name="offsetEdgeIdx"></param>
-        /// <param name="offsetLocation"></param>
-        /// <param name="offsetLength"></param>
-        /// <param name="offsetEdgeLength"></param>
-        /// <param name="edgeLength"></param>
-        /// <returns></returns>
-        public virtual List<GeoCoordinate> GetCoordinates(Locations.ReferencedLine route, double offsetRatio, 
-            out int offsetEdgeIdx, out GeoCoordinate offsetLocation, out Meter offsetLength, out Meter offsetEdgeLength, out Meter edgeLength)
-        {
-            if (route == null) { throw new ArgumentNullException("route"); }
-            if (route.Edges == null || route.Edges.Length == 0) { throw new ArgumentOutOfRangeException("route", "Route has no edges."); }
-            if (route.Vertices == null || route.Vertices.Length == 0) { throw new ArgumentOutOfRangeException("route", "Route has no vertices."); }
-            if (route.Vertices.Length != route.Edges.Length + 1) { throw new ArgumentOutOfRangeException("route", "Route is invalid: there should be n vertices and n-1 edges."); }
-
-            // calculate the total length first.
-            var totalLength = this.GetDistance(route);
-
-            // calculate the lenght at the offst.
-            offsetLength = (Meter)(totalLength.Value * offsetRatio);
-            offsetEdgeLength = -1;
-            offsetEdgeIdx = -1;
-            edgeLength = -1;
-
-            // loop over all coordinates and collect offsetLocation and offsetEdgeIdx.
-            double currentOffsetLength = 0;
-            double currentEdgeLength = 0;
-            var coordinates = new List<GeoCoordinate>();
-            coordinates.Add(this.GetCoordinate(route.Vertices[0]).ToGeoCoordinate());
-            for (int edgeIdx = 0; edgeIdx < route.Edges.Length; edgeIdx++)
-            {
-                currentEdgeLength = 0;
-                var edge = route.Edges[edgeIdx];
-                var edgeShapes = route.EdgeShapes[edgeIdx];
-                if (edgeShapes != null)
-                { // there are intermediate coordinates.
-                    if (edge.Forward)
-                    { // the edge is forward.
-                        for (int idx = 0; idx < edgeShapes.Length; idx++)
-                        {
-                            coordinates.Add(new GeoCoordinate(edgeShapes[idx].Latitude, edgeShapes[idx].Longitude));
-                            currentEdgeLength = currentEdgeLength + coordinates[coordinates.Count - 2].DistanceEstimate(coordinates[coordinates.Count - 1]).Value;
-                        }
-                    }
-                    else
-                    { // the edge is backward.
-                        for (int idx = edgeShapes.Length - 1; idx >= 0; idx--)
-                        {
-                            coordinates.Add(new GeoCoordinate(edgeShapes[idx].Latitude, edgeShapes[idx].Longitude));
-                            currentEdgeLength = currentEdgeLength + coordinates[coordinates.Count - 2].DistanceEstimate(coordinates[coordinates.Count - 1]).Value;
-                        }
-                    }
-                }
-                coordinates.Add(this.GetCoordinate(route.Vertices[edgeIdx + 1]).ToGeoCoordinate());
-                currentEdgeLength = currentEdgeLength + coordinates[coordinates.Count - 2].DistanceEstimate(coordinates[coordinates.Count - 1]).Value;
-
-                // add current edge length to current offset.
-                if ((currentOffsetLength + currentEdgeLength) >= offsetLength.Value && 
-                    edgeLength.Value < 0)
-                { // it's this edge that has the valuable info.
-                    offsetEdgeIdx = edgeIdx;
-                    offsetEdgeLength = offsetLength - currentOffsetLength;
-                    edgeLength = currentEdgeLength;
-                }
-                currentOffsetLength = currentOffsetLength + currentEdgeLength;
-            }
-
-            // choose the last edge.
-            if (edgeLength.Value < 0)
-            { // it's this edge that has the valuable info.
-                offsetEdgeIdx = route.Edges.Length - 1;
-                offsetEdgeLength = offsetLength - currentOffsetLength;
-                edgeLength = currentEdgeLength;
-            }
-
-            // calculate actual offset position.
-            offsetLocation = coordinates.GetPositionLocation(offsetRatio);
-            return coordinates;
-        }
-
-        /// <summary>
-        /// Returns the distance for the given route.
-        /// </summary>
-        /// <param name="route"></param>
-        /// <returns></returns>
-        public virtual Meter GetDistance(Locations.ReferencedLine route)
-        {
-            var coordinates = new List<GeoCoordinate>();
-            coordinates.Add(this.GetCoordinate(route.Vertices[0]).ToGeoCoordinate());
-            for (int edgeIdx = 0; edgeIdx < route.Edges.Length; edgeIdx++)
-            {
-                var edge = route.Edges[edgeIdx];
-                var edgeShape = route.EdgeShapes[edgeIdx];
-                if (edgeShape != null)
-                { // there are intermediate coordinates.
-                    if (edge.Forward)
-                    { // the edge is forward.
-                        for (int idx = 0; idx < edgeShape.Length; idx++)
-                        {
-                            coordinates.Add(new GeoCoordinate(edgeShape[idx].Latitude, edgeShape[idx].Longitude));
-                        }
-                    }
-                    else
-                    { // the edge is backward.
-                        for (int idx = edgeShape.Length - 1; idx >= 0; idx--)
-                        {
-                            coordinates.Add(new GeoCoordinate(edgeShape[idx].Latitude, edgeShape[idx].Longitude));
-                        }
-                    }
-                }
-                coordinates.Add(this.GetCoordinate(route.Vertices[edgeIdx + 1]).ToGeoCoordinate());
-            }
-
-            Meter distance = 0;
-            if(coordinates != null && coordinates.Count > 1)
-            {
-                for(int idx = 1; idx < coordinates.Count; idx++)
-                {
-                    distance = distance + coordinates[idx - 1].DistanceReal(coordinates[idx]);
-                }
-            }
-            return distance;
         }
 
         /// <summary>

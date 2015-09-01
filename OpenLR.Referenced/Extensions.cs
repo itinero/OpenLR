@@ -335,7 +335,7 @@ namespace OpenLR.Referenced
         }
 
         /// <summary>
-        /// Converts the referenced line location to features.
+        /// Converts the referenced line location to a list of sorted coordinates.
         /// </summary>
         /// <param name="referencedLine">The referenced line.</param>
         /// <param name="decoder">The decoder.</param>
@@ -346,7 +346,7 @@ namespace OpenLR.Referenced
         }
 
         /// <summary>
-        /// Converts the referenced line location to features.
+        /// Converts the referenced line location to a list of sorted coordinates.
         /// </summary>
         /// <param name="referencedLine">The referenced line.</param>
         /// <param name="decoder">The decoder.</param>
@@ -377,10 +377,74 @@ namespace OpenLR.Referenced
         }
 
         /// <summary>
+        /// Converts the referenced line location to a list of sorted coordinates.
+        /// </summary>
+        /// <returns></returns>
+        public static List<GeoCoordinate> GetCoordinates(this ReferencedLine route, ReferencedDecoderBase decoder, double offsetRatio, 
+            out int offsetEdgeIdx, out GeoCoordinate offsetLocation, out Meter offsetLength, out Meter offsetEdgeLength, out Meter edgeLength)
+        {            
+            if (route == null) { throw new ArgumentNullException("route"); }
+            if (route.Edges == null || route.Edges.Length == 0) { throw new ArgumentOutOfRangeException("route", "Route has no edges."); }
+            if (route.Vertices == null || route.Vertices.Length == 0) { throw new ArgumentOutOfRangeException("route", "Route has no vertices."); }
+            if (route.Vertices.Length != route.Edges.Length + 1) { throw new ArgumentOutOfRangeException("route", "Route is invalid: there should be n vertices and n-1 edges."); }
+
+            // calculate the total length first.
+            var totalLength = route.GetCoordinates(decoder).Length();
+
+            // calculate the lenght at the offst.
+            offsetLength = (Meter)(totalLength.Value * offsetRatio);
+            offsetEdgeLength = -1;
+            offsetEdgeIdx = -1;
+            edgeLength = -1;
+
+            // loop over all coordinates and collect offsetLocation and offsetEdgeIdx.
+            double currentOffsetLength = 0;
+            double currentEdgeLength = 0;
+            var coordinates = new List<GeoCoordinate>();
+            coordinates.Add(decoder.GetCoordinate(route.Vertices[0]).ToGeoCoordinate());
+            for (int edgeIdx = 0; edgeIdx < route.Edges.Length; edgeIdx++)
+            {
+                currentEdgeLength = 0;
+                var edge = route.Edges[edgeIdx];
+                var edgeShapes = route.EdgeShapes[edgeIdx];
+                if (edgeShapes != null)
+                { // there are intermediate coordinates.
+                    for (int idx = 0; idx < edgeShapes.Length; idx++)
+                    {
+                        coordinates.Add(new GeoCoordinate(edgeShapes[idx].Latitude, edgeShapes[idx].Longitude));
+                        currentEdgeLength = currentEdgeLength + coordinates[coordinates.Count - 2].DistanceEstimate(coordinates[coordinates.Count - 1]).Value;
+                    }
+                }
+                coordinates.Add(decoder.GetCoordinate(route.Vertices[edgeIdx + 1]).ToGeoCoordinate());
+                currentEdgeLength = currentEdgeLength + coordinates[coordinates.Count - 2].DistanceEstimate(coordinates[coordinates.Count - 1]).Value;
+
+                // add current edge length to current offset.
+                if ((currentOffsetLength + currentEdgeLength) >= offsetLength.Value &&
+                    edgeLength.Value < 0)
+                { // it's this edge that has the valuable info.
+                    offsetEdgeIdx = edgeIdx;
+                    offsetEdgeLength = offsetLength - currentOffsetLength;
+                    edgeLength = currentEdgeLength;
+                }
+                currentOffsetLength = currentOffsetLength + currentEdgeLength;
+            }
+
+            // choose the last edge.
+            if (edgeLength.Value < 0)
+            { // it's this edge that has the valuable info.
+                offsetEdgeIdx = route.Edges.Length - 1;
+                offsetEdgeLength = offsetLength - currentOffsetLength;
+                edgeLength = currentEdgeLength;
+            }
+
+            // calculate actual offset position.
+            offsetLocation = coordinates.GetPositionLocation(offsetRatio);
+            return coordinates;
+        }
+
+        /// <summary>
         /// Converts the referenced point along the line location to features.
         /// </summary>
-        /// <param name="referencedPointALongLineLocation"></param>
-        /// <param name="baseDecoder"></param>
         /// <returns></returns>
         public static FeatureCollection ToFeatures(this ReferencedPointAlongLine referencedPointALongLineLocation, ReferencedDecoderBase baseDecoder)
         {

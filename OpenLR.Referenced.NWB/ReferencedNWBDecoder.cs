@@ -80,7 +80,7 @@ namespace OpenLR.Referenced.NWB
         /// <param name="to"></param>
         /// <param name="minimum">The minimum FRC.</param>
         /// <returns></returns>
-        public override CandidateRoute FindCandiateRoute(CandidateVertexEdge from, CandidateVertexEdge to, FunctionalRoadClass minimum)
+        public override CandidateRoute FindCandidateRoute(CandidateVertexEdge from, CandidateVertexEdge to, FunctionalRoadClass minimum)
         {
             var edgeInterpreter = new ShapefileEdgeInterpreter();
             var interpreter = new ShapefileRoutingInterpreter();
