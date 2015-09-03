@@ -100,7 +100,7 @@ namespace OpenLR.Referenced.Decoding
                     // calculate distance and compare with distancetonext.
                     var distance = candidate.Route.GetCoordinates(this.MainDecoder).Length().Value;
                     var expectedDistance = location.First.DistanceToNext;
-                    var distanceDiff = System.Math.Abs(distance - expectedDistance);
+                    var distanceDiff = System.Math.Max(System.Math.Abs(distance - expectedDistance) - 200, 0); // don't care about difference smaller than 200m, the binary encoding only handles segments of about 50m.
                     var deviation = Score.New(Score.DISTANCE_COMPARISON, "Compares expected location distance with decoded location distance (1=prefect, 0=difference bigger than total distance)",
                         1 - System.Math.Min(System.Math.Max(distanceDiff / expectedDistance, 0), 1), 1);
 
