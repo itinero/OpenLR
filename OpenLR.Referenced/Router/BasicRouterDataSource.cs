@@ -103,15 +103,13 @@ namespace OpenLR.Referenced.Router
         {
             _newEdges.Add(new KeyValuePair<long, KeyValuePair<long, Tuple<TEdge, ICoordinateCollection>>>(
                 vertex1, new KeyValuePair<long, Tuple<TEdge, ICoordinateCollection>>(vertex2, new Tuple<TEdge, ICoordinateCollection>(edge, null))));
+            _newEdges.Add(new KeyValuePair<long, KeyValuePair<long, Tuple<TEdge, ICoordinateCollection>>>(
+                vertex2, new KeyValuePair<long, Tuple<TEdge, ICoordinateCollection>>(vertex1, new Tuple<TEdge, ICoordinateCollection>((TEdge)edge.Reverse(), null))));
         }
 
         /// <summary>
         /// Adds a new arc.
         /// </summary>
-        /// <param name="vertex1"></param>
-        /// <param name="vertex2"></param>
-        /// <param name="edge"></param>
-        /// <param name="shape"></param>
         public void AddEdge(long vertex1, long vertex2, TEdge edge, GeoCoordinateSimple[] shape)
         {
             if(shape == null)
@@ -121,19 +119,15 @@ namespace OpenLR.Referenced.Router
             }
             _newEdges.Add(new KeyValuePair<long, KeyValuePair<long, Tuple<TEdge, ICoordinateCollection>>>(
                 vertex1, new KeyValuePair<long, Tuple<TEdge, ICoordinateCollection>>(vertex2, new Tuple<TEdge, ICoordinateCollection>(edge, new CoordinateArrayCollection<GeoCoordinateSimple>(shape)))));
-        }
-
-        /// <summary>
-        /// Adds a new arc.
-        /// </summary>
-        /// <param name="vertex1"></param>
-        /// <param name="vertex2"></param>
-        /// <param name="edge"></param>
-        /// <param name="shape"></param>
-        public void AddEdge(long vertex1, long vertex2, TEdge edge, ICoordinateCollection shape)
-        {
+            var reverseShape = new GeoCoordinateSimple[shape.Length];
+            for(var i = 0; i < shape.Length; i++)
+            {
+                reverseShape[shape.Length - 1 - i] = shape[i];
+            } 
             _newEdges.Add(new KeyValuePair<long, KeyValuePair<long, Tuple<TEdge, ICoordinateCollection>>>(
-                vertex1, new KeyValuePair<long, Tuple<TEdge,ICoordinateCollection>>(vertex2, new Tuple<TEdge, ICoordinateCollection>(edge, shape))));
+                 vertex2, new KeyValuePair<long, Tuple<TEdge, ICoordinateCollection>>(vertex1, new Tuple<TEdge, ICoordinateCollection>(
+                     (TEdge)edge.Reverse(), new CoordinateArrayCollection<GeoCoordinateSimple>(reverseShape)))));
+            
         }
 
         /// <summary>

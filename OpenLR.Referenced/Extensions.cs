@@ -683,8 +683,8 @@ namespace OpenLR.Referenced
                 {
                     for (int idx = 1; idx < coordinates.Count; idx++)
                     {
-                        //if (maxDistanceBox.IntersectsPotentially(coordinates[idx - 1], coordinates[idx]))
-                        //{
+                        if (maxDistanceBox.IntersectsPotentially(coordinates[idx - 1], coordinates[idx]))
+                        {
                             var line = new GeoCoordinateLine(coordinates[idx - 1], coordinates[idx], true, true);
                             var distance = line.DistanceReal(location).Value;
                             if (distance < bestDistance)
@@ -692,7 +692,7 @@ namespace OpenLR.Referenced
                                 bestEdge = new Tuple<long, long, LiveEdge>(arc.Item1, arc.Item2, arc.Item3);
                                 bestDistance = distance;
                             }
-                        //}
+                        }
                     }
                 }
             }
@@ -971,14 +971,9 @@ namespace OpenLR.Referenced
         /// <summary>
         /// Projects the given point on the line represented by the coordinates.
         /// </summary>
-        /// <param name="coordinates"></param>
-        /// <param name="point"></param>
-        /// <param name="bestProjected"></param>
-        /// <param name="bestPosition"></param>
-        /// <param name="bestOffset"></param>
         /// <returns></returns>
         public static bool ProjectOn(this List<GeoCoordinate> coordinates, PointF2D point, out PointF2D bestProjected, 
-            out LinePointPosition bestPosition, out Meter bestOffset)
+            out LinePointPosition bestPosition, out Meter bestOffset, out int bestIndex)
         {
             // check first point.
             var pointGeo = new GeoCoordinate(point);
@@ -986,6 +981,7 @@ namespace OpenLR.Referenced
             bestProjected = coordinates[0];
             bestOffset = 0;
             bestPosition = LinePointPosition.On;
+            bestIndex = -1;
 
             // check intermediate points.
             var bestDistance = distance;
@@ -1005,6 +1001,7 @@ namespace OpenLR.Referenced
                         bestDistance = distance;
                         bestProjected = projected;
                         bestOffset = currentOffset + offset;
+                        bestIndex = idx;
                     }
                 }
                 currentOffset = currentOffset + line.LengthReal.Value;
@@ -1017,6 +1014,7 @@ namespace OpenLR.Referenced
                     bestProjected = coordinates[idx + 1];
                     bestOffset = currentOffset;
                     bestPosition = LinePointPosition.On;
+                    bestIndex = idx + 1;
                 }
             }
 

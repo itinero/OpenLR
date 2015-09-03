@@ -22,10 +22,7 @@ namespace OpenLR.Referenced.Decoding
         where TReferencedLocation : ReferencedLocation
         where TLocation : ILocation
     {
-        /// <summary>
-        /// Holds the main decoder.
-        /// </summary>
-        private ReferencedDecoderBase _mainDecoder;
+        private readonly ReferencedDecoderBase _mainDecoder;
 
         /// <summary>
         /// Creates a new dynamic graph decoder.

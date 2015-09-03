@@ -6,6 +6,7 @@ using OpenLR.Referenced.Decoding.Candidates;
 using OpenLR.Referenced.Encoding;
 using OpenLR.Referenced.Router;
 using OpenLR.Referenced.Scoring;
+using OsmSharp.Collections.Coordinates.Collections;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Simple;
@@ -34,6 +35,7 @@ namespace OpenLR.Referenced
         private readonly ReferencedPolygonDecoder _referencedPolygonDecoder;
         private readonly ReferencedRectangleDecoder _referencedRectangleDecoder;
         private readonly Vehicle _vehicle;
+        private readonly float _scoreThreshold = 0.5f;
 
         /// <summary>
         /// Creates a new referenced decoder.
@@ -111,6 +113,17 @@ namespace OpenLR.Referenced
             get
             {
                 return _maxVertexDistance;
+            }
+        }
+
+        /// <summary>
+        /// Returns the threshold for the decoding scores.
+        /// </summary>
+        public float ScoreThreshold
+        {
+            get
+            {
+                return _scoreThreshold;
             }
         }
 
@@ -308,26 +321,6 @@ namespace OpenLR.Referenced
         }
 
         /// <summary>
-        /// Creates candidate vertex/edge pairs for a given location reference point.
-        /// </summary>
-        /// <param name="lrp"></param>
-        /// <param name="forward"></param>
-        /// <returns></returns>
-        public virtual SortedSet<CandidateVertexEdge> CreateCandidatesFor(LocationReferencePoint lrp, bool forward)
-        {
-            return this.CreateCandidatesFor(lrp, forward, _maxVertexDistance);
-        }
-
-        /// <summary>
-        /// Finds all candidate vertex/edge pairs for a given location reference point.
-        /// </summary>
-        /// <param name="lrp"></param>
-        /// <param name="forward"></param>
-        /// <param name="maxVertexDistance"></param>
-        /// <returns></returns>
-        public abstract SortedSet<CandidateVertexEdge> CreateCandidatesFor(LocationReferencePoint lrp, bool forward, Meter maxVertexDistance);
-        
-        /// <summary>
         /// Finds candidate vertices for a location reference point.
         /// </summary>
         /// <param name="lrp"></param>
@@ -380,6 +373,69 @@ namespace OpenLR.Referenced
                             Score = Score.New(Score.VERTEX_DISTANCE, string.Format("The vertex score compare to max distance {0}", _maxVertexDistance), (float)System.Math.Max(0, (1.0 - (distance.Value / _maxVertexDistance.Value))), 1), // calculate scoring compared to the fixed max distance.
                             Vertex = vertex
                         });
+                    }
+                }
+            }
+
+            if (scoredCandidates.Count == 0)
+            { // no candidates, create a virtual candidate.
+                var closestEdge = this.Graph.GetClosestEdge(geoCoordinate, maxVertexDistance, 0.1);
+                if (closestEdge != null)
+                {
+                    var coordinates = this.Graph.GetCoordinates(closestEdge);
+
+                    OsmSharp.Math.Primitives.PointF2D bestProjected;
+                    OsmSharp.Math.Primitives.LinePointPosition bestPosition;
+                    Meter bestOffset;
+                    int bestIndex;
+                    if (coordinates.ProjectOn(geoCoordinate, out bestProjected, out bestPosition, out bestOffset, out bestIndex))
+                    { // successfully projected, insert virtual vertex.
+                        var distance = geoCoordinate.DistanceEstimate(new GeoCoordinate(bestProjected[1], bestProjected[0]));
+                        if (distance.Value < maxVertexDistance.Value)
+                        {
+                            this.Graph.RemoveEdge(closestEdge.Item1, closestEdge.Item2);
+
+                            var newVertex = this.Graph.AddVertex((float)bestProjected[1], (float)bestProjected[0]);
+
+                            // build distance before/after.
+                            var distanceBefore = bestOffset.Value;
+                            var distanceAfter = closestEdge.Item3.Distance - bestOffset.Value;
+
+                            // build coordinates before/after.
+                            var coordinatesBefore = new List<GeoCoordinateSimple>(
+                                coordinates.GetRange(1, bestIndex).Select(x => new GeoCoordinateSimple()
+                                    {
+                                        Latitude = (float)x.Latitude,
+                                        Longitude = (float)x.Longitude
+                                    }));
+                            var coordinatesAfter = new List<GeoCoordinateSimple>(
+                                coordinates.GetRange(bestIndex + 1, coordinates.Count - 1 - bestIndex - 1).Select(x => new GeoCoordinateSimple()
+                                {
+                                    Latitude = (float)x.Latitude,
+                                    Longitude = (float)x.Longitude
+                                }));
+
+                            this.Graph.AddEdge(closestEdge.Item1, newVertex, new LiveEdge()
+                            {
+                                Distance = (float)distanceBefore,
+                                Forward = closestEdge.Item3.Forward,
+                                Tags = closestEdge.Item3.Tags
+                            }, coordinatesBefore.Count > 0 ? coordinatesBefore.ToArray() : null);
+                            this.Graph.AddEdge(newVertex, closestEdge.Item2, new LiveEdge()
+                            {
+                                Distance = (float)distanceAfter,
+                                Forward = closestEdge.Item3.Forward,
+                                Tags = closestEdge.Item3.Tags
+                            }, coordinatesAfter.Count > 0 ? coordinatesAfter.ToArray() : null);
+
+                            scoredCandidates.Add(new CandidateVertex()
+                            {
+                                Score = Score.New(Score.VERTEX_DISTANCE,
+                                    string.Format("The vertex score compare to max distance {0}", _maxVertexDistance),
+                                        (float)System.Math.Max(0, (1.0 - (distance.Value / _maxVertexDistance.Value))), 1), // calculate scoring compared to the fixed max distance.
+                                Vertex = newVertex
+                            });
+                        }
                     }
                 }
             }

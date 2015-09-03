@@ -86,7 +86,9 @@ namespace OpenLR.Referenced.Encoding
                 PointF2D bestProjected;
                 LinePointPosition bestPosition;
                 Meter bestOffset;
-                if (!coordinates.ProjectOn(new PointF2D(referencedLocation.Longitude, referencedLocation.Latitude), out bestProjected, out bestPosition, out bestOffset))
+                int bestIndex;
+                if (!coordinates.ProjectOn(new PointF2D(referencedLocation.Longitude, referencedLocation.Latitude),
+                    out bestProjected, out bestPosition, out bestOffset, out bestIndex))
                 { // the projection on the edge failed.
                     throw new ReferencedEncodingException(referencedLocation, "The point in the ReferencedPointAlongLine could not be projected on the referenced edge.");
                 }

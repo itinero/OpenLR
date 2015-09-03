@@ -285,47 +285,48 @@ namespace OpenLR.Referenced
                 return this.Vehicle.CanTraverse(this.Graph.TagsIndex.Get(arc.Value.Tags));
             }).ToList();
 
-            if (traversableArcs.Count > 1)
-            { // if there is one incoming edge where there is only one way out then this vertex is invalid.
-                foreach (var incoming in traversableArcs)
-                {
-                    // check if this neighbour is incoming.
-                    var incomingTags = this.Graph.TagsIndex.Get(incoming.Value.Tags);
-                    var incomingOneway = this.Vehicle.IsOneWay(incomingTags);
-                    if (incomingOneway == null ||
-                        incomingOneway.Value != incoming.Value.Forward)
-                    { // ok, is not oneway or oneway is in incoming direction.
-                        var outgoingCount = 0;
-                        foreach (var outgoing in traversableArcs)
-                        {
-                            if (outgoing.Key != incoming.Key ||
-                                !outgoing.Value.Equals(incoming.Value))
-                            { // don't take the same edge.
-                                var outgoingTags = this.Graph.TagsIndex.Get(outgoing.Value.Tags);
-                                var oneway = this.Vehicle.IsOneWay(outgoingTags);
-                                if (oneway == null ||
-                                    oneway.Value == outgoing.Value.Forward)
-                                { // ok, is not oneway or oneway is outgoing direction.
-                                    outgoingCount++;
-                                    if (outgoingCount > 1)
-                                    { // it's not going down again, stop the search.
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                        if (outgoingCount == 1)
-                        { // there is only one option, so for some situations to vertex is invalid, mark it invalid for all.
-                            return false;
-                        }
-                    }
-                }
-                return true;
-            }
-            else
-            { // one arc, vertex is at the end.
-                return true;
-            }
+            return traversableArcs.Count != 2;
+            //if (traversableArcs.Count > 1)
+            //{ // if there is one incoming edge where there is only one way out then this vertex is invalid.
+            //    foreach (var incoming in traversableArcs)
+            //    {
+            //        // check if this neighbour is incoming.
+            //        var incomingTags = this.Graph.TagsIndex.Get(incoming.Value.Tags);
+            //        var incomingOneway = this.Vehicle.IsOneWay(incomingTags);
+            //        if (incomingOneway == null ||
+            //            incomingOneway.Value != incoming.Value.Forward)
+            //        { // ok, is not oneway or oneway is in incoming direction.
+            //            var outgoingCount = 0;
+            //            foreach (var outgoing in traversableArcs)
+            //            {
+            //                if (outgoing.Key != incoming.Key ||
+            //                    !outgoing.Value.Equals(incoming.Value))
+            //                { // don't take the same edge.
+            //                    var outgoingTags = this.Graph.TagsIndex.Get(outgoing.Value.Tags);
+            //                    var oneway = this.Vehicle.IsOneWay(outgoingTags);
+            //                    if (oneway == null ||
+            //                        oneway.Value == outgoing.Value.Forward)
+            //                    { // ok, is not oneway or oneway is outgoing direction.
+            //                        outgoingCount++;
+            //                        if (outgoingCount > 1)
+            //                        { // it's not going down again, stop the search.
+            //                            break;
+            //                        }
+            //                    }
+            //                }
+            //            }
+            //            if (outgoingCount == 1)
+            //            { // there is only one option, so for some situations to vertex is invalid, mark it invalid for all.
+            //                return false;
+            //            }
+            //        }
+            //    }
+            //    return true;
+            //}
+            //else
+            //{ // a dead-end with only one arc traversible arc.
+            //    return true;
+            //}
         }
 
         /// <summary>

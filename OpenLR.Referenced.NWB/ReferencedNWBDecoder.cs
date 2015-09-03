@@ -105,8 +105,8 @@ namespace OpenLR.Referenced.NWB
                 vertices.Add(path.From.VertexId);
 
                 // get edge between current and from.
-                uint fromVertex = (uint)path.From.VertexId;
-                uint toVertex = (uint)path.VertexId;
+                var fromVertex = path.From.VertexId;
+                var toVertex = path.VertexId;
 
                 var edgeDistance = double.MaxValue;
                 var arcs = this.Graph.GetEdges(fromVertex);
@@ -163,7 +163,7 @@ namespace OpenLR.Referenced.NWB
         public override Coordinate GetCoordinate(long vertex)
         {
             float latitude, longitude;
-            if (!this.Graph.GetVertex((uint)vertex, out latitude, out longitude))
+            if (!this.Graph.GetVertex(vertex, out latitude, out longitude))
             { // oeps, vertex does not exist!
                 throw new ArgumentOutOfRangeException("vertex", string.Format("Vertex {0} not found!", vertex));
             }

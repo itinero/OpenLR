@@ -24,13 +24,22 @@ namespace OpenLR.Referenced
         /// <returns></returns>
         public static ReferencedPointAlongLine BuildPointAlongLine(this ReferencedEncoderBase encoder, GeoCoordinate location, double boxSize = 0.1)
         {
+            return encoder.BuildPointAlongLine(location, 10, boxSize);
+        }
+
+        /// <summary>
+        /// Builds a point along line location.
+        /// </summary>
+        /// <returns></returns>
+        public static ReferencedPointAlongLine BuildPointAlongLine(this ReferencedEncoderBase encoder, GeoCoordinate location, Meter maxDistance, double boxSize = 0.1)
+        {
             if (location == null) { throw new ArgumentNullException("location"); }
 
             // get the closest edge that can be traversed to the given location.
-            var closest = encoder.Graph.GetClosestEdge(location, double.MaxValue, boxSize);
+            var closest = encoder.Graph.GetClosestEdge(location, maxDistance, boxSize);
             if (closest == null)
             { // no location could be found. 
-                throw new Exception("No network features found near the given location. Make sure the network covers the given location.");
+                throw new BuildLocationFailedException("No network features found near the given location. Make sure the network covers the given location.");
             }
             var oneway = encoder.Vehicle.IsOneWay(encoder.Graph.TagsIndex.Get(closest.Item3.Tags));
             if(oneway.HasValue && oneway.Value != closest.Item3.Forward)
