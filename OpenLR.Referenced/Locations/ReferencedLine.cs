@@ -48,12 +48,12 @@ namespace OpenLR.Referenced.Locations
         /// <summary>
         /// Gets or sets the offset at the beginning of the path representing this location.
         /// </summary>
-        public float PositiveOffsetPercentage { get; set; }
+        public float PositiveOffset { get; set; }
 
         /// <summary>
         /// Gets or sets the offset at the end of the path representing this location.
         /// </summary>
-        public float NegativeOffsetPercentage { get; set; }
+        public float NegativeOffset { get; set; }
 
         /// <summary>
         /// Creates a new object that is a copy of the current instance.
@@ -76,8 +76,8 @@ namespace OpenLR.Referenced.Locations
                 Edges = this.Edges == null ? null : this.Edges.Clone() as LiveEdge[],
                 Vertices = this.Vertices == null ? null : this.Vertices.Clone() as long[],
                 EdgeShapes = edgeShapes,
-                NegativeOffsetPercentage = this.NegativeOffsetPercentage,
-                PositiveOffsetPercentage = this.PositiveOffsetPercentage
+                NegativeOffset = this.NegativeOffset,
+                PositiveOffset = this.PositiveOffset
             };
         }
 
@@ -275,8 +275,8 @@ namespace OpenLR.Referenced.Locations
         public void AdjustToValidPoints(ReferencedEncoderBase encoder)
         {
             var length = (float)this.Length(encoder).Value;
-            var positiveOffsetLength = (this.PositiveOffsetPercentage / 100) * length;
-            var negativeOffsetLength = (this.NegativeOffsetPercentage / 100) * length;
+            var positiveOffsetLength = (this.PositiveOffset / 100) * length;
+            var negativeOffsetLength = (this.NegativeOffset / 100) * length;
             var excludeSet = new HashSet<long>();
             if (!encoder.IsVertexValid(this.Vertices[0]))
             { // from is not valid, try to find a valid point.
@@ -389,8 +389,8 @@ namespace OpenLR.Referenced.Locations
             }
 
             // update offset percentags.
-            this.PositiveOffsetPercentage = (float)((positiveOffsetLength / length) * 100.0);
-            this.NegativeOffsetPercentage = (float)((negativeOffsetLength / length) * 100.0);
+            this.PositiveOffset = (float)((positiveOffsetLength / length) * 100.0);
+            this.NegativeOffset = (float)((negativeOffsetLength / length) * 100.0);
 
             // fill shapes.
             this.EdgeShapes = new GeoCoordinateSimple[this.Edges.Length][];

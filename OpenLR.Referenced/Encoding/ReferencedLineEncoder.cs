@@ -95,8 +95,14 @@ namespace OpenLR.Referenced.Encoding
                 location.Last = locationReferencePoints[locationReferencePoints.Count - 1];
 
                 // set offsets.
-                location.PositiveOffsetPercentage = referencedLocation.PositiveOffsetPercentage;
-                location.NegativeOffsetPercentage = referencedLocation.NegativeOffsetPercentage;
+                if(referencedLocation.PositiveOffset != 0)
+                {
+                    location.PositiveOffsetPercentage = (float)((referencedLocation.PositiveOffset / length.Value) * 100.0);
+                }
+                if(referencedLocation.NegativeOffset != 0)
+                {
+                    location.NegativeOffsetPercentage = (float)((referencedLocation.NegativeOffset / length.Value) * 100.0);
+                }
 
                 return location;
             }

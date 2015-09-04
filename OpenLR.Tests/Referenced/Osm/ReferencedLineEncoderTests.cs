@@ -182,8 +182,8 @@ namespace OpenLR.Tests.Referenced.Osm
             Assert.AreEqual(edge1.Distance, referencedLocation.Edges[0].Distance);
             Assert.AreEqual(edge1.Forward, referencedLocation.Edges[0].Forward);
             Assert.AreEqual(edge1.Tags, referencedLocation.Edges[0].Tags);
-            Assert.AreEqual(0, referencedLocation.PositiveOffsetPercentage);
-            Assert.AreEqual(0, referencedLocation.NegativeOffsetPercentage);
+            Assert.AreEqual(0, referencedLocation.PositiveOffset);
+            Assert.AreEqual(0, referencedLocation.NegativeOffset);
         }
 
         /// <summary>
@@ -248,8 +248,8 @@ namespace OpenLR.Tests.Referenced.Osm
             Assert.AreEqual(edge.Distance, referencedLocation.Edges[1].Distance);
             Assert.AreEqual(edge.Forward, referencedLocation.Edges[1].Forward);
             Assert.AreEqual(edge.Tags, referencedLocation.Edges[1].Tags);
-            Assert.AreEqual(50, referencedLocation.PositiveOffsetPercentage, 1);
-            Assert.AreEqual(0, referencedLocation.NegativeOffsetPercentage);
+            Assert.AreEqual(50, referencedLocation.PositiveOffset, 1);
+            Assert.AreEqual(0, referencedLocation.NegativeOffset);
         }
 
         /// <summary>
@@ -314,8 +314,8 @@ namespace OpenLR.Tests.Referenced.Osm
             Assert.AreEqual(edge.Distance, referencedLocation.Edges[1].Distance);
             Assert.AreEqual(edge.Forward, referencedLocation.Edges[1].Forward);
             Assert.AreEqual(edge.Tags, referencedLocation.Edges[1].Tags);
-            Assert.AreEqual(0, referencedLocation.PositiveOffsetPercentage, 1);
-            Assert.AreEqual(50, referencedLocation.NegativeOffsetPercentage, 1);
+            Assert.AreEqual(0, referencedLocation.PositiveOffset, 1);
+            Assert.AreEqual(50, referencedLocation.NegativeOffset, 1);
         }
 
         /// <summary>
@@ -380,8 +380,8 @@ namespace OpenLR.Tests.Referenced.Osm
             Assert.AreEqual(edge.Distance, referencedLocation.Edges[1].Distance);
             Assert.AreEqual(edge.Forward, referencedLocation.Edges[1].Forward);
             Assert.AreEqual(edge.Tags, referencedLocation.Edges[1].Tags);
-            Assert.AreEqual(60, referencedLocation.PositiveOffsetPercentage, 1);
-            Assert.AreEqual(0, referencedLocation.NegativeOffsetPercentage);
+            Assert.AreEqual(60, referencedLocation.PositiveOffset, 1);
+            Assert.AreEqual(0, referencedLocation.NegativeOffset);
         }
 
         /// <summary>
@@ -445,8 +445,8 @@ namespace OpenLR.Tests.Referenced.Osm
             Assert.AreEqual(edge.Distance, referencedLocation.Edges[1].Distance);
             Assert.AreEqual(edge.Forward, referencedLocation.Edges[1].Forward);
             Assert.AreEqual(edge.Tags, referencedLocation.Edges[1].Tags);
-            Assert.AreEqual(0, referencedLocation.PositiveOffsetPercentage, 1);
-            Assert.AreEqual(60, referencedLocation.NegativeOffsetPercentage, 1);
+            Assert.AreEqual(0, referencedLocation.PositiveOffset, 1);
+            Assert.AreEqual(60, referencedLocation.NegativeOffset, 1);
         }
 
         /// <summary>

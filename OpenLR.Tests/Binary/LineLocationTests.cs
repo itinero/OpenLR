@@ -55,6 +55,10 @@ namespace OpenLR.Tests.Binary
             Assert.AreEqual(49.60305, lineLocation.Last.Coordinate.Latitude, delta); // 49.60305°
             Assert.AreEqual(FunctionalRoadClass.Frc5, lineLocation.Last.FuntionalRoadClass);
             Assert.AreEqual(FormOfWay.SingleCarriageWay, lineLocation.Last.FormOfWay);
+
+            // check others.
+            Assert.AreEqual(26.74, lineLocation.PositiveOffsetPercentage, 100.0 / 265.0);
+            Assert.AreEqual(null, lineLocation.NegativeOffsetPercentage);
         }
 
         /// <summary>
@@ -88,6 +92,8 @@ namespace OpenLR.Tests.Binary
             location.Last.FuntionalRoadClass = FunctionalRoadClass.Frc5;
             location.Last.FormOfWay = FormOfWay.SingleCarriageWay;
             location.Last.Bearing = 0;
+            location.NegativeOffsetPercentage = 24.4f;
+            location.PositiveOffsetPercentage = 13.3f;
 
             // encode.
             var encoder = new LineEncoder();
@@ -124,6 +130,10 @@ namespace OpenLR.Tests.Binary
             Assert.AreEqual(49.60305, lineLocation.Last.Coordinate.Latitude, delta); // 49.60305°
             Assert.AreEqual(FunctionalRoadClass.Frc5, lineLocation.Last.FuntionalRoadClass);
             Assert.AreEqual(FormOfWay.SingleCarriageWay, lineLocation.Last.FormOfWay);
+
+            // check others.
+            Assert.AreEqual(24.4, lineLocation.NegativeOffsetPercentage, 100.0 / 265.0);
+            Assert.AreEqual(13.3, lineLocation.PositiveOffsetPercentage, 100.0 / 265.0);
 
             // compare again with reference encoded string.
             var referenceStringData = "CwRbWyNG9BpgAACa/jsboAD/6/+kKwAAAA==";
