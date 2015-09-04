@@ -24,7 +24,7 @@ namespace OpenLR.Referenced
         /// <returns></returns>
         public static ReferencedPointAlongLine BuildPointAlongLine(this ReferencedEncoderBase encoder, GeoCoordinate location, double boxSize = 0.1)
         {
-            return encoder.BuildPointAlongLine(location, 10, boxSize);
+            return encoder.BuildPointAlongLine(location, 20, boxSize);
         }
 
         /// <summary>
