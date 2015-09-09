@@ -394,6 +394,7 @@ namespace OpenLR.Referenced
                         if (distance.Value < maxVertexDistance.Value)
                         {
                             this.Graph.RemoveEdge(closestEdge.Item1, closestEdge.Item2);
+                            this.Graph.RemoveEdge(closestEdge.Item2, closestEdge.Item1);
 
                             var newVertex = this.Graph.AddVertex((float)bestProjected[1], (float)bestProjected[0]);
 
