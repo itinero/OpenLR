@@ -237,8 +237,13 @@ namespace OpenLR.Referenced
             var featureCollection = referencedPointALongLineLocation.Route.ToFeatures();
 
             // create the coordinates.
-            featureCollection.Add(baseEncoder.GetVertexLocation(referencedPointALongLineLocation.Route.Vertices[0]).ToFeature());
-            featureCollection.Add(baseEncoder.GetVertexLocation(referencedPointALongLineLocation.Route.Vertices[referencedPointALongLineLocation.Route.Vertices.Length - 1]).ToFeature());
+            var feature = baseEncoder.GetVertexLocation(referencedPointALongLineLocation.Route.Vertices[0]).ToFeature();
+            feature.Attributes.AddAttribute("type", "start");
+            featureCollection.Add(feature);
+            feature = baseEncoder.GetVertexLocation(referencedPointALongLineLocation.Route.Vertices[
+                referencedPointALongLineLocation.Route.Vertices.Length - 1]).ToFeature();
+            feature.Attributes.AddAttribute("type", "end");
+            featureCollection.Add(feature);
 
             // create a feature for the actual location.
             var locationCoordinate = new Coordinate(referencedPointALongLineLocation.Longitude, referencedPointALongLineLocation.Latitude);
@@ -455,8 +460,13 @@ namespace OpenLR.Referenced
             var featureCollection = referencedPointALongLineLocation.Route.ToFeatures();
 
             // create the coordinates.
-            featureCollection.Add(baseDecoder.GetVertexLocation(referencedPointALongLineLocation.Route.Vertices[0]).ToFeature());
-            featureCollection.Add(baseDecoder.GetVertexLocation(referencedPointALongLineLocation.Route.Vertices[referencedPointALongLineLocation.Route.Vertices.Length - 1]).ToFeature());
+            var feature = baseDecoder.GetVertexLocation(referencedPointALongLineLocation.Route.Vertices[0]).ToFeature();
+            feature.Attributes.AddAttribute("type", "start");
+            featureCollection.Add(feature);
+            feature = baseDecoder.GetVertexLocation(referencedPointALongLineLocation.Route.Vertices[
+                referencedPointALongLineLocation.Route.Vertices.Length - 1]).ToFeature();
+            feature.Attributes.AddAttribute("type", "end");
+            featureCollection.Add(feature);
 
             // create a feature for the actual location.
             var locationCoordinate = new Coordinate(referencedPointALongLineLocation.Longitude, referencedPointALongLineLocation.Latitude);

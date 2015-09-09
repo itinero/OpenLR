@@ -274,121 +274,119 @@ namespace OpenLR.Referenced
         /// Returns true if the given vertex is a valid candidate to use as a location reference point.
         /// </summary>
         /// <param name="vertex">The vertex is validate.</param>
-        /// <param name="neighbour">The neighbour to ignore, this is the incoming or outgoing edge.</param>
-        /// <param name="arrivingFrom">True when arriving from neighbour, else departing to neighbour.</param>
         /// <returns></returns>
         public virtual bool IsVertexValid(long vertex)
         {
-            // REASONING: search all edges from vertex for 'options' excluding the one leading to 'neighbour'.
-            //      ARRIVING FROM:   count all outgoing edges excluding the one leading to 'neighbour'.
-            //      DEPARTING TO:    count all incoming edges excluding the one leading to 'neighbour'.
-            //  WHEN: - only one option is left, there is no choice here and this is not considered a valid point.
-            //        - no options left, no choice either but is a valid point.
-            //              EXCEPTION1: when the point is at the end of a oneway and a two way street begins.
-            //        - more than one option left, this is also a valid point.
-
             var arcs = this.Graph.GetEdges(vertex);
 
-            // go over each arc, treat it once as incoming and once as outgoing.
+            // go over each arc and count the traversible arcs.
+            var traversCount = 0;
             foreach(var arc in arcs)
             {
                 var tags = this.Graph.TagsIndex.Get(arc.Value.Tags);
                 if(this.Vehicle.CanTraverse(tags))
-                { // ok, arc can be traversed.
-                    // consider the arc as incoming, we are arriving via the current arc.
-                    var isIncoming = false;
-                    var isOutgoing = false;
-                    var oneway = this.Vehicle.IsOneWay(tags);
-                    if(!oneway.HasValue)
-                    { // bidirectional, can be used as incoming.
-                        isIncoming = true;
-                        isOutgoing = true;
-                    }
-                    else if(oneway.Value != arc.Value.Forward)
-                    { // oneway is forward but arc is backward, arc is incoming.
-                        // oneway is backward and arc is forward, arc is incoming.
-                        isIncoming = true;
-                    }
-                    else if (oneway.Value == arc.Value.Forward)
-                    { // oneway is forward and arc is forward, arc is outgoing.
-                        // oneway is backward and arc is backward, arc is outgoing.
-                        isOutgoing = true;
-                    }
-                    if(isIncoming)
-                    { // ok, this arc can be used as an incoming arc, search for outgoing options.
-                        var options = 0;
-                        var nonDirectedOptions = 0;
-                        foreach(var outgoing in arcs)
-                        {
-                            if (outgoing.Key == arc.Key)
-                            { // ignore, this is the incoming arc.
-                                continue;
-                            }
-                            tags = this.Graph.TagsIndex.Get(outgoing.Value.Tags);
-
-                            if (this.Vehicle.CanTraverse(tags))
-                            { // ok, arc can be traversed.
-                                oneway = this.Vehicle.IsOneWay(tags);
-                                if (!oneway.HasValue)
-                                { // bidirectional, always an option.
-                                    options++;
-                                }
-                                else if (oneway.Value == outgoing.Value.Forward)
-                                { // if arc is forward and oneway is forward this edge is outgoing.
-                                    // if arc is backward and oneway is backward this edge is outgoing.
-                                    options++;
-                                }
-                                nonDirectedOptions++;
-                            }
+                {
+                    traversCount++;
+                }
+            }
+            if (traversCount != 3)
+            { // no special cases, only 1=valid, 2=invalid or 4 and up=valid.
+                if (traversCount == 2)
+                { // only two traversable edges, no options here!
+                    return false;
+                }
+                return true;
+            }
+            else
+            { // special cases possible here, we need more info here.
+                var incoming = new List<Tuple<long, TagsCollectionBase, LiveEdge>>();
+                var outgoing = new List<Tuple<long, TagsCollectionBase, LiveEdge>>();
+                var bidirectional = new List<Tuple<long, TagsCollectionBase, LiveEdge>>();
+                foreach (var arc in arcs)
+                {
+                    var tags = this.Graph.TagsIndex.Get(arc.Value.Tags);
+                    if (this.Vehicle.CanTraverse(tags))
+                    {
+                        var oneway = this.Vehicle.IsOneWay(tags);
+                        if (!oneway.HasValue)
+                        { // bidirectional, can be used as incoming.
+                            bidirectional.Add(new Tuple<long, TagsCollectionBase, LiveEdge>(arc.Key, tags, arc.Value));
                         }
-                        if (options == 0 && nonDirectedOptions == 0)
-                        { // there is an incoming edge with no outgoing option (EXCEPTION1: and no other undirected options).
-                            return true;
+                        else if (oneway.Value != arc.Value.Forward)
+                        { // oneway is forward but arc is backward, arc is incoming.
+                            // oneway is backward and arc is forward, arc is incoming.
+                            incoming.Add(new Tuple<long, TagsCollectionBase, LiveEdge>(arc.Key, tags, arc.Value));
                         }
-                        else if(options > 1)
-                        { // there is an incoming edge with more than one outgoing option.
-                            return true;
-                        }
-                    }
-                    if(isOutgoing)
-                    { // ok, this arc can be used as outgoing arc, search for incoming options.
-                        var options = 0;
-                        var nonDirectedOptions = 0;
-                        foreach (var incoming in arcs)
-                        {
-                            if (incoming.Key == arc.Key)
-                            { // ignore, this arc is the outgoing one.
-                                continue;
-                            }
-                            tags = this.Graph.TagsIndex.Get(incoming.Value.Tags);
-
-                            if (this.Vehicle.CanTraverse(tags))
-                            { // ok, arc can be traversed.
-                                oneway = this.Vehicle.IsOneWay(tags);
-                                if (!oneway.HasValue)
-                                { // bidirectional, always an option.
-                                    options++;
-                                }
-                                else if (oneway.Value != incoming.Value.Forward)
-                                { // if arc is forward and oneway is backward this edge is incoming.
-                                    // if arc is backward and oneway is forward this edge is incoming.
-                                    options++;
-                                }
-                                nonDirectedOptions++;
-                            }
-                        }
-                        if (options == 0 && nonDirectedOptions == 0)
-                        { // there is an incoming edge with no outgoing option (EXCEPTION1: and no other undirected options).
-                            return true;
-                        }
-                        else if (options > 1)
-                        { // there is an incoming edge with more than one outgoing option.
-                            return true;
+                        else if (oneway.Value == arc.Value.Forward)
+                        { // oneway is forward and arc is forward, arc is outgoing.
+                            // oneway is backward and arc is backward, arc is outgoing.
+                            outgoing.Add(new Tuple<long, TagsCollectionBase, LiveEdge>(arc.Key, tags, arc.Value));
                         }
                     }
                 }
+
+                if(bidirectional.Count == 1 && incoming.Count == 1 && outgoing.Count == 1)
+                { // all special cases are found here.
+                    // get incoming's frc and fow.
+                    FormOfWay incomingFow, outgoingFow, bidirectionalFow;
+                    FunctionalRoadClass incomingFrc, outgoingFrc, bidirectionalFrc;
+                    if (this.TryMatching(incoming[0].Item2, out incomingFrc, out incomingFow))
+                    {
+                        if (incomingFow == FormOfWay.Roundabout)
+                        { // is this a roundabout, always valid.
+                            return true;
+                        }
+                        if(this.TryMatching(outgoing[0].Item2, out outgoingFrc, out outgoingFow))
+                        {
+                            if (outgoingFow == FormOfWay.Roundabout)
+                            { // is this a roundabout, always valid.
+                                return true;
+                            }
+
+                            if(incomingFrc != outgoingFrc)
+                            { // is there a difference in frc.
+                                return true;
+                            }
+
+                            if(this.TryMatching(bidirectional[0].Item2, out bidirectionalFrc, out bidirectionalFow))
+                            {
+                                if (incomingFrc != bidirectionalFrc)
+                                { // is there a difference in frc.
+                                    return true;
+                                }
+                            }
+                        }
+
+                        // at this stage we have:
+                        // - two oneways, in opposite direction
+                        // - one bidirectional
+                        // - all same frc.
+
+                        // the only thing left to check is if the oneway edges go in the same general direction or not.
+                        // compare bearings but only if distance is large enough.
+                        var incomingShape = this.Graph.GetCoordinates(new Tuple<long,long,LiveEdge>(
+                            vertex, incoming[0].Item1, incoming[0].Item3));
+                        var outgoingShape = this.Graph.GetCoordinates(new Tuple<long,long,LiveEdge>(
+                            vertex, outgoing[0].Item1, outgoing[0].Item3));
+
+                        if(incomingShape.Length().Value < 25 &&
+                            outgoingShape.Length().Value < 25)
+                        { // edges are too short to compare bearing in a way meaningful for determining this.
+                            // assume not valid.
+                            return false;
+                        }
+                        var incomingBearing = BearingEncoder.EncodeBearing(incomingShape);
+                        var outgoingBearing = BearingEncoder.EncodeBearing(outgoingShape);
+
+                        if (incomingBearing.SmallestDifference(outgoingBearing) > 30)
+                        { // edges are clearly not going in the same direction.
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+                return true;
             }
-            return false;
         }
 
         /// <summary>

@@ -157,13 +157,14 @@
     <Compile Include="Binary\RectangleLocationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Referenced\EncoderMock.cs" />
+    <Compile Include="Referenced\MultiNet\ValidPointTests.cs" />
     <Compile Include="Referenced\MultiNet\ReferencedPointAlongLineDecoderTests.cs" />
     <Compile Include="Referenced\MultiNet\ReferencedPointAlongLineEncoderTests.cs" />
     <Compile Include="Referenced\NWB\NWBMappingTests.cs" />
     <Compile Include="Referenced\NWB\ReferencedPointAlongLineDecoderTests.cs" />
     <Compile Include="Referenced\NWB\ReferencedPointAlongLineEncoderTests.cs" />
     <Compile Include="Referenced\Osm\ReferencedLineEncoderTests.cs" />
-    <Compile Include="Referenced\Osm\ReferencedOsmEncoderTests.cs" />
+    <Compile Include="Referenced\Osm\ValidPointTests.cs" />
     <Compile Include="Referenced\Real\Osm\RealGraphOsm.cs" />
     <Compile Include="Referenced\Real\Osm\RealReferencedDecoderTests.cs" />
     <Compile Include="Referenced\Osm\ReferencedPointAlongLineDecoderTests.cs" />

@@ -1,5 +1,6 @@
 ﻿using OpenLR.Encoding;
 using OpenLR.Model;
+using OpenLR.Referenced.Encoding;
 using OpenLR.Referenced.Router;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Routing;
@@ -8,6 +9,7 @@ using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Shape;
 using OsmSharp.Routing.Shape.Readers;
 using System;
+using System.Collections.Generic;
 
 namespace OpenLR.Referenced.NWB
 {
@@ -71,6 +73,112 @@ namespace OpenLR.Referenced.NWB
         public override global::OsmSharp.Routing.Vehicle Vehicle
         {
             get { return _vehicle; }
+        }
+
+        /// <summary>
+        /// Returns true if the given vertex is a valid candidate to use as a location reference point.
+        /// </summary>
+        /// <param name="vertex">The vertex is validate.</param>
+        /// <returns></returns>
+        public override bool IsVertexValid(long vertex)
+        {
+            var arcs = this.Graph.GetEdges(vertex);
+
+            // go over each arc and count the traversible arcs.
+            var traversCount = 0;
+            foreach (var arc in arcs)
+            {
+                var tags = this.Graph.TagsIndex.Get(arc.Value.Tags);
+                if (this.Vehicle.CanTraverse(tags))
+                {
+                    traversCount++;
+                }
+            }
+            if (traversCount != 3)
+            { // no special cases, only 1=valid, 2=invalid or 4 and up=valid.
+                if (traversCount == 2)
+                { // only two traversable edges, no options here!
+                    return false;
+                }
+                return true;
+            }
+            else
+            { // special cases possible here, we need more info here.
+                var incoming = new List<Tuple<long, TagsCollectionBase, LiveEdge>>();
+                var outgoing = new List<Tuple<long, TagsCollectionBase, LiveEdge>>();
+                var bidirectional = new List<Tuple<long, TagsCollectionBase, LiveEdge>>();
+                foreach (var arc in arcs)
+                {
+                    var tags = this.Graph.TagsIndex.Get(arc.Value.Tags);
+                    if (this.Vehicle.CanTraverse(tags))
+                    {
+                        var oneway = this.Vehicle.IsOneWay(tags);
+                        if (!oneway.HasValue)
+                        { // bidirectional, can be used as incoming.
+                            bidirectional.Add(new Tuple<long, TagsCollectionBase, LiveEdge>(arc.Key, tags, arc.Value));
+                        }
+                        else if (oneway.Value != arc.Value.Forward)
+                        { // oneway is forward but arc is backward, arc is incoming.
+                            // oneway is backward and arc is forward, arc is incoming.
+                            incoming.Add(new Tuple<long, TagsCollectionBase, LiveEdge>(arc.Key, tags, arc.Value));
+                        }
+                        else if (oneway.Value == arc.Value.Forward)
+                        { // oneway is forward and arc is forward, arc is outgoing.
+                            // oneway is backward and arc is backward, arc is outgoing.
+                            outgoing.Add(new Tuple<long, TagsCollectionBase, LiveEdge>(arc.Key, tags, arc.Value));
+                        }
+                    }
+                }
+
+                if (bidirectional.Count == 1 && incoming.Count == 1 && outgoing.Count == 1)
+                { // all special cases are found here.
+                    // get incoming's frc and fow.
+                    FormOfWay incomingFow, outgoingFow;
+                    FunctionalRoadClass incomingFrc, outgoingFrc;
+                    if (this.TryMatching(incoming[0].Item2, out incomingFrc, out incomingFow))
+                    {
+                        if (incomingFow == FormOfWay.Roundabout)
+                        { // is this a roundabout, always valid.
+                            return true;
+                        }
+                        if (this.TryMatching(outgoing[0].Item2, out outgoingFrc, out outgoingFow))
+                        {
+                            if (outgoingFow == FormOfWay.Roundabout)
+                            { // is this a roundabout, always valid.
+                                return true;
+                            }
+                        }
+
+                        // at this stage we have:
+                        // - two oneways, in opposite direction
+                        // - one bidirectional
+                        // - all same frc.
+
+                        // the only thing left to check is if the oneway edges go in the same general direction or not.
+                        // compare bearings but only if distance is large enough.
+                        var incomingShape = this.Graph.GetCoordinates(new Tuple<long, long, LiveEdge>(
+                            vertex, incoming[0].Item1, incoming[0].Item3));
+                        var outgoingShape = this.Graph.GetCoordinates(new Tuple<long, long, LiveEdge>(
+                            vertex, outgoing[0].Item1, outgoing[0].Item3));
+
+                        if (incomingShape.Length().Value < 25 &&
+                            outgoingShape.Length().Value < 25)
+                        { // edges are too short to compare bearing in a way meaningful for determining this.
+                            // assume not valid.
+                            return false;
+                        }
+                        var incomingBearing = BearingEncoder.EncodeBearing(incomingShape);
+                        var outgoingBearing = BearingEncoder.EncodeBearing(outgoingShape);
+
+                        if (incomingBearing.SmallestDifference(outgoingBearing) > 30)
+                        { // edges are clearly not going in the same direction.
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+                return true;
+            }
         }
 
         #region Static Creation Helper Functions

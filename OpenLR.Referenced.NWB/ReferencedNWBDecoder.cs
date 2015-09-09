@@ -28,7 +28,7 @@ namespace OpenLR.Referenced.NWB
         /// <param name="graph"></param>
         /// <param name="locationDecoder"></param>
         public ReferencedNWBDecoder(BasicRouterDataSource<LiveEdge> graph, Decoder locationDecoder)
-            : base(graph, new global::OsmSharp.Routing.Shape.Vehicles.Car("RIJRICHTING", "H", "T", string.Empty), locationDecoder)
+            : base(graph, new global::OsmSharp.Routing.Shape.Vehicles.Car(NWBMapping.RIJRICHTNG, "H", "T", string.Empty), locationDecoder)
         {
 
         }
@@ -40,7 +40,7 @@ namespace OpenLR.Referenced.NWB
         /// <param name="locationDecoder"></param>
         /// <param name="maxVertexDistance"></param>
         public ReferencedNWBDecoder(BasicRouterDataSource<LiveEdge> graph, Decoder locationDecoder, Meter maxVertexDistance)
-            : base(graph, new global::OsmSharp.Routing.Shape.Vehicles.Car("RIJRICHTING", "H", "T", string.Empty), locationDecoder, maxVertexDistance)
+            : base(graph, new global::OsmSharp.Routing.Shape.Vehicles.Car(NWBMapping.RIJRICHTNG, "H", "T", string.Empty), locationDecoder, maxVertexDistance)
         {
 
         }

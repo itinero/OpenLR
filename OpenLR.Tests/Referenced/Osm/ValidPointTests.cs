@@ -4,16 +4,11 @@ using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Index;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Graphs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OpenLR.Tests.Referenced.Osm
 {
     [TestFixture]
-    public class ReferencedOsmEncoderTests
+    public class ValidPointTests
     {
         /// <summary>
         /// Tests if a deadend vertex is valid.

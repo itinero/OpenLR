@@ -62,7 +62,7 @@ namespace OpenLR.Referenced.NWB
             if (!string.IsNullOrWhiteSpace(wegbeerder)) { wegbeerder = wegbeerder.ToLowerInvariant(); }
             if (!string.IsNullOrWhiteSpace(baansubsrt)) { baansubsrt = baansubsrt.ToLowerInvariant(); }
             if (!string.IsNullOrWhiteSpace(wegnummer)) { wegnummer = wegnummer.ToLowerInvariant(); if (!string.IsNullOrEmpty(dvkletter_)) dvkletter = dvkletter_[0]; }
-            if (!string.IsNullOrWhiteSpace(wegnummer)) { rijrichting = rijrichting.ToLowerInvariant(); }
+            if (!string.IsNullOrWhiteSpace(rijrichting)) { rijrichting = rijrichting.ToLowerInvariant(); }
 
             fow = FormOfWay.Other;
             frc = FunctionalRoadClass.Frc5;
