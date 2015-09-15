@@ -102,7 +102,7 @@ namespace OpenLR.Referenced.Decoding
                     { // calculate bearing and compare with reference bearing.
                         // calculate distance and compare with distancetonext.
                         var distance = candidate.Route.GetCoordinates(this.MainDecoder).Length().Value;
-                        var expectedDistance = location.First.DistanceToNext;
+                        var expectedDistance = source.DistanceToNext;
 
                         // default a perfect score, only compare large distances.
                         Score deviation = Score.New(Score.DISTANCE_COMPARISON,

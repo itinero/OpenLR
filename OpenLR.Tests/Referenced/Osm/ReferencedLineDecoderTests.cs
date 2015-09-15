@@ -29,7 +29,7 @@ namespace OpenLR.Tests.Referenced.Osm
             var location = new LineLocation();
             location.First = new LocationReferencePoint();
             location.First.Coordinate = new Coordinate() { Latitude = 49.60851, Longitude = 6.12683 };
-            location.First.DistanceToNext = 10;
+            location.First.DistanceToNext = 517;
             location.First.FuntionalRoadClass = FunctionalRoadClass.Frc3;
             location.First.FormOfWay = FormOfWay.MultipleCarriageWay;
             location.First.LowestFunctionalRoadClassToNext = FunctionalRoadClass.Frc3;
@@ -37,7 +37,7 @@ namespace OpenLR.Tests.Referenced.Osm
             location.Intermediate = new LocationReferencePoint[1];
             location.Intermediate[0] = new LocationReferencePoint();
             location.Intermediate[0].Coordinate = new Coordinate() { Latitude = 49.60398, Longitude = 6.12838 };
-            location.Intermediate[0].DistanceToNext = 10;
+            location.Intermediate[0].DistanceToNext = 104;
             location.Intermediate[0].FuntionalRoadClass = FunctionalRoadClass.Frc3;
             location.Intermediate[0].FormOfWay = FormOfWay.SingleCarriageWay;
             location.Intermediate[0].LowestFunctionalRoadClassToNext = FunctionalRoadClass.Frc5;
@@ -45,7 +45,7 @@ namespace OpenLR.Tests.Referenced.Osm
             location.Last = new LocationReferencePoint();
             location.Last = new LocationReferencePoint();
             location.Last.Coordinate = new Coordinate() { Latitude = 49.60305, Longitude = 6.12817 };
-            location.Last.DistanceToNext = 10;
+            location.Last.DistanceToNext = 0;
             location.Last.FuntionalRoadClass = FunctionalRoadClass.Frc5;
             location.Last.FormOfWay = FormOfWay.SingleCarriageWay;
             location.Last.Bearing = 0;
@@ -58,25 +58,25 @@ namespace OpenLR.Tests.Referenced.Osm
             uint vertex3 = graphDataSource.AddVertex(49.60305f, 6.12817f);
             graphDataSource.AddEdge(vertex1, vertex2, new LiveEdge()
             {
-                Distance = 10,
+                Distance = 517,
                 Forward = true,
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
             }, null);
             graphDataSource.AddEdge(vertex2, vertex1, new LiveEdge()
             {
-                Distance = 10,
+                Distance = 517,
                 Forward = true,
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
             }, null);
             graphDataSource.AddEdge(vertex2, vertex3, new LiveEdge()
             {
-                Distance = 10,
+                Distance = 104,
                 Forward = true,
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
             }, null);
             graphDataSource.AddEdge(vertex3, vertex2, new LiveEdge()
             {
-                Distance = 10,
+                Distance = 104,
                 Forward = true,
                 Tags = tags.Add(new TagsCollection(Tag.Create("highway", "tertiary")))
             }, null);
