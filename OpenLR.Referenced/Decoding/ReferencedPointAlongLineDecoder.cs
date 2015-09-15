@@ -100,14 +100,22 @@ namespace OpenLR.Referenced.Decoding
                     // calculate distance and compare with distancetonext.
                     var distance = candidate.Route.GetCoordinates(this.MainDecoder).Length().Value;
                     var expectedDistance = location.First.DistanceToNext;
-                    var distanceDiff = System.Math.Max(System.Math.Abs(distance - expectedDistance) - 200, 0); // don't care about difference smaller than 200m, the binary encoding only handles segments of about 50m.
-                    var deviation = Score.New(Score.DISTANCE_COMPARISON, "Compares expected location distance with decoded location distance (1=prefect, 0=difference bigger than total distance)",
-                        1 - System.Math.Min(System.Math.Max(distanceDiff / expectedDistance, 0), 1), 1);
+
+                    // default a perfect score, only compare large distances.
+                    var deviation = Score.New(Score.DISTANCE_COMPARISON, 
+                        "Compares expected location distance with decoded location distance (1=perfect, 0=difference bigger than total distance)", 1, 1);
+                    if (expectedDistance > 200 || distance > 200)
+                    { // non-perfect score.
+                        // don't care about difference smaller than 200m, the binary encoding only handles segments of about 50m.
+                        var distanceDiff = System.Math.Max(System.Math.Abs(distance - expectedDistance) - 200, 0); 
+                        deviation = Score.New(Score.DISTANCE_COMPARISON, "Compares expected location distance with decoded location distance (1=prefect, 0=difference bigger than total distance)",
+                            1 - System.Math.Min(System.Math.Max(distanceDiff / expectedDistance, 0), 1), 1);
+                    }
 
                     // add deviation-score.
                     candidate.Score = candidate.Score * deviation;
 
-                    if (candidate.Score.Value > this.MainDecoder.ScoreThreshold)
+                    if ((candidate.Score.Value / candidate.Score.Reference) > this.MainDecoder.ScoreThreshold)
                     { // ok, candidate is good enough.
                         // check candidate.
                         if (best == null)

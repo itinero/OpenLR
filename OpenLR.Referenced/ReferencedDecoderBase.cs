@@ -35,7 +35,7 @@ namespace OpenLR.Referenced
         private readonly ReferencedPolygonDecoder _referencedPolygonDecoder;
         private readonly ReferencedRectangleDecoder _referencedRectangleDecoder;
         private readonly Vehicle _vehicle;
-        private readonly float _scoreThreshold = 0.5f;
+        private readonly float _scoreThreshold = 0.3f;
 
         /// <summary>
         /// Creates a new referenced decoder.
