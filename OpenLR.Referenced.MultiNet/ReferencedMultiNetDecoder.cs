@@ -324,15 +324,14 @@ namespace OpenLR.Referenced.MultiNet
         /// <summary>
         /// Calculates a route between the two given vertices.
         /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        /// <param name="minimum">The minimum FRC.</param>
         /// <returns></returns>
-        public override CandidateRoute FindCandidateRoute(CandidateVertexEdge from, CandidateVertexEdge to, FunctionalRoadClass minimum)
+        public override CandidateRoute FindCandidateRoute(CandidateVertexEdge from, CandidateVertexEdge to, FunctionalRoadClass minimum,
+            bool ignoreFromEdge = false, bool ignoreToEdge = false)
         {
             var edgeInterpreter = new ShapefileEdgeInterpreter();
             var interpreter = new ShapefileRoutingInterpreter();
-            var path = this.GetRouter().Calculate(this.Graph, interpreter, this.Vehicle, from, to, minimum);
+            var path = this.GetRouter().Calculate(this.Graph, interpreter, this.Vehicle, from, to, minimum,
+                ignoreFromEdge, ignoreToEdge);
 
             // if no route is found, score is 0.
             if (path == null)

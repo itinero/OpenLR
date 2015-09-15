@@ -167,13 +167,12 @@ namespace OpenLR.Referenced.Osm
         /// <summary>
         /// Calculates a route between the two given vertices.
         /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        /// <param name="minimum">The minimum FRC.</param>
         /// <returns></returns>
-        public override CandidateRoute FindCandidateRoute(CandidateVertexEdge from, CandidateVertexEdge to, FunctionalRoadClass minimum)
+        public override CandidateRoute FindCandidateRoute(CandidateVertexEdge from, CandidateVertexEdge to, FunctionalRoadClass minimum,
+            bool ignoreFromEdge = false, bool ignoreToEdge = false)
         {
-            var path = this.GetRouter().Calculate(this.Graph, new OsmRoutingInterpreter(), Vehicle.Car, from, to, minimum);
+            var path = this.GetRouter().Calculate(this.Graph, new OsmRoutingInterpreter(), Vehicle.Car, from, to, minimum,
+                ignoreFromEdge, ignoreToEdge);
 
             // if no route is found, score is 0.
             if (path == null)

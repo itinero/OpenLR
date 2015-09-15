@@ -376,6 +376,18 @@ namespace OpenLR.Referenced
 
         /// <summary>
         /// Builds a line location along the shortest path between start and end location while the start and end location are the exact location of vertices from the netwerk being encoded on.
+        /// 
+        /// Location being built:
+        /// 
+        ///  A --- X ==== B ======(shortest-path)====== C ==== Y --- D
+        ///  
+        /// With
+        ///  startLocation1: A
+        ///  startLocation2: B
+        ///  startOffset:    distance A->X in meters.
+        ///  endLocation1:   C
+        ///  endLocation2:   D
+        ///  endOffset:      distance C->Y in meters.
         /// </summary>
         /// <param name="encoder">The encoder.</param>
         /// <param name="startLocation1">The first point of the edge containing the start location.</param>
@@ -475,6 +487,11 @@ namespace OpenLR.Referenced
             // project the endlocation on the edge.
             coordinates = encoder.Graph.GetCoordinates(endEdge);
             var endEdgeLength = coordinates.Length();
+
+            // invert end offset to mean 'Y->D'.
+            endOffset = endEdgeLength - endOffset;
+            if (endOffset.Value < 0) { endOffset = 0; }
+
             // construct from pathsegments.
             var endPaths = new List<PathSegment>();
             if (endOffset.Value < epsilon)
@@ -683,9 +700,6 @@ namespace OpenLR.Referenced
             {
                 throw new BuildLocationFailedException("Routing failed: last edge in route is not edge that was ended with.");
             }
-
-
-
             return encoder.BuildLineLocation(vertices.ToArray(), edges.ToArray(), positivePercentageOffset, negativePercentageOffset);
         }
 

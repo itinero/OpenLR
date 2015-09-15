@@ -103,6 +103,12 @@ namespace OpenLR.Referenced.Locations
                 this.Edges.CopyTo(edges, 0);
                 location.Edges.CopyTo(edges, this.Edges.Length);
                 this.Edges = edges;
+
+                // merge edge shapes.
+                var edgeShapes = new GeoCoordinateSimple[this.Edges.Length + location.Edges.Length][];
+                this.EdgeShapes.CopyTo(edgeShapes, 0);
+                location.EdgeShapes.CopyTo(edgeShapes, this.EdgeShapes.Length);
+                this.EdgeShapes = edgeShapes;
                 return;
             }
             throw new Exception("Cannot add a location without them having one vertex incommon.");

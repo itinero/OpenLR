@@ -527,11 +527,9 @@ namespace OpenLR.Referenced
         /// <summary>
         /// Calculates a route between the two given vertices.
         /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        /// <param name="minimum">The minimum FRC.</param>
         /// <returns></returns>
-        public abstract CandidateRoute FindCandidateRoute(CandidateVertexEdge from, CandidateVertexEdge to, FunctionalRoadClass minimum);
+        public abstract CandidateRoute FindCandidateRoute(CandidateVertexEdge from, CandidateVertexEdge to, FunctionalRoadClass minimum,
+            bool ignoreFromEdge = false, bool ignoreToEdge = false);
 
         /// <summary>
         /// Returns the coordinate of the given vertex.

@@ -24,31 +24,20 @@ namespace OpenLR.Referenced.Router
         /// <summary>
         /// Calculates a path between the two candidates using the information in the candidates.
         /// </summary>
-        /// <param name="graph"></param>
-        /// <param name="interpreter"></param>
-        /// <param name="vehicle"></param>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        /// <param name="minimum"></param>
         public PathSegment<long> Calculate(BasicRouterDataSource<LiveEdge> graph, IRoutingInterpreter interpreter,
-            Vehicle vehicle, CandidateVertexEdge from, CandidateVertexEdge to, FunctionalRoadClass minimum)
+            Vehicle vehicle, CandidateVertexEdge from, CandidateVertexEdge to, FunctionalRoadClass minimum,
+            bool ignoreFromEdge, bool ignoreToEdge)
         {
-            return this.Calculate(graph, interpreter, vehicle, from, to, minimum, MaxSettles);
+            return this.Calculate(graph, interpreter, vehicle, from, to, minimum, MaxSettles, ignoreFromEdge, ignoreToEdge);
         }
 
         /// <summary>
         /// Calculates a path between the two candidates using the information in the candidates.
         /// </summary>
-        /// <param name="graph"></param>
-        /// <param name="interpreter"></param>
-        /// <param name="vehicle"></param>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        /// <param name="minimum"></param>
-        /// <param name="maxSettles"></param>
         /// <returns></returns>
         public PathSegment<long> Calculate(BasicRouterDataSource<LiveEdge> graph, IRoutingInterpreter interpreter,
-            Vehicle vehicle, CandidateVertexEdge from, CandidateVertexEdge to, FunctionalRoadClass minimum, uint maxSettles)
+            Vehicle vehicle, CandidateVertexEdge from, CandidateVertexEdge to, FunctionalRoadClass minimum, uint maxSettles,
+            bool ignoreFromEdge, bool ignoreToEdge)
         {
             // first check for the simple stuff.
             if (from.Vertex == to.Vertex)
@@ -57,12 +46,19 @@ namespace OpenLR.Referenced.Router
             }
 
             // check paths.
-            var fromPathWeight = vehicle.Weight(graph.TagsIndex.Get(from.Edge.Tags), from.Edge.Distance);
-            var fromPath = new PathSegment<long>(from.TargetVertex, fromPathWeight, new PathSegment<long>(from.Vertex));
-            if(from.Vertex == to.TargetVertex &&
-                to.Vertex == from.TargetVertex)
-            { // edges are the same, 
-                return fromPath;
+            var fromPath = new PathSegment<long>(from.TargetVertex, vehicle.Weight(graph.TagsIndex.Get(from.Edge.Tags), 
+                from.Edge.Distance), new PathSegment<long>(from.Vertex));
+            if (!ignoreFromEdge || !ignoreToEdge)
+            { // do not check paths when one of the edges need to be ignored.
+                if (from.Vertex == to.TargetVertex &&
+                    to.Vertex == from.TargetVertex)
+                { // edges are the same, 
+                    return fromPath;
+                }
+            }
+            if(ignoreFromEdge)
+            { // ignore from edge, just use the from-vertex.
+                fromPath = new PathSegment<long>(from.Vertex);
             }
 
             // initialize the heap/visit list.
@@ -70,10 +66,14 @@ namespace OpenLR.Referenced.Router
             var visited = new HashSet<long>();
             visited.Add(from.Vertex);
 
-            // also add the target to the visit list and actually search for the target candidate edge ending.
-            visited.Add(to.Vertex);
-            var target = to.TargetVertex;
+            // set target.
+            var target = to.Vertex;
             var targetWeight = double.MaxValue;
+            if(!ignoreToEdge)
+            { // also add the target to the visit list and actually search for the target candidate edge ending.
+                target = to.TargetVertex;
+                visited.Add(to.Vertex);
+            }
 
             // create a path segment from the from-candidate.
             heap.Push(fromPath, (float)fromPath.Weight);
@@ -96,7 +96,11 @@ namespace OpenLR.Referenced.Router
                 // check for the target.
                 if(current.VertexId == target)
                 { // target was found.
-                    return new PathSegment<long>(to.Vertex, current.Weight + fromPathWeight, current);
+                    if(ignoreToEdge)
+                    {
+                        return current;
+                    }
+                    return new PathSegment<long>(to.Vertex, current.Weight, current);
                 }
 
                 // check if the maximum settled vertex count has been reached.
