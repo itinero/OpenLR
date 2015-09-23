@@ -275,31 +275,135 @@ namespace OpenLR.Referenced.Locations
         #endregion
 
         /// <summary>
+        /// Gets all vertices in one hashset.
+        /// </summary>
+        /// <returns></returns>
+        public HashSet<long> GetVerticesSet()
+        {
+            var set = new HashSet<long>();
+            if(this.Vertices == null)
+            { // empty set is ok.
+                return set;
+            }
+            for (var i = 0; i < this.Vertices.Length; i++)
+            {
+                set.Add(this.Vertices[i]);
+            }
+            return set;
+        }
+
+        /// <summary>
         /// Adjusts this location to use valid LR-points.
         /// </summary>
-        /// <param name="encoder">The encoder.</param>
         public void AdjustToValidPoints(ReferencedEncoderBase encoder)
+        {
+            if (this.Vertices.Length <= 1) { throw new ArgumentException("Cannot adjust a line location with only one vertex."); }
+            if (encoder.IsVertexValid(this.Vertices[0]) &&
+                encoder.IsVertexValid(this.Vertices[this.Vertices.Length - 1]))
+            { // already valid.
+                return;
+            }
+            if (this.Vertices.Length > 2) { return; } // line was already adjusted.
+
+            var vertex1 = this.Vertices[0];
+            var vertex2 = this.Vertices[1];
+
+            if(!encoder.IsOnShortestPath(this.Vertices[0], this.Vertices[this.Vertices.Length - 1],
+                vertex1, vertex2))
+            { // impossible to expand edge.
+                return;
+            }
+
+            // make sure the original sequence is still there on the shortest path.
+            ReferencedLine validCopy = null;
+            var backwardExcludeSet = this.GetVerticesSet();
+            while (true)
+            {
+                // search backward.
+                var workingCopy = this.Clone() as ReferencedLine;
+                if(!workingCopy.TryAdjustToValidPointBackwards(encoder, vertex1, vertex2, backwardExcludeSet))
+                { // no more options exist, impossible to expand edge, just keep the edge itself.
+                    return;
+                }
+
+                // search forward.
+                var forwardExcludeSet = workingCopy.GetVerticesSet();
+                do
+                {
+                    var forwardWorkingCopy = workingCopy.Clone() as ReferencedLine;
+                    if (!forwardWorkingCopy.TryAdjustToValidPointForwards(encoder, vertex1, vertex2, forwardExcludeSet))
+                    { // no more forward options for the current backward.
+                        break;
+                    }
+
+                    // check valid.
+                    if (encoder.IsOnShortestPath(forwardWorkingCopy.Vertices[0], forwardWorkingCopy.Vertices[forwardWorkingCopy.Vertices.Length - 1],
+                        vertex1, vertex2))
+                    { // current location is valid.
+                        validCopy = forwardWorkingCopy;
+                        break;
+                    }
+
+                    // not valid here, exclude current forward.
+                    forwardExcludeSet.Add(forwardWorkingCopy.Vertices[forwardWorkingCopy.Vertices.Length - 1]);
+                } while (true);
+
+                if (validCopy != null)
+                { // current location is valid.
+                    break;
+                }
+
+                // exclude current backward and continue.
+                backwardExcludeSet.Add(workingCopy.Vertices[0]);
+            }
+
+            // copy from working copy.
+            this.Edges = validCopy.Edges;
+            this.Vertices = validCopy.Vertices;
+            this.NegativeOffsetPercentage = validCopy.NegativeOffsetPercentage;
+            this.PositiveOffsetPercentage = validCopy.PositiveOffsetPercentage;
+            
+            // fill shapes.
+            this.EdgeShapes = new GeoCoordinateSimple[this.Edges.Length][];
+            for (int i = 0; i < this.Edges.Length; i++)
+            {
+                this.EdgeShapes[i] = encoder.Graph.GetEdgeShape(
+                    this.Vertices[i], this.Vertices[i + 1]);
+            }
+        }
+
+        /// <summary>
+        /// Tries to adjust this location backwards to a valid point.
+        /// </summary>
+        /// <returns></returns>
+        private bool TryAdjustToValidPointBackwards(ReferencedEncoderBase encoder, long vertex1, long vertex2,
+            HashSet<long> exclude)
         {
             var length = (float)this.Length(encoder).Value;
             var positiveOffsetLength = (this.PositiveOffsetPercentage / 100) * length;
-            var negativeOffsetLength = (this.NegativeOffsetPercentage / 100) * length;
-            var excludeSet = new HashSet<long>();
+
+            exclude = new HashSet<long>(exclude);
+            foreach (var vertex in this.Vertices)
+            {
+                exclude.Add(vertex);
+            }
+
             if (!encoder.IsVertexValid(this.Vertices[0]))
             { // from is not valid, try to find a valid point.
                 var pathToValid = encoder.FindValidVertexFor(this.Vertices[0], this.Edges[0], this.Vertices[1],
-                    excludeSet, false);
+                    exclude, false);
 
                 // build edges list.
                 if (pathToValid != null)
-                { // no path found, just leave things as is.
+                { // path found check if on shortest route.
                     var shortestRoute = encoder.FindShortestPath(this.Vertices[1], pathToValid.Vertex, false);
                     while (shortestRoute != null && !shortestRoute.Contains(this.Vertices[0]))
                     { // the vertex that should be on this shortest route, isn't anymore.
                         // exclude the current target vertex, 
-                        excludeSet.Add(pathToValid.Vertex);
+                        exclude.Add(pathToValid.Vertex);
                         // calulate a new path-to-valid.
                         pathToValid = encoder.FindValidVertexFor(this.Vertices[0], this.Edges[0], this.Vertices[1],
-                            excludeSet, false);
+                            exclude, false);
                         if (pathToValid == null)
                         { // a new path was not found.
                             break;
@@ -339,14 +443,40 @@ namespace OpenLR.Referenced.Locations
                         positiveOffsetLength = positiveOffsetLength + (newLength - length);
                         length = newLength;
                     }
+                    else
+                    { // no valid path was found.
+                        return false;
+                    }
+                }
+                else
+                { // no valid path was found.
+                    return false;
                 }
             }
-            excludeSet.Clear();
+
+            // update offset percentage.
+            this.PositiveOffsetPercentage = (float)((positiveOffsetLength / length) * 100.0);
+
+            return true;
+        }
+
+        private bool TryAdjustToValidPointForwards(ReferencedEncoderBase encoder, long vertex1, long vertex2,
+            HashSet<long> exclude)
+        {
+            var length = (float)this.Length(encoder).Value;
+            var negativeOffsetLength = (this.NegativeOffsetPercentage / 100) * length;
+
+            exclude = new HashSet<long>(exclude);
+            foreach (var vertex in this.Vertices)
+            {
+                exclude.Add(vertex);
+            }
+
             if (!encoder.IsVertexValid(this.Vertices[this.Vertices.Length - 1]))
             { // from is not valid, try to find a valid point.
                 var vertexCount = this.Vertices.Length;
                 var pathToValid = encoder.FindValidVertexFor(this.Vertices[vertexCount - 1], this.Edges[
-                    this.Edges.Length - 1].ToReverse(), this.Vertices[vertexCount - 2], excludeSet, true);
+                    this.Edges.Length - 1].ToReverse(), this.Vertices[vertexCount - 2], exclude, true);
 
                 // build edges list.
                 if (pathToValid != null)
@@ -355,10 +485,10 @@ namespace OpenLR.Referenced.Locations
                     while (shortestRoute != null && !shortestRoute.Contains(this.Vertices[vertexCount - 1]))
                     { // the vertex that should be on this shortest route, isn't anymore.
                         // exclude the current target vertex, 
-                        excludeSet.Add(pathToValid.Vertex);
+                        exclude.Add(pathToValid.Vertex);
                         // calulate a new path-to-valid.
                         pathToValid = encoder.FindValidVertexFor(this.Vertices[vertexCount - 1], this.Edges[
-                            this.Edges.Length - 1].ToReverse(), this.Vertices[vertexCount - 2], excludeSet, true);
+                            this.Edges.Length - 1].ToReverse(), this.Vertices[vertexCount - 2], exclude, true);
                         if (pathToValid == null)
                         { // a new path was not found.
                             break;
@@ -391,21 +521,156 @@ namespace OpenLR.Referenced.Locations
                         negativeOffsetLength = negativeOffsetLength + (newLength - length);
                         length = newLength;
                     }
+                    else
+                    { // no valid path was found.
+                        return false;
+                    }
+                }
+                else
+                { // no valid path was found.
+                    return false;
                 }
             }
 
-            // update offset percentags.
-            this.PositiveOffsetPercentage = (float)((positiveOffsetLength / length) * 100.0);
+            // update offset percentage
             this.NegativeOffsetPercentage = (float)((negativeOffsetLength / length) * 100.0);
 
-            // fill shapes.
-            this.EdgeShapes = new GeoCoordinateSimple[this.Edges.Length][];
-            for (int i = 0; i < this.Edges.Length; i++)
-            {
-                this.EdgeShapes[i] = encoder.Graph.GetEdgeShape(
-                    this.Vertices[i], this.Vertices[i + 1]);
-            }
+            return true;
         }
+
+        ///// <summary>
+        ///// Adjusts this location to use valid LR-points.
+        ///// </summary>
+        //private bool TryAdjustToValidPoints(ReferencedEncoderBase encoder, long vertex1, long vertex2, 
+        //    HashSet<long> excludeBackward, HashSet<long> excludeForward)
+        //{
+        //    var length = (float)this.Length(encoder).Value;
+        //    var positiveOffsetLength = (this.PositiveOffsetPercentage / 100) * length;
+        //    var negativeOffsetLength = (this.NegativeOffsetPercentage / 100) * length;
+        //    var exclude = new HashSet<long>(excludeForward);
+        //    if (!encoder.IsVertexValid(this.Vertices[0]))
+        //    { // from is not valid, try to find a valid point.
+        //        var pathToValid = encoder.FindValidVertexFor(this.Vertices[0], this.Edges[0], this.Vertices[1],
+        //            exclude, false);
+
+        //        // build edges list.
+        //        if (pathToValid != null)
+        //        { // no path found, just leave things as is.
+        //            var shortestRoute = encoder.FindShortestPath(this.Vertices[1], pathToValid.Vertex, false);
+        //            while (shortestRoute != null && !shortestRoute.Contains(this.Vertices[0]))
+        //            { // the vertex that should be on this shortest route, isn't anymore.
+        //                // exclude the current target vertex, 
+        //                exclude.Add(pathToValid.Vertex);
+        //                // calulate a new path-to-valid.
+        //                pathToValid = encoder.FindValidVertexFor(this.Vertices[0], this.Edges[0], this.Vertices[1],
+        //                    exclude, false);
+        //                if (pathToValid == null)
+        //                { // a new path was not found.
+        //                    break;
+        //                }
+        //                shortestRoute = encoder.FindShortestPath(this.Vertices[1], pathToValid.Vertex, false);
+        //            }
+        //            if (pathToValid != null)
+        //            { // no path found, just leave things as is.
+        //                var newVertices = pathToValid.ToArray().Reverse().ToList();
+        //                var newEdges = new List<LiveEdge>();
+        //                for (int idx = 0; idx < newVertices.Count - 1; idx++)
+        //                { // loop over edges.
+        //                    var edge = newVertices[idx].Edge;
+        //                    // Next OsmSharp version: use closest.Value.Value.Reverse()?
+        //                    var reverseEdge = new LiveEdge();
+        //                    reverseEdge.Tags = edge.Tags;
+        //                    reverseEdge.Forward = !edge.Forward;
+        //                    reverseEdge.Distance = edge.Distance;
+
+        //                    edge = reverseEdge;
+        //                    newEdges.Add(edge);
+        //                }
+
+        //                // create new location.
+        //                var edgesArray = new LiveEdge[newEdges.Count + this.Edges.Length];
+        //                newEdges.CopyTo(0, edgesArray, 0, newEdges.Count);
+        //                this.Edges.CopyTo(0, edgesArray, newEdges.Count, this.Edges.Length);
+        //                var vertexArray = new long[newVertices.Count - 1 + this.Vertices.Length];
+        //                newVertices.ConvertAll(x => (long)x.Vertex).CopyTo(0, vertexArray, 0, newVertices.Count - 1);
+        //                this.Vertices.CopyTo(0, vertexArray, newVertices.Count - 1, this.Vertices.Length);
+
+        //                this.Edges = edgesArray;
+        //                this.Vertices = vertexArray;
+
+        //                // adjust offset length.
+        //                var newLength = (float)this.Length(encoder).Value;
+        //                positiveOffsetLength = positiveOffsetLength + (newLength - length);
+        //                length = newLength;
+        //            }
+        //        }
+        //    }
+        //    exclude = new HashSet<long>(excludeBackward);
+        //    if (!encoder.IsVertexValid(this.Vertices[this.Vertices.Length - 1]))
+        //    { // from is not valid, try to find a valid point.
+        //        var vertexCount = this.Vertices.Length;
+        //        var pathToValid = encoder.FindValidVertexFor(this.Vertices[vertexCount - 1], this.Edges[
+        //            this.Edges.Length - 1].ToReverse(), this.Vertices[vertexCount - 2], exclude, true);
+
+        //        // build edges list.
+        //        if (pathToValid != null)
+        //        { // no path found, just leave things as is.
+        //            var shortestRoute = encoder.FindShortestPath(this.Vertices[vertexCount - 2], pathToValid.Vertex, true);
+        //            while (shortestRoute != null && !shortestRoute.Contains(this.Vertices[vertexCount - 1]))
+        //            { // the vertex that should be on this shortest route, isn't anymore.
+        //                // exclude the current target vertex, 
+        //                exclude.Add(pathToValid.Vertex);
+        //                // calulate a new path-to-valid.
+        //                pathToValid = encoder.FindValidVertexFor(this.Vertices[vertexCount - 1], this.Edges[
+        //                    this.Edges.Length - 1].ToReverse(), this.Vertices[vertexCount - 2], exclude, true);
+        //                if (pathToValid == null)
+        //                { // a new path was not found.
+        //                    break;
+        //                }
+        //                shortestRoute = encoder.FindShortestPath(this.Vertices[vertexCount - 2], pathToValid.Vertex, true);
+        //            }
+        //            if (pathToValid != null)
+        //            { // no path found, just leave things as is.
+        //                var newVertices = pathToValid.ToArray().ToList();
+        //                var newEdges = new List<LiveEdge>();
+        //                for (int idx = 1; idx < newVertices.Count; idx++)
+        //                { // loop over edges.
+        //                    var edge = newVertices[idx].Edge;
+        //                    newEdges.Add(edge);
+        //                }
+
+        //                // create new location.
+        //                var edgesArray = new LiveEdge[newEdges.Count + this.Edges.Length];
+        //                this.Edges.CopyTo(0, edgesArray, 0, this.Edges.Length);
+        //                newEdges.CopyTo(0, edgesArray, this.Edges.Length, newEdges.Count);
+        //                var vertexArray = new long[newVertices.Count - 1 + this.Vertices.Length];
+        //                this.Vertices.CopyTo(0, vertexArray, 0, this.Vertices.Length);
+        //                newVertices.ConvertAll(x => (long)x.Vertex).CopyTo(1, vertexArray, this.Vertices.Length, newVertices.Count - 1);
+
+        //                this.Edges = edgesArray;
+        //                this.Vertices = vertexArray;
+
+        //                // adjust offset length.
+        //                var newLength = (float)this.Length(encoder).Value;
+        //                negativeOffsetLength = negativeOffsetLength + (newLength - length);
+        //                length = newLength;
+        //            }
+        //        }
+        //    }
+
+        //    // update offset percentags.
+        //    this.PositiveOffsetPercentage = (float)((positiveOffsetLength / length) * 100.0);
+        //    this.NegativeOffsetPercentage = (float)((negativeOffsetLength / length) * 100.0);
+
+        //    // fill shapes.
+        //    this.EdgeShapes = new GeoCoordinateSimple[this.Edges.Length][];
+        //    for (int i = 0; i < this.Edges.Length; i++)
+        //    {
+        //        this.EdgeShapes[i] = encoder.Graph.GetEdgeShape(
+        //            this.Vertices[i], this.Vertices[i + 1]);
+        //    }
+        //    return true;
+        //}
 
         /// <summary>
         /// Adjusts this location by inserting intermediate LR-points if needed.

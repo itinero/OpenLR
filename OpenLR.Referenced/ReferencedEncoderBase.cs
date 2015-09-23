@@ -2,25 +2,14 @@
 using OpenLR.Locations;
 using OpenLR.Model;
 using OpenLR.Referenced.Encoding;
-using OpenLR.Referenced.Exceptions;
 using OpenLR.Referenced.Locations;
 using OpenLR.Referenced.Router;
-using OpenLR.Referenced;
-using OsmSharp;
 using OsmSharp.Collections.PriorityQueues;
 using OsmSharp.Collections.Tags;
-using OsmSharp.Math.Geo;
-using OsmSharp.Math.Geo.Simple;
-using OsmSharp.Math.Primitives;
 using OsmSharp.Routing;
-using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.Osm.Graphs;
-using OsmSharp.Units.Angle;
-using OsmSharp.Units.Distance;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace OpenLR.Referenced
 {
@@ -417,6 +406,10 @@ namespace OpenLR.Referenced
             {
                 // get next.
                 var current = heap.Pop();
+                if(settled.Contains(current.Vertex))
+                { // don't consider vertices twice.
+                    continue;
+                }
                 settled.Add(current.Vertex);
 
                 // check if valid.
@@ -438,9 +431,9 @@ namespace OpenLR.Referenced
                             var tags = this.Graph.TagsIndex.Get(arc.Value.Tags);
                             if (this.Vehicle.CanTraverse(tags))
                             { // ok, we can traverse this edge.
-                                var onway = this.Vehicle.IsOneWay(tags);
-                                if (onway == null ||
-                                  !(onway.Value == arc.Value.Forward ^ searchForward))
+                                var oneway = this.Vehicle.IsOneWay(tags);
+                                if (oneway == null ||
+                                  !(oneway.Value == arc.Value.Forward ^ searchForward))
                                 { // ok, no oneway or oneway reversed.
                                     var weight = this.Vehicle.Weight(this.Graph.TagsIndex.Get(arc.Value.Tags), arc.Value.Distance);
                                     var path = new PathSegment(arc.Key, current.Weight + weight, arc.Value, current);
@@ -503,6 +496,24 @@ namespace OpenLR.Referenced
             //        fromPaths, toPaths, searchForward, BasicRouter.MAX_SETTLES);
             //}
             return result;
+        }
+
+        /// <summary>
+        /// Returns true if the sequence vertex1->vertex2 occurs on the shortest path between from and to.
+        /// </summary>
+        /// <returns></returns>
+        public virtual bool IsOnShortestPath(long from, long to, long vertex1, long vertex2)
+        {
+            var path = this.FindShortestPath(from, to, true).ToArray();
+            for (var i = 1; i < path.Length; i++)
+            {
+                if(path[i - 1].Vertex == vertex1 &&
+                   path[i].Vertex == vertex2)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
