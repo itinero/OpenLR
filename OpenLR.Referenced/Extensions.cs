@@ -1018,7 +1018,7 @@ namespace OpenLR.Referenced
                 if(projected != null)
                 { // there is a valid projected point.
                     var offset = coordinates[idx].DistanceReal(new GeoCoordinate(projected)).Value;
-                    distance = projected.Distance(point);
+                    distance = (new GeoCoordinate(projected)).DistanceReal(new GeoCoordinate(point)).Value;
                     if(distance < bestDistance)
                     { // this point is closer.
                         bestDistance = distance;
