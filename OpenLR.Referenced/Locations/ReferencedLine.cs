@@ -298,8 +298,10 @@ namespace OpenLR.Referenced.Locations
         public void AdjustToValidPoints(ReferencedEncoderBase encoder)
         {
             if (this.Vertices.Length <= 1) { throw new ArgumentException("Cannot adjust a line location with only one vertex."); }
-            if (encoder.IsVertexValid(this.Vertices[0]) &&
-                encoder.IsVertexValid(this.Vertices[this.Vertices.Length - 1]))
+
+            var vertex1Valid = encoder.IsVertexValid(this.Vertices[0]);
+            var vertex2Valid = encoder.IsVertexValid(this.Vertices[this.Vertices.Length - 1]);
+            if (vertex1Valid && vertex2Valid)
             { // already valid.
                 return;
             }
@@ -326,31 +328,38 @@ namespace OpenLR.Referenced.Locations
                     return;
                 }
 
-                // search forward.
-                var forwardExcludeSet = workingCopy.GetVerticesSet();
-                do
-                {
-                    var forwardWorkingCopy = workingCopy.Clone() as ReferencedLine;
-                    if (!forwardWorkingCopy.TryAdjustToValidPointForwards(encoder, vertex1, vertex2, forwardExcludeSet))
-                    { // no more forward options for the current backward.
-                        break;
-                    }
+                if(!vertex2Valid)
+                { // search forward.
+                    var forwardExcludeSet = workingCopy.GetVerticesSet();
+                    do
+                    {
+                        var forwardWorkingCopy = workingCopy.Clone() as ReferencedLine;
+                        if (!forwardWorkingCopy.TryAdjustToValidPointForwards(encoder, vertex1, vertex2, forwardExcludeSet))
+                        { // no more forward options for the current backward.
+                            break;
+                        }
 
-                    // check valid.
-                    if (encoder.IsOnShortestPath(forwardWorkingCopy.Vertices[0], forwardWorkingCopy.Vertices[forwardWorkingCopy.Vertices.Length - 1],
-                        vertex1, vertex2))
-                    { // current location is valid.
-                        validCopy = forwardWorkingCopy;
-                        break;
-                    }
+                        // check valid.
+                        if (encoder.IsOnShortestPath(forwardWorkingCopy.Vertices[0], forwardWorkingCopy.Vertices[forwardWorkingCopy.Vertices.Length - 1],
+                            vertex1, vertex2))
+                        { // current location is valid.
+                            validCopy = forwardWorkingCopy;
+                            break;
+                        }
 
-                    // not valid here, exclude current forward.
-                    forwardExcludeSet.Add(forwardWorkingCopy.Vertices[forwardWorkingCopy.Vertices.Length - 1]);
-                } while (true);
+                        // not valid here, exclude current forward.
+                        forwardExcludeSet.Add(forwardWorkingCopy.Vertices[forwardWorkingCopy.Vertices.Length - 1]);
+                    } while (true);
+                }
 
                 if (validCopy != null)
                 { // current location is valid.
                     break;
+                }
+
+                if(vertex1Valid)
+                { // vertex1 was already valid, no reason to continue searching.
+                    return;
                 }
 
                 // exclude current backward and continue.
