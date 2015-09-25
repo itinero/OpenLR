@@ -412,6 +412,12 @@ namespace OpenLR.Referenced
                 }
                 settled.Add(current.Vertex);
 
+                // limit search.
+                if(settled.Count > BasicRouter.MaxSettles)
+                { // not valid vertex found.
+                    return null;
+                }
+
                 // check if valid.
                 if (current.Vertex != vertex &&
                     this.IsVertexValid(current.Vertex))
