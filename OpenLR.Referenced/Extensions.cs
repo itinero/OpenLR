@@ -673,8 +673,21 @@ namespace OpenLR.Referenced
             {
                 graph.GetVertex(arc.Item1, out latitude, out longitude);
                 var from = new GeoCoordinate(latitude, longitude);
+                var distance = from.DistanceReal(location).Value;
+                if (distance < bestDistance)
+                { // first point is closer.
+                    bestEdge = new Tuple<long, long, LiveEdge>(arc.Item1, arc.Item2, arc.Item3);
+                    bestDistance = distance;
+                }
+
                 graph.GetVertex(arc.Item2, out latitude, out longitude);
                 var to = new GeoCoordinate(latitude, longitude);
+                distance = to.DistanceReal(location).Value;
+                if (distance < bestDistance)
+                { // second point is closer.
+                    bestEdge = new Tuple<long, long, LiveEdge>(arc.Item1, arc.Item2, arc.Item3);
+                    bestDistance = distance;
+                }
 
                 var coordinates = new List<GeoCoordinate>();
                 ICoordinateCollection shape = arc.Item4;
@@ -696,7 +709,7 @@ namespace OpenLR.Referenced
                         if (maxDistanceBox.IntersectsPotentially(coordinates[idx - 1], coordinates[idx]))
                         {
                             var line = new GeoCoordinateLine(coordinates[idx - 1], coordinates[idx], true, true);
-                            var distance = line.DistanceReal(location).Value;
+                            distance = line.DistanceReal(location).Value;
                             if (distance < bestDistance)
                             {
                                 bestEdge = new Tuple<long, long, LiveEdge>(arc.Item1, arc.Item2, arc.Item3);
