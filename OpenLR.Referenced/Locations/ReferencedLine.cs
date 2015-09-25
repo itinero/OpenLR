@@ -351,6 +351,15 @@ namespace OpenLR.Referenced.Locations
                         forwardExcludeSet.Add(forwardWorkingCopy.Vertices[forwardWorkingCopy.Vertices.Length - 1]);
                     } while (true);
                 }
+                else
+                { // check valid.
+                    if (encoder.IsOnShortestPath(workingCopy.Vertices[0], workingCopy.Vertices[workingCopy.Vertices.Length - 1],
+                        vertex1, vertex2))
+                    { // current location is valid.
+                        validCopy = workingCopy;
+                        break;
+                    }
+                }
 
                 if (validCopy != null)
                 { // current location is valid.
