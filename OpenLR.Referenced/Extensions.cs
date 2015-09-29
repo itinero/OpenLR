@@ -706,6 +706,12 @@ namespace OpenLR.Referenced
                 {
                     for (int idx = 1; idx < coordinates.Count; idx++)
                     {
+                        distance = coordinates[idx].DistanceReal(location).Value;
+                        if (distance < bestDistance)
+                        {
+                            bestEdge = new Tuple<long, long, LiveEdge>(arc.Item1, arc.Item2, arc.Item3);
+                            bestDistance = distance;
+                        }
                         if (maxDistanceBox.IntersectsPotentially(coordinates[idx - 1], coordinates[idx]))
                         {
                             var line = new GeoCoordinateLine(coordinates[idx - 1], coordinates[idx], true, true);
@@ -1108,6 +1114,39 @@ namespace OpenLR.Referenced
         public static Feature ToFeature(this OpenLR.Model.Coordinate coordinate)
         {
             return new Feature(new Point(coordinate.ToGeoAPICoordinate()), new AttributesTable());
+        }
+
+        /// <summary>
+        /// Returns a feature representing the geometry of the edge.
+        /// </summary>
+        /// <returns></returns>
+        public static Feature ToFeature(this BasicRouterDataSource<LiveEdge> graph, Tuple<long, long, LiveEdge> edge)
+        {
+            var coordinates = graph.GetCoordinates(edge);
+            var geoApiCoordinates = new Coordinate[coordinates.Count];
+            for(var  i = 0; i < coordinates.Count; i++)
+            {
+                geoApiCoordinates[i] = new Coordinate(coordinates[i].Longitude, coordinates[i].Latitude);
+            }
+            return new Feature(new LineString(geoApiCoordinates), new AttributesTable());
+        }
+
+        /// <summary>
+        /// Returns a feature representing the geometry of the edge.
+        /// </summary>
+        /// <returns></returns>
+        public static FeatureCollection ToFeatures(this BasicRouterDataSource<LiveEdge> graph, Tuple<long, long, LiveEdge> edge)
+        {
+            var coordinates = graph.GetCoordinates(edge);
+            var geoApiCoordinates = new Coordinate[coordinates.Count];
+            for (var i = 0; i < coordinates.Count; i++)
+            {
+                geoApiCoordinates[i] = new Coordinate(coordinates[i].Longitude, coordinates[i].Latitude);
+            }
+            var feature = new Feature(new LineString(geoApiCoordinates), new AttributesTable());
+            var features = new FeatureCollection();
+            features.Add(feature);
+            return features;
         }
 
         /// <summary>
