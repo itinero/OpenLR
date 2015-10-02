@@ -654,76 +654,81 @@ namespace OpenLR.Referenced
         {
             Tuple<long, long, LiveEdge> bestEdge = null;
 
-            var searchBox = new GeoCoordinateBox(
-                new GeoCoordinate(location.Latitude - (boxSize / 2), location.Longitude - boxSize),
-                new GeoCoordinate(location.Latitude + (boxSize / 2), location.Longitude + boxSize));
-
-            var maxDistanceBox = searchBox;
-            if (maxDistance.Value < double.MaxValue)
+            while (boxSize < 1 && bestEdge == null)
             {
-                maxDistanceBox = new GeoCoordinateBox(
-                    location.OffsetWithDirection(maxDistance, OsmSharp.Math.Geo.Meta.DirectionEnum.East).OffsetWithDirection(maxDistance, OsmSharp.Math.Geo.Meta.DirectionEnum.South),
-                    location.OffsetWithDirection(maxDistance, OsmSharp.Math.Geo.Meta.DirectionEnum.West).OffsetWithDirection(maxDistance, OsmSharp.Math.Geo.Meta.DirectionEnum.North));
-            }
-            var arcs = graph.GetEdges(searchBox);
+                var searchBox = new GeoCoordinateBox(
+                    new GeoCoordinate(location.Latitude - (boxSize / 2), location.Longitude - boxSize),
+                    new GeoCoordinate(location.Latitude + (boxSize / 2), location.Longitude + boxSize));
 
-            float latitude, longitude;
-            var bestDistance = maxDistance.Value;
-            foreach (var arc in arcs)
-            {
-                graph.GetVertex(arc.Item1, out latitude, out longitude);
-                var from = new GeoCoordinate(latitude, longitude);
-                var distance = from.DistanceReal(location).Value;
-                if (distance < bestDistance)
-                { // first point is closer.
-                    bestEdge = new Tuple<long, long, LiveEdge>(arc.Item1, arc.Item2, arc.Item3);
-                    bestDistance = distance;
-                }
-
-                graph.GetVertex(arc.Item2, out latitude, out longitude);
-                var to = new GeoCoordinate(latitude, longitude);
-                distance = to.DistanceReal(location).Value;
-                if (distance < bestDistance)
-                { // second point is closer.
-                    bestEdge = new Tuple<long, long, LiveEdge>(arc.Item1, arc.Item2, arc.Item3);
-                    bestDistance = distance;
-                }
-
-                var coordinates = new List<GeoCoordinate>();
-                ICoordinateCollection shape = arc.Item4;
-                if (shape != null)
-                { // a non-null shape.
-                    coordinates.Add(from);
-                    coordinates.AddRange(shape.ToArray());
-                    coordinates.Add(to);
-                }
-                else
-                { // no shape, only add from/to.
-                    coordinates.Add(from);
-                    coordinates.Add(to);
-                }
-                if (coordinates != null && coordinates.Count > 0)
+                var maxDistanceBox = searchBox;
+                if (maxDistance.Value < double.MaxValue)
                 {
-                    for (int idx = 1; idx < coordinates.Count; idx++)
+                    maxDistanceBox = new GeoCoordinateBox(
+                        location.OffsetWithDirection(maxDistance, OsmSharp.Math.Geo.Meta.DirectionEnum.East).OffsetWithDirection(maxDistance, OsmSharp.Math.Geo.Meta.DirectionEnum.South),
+                        location.OffsetWithDirection(maxDistance, OsmSharp.Math.Geo.Meta.DirectionEnum.West).OffsetWithDirection(maxDistance, OsmSharp.Math.Geo.Meta.DirectionEnum.North));
+                }
+                var arcs = graph.GetEdges(searchBox);
+
+                float latitude, longitude;
+                var bestDistance = maxDistance.Value;
+                foreach (var arc in arcs)
+                {
+                    graph.GetVertex(arc.Item1, out latitude, out longitude);
+                    var from = new GeoCoordinate(latitude, longitude);
+                    var distance = from.DistanceReal(location).Value;
+                    if (distance < bestDistance)
+                    { // first point is closer.
+                        bestEdge = new Tuple<long, long, LiveEdge>(arc.Item1, arc.Item2, arc.Item3);
+                        bestDistance = distance;
+                    }
+
+                    graph.GetVertex(arc.Item2, out latitude, out longitude);
+                    var to = new GeoCoordinate(latitude, longitude);
+                    distance = to.DistanceReal(location).Value;
+                    if (distance < bestDistance)
+                    { // second point is closer.
+                        bestEdge = new Tuple<long, long, LiveEdge>(arc.Item1, arc.Item2, arc.Item3);
+                        bestDistance = distance;
+                    }
+
+                    var coordinates = new List<GeoCoordinate>();
+                    ICoordinateCollection shape = arc.Item4;
+                    if (shape != null)
+                    { // a non-null shape.
+                        coordinates.Add(from);
+                        coordinates.AddRange(shape.ToArray());
+                        coordinates.Add(to);
+                    }
+                    else
+                    { // no shape, only add from/to.
+                        coordinates.Add(from);
+                        coordinates.Add(to);
+                    }
+                    if (coordinates != null && coordinates.Count > 0)
                     {
-                        distance = coordinates[idx].DistanceReal(location).Value;
-                        if (distance < bestDistance)
+                        for (int idx = 1; idx < coordinates.Count; idx++)
                         {
-                            bestEdge = new Tuple<long, long, LiveEdge>(arc.Item1, arc.Item2, arc.Item3);
-                            bestDistance = distance;
-                        }
-                        if (maxDistanceBox.IntersectsPotentially(coordinates[idx - 1], coordinates[idx]))
-                        {
-                            var line = new GeoCoordinateLine(coordinates[idx - 1], coordinates[idx], true, true);
-                            distance = line.DistanceReal(location).Value;
+                            distance = coordinates[idx].DistanceReal(location).Value;
                             if (distance < bestDistance)
                             {
                                 bestEdge = new Tuple<long, long, LiveEdge>(arc.Item1, arc.Item2, arc.Item3);
                                 bestDistance = distance;
                             }
+                            if (maxDistanceBox.IntersectsPotentially(coordinates[idx - 1], coordinates[idx]))
+                            {
+                                var line = new GeoCoordinateLine(coordinates[idx - 1], coordinates[idx], true, true);
+                                distance = line.DistanceReal(location).Value;
+                                if (distance < bestDistance)
+                                {
+                                    bestEdge = new Tuple<long, long, LiveEdge>(arc.Item1, arc.Item2, arc.Item3);
+                                    bestDistance = distance;
+                                }
+                            }
                         }
                     }
                 }
+
+                boxSize *= 2;
             }
             return bestEdge;
         }
