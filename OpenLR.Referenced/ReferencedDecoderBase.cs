@@ -36,16 +36,19 @@ namespace OpenLR.Referenced
         private readonly ReferencedRectangleDecoder _referencedRectangleDecoder;
         private readonly Vehicle _vehicle;
         private readonly float _scoreThreshold = 0.3f;
+        private readonly float _candidateSearchBoxSize = 0.01f;
 
         /// <summary>
         /// Creates a new referenced decoder.
         /// </summary>
-        public ReferencedDecoderBase(BasicRouterDataSource<LiveEdge> graph, Vehicle vehicle, Decoder locationDecoder, Meter maxVertexDistance)
+        public ReferencedDecoderBase(BasicRouterDataSource<LiveEdge> graph, Vehicle vehicle, Decoder locationDecoder, Meter maxVertexDistance,
+            float candidateSearchBoxSize)
             :base(locationDecoder)
         {
             _graph = graph;
             _maxVertexDistance = maxVertexDistance;
             _vehicle = vehicle;
+            _candidateSearchBoxSize = candidateSearchBoxSize;
 
             _referencedCircleDecoder = this.GetReferencedCircleDecoder();
             _referencedGeoCoordinateDecoder = this.GetReferencedGeoCoordinateDecoder();
@@ -339,7 +342,7 @@ namespace OpenLR.Referenced
 
             // create a search box.
             var box = new GeoCoordinateBox(geoCoordinate, geoCoordinate);
-            box = box.Resize(0.1);
+            box = box.Resize(_candidateSearchBoxSize);
 
             // get arcs.
             var arcs = this.Graph.GetEdges(box);

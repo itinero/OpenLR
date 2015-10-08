@@ -22,7 +22,7 @@ namespace OpenLR.Referenced
         /// Builds a point along line location.
         /// </summary>
         /// <returns></returns>
-        public static ReferencedPointAlongLine BuildPointAlongLine(this ReferencedEncoderBase encoder, GeoCoordinate location, double boxSize = 0.1)
+        public static ReferencedPointAlongLine BuildPointAlongLine(this ReferencedEncoderBase encoder, GeoCoordinate location, double boxSize = 0.01)
         {
             return encoder.BuildPointAlongLine(location, 20, boxSize);
         }
@@ -31,7 +31,7 @@ namespace OpenLR.Referenced
         /// Builds a point along line location.
         /// </summary>
         /// <returns></returns>
-        public static ReferencedPointAlongLine BuildPointAlongLine(this ReferencedEncoderBase encoder, GeoCoordinate location, Meter maxDistance, double boxSize = 0.1)
+        public static ReferencedPointAlongLine BuildPointAlongLine(this ReferencedEncoderBase encoder, GeoCoordinate location, Meter maxDistance, double boxSize = 0.01)
         {
             if (location == null) { throw new ArgumentNullException("location"); }
 

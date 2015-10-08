@@ -35,11 +35,10 @@ namespace OpenLR.Referenced.MultiNet
         /// <summary>
         /// Creates a new referenced live edge decoder.
         /// </summary>
-        /// <param name="graph"></param>
-        /// <param name="locationDecoder"></param>
-        /// <param name="maxVertexDistance"></param>
-        public ReferencedMultiNetDecoder(BasicRouterDataSource<LiveEdge> graph, Decoder locationDecoder, Meter maxVertexDistance)
-            : base(graph, new global::OsmSharp.Routing.Shape.Vehicles.Car("ONEWAY", "FT", "TF", string.Empty), locationDecoder, maxVertexDistance)
+        public ReferencedMultiNetDecoder(BasicRouterDataSource<LiveEdge> graph, Decoder locationDecoder, Meter maxVertexDistance, 
+            float candidateSearchBoxSize)
+            : base(graph, new global::OsmSharp.Routing.Shape.Vehicles.Car("ONEWAY", "FT", "TF", string.Empty), locationDecoder, maxVertexDistance,
+                candidateSearchBoxSize)
         {
 
         }
@@ -471,23 +470,21 @@ namespace OpenLR.Referenced.MultiNet
         /// <summary>
         /// Creates a new referenced MultiNet decoder.
         /// </summary>
-        /// <param name="graph">The graph containing the MultiNet network.</param>
-        /// <param name="maxVertexDistance">The maximum vertex distance.</param>
         /// <returns></returns>
-        public static ReferencedMultiNetDecoder CreateBinary(IBasicRouterDataSource<LiveEdge> graph, Meter maxVertexDistance)
+        public static ReferencedMultiNetDecoder CreateBinary(IBasicRouterDataSource<LiveEdge> graph, Meter maxVertexDistance, 
+            float candidateSearchBoxSize)
         {
-            return ReferencedMultiNetDecoder.Create(new BasicRouterDataSource<LiveEdge>(graph), new OpenLR.Binary.BinaryDecoder(), maxVertexDistance);
+            return ReferencedMultiNetDecoder.Create(new BasicRouterDataSource<LiveEdge>(graph), new OpenLR.Binary.BinaryDecoder(), maxVertexDistance, candidateSearchBoxSize);
         }
 
         /// <summary>
         /// Creates a new referenced MultiNet decoder.
         /// </summary>
-        /// <param name="graph">The graph containing the MultiNet network.</param>
-        /// <param name="maxVertexDistance">The maximum vertex distance.</param>
         /// <returns></returns>
-        public static ReferencedMultiNetDecoder CreateBinary(BasicRouterDataSource<LiveEdge> graph, Meter maxVertexDistance)
+        public static ReferencedMultiNetDecoder CreateBinary(BasicRouterDataSource<LiveEdge> graph, Meter maxVertexDistance,
+            float candidateSearchBoxSize)
         {
-            return ReferencedMultiNetDecoder.Create(graph, new OpenLR.Binary.BinaryDecoder(), maxVertexDistance);
+            return ReferencedMultiNetDecoder.Create(graph, new OpenLR.Binary.BinaryDecoder(), maxVertexDistance, candidateSearchBoxSize);
         }
 
         /// <summary>
@@ -521,13 +518,11 @@ namespace OpenLR.Referenced.MultiNet
         /// <summary>
         /// Creates a new referenced MultiNet decoder.
         /// </summary>
-        /// <param name="graph">The graph containing the MultiNet network.</param>
-        /// <param name="rawLocationDecoder">The raw location decoder.</param>
-        /// <param name="maxVertexDistance">The maximum vertex distance.</param>
         /// <returns></returns>
-        public static ReferencedMultiNetDecoder Create(BasicRouterDataSource<LiveEdge> graph, Decoder rawLocationDecoder, Meter maxVertexDistance)
+        public static ReferencedMultiNetDecoder Create(BasicRouterDataSource<LiveEdge> graph, Decoder rawLocationDecoder, Meter maxVertexDistance,
+            float candidateSearchBoxSize)
         {
-            return new ReferencedMultiNetDecoder(graph, rawLocationDecoder, maxVertexDistance);
+            return new ReferencedMultiNetDecoder(graph, rawLocationDecoder, maxVertexDistance, candidateSearchBoxSize);
         }
 
         #endregion

@@ -25,9 +25,6 @@ namespace OpenLR.Referenced
         /// <summary>
         /// Creates a new referenced live edge decoder.
         /// </summary>
-        /// <param name="graph"></param>
-        /// <param name="vehicle"></param>
-        /// <param name="locationDecoder"></param>
         public ReferencedDecoderBaseLiveEdge(BasicRouterDataSource<LiveEdge> graph, Vehicle vehicle, Decoder locationDecoder)
             : base(graph, vehicle, locationDecoder)
         {
@@ -37,12 +34,9 @@ namespace OpenLR.Referenced
         /// <summary>
         /// Creates a new referenced live edge decoder.
         /// </summary>
-        /// <param name="graph"></param>
-        /// <param name="vehicle"></param>
-        /// <param name="locationDecoder"></param>
-        /// <param name="maxVertexDistance"></param>
-        public ReferencedDecoderBaseLiveEdge(BasicRouterDataSource<LiveEdge> graph, Vehicle vehicle, Decoder locationDecoder, Meter maxVertexDistance)
-            : base(graph, vehicle, locationDecoder, maxVertexDistance)
+        public ReferencedDecoderBaseLiveEdge(BasicRouterDataSource<LiveEdge> graph, Vehicle vehicle, Decoder locationDecoder, Meter maxVertexDistance,
+            float candidateSearchBoxSize)
+            : base(graph, vehicle, locationDecoder, maxVertexDistance, candidateSearchBoxSize)
         {
 
         }

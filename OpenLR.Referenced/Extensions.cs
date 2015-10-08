@@ -675,7 +675,7 @@ namespace OpenLR.Referenced
                 {
                     graph.GetVertex(arc.Item1, out latitude, out longitude);
                     var from = new GeoCoordinate(latitude, longitude);
-                    var distance = from.DistanceReal(location).Value;
+                    var distance = from.DistanceEstimate(location).Value;
                     if (distance < bestDistance)
                     { // first point is closer.
                         bestEdge = new Tuple<long, long, LiveEdge>(arc.Item1, arc.Item2, arc.Item3);
@@ -684,7 +684,7 @@ namespace OpenLR.Referenced
 
                     graph.GetVertex(arc.Item2, out latitude, out longitude);
                     var to = new GeoCoordinate(latitude, longitude);
-                    distance = to.DistanceReal(location).Value;
+                    distance = to.DistanceEstimate(location).Value;
                     if (distance < bestDistance)
                     { // second point is closer.
                         bestEdge = new Tuple<long, long, LiveEdge>(arc.Item1, arc.Item2, arc.Item3);
@@ -708,7 +708,7 @@ namespace OpenLR.Referenced
                     {
                         for (int idx = 1; idx < coordinates.Count; idx++)
                         {
-                            distance = coordinates[idx].DistanceReal(location).Value;
+                            distance = coordinates[idx].DistanceEstimate(location).Value;
                             if (distance < bestDistance)
                             {
                                 bestEdge = new Tuple<long, long, LiveEdge>(arc.Item1, arc.Item2, arc.Item3);
