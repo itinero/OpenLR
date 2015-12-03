@@ -3,7 +3,7 @@
     <metadata>
         <id>OpenLR</id>
         <version>$version$</version>
-        <title>OpenLR - OpenLR Encoding/decoding library.</title>
+        <title>OpenLR</title>
         <authors>Ben Abelshausen, VIA</authors>
         <owners>Ben Abelshausen</owners>
         <licenseUrl>http://via.nl/</licenseUrl>
