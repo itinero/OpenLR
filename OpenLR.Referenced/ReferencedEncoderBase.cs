@@ -18,26 +18,20 @@ namespace OpenLR.Referenced
     /// </summary>
     public abstract class ReferencedEncoderBase : OpenLR.Referenced.Encoding.ReferencedEncoder
     {
-        /// <summary>
-        /// Holds the basic router datasource.
-        /// </summary>
-        private readonly BasicRouterDataSource<LiveEdge> _graph;
+        private readonly RouterDb _routerDb;
 
         /// <summary>
         /// Creates a new referenced encoder.
         /// </summary>
-        /// <param name="graph"></param>
-        /// <param name="locationEncoder"></param>
-        public ReferencedEncoderBase(BasicRouterDataSource<LiveEdge> graph, Encoder locationEncoder)
+        public ReferencedEncoderBase(RouterDb routerDb, Encoder locationEncoder)
             : base(locationEncoder)
         {
-            _graph = graph;
+            _routerDb = routerDb;
         }
 
         /// <summary>
         /// Gets a new router.
         /// </summary>
-        /// <returns></returns>
         protected virtual BasicRouter GetRouter()
         {
             return new BasicRouter();
@@ -46,11 +40,11 @@ namespace OpenLR.Referenced
         /// <summary>
         /// Returns the reference graph.
         /// </summary>
-        public BasicRouterDataSource<LiveEdge> Graph
+        public RouterDb RouterDb
         {
             get
             {
-                return _graph;
+                return _routerDb;
             }
         }
 
@@ -148,7 +142,7 @@ namespace OpenLR.Referenced
         public virtual Coordinate GetVertexLocation(long vertex)
         {
             float latitude, longitude;
-            if (!this.Graph.GetVertex(vertex, out latitude, out longitude))
+            if (!this.RouterDb.GetVertex(vertex, out latitude, out longitude))
             { // oeps, vertex does not exist!
                 throw new ArgumentOutOfRangeException("vertex", string.Format("Vertex {0} not found!", vertex));
             }
@@ -266,13 +260,13 @@ namespace OpenLR.Referenced
         /// <returns></returns>
         public virtual bool IsVertexValid(long vertex)
         {
-            var arcs = this.Graph.GetEdges(vertex);
+            var arcs = this.RouterDb.GetEdges(vertex);
 
             // go over each arc and count the traversible arcs.
             var traversCount = 0;
             foreach(var arc in arcs)
             {
-                var tags = this.Graph.TagsIndex.Get(arc.Value.Tags);
+                var tags = this.RouterDb.TagsIndex.Get(arc.Value.Tags);
                 if(this.Vehicle.CanTraverse(tags))
                 {
                     traversCount++;
@@ -293,7 +287,7 @@ namespace OpenLR.Referenced
                 var bidirectional = new List<Tuple<long, TagsCollectionBase, LiveEdge>>();
                 foreach (var arc in arcs)
                 {
-                    var tags = this.Graph.TagsIndex.Get(arc.Value.Tags);
+                    var tags = this.RouterDb.TagsIndex.Get(arc.Value.Tags);
                     if (this.Vehicle.CanTraverse(tags))
                     {
                         var oneway = this.Vehicle.IsOneWay(tags);
@@ -353,9 +347,9 @@ namespace OpenLR.Referenced
 
                         // the only thing left to check is if the oneway edges go in the same general direction or not.
                         // compare bearings but only if distance is large enough.
-                        var incomingShape = this.Graph.GetCoordinates(new Tuple<long,long,LiveEdge>(
+                        var incomingShape = this.RouterDb.GetCoordinates(new Tuple<long,long,LiveEdge>(
                             vertex, incoming[0].Item1, incoming[0].Item3));
-                        var outgoingShape = this.Graph.GetCoordinates(new Tuple<long,long,LiveEdge>(
+                        var outgoingShape = this.RouterDb.GetCoordinates(new Tuple<long,long,LiveEdge>(
                             vertex, outgoing[0].Item1, outgoing[0].Item3));
 
                         if(incomingShape.Length().Value < 25 &&
@@ -427,21 +421,21 @@ namespace OpenLR.Referenced
                 else
                 { // continue search.
                     // add unsettled neighbours.
-                    var arcs = this.Graph.GetEdges(current.Vertex);
+                    var arcs = this.RouterDb.GetEdges(current.Vertex);
                     foreach (var arc in arcs)
                     {
                         if (!excludeSet.Contains(arc.Key) &&
                             !settled.Contains(arc.Key) &&
                            !(current.Vertex == vertex && arc.Key == targetVertex && edge.Distance == arc.Value.Distance))
                         { // ok, new neighbour, and ok, not the edge and neighbour to ignore.
-                            var tags = this.Graph.TagsIndex.Get(arc.Value.Tags);
+                            var tags = this.RouterDb.TagsIndex.Get(arc.Value.Tags);
                             if (this.Vehicle.CanTraverse(tags))
                             { // ok, we can traverse this edge.
                                 var oneway = this.Vehicle.IsOneWay(tags);
                                 if (oneway == null ||
                                   !(oneway.Value == arc.Value.Forward ^ searchForward))
                                 { // ok, no oneway or oneway reversed.
-                                    var weight = this.Vehicle.Weight(this.Graph.TagsIndex.Get(arc.Value.Tags), arc.Value.Distance);
+                                    var weight = this.Vehicle.Weight(this.RouterDb.TagsIndex.Get(arc.Value.Tags), arc.Value.Distance);
                                     var path = new PathSegment(arc.Key, current.Weight + weight, arc.Value, current);
                                     heap.Push(path, (float)path.Weight);
                                 }
@@ -474,11 +468,11 @@ namespace OpenLR.Referenced
         public virtual PathSegment FindShortestPath(long from, long to, bool searchForward)
         {
             var router = this.GetRouter();
-            var result = router.Calculate(this.Graph, this.Vehicle,
+            var result = router.Calculate(this.RouterDb, this.Vehicle,
                 from, to, searchForward);
             if (result == null)
             {
-                result = router.Calculate(this.Graph, this.Vehicle,
+                result = router.Calculate(this.RouterDb, this.Vehicle,
                     from, to, searchForward, BasicRouter.MaxSettles);
             }
             return result;
@@ -494,7 +488,7 @@ namespace OpenLR.Referenced
         public virtual PathSegment FindShortestPath(List<PathSegment> fromPaths, List<PathSegment> toPaths, bool searchForward)
         {
             var router = this.GetRouter();
-            var result = router.Calculate(this.Graph, this.Vehicle,
+            var result = router.Calculate(this.RouterDb, this.Vehicle,
                 fromPaths, toPaths, searchForward);
             //if (result == null)
             //{

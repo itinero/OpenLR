@@ -1,4 +1,26 @@
-﻿namespace OpenLR.Referenced.Scoring
+﻿// The MIT License (MIT)
+
+// Copyright (c) 2016 Ben Abelshausen
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
+namespace OpenLR.Referenced.Scoring
 {
     /// <summary>
     /// Represents a score for a specific purpose.
@@ -54,18 +76,11 @@
         /// <summary>
         /// Gets a score by name.
         /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
         public abstract Score GetByName(string key);
 
         /// <summary>
-        /// Creates a new simple score.
+        /// Creates a new score.
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="description"></param>
-        /// <param name="value"></param>
-        /// <param name="reference"></param>
-        /// <returns></returns>
         public static SimpleScore New(string name, string description, double value, double reference)
         {
             return new SimpleScore(name, description, value, reference);
@@ -74,9 +89,6 @@
         /// <summary>
         /// Multiplies the two given scores.
         /// </summary>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
-        /// <returns></returns>
         public static MultipliedScore operator *(Score left, Score right)
         {
             return new MultipliedScore(left, right);
@@ -85,9 +97,6 @@
         /// <summary>
         /// Adds the two given scores.
         /// </summary>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
-        /// <returns></returns>
         public static AddedScore operator +(Score left, Score right)
         {
             return new AddedScore(left, right);
@@ -96,7 +105,6 @@
         /// <summary>
         /// Returns a description of this score.
         /// </summary>
-        /// <returns></returns>
         public override string ToString()
         {
             return string.Format("{0} {1}/{2}", this.Name, this.Value, this.Reference);
@@ -105,7 +113,6 @@
         /// <summary>
         /// Returns the hashcode.
         /// </summary>
-        /// <returns></returns>
         public override int GetHashCode()
         {
             return this.Name.GetHashCode() ^
@@ -117,8 +124,6 @@
         /// <summary>
         /// Returns true if the given object equals this object.
         /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
         public override bool Equals(object obj)
         {
             var otherScore = obj as Score;

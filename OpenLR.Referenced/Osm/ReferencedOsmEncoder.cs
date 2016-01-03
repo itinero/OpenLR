@@ -4,10 +4,6 @@ using OpenLR.Referenced.Router;
 using OsmSharp.Collections.PriorityQueues;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Routing;
-using OsmSharp.Routing.Graph.Routing;
-using OsmSharp.Routing.Osm.Graphs;
-using OsmSharp.Routing.Shape;
-using OsmSharp.Routing.Shape.Readers;
 using System.Collections.Generic;
 
 namespace OpenLR.Referenced.Osm
@@ -20,31 +16,15 @@ namespace OpenLR.Referenced.Osm
         /// <summary>
         /// Creates a new referenced live edge decoder.
         /// </summary>
-        /// <param name="graph"></param>
-        /// <param name="locationEncoder"></param>
-        public ReferencedOsmEncoder(BasicRouterDataSource<LiveEdge> graph, Encoder locationEncoder)
-            : base(graph, locationEncoder)
+        public ReferencedOsmEncoder(RouterDb routerDb, Encoder locationEncoder)
+            : base(routerDb, locationEncoder)
         {
 
-        }
-
-        /// <summary>
-        /// Returns the tags associated with the given tags id.
-        /// </summary>
-        /// <param name="tagsId"></param>
-        /// <returns></returns>
-        public override TagsCollectionBase GetTags(uint tagsId)
-        {
-            return this.Graph.TagsIndex.Get(tagsId);
         }
 
         /// <summary>
         /// Tries to match the given tags and figure out a corresponding frc and fow.
         /// </summary>
-        /// <param name="tags"></param>
-        /// <param name="frc"></param>
-        /// <param name="fow"></param>
-        /// <returns>False if no matching was found.</returns>
         public override bool TryMatching(TagsCollectionBase tags, out FunctionalRoadClass frc, out FormOfWay fow)
         {
             frc = FunctionalRoadClass.Frc7;
@@ -108,25 +88,6 @@ namespace OpenLR.Referenced.Osm
             return false;
         }
 
-        /// <summary>
-        /// Returns a value if a oneway restriction is found.
-        /// </summary>
-        /// <param name="tags"></param>
-        /// <returns>null: no restrictions, true: forward restriction, false: backward restriction.</returns>
-        /// <returns></returns>
-        public override bool? IsOneway(TagsCollectionBase tags)
-        {
-            return this.Vehicle.IsOneWay(tags);
-        }
-
-        /// <summary>
-        /// Returns the encoder vehicle profile.
-        /// </summary>
-        public override Vehicle Vehicle
-        {
-            get { return Vehicle.Car; }
-        }
-
         #region Static Creation Helper Functions
 
         /// <summary>
@@ -143,21 +104,9 @@ namespace OpenLR.Referenced.Osm
         /// <summary>
         /// Creates a new referenced Osm encoder.
         /// </summary>
-        /// <param name="graph">The graph containing the Osm network.</param>
-        /// <returns></returns>
-        public static ReferencedOsmEncoder CreateBinary(BasicRouterDataSource<LiveEdge> graph)
+        public static ReferencedOsmEncoder CreateBinary(RouterDb routerDb)
         {
-            return ReferencedOsmEncoder.Create(graph, new OpenLR.Binary.BinaryEncoder());
-        }
-
-        /// <summary>
-        /// Creates a new referenced Osm encoder.
-        /// </summary>
-        /// <param name="graph">The graph containing the Osm network.</param>
-        /// <returns></returns>
-        public static ReferencedOsmEncoder CreateBinary(IBasicRouterDataSource<LiveEdge> graph)
-        {
-            return ReferencedOsmEncoder.CreateBinary(new BasicRouterDataSource<LiveEdge>(graph));
+            return ReferencedOsmEncoder.Create(routerDb, new OpenLR.Binary.BinaryEncoder());
         }
 
         /// <summary>
@@ -180,12 +129,12 @@ namespace OpenLR.Referenced.Osm
         /// <summary>
         /// Creates a new referenced Osm encoder.
         /// </summary>
-        /// <param name="graph">The graph containing the Osm network.</param>
+        /// <param name="routerDb">The router db containing the OSM network.</param>
         /// <param name="rawLocationEncoder">The raw location encoder.</param>
         /// <returns></returns>
-        public static ReferencedOsmEncoder Create(BasicRouterDataSource<LiveEdge> graph, Encoder rawLocationEncoder)
+        public static ReferencedOsmEncoder Create(RouterDb routerDb, Encoder rawLocationEncoder)
         {
-            return new ReferencedOsmEncoder(graph, rawLocationEncoder);
+            return new ReferencedOsmEncoder(routerDb, rawLocationEncoder);
         }
 
         #endregion

@@ -1,11 +1,31 @@
-﻿using GeoAPI.Geometries;
-using NetTopologySuite.Features;
-using NetTopologySuite.Geometries;
-using OpenLR.Referenced.Router;
+﻿// The MIT License (MIT)
+
+// Copyright (c) 2016 Ben Abelshausen
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
 using OpenLR.Referenced.Scoring;
-using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Osm.Graphs;
-using System.Collections.Generic;
+using OsmSharp.Geo.Attributes;
+using OsmSharp.Geo.Features;
+using OsmSharp.Geo.Geometries;
+using OsmSharp.Routing;
+using OsmSharp.Routing.Network;
 
 namespace OpenLR.Referenced.Decoding.Candidates
 {
@@ -20,91 +40,63 @@ namespace OpenLR.Referenced.Decoding.Candidates
         public Score Score { get; set; }
 
         /// <summary>
-        /// Gets or sets the candidate vertex.
-        /// </summary>
-        public long Vertex { get; set; }
-
-        /// <summary>
         /// Gets or sets the candidate edge.
         /// </summary>
-        public LiveEdge Edge { get; set; }
+        public uint EdgeId { get; set; }
 
         /// <summary>
-        /// Gets or sets the vertex this edge leads to.
+        /// Gets or sets the candidate vertex.
         /// </summary>
-        public long TargetVertex { get; set; }
+        public uint VertexId { get; set; }
 
         /// <summary>
         /// Converts this referenced location to a geometry.
         /// </summary>
-        /// <returns></returns>
-        public FeatureCollection ToFeatures(BasicRouterDataSource<LiveEdge> graph)
+        public FeatureCollection ToFeatures(RouterDb db)
         {
             var featureCollection = new FeatureCollection();
-            var geometryFactory = new GeometryFactory();
 
             // build coordinates list.
-            var coordinates = new List<Coordinate>();
-            float latitude, longitude;
-            graph.GetVertex(this.Vertex, out latitude, out longitude);
-            coordinates.Add(new Coordinate(longitude, latitude));
+            var edge = db.Network.GetEdge(this.EdgeId);
+            var coordinates = db.Network.GetShape(edge);
 
-            var edgeShape = graph.GetEdgeShape(this.Vertex, this.TargetVertex);
-            if (edgeShape != null)
-            {
-                for (int coordIdx = 0; coordIdx < edgeShape.Length; coordIdx++)
-                {
-                    coordinates.Add(new Coordinate()
-                    {
-                        X = edgeShape[coordIdx].Longitude,
-                        Y = edgeShape[coordIdx].Latitude
-                    });
-                }
-            }
-
-            var tags = graph.TagsIndex.Get(this.Edge.Tags);
-            var table = tags.ToAttributes();
-
-            graph.GetVertex(this.TargetVertex, out latitude, out longitude);
-            coordinates.Add(new Coordinate(longitude, latitude));
-
-            featureCollection.Add(new Feature(geometryFactory.CreateLineString(coordinates.ToArray()), table));
+            // build linestring.
+            var lineString = new LineString(coordinates);
+            featureCollection.Add(new Feature(new LineString(coordinates.ToArray()), 
+                new SimpleGeometryAttributeCollection()));
 
             return featureCollection;
         }
 
-
         /// <summary>
         /// Determines whether this object is equal to the given object.
         /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
         public override bool Equals(object obj)
         {
             var other = (obj as CandidateVertexEdge);
-            return other != null && other.Vertex == this.Vertex && other.TargetVertex == this.TargetVertex && other.Edge.Equals(this.Edge) && other.Score == this.Score;
+            return other != null && other.Score == this.Score && 
+                other.EdgeId == this.EdgeId &&
+                other.VertexId == this.VertexId;
         }
 
         /// <summary>
         /// Serves as a hashfunction.
         /// </summary>
-        /// <returns></returns>
         public override int GetHashCode()
         {
             return this.Score.GetHashCode() ^
-                this.Edge.GetHashCode() ^
-                this.Vertex.GetHashCode() ^
-                this.TargetVertex.GetHashCode();
+                this.EdgeId.GetHashCode() ^
+                this.VertexId.GetHashCode();
         }
 
         /// <summary>
         /// Returns a description of this candidate.
         /// </summary>
-        /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("{0}->{1}->{2}: {3}",
-                this.Vertex.ToString(), this.Edge.ToString(), this.TargetVertex.ToString(), 
+            return string.Format("{0} on {1}: {2}",
+                this.VertexId.ToString(), 
+                this.EdgeId.ToString(),
                 this.Score.ToString());
         }
     }
