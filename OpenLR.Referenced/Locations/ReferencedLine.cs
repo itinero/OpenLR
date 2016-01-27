@@ -1,13 +1,33 @@
-﻿using GeoAPI.Geometries;
-using OsmSharp;
-using NetTopologySuite.Features;
-using NetTopologySuite.Geometries;
-using OpenLR.Referenced.Router;
-using OsmSharp.Math.Geo.Simple;
-using OsmSharp.Routing.Osm.Graphs;
+﻿// The MIT License (MIT)
+
+// Copyright (c) 2016 Ben Abelshausen
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
+using OsmSharp.Collections.Tags;
+using OsmSharp.Geo.Attributes;
+using OsmSharp.Geo.Features;
+using OsmSharp.Geo.Geometries;
+using OsmSharp.Math.Geo;
+using OsmSharp.Routing;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace OpenLR.Referenced.Locations
 {
@@ -16,34 +36,25 @@ namespace OpenLR.Referenced.Locations
     /// </summary>
     public class ReferencedLine : ReferencedLocation
     {
-        /// <summary>
-        /// Holds the graph.
-        /// </summary>
-        private BasicRouterDataSource<LiveEdge> _graph;
+        private readonly RouterDb _routerDb;
 
         /// <summary>
         /// Creates a new referenced line.
         /// </summary>
-        /// <param name="graph"></param>
-        public ReferencedLine(BasicRouterDataSource<LiveEdge> graph)
+        public ReferencedLine(RouterDb routerDb)
         {
-            _graph = graph;
+            _routerDb = routerDb;
         }
 
         /// <summary>
         /// Gets or sets the vertices.
         /// </summary>
-        public long[] Vertices { get; set; }
+        public uint[] Vertices { get; set; }
 
         /// <summary>
         /// Gets or sets the edges.
         /// </summary>
-        public LiveEdge[] Edges { get; set; }
-
-        /// <summary>
-        /// Gets or sets the edge shapes.
-        /// </summary>
-        public GeoCoordinateSimple[][] EdgeShapes { get; set; }
+        public uint[] Edges { get; set; }
 
         /// <summary>
         /// Gets or sets the offset at the beginning of the path representing this location.
@@ -61,21 +72,10 @@ namespace OpenLR.Referenced.Locations
         /// <returns></returns>
         public override object Clone()
         {
-            GeoCoordinateSimple[][] edgeShapes = null;
-            if(this.EdgeShapes != null)
+            return new ReferencedLine(_routerDb)
             {
-                edgeShapes = new GeoCoordinateSimple[this.EdgeShapes.Length][];
-                for (var i = 0; i < edgeShapes.Length; i++)
-                {
-                    edgeShapes[i] = edgeShapes[i] == null ? null : edgeShapes[i].Clone() as GeoCoordinateSimple[];
-                }
-            }
-
-            return new ReferencedLine(_graph)
-            {
-                Edges = this.Edges == null ? null : this.Edges.Clone() as LiveEdge[],
-                Vertices = this.Vertices == null ? null : this.Vertices.Clone() as long[],
-                EdgeShapes = edgeShapes,
+                Edges = this.Edges == null ? null : this.Edges.Clone() as uint[],
+                Vertices = this.Vertices == null ? null : this.Vertices.Clone() as uint[],
                 NegativeOffsetPercentage = this.NegativeOffsetPercentage,
                 PositiveOffsetPercentage = this.PositiveOffsetPercentage
             };
@@ -84,13 +84,12 @@ namespace OpenLR.Referenced.Locations
         /// <summary>
         /// Adds another line location to this one.
         /// </summary>
-        /// <param name="location"></param>
         public void Add(ReferencedLine location)
         {
             if(this.Vertices[this.Vertices.Length - 1] == location.Vertices[0])
             { // there is a match.
                 // merge vertices.
-                var vertices = new long[this.Vertices.Length + location.Vertices.Length - 1];
+                var vertices = new uint[this.Vertices.Length + location.Vertices.Length - 1];
                 this.Vertices.CopyTo(vertices, 0);
                 for(int idx = 1; idx < location.Vertices.Length; idx++)
                 {
@@ -99,16 +98,10 @@ namespace OpenLR.Referenced.Locations
                 this.Vertices = vertices;
 
                 // merge edges.
-                var edges = new LiveEdge[this.Edges.Length + location.Edges.Length];
+                var edges = new uint[this.Edges.Length + location.Edges.Length];
                 this.Edges.CopyTo(edges, 0);
                 location.Edges.CopyTo(edges, this.Edges.Length);
                 this.Edges = edges;
-
-                // merge edge shapes.
-                var edgeShapes = new GeoCoordinateSimple[this.Edges.Length + location.Edges.Length][];
-                this.EdgeShapes.CopyTo(edgeShapes, 0);
-                location.EdgeShapes.CopyTo(edgeShapes, this.EdgeShapes.Length);
-                this.EdgeShapes = edgeShapes;
                 return;
             }
             throw new Exception("Cannot add a location without them having one vertex incommon.");
@@ -117,444 +110,432 @@ namespace OpenLR.Referenced.Locations
         /// <summary>
         /// Converts this referenced location to a geometry.
         /// </summary>
-        /// <returns></returns>
-        public IGeometry ToGeometry()
+        public Geometry ToGeometry()
         {
-            var geometryFactory = new GeometryFactory();
-
-            // build coordinates list.
-            var coordinates = new List<Coordinate>();
-            for (int idx = 0; idx < this.Vertices.Length; idx++)
+            var coordinates = new List<GeoCoordinate>();
+            for (var i = 0; i < this.Vertices.Length; i++)
             {
                 float latitude, longitude;
-                _graph.GetVertex(this.Vertices[idx], out latitude, out longitude);
-                coordinates.Add(new Coordinate(longitude, latitude));
+                _routerDb.Network.GetVertex(this.Vertices[i], out latitude, out longitude);
+                coordinates.Add(new GeoCoordinate(longitude, latitude));
 
-                if (idx < this.Edges.Length)
+                if (i < this.Edges.Length)
                 {
-                    var edge = this.Edges[idx];
-                    var edgeShape = this.EdgeShapes[idx];
-                    if (edgeShape != null)
+                    var edgeId = this.Edges[i];
+                    var edge = _routerDb.Network.GetEdge(edgeId);
+                    if (edge.Shape != null)
                     {
-                        if (edge.Forward)
+                        var shape = edge.Shape;
+                        if (edge.From != this.Vertices[i])
                         {
-                            for (int coordIdx = 0; coordIdx < edgeShape.Length; coordIdx++)
-                            {
-                                coordinates.Add(new Coordinate()
-                                {
-                                    X = edgeShape[coordIdx].Longitude,
-                                    Y = edgeShape[coordIdx].Latitude
-                                });
-                            }
+                            shape = shape.Reverse();
                         }
-                        else
+                        for (var j = 0; j < shape.Count; j++)
                         {
-                            for (int coordIdx = edgeShape.Length - 1; coordIdx >= 0; coordIdx--)
-                            {
-                                coordinates.Add(new Coordinate()
-                                {
-                                    X = edgeShape[coordIdx].Longitude,
-                                    Y = edgeShape[coordIdx].Latitude
-                                });
-                            }
+                            coordinates.Add(new GeoCoordinate(
+                                shape[j].Latitude,
+                                shape[j].Longitude));
                         }
                     }
                 }
             }
-            return geometryFactory.CreateLineString(coordinates.ToArray());
+            return new LineString(coordinates.ToArray());
         }
 
         /// <summary>
         /// Converts this referenced location to a geometry.
         /// </summary>
-        /// <returns></returns>
         public FeatureCollection ToFeatures()
         {
             var featureCollection = new FeatureCollection();
-            var geometryFactory = new GeometryFactory();
 
             // build coordinates list.
-            var coordinates = new List<Coordinate>();
-            for (int idx = 0; idx < this.Edges.Length; idx++)
+            var coordinates = new List<GeoCoordinate>();
+            for (var i = 0; i < this.Edges.Length; i++)
             {
                 float latitude, longitude;
-                _graph.GetVertex(this.Vertices[idx], out latitude, out longitude);
-                coordinates.Add(new Coordinate(longitude, latitude));
+                _routerDb.Network.GetVertex(this.Vertices[i], out latitude, out longitude);
+                coordinates.Add(new GeoCoordinate(latitude, longitude));
 
-                var edge = this.Edges[idx];
-                var edgeShape = this.EdgeShapes[idx];
-                if (edgeShape != null)
+                var edgeId = this.Edges[i];
+                var edge = _routerDb.Network.GetEdge(edgeId);
+                if (edge.Shape != null)
                 {
-                    for (int coordIdx = 0; coordIdx < edgeShape.Length; coordIdx++)
+                    var shape = edge.Shape;
+                    if (edge.From != this.Vertices[i])
                     {
-                        coordinates.Add(new Coordinate()
-                        {
-                            X = edgeShape[coordIdx].Longitude,
-                            Y = edgeShape[coordIdx].Latitude
-                        });
+                        shape = shape.Reverse();
+                    }
+                    for (var j = 0; j < shape.Count; j++)
+                    {
+                        coordinates.Add(new GeoCoordinate(
+                            shape[j].Latitude,
+                            shape[j].Longitude));
                     }
                 }
 
-                var tags = _graph.TagsIndex.Get(edge.Tags);
-                var table = tags.ToAttributes();
+                var tags = new TagsCollection();
+                tags.AddOrReplace(_routerDb.EdgeMeta.Get(edge.Data.MetaId));
+                tags.AddOrReplace(_routerDb.EdgeProfiles.Get(edge.Data.Profile));
+                var table = new SimpleGeometryAttributeCollection(tags);
 
-                _graph.GetVertex(this.Vertices[idx + 1], out latitude, out longitude);
-                coordinates.Add(new Coordinate(longitude, latitude));
+                _routerDb.Network.GetVertex(this.Vertices[i + 1], out latitude, out longitude);
+                coordinates.Add(new GeoCoordinate(latitude, longitude));
 
-                featureCollection.Add(new Feature(geometryFactory.CreateLineString(coordinates.ToArray()), table));
+                featureCollection.Add(new Feature(new LineString(coordinates.ToArray()), table));
                 coordinates.Clear();
             }
             return featureCollection;
         }
 
-        #region Validation
+        //#region Validation
 
-        /// <summary>
-        /// Validates if the location is connected.
-        /// </summary>
-        /// <returns></returns>
-        public void ValidateConnected(ReferencedEncoderBase mainEncoder)
-        {
-            var edges = this.Edges;
-            var vertices = this.Vertices;
+        ///// <summary>
+        ///// Validates if the location is connected.
+        ///// </summary>
+        ///// <returns></returns>
+        //public void ValidateConnected(ReferencedEncoderBase mainEncoder)
+        //{
+        //    var edges = this.Edges;
+        //    var vertices = this.Vertices;
 
-            // 1: Is the path connected?
-            // 2: Is the path traversable?
-            for (int edgeIdx = 0; edgeIdx < edges.Length; edgeIdx++)
-            {
-                var from = vertices[edgeIdx];
-                var to = vertices[edgeIdx + 1];
+        //    // 1: Is the path connected?
+        //    // 2: Is the path traversable?
+        //    for (int edgeIdx = 0; edgeIdx < edges.Length; edgeIdx++)
+        //    {
+        //        var from = vertices[edgeIdx];
+        //        var to = vertices[edgeIdx + 1];
 
-                bool found = false;
-                foreach (var edge in mainEncoder.Graph.GetEdges(from))
-                {
-                    if (edge.Key == to &&
-                        edge.Value.Equals(edges[edgeIdx]))
-                    { // edge was found, is valid.
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found)
-                { // edge is not found, path not connected.
-                    throw new ArgumentOutOfRangeException(string.Format("Edge {0} cannot be found between vertex {1} and {2}. The given path is not connected.",
-                        edges[edgeIdx].ToInvariantString(), from, to));
-                }
-                // check whether the edge can traversed.
-                var tags = mainEncoder.Graph.TagsIndex.Get(edges[edgeIdx].Tags);
-                if (!mainEncoder.Vehicle.CanTraverse(tags))
-                { // oeps, cannot be traversed.
-                    throw new ArgumentOutOfRangeException(string.Format("Edge at index {0} cannot be traversed by vehicle {1}.", edgeIdx, mainEncoder.Vehicle.UniqueName));
-                }
-                // check whether the edge can be traversed in the correct direction.
-                var oneway = mainEncoder.Vehicle.IsOneWay(tags);
-                var canMoveForward = (oneway == null) || (oneway.Value == edges[edgeIdx].Forward);
-                if (!canMoveForward)
-                { // path cannot be traversed in this direction.
-                    throw new ArgumentOutOfRangeException(string.Format("Edge at index {0} cannot be traversed by vehicle {1} in the direction given.", edgeIdx, mainEncoder.Vehicle.UniqueName));
-                }
-            }
-        }
+        //        bool found = false;
+        //        foreach (var edge in mainEncoder.RouterDb.GetEdges(from))
+        //        {
+        //            if (edge.Key == to &&
+        //                edge.Value.Equals(edges[edgeIdx]))
+        //            { // edge was found, is valid.
+        //                found = true;
+        //                break;
+        //            }
+        //        }
+        //        if (!found)
+        //        { // edge is not found, path not connected.
+        //            throw new ArgumentOutOfRangeException(string.Format("Edge {0} cannot be found between vertex {1} and {2}. The given path is not connected.",
+        //                edges[edgeIdx].ToInvariantString(), from, to));
+        //        }
+        //        // check whether the edge can traversed.
+        //        var tags = mainEncoder.RouterDb.TagsIndex.Get(edges[edgeIdx].Tags);
+        //        if (!mainEncoder.Vehicle.CanTraverse(tags))
+        //        { // oeps, cannot be traversed.
+        //            throw new ArgumentOutOfRangeException(string.Format("Edge at index {0} cannot be traversed by vehicle {1}.", edgeIdx, mainEncoder.Vehicle.UniqueName));
+        //        }
+        //        // check whether the edge can be traversed in the correct direction.
+        //        var oneway = mainEncoder.Vehicle.IsOneWay(tags);
+        //        var canMoveForward = (oneway == null) || (oneway.Value == edges[edgeIdx].Forward);
+        //        if (!canMoveForward)
+        //        { // path cannot be traversed in this direction.
+        //            throw new ArgumentOutOfRangeException(string.Format("Edge at index {0} cannot be traversed by vehicle {1} in the direction given.", edgeIdx, mainEncoder.Vehicle.UniqueName));
+        //        }
+        //    }
+        //}
 
-        /// <summary>
-        /// Validates the offsets.
-        /// </summary>
-        public void ValidateOffsets(ReferencedEncoderBase mainEncoder)
-        {
+        ///// <summary>
+        ///// Validates the offsets.
+        ///// </summary>
+        //public void ValidateOffsets(ReferencedEncoderBase mainEncoder)
+        //{
 
-        }
+        //}
 
-        /// <summary>
-        /// Validates the location for encoding in binary format.
-        /// </summary>
-        public void ValidateBinary(ReferencedEncoderBase mainEncoder)
-        {
+        ///// <summary>
+        ///// Validates the location for encoding in binary format.
+        ///// </summary>
+        //public void ValidateBinary(ReferencedEncoderBase mainEncoder)
+        //{
 
-        }
+        //}
 
-        #endregion
+        //#endregion
 
-        /// <summary>
-        /// Gets all vertices in one hashset.
-        /// </summary>
-        /// <returns></returns>
-        public HashSet<long> GetVerticesSet()
-        {
-            var set = new HashSet<long>();
-            if(this.Vertices == null)
-            { // empty set is ok.
-                return set;
-            }
-            for (var i = 0; i < this.Vertices.Length; i++)
-            {
-                set.Add(this.Vertices[i]);
-            }
-            return set;
-        }
+        ///// <summary>
+        ///// Gets all vertices in one hashset.
+        ///// </summary>
+        ///// <returns></returns>
+        //public HashSet<long> GetVerticesSet()
+        //{
+        //    var set = new HashSet<long>();
+        //    if(this.Vertices == null)
+        //    { // empty set is ok.
+        //        return set;
+        //    }
+        //    for (var i = 0; i < this.Vertices.Length; i++)
+        //    {
+        //        set.Add(this.Vertices[i]);
+        //    }
+        //    return set;
+        //}
 
-        /// <summary>
-        /// Adjusts this location to use valid LR-points.
-        /// </summary>
-        public void AdjustToValidPoints(ReferencedEncoderBase encoder)
-        {
-            if (this.Vertices.Length <= 1) { throw new ArgumentException("Cannot adjust a line location with only one vertex."); }
+        ///// <summary>
+        ///// Adjusts this location to use valid LR-points.
+        ///// </summary>
+        //public void AdjustToValidPoints(ReferencedEncoderBase encoder)
+        //{
+        //    if (this.Vertices.Length <= 1) { throw new ArgumentException("Cannot adjust a line location with only one vertex."); }
 
-            var vertex1Valid = encoder.IsVertexValid(this.Vertices[0]);
-            var vertex2Valid = encoder.IsVertexValid(this.Vertices[this.Vertices.Length - 1]);
-            if (vertex1Valid && vertex2Valid)
-            { // already valid.
-                return;
-            }
-            if (this.Vertices.Length > 2) { return; } // line was already adjusted.
+        //    var vertex1Valid = encoder.IsVertexValid(this.Vertices[0]);
+        //    var vertex2Valid = encoder.IsVertexValid(this.Vertices[this.Vertices.Length - 1]);
+        //    if (vertex1Valid && vertex2Valid)
+        //    { // already valid.
+        //        return;
+        //    }
+        //    if (this.Vertices.Length > 2) { return; } // line was already adjusted.
 
-            var vertex1 = this.Vertices[0];
-            var vertex2 = this.Vertices[1];
+        //    var vertex1 = this.Vertices[0];
+        //    var vertex2 = this.Vertices[1];
 
-            if(!encoder.IsOnShortestPath(this.Vertices[0], this.Vertices[this.Vertices.Length - 1],
-                vertex1, vertex2))
-            { // impossible to expand edge.
-                return;
-            }
+        //    if(!encoder.IsOnShortestPath(this.Vertices[0], this.Vertices[this.Vertices.Length - 1],
+        //        vertex1, vertex2))
+        //    { // impossible to expand edge.
+        //        return;
+        //    }
 
-            // make sure the original sequence is still there on the shortest path.
-            ReferencedLine validCopy = null;
-            var backwardExcludeSet = this.GetVerticesSet();
-            while (true)
-            {
-                // search backward.
-                var workingCopy = this.Clone() as ReferencedLine;
-                if(!workingCopy.TryAdjustToValidPointBackwards(encoder, vertex1, vertex2, backwardExcludeSet))
-                { // no more options exist, impossible to expand edge, just keep the edge itself.
-                    return;
-                }
+        //    // make sure the original sequence is still there on the shortest path.
+        //    ReferencedLine validCopy = null;
+        //    var backwardExcludeSet = this.GetVerticesSet();
+        //    while (true)
+        //    {
+        //        // search backward.
+        //        var workingCopy = this.Clone() as ReferencedLine;
+        //        if(!workingCopy.TryAdjustToValidPointBackwards(encoder, vertex1, vertex2, backwardExcludeSet))
+        //        { // no more options exist, impossible to expand edge, just keep the edge itself.
+        //            return;
+        //        }
 
-                if(!vertex2Valid)
-                { // search forward.
-                    var forwardExcludeSet = workingCopy.GetVerticesSet();
-                    do
-                    {
-                        var forwardWorkingCopy = workingCopy.Clone() as ReferencedLine;
-                        if (!forwardWorkingCopy.TryAdjustToValidPointForwards(encoder, vertex1, vertex2, forwardExcludeSet))
-                        { // no more forward options for the current backward.
-                            break;
-                        }
+        //        if(!vertex2Valid)
+        //        { // search forward.
+        //            var forwardExcludeSet = workingCopy.GetVerticesSet();
+        //            do
+        //            {
+        //                var forwardWorkingCopy = workingCopy.Clone() as ReferencedLine;
+        //                if (!forwardWorkingCopy.TryAdjustToValidPointForwards(encoder, vertex1, vertex2, forwardExcludeSet))
+        //                { // no more forward options for the current backward.
+        //                    break;
+        //                }
 
-                        // check valid.
-                        if (encoder.IsOnShortestPath(forwardWorkingCopy.Vertices[0], forwardWorkingCopy.Vertices[forwardWorkingCopy.Vertices.Length - 1],
-                            vertex1, vertex2))
-                        { // current location is valid.
-                            validCopy = forwardWorkingCopy;
-                            break;
-                        }
+        //                // check valid.
+        //                if (encoder.IsOnShortestPath(forwardWorkingCopy.Vertices[0], forwardWorkingCopy.Vertices[forwardWorkingCopy.Vertices.Length - 1],
+        //                    vertex1, vertex2))
+        //                { // current location is valid.
+        //                    validCopy = forwardWorkingCopy;
+        //                    break;
+        //                }
 
-                        // not valid here, exclude current forward.
-                        forwardExcludeSet.Add(forwardWorkingCopy.Vertices[forwardWorkingCopy.Vertices.Length - 1]);
-                    } while (true);
-                }
-                else
-                { // check valid.
-                    if (encoder.IsOnShortestPath(workingCopy.Vertices[0], workingCopy.Vertices[workingCopy.Vertices.Length - 1],
-                        vertex1, vertex2))
-                    { // current location is valid.
-                        validCopy = workingCopy;
-                        break;
-                    }
-                }
+        //                // not valid here, exclude current forward.
+        //                forwardExcludeSet.Add(forwardWorkingCopy.Vertices[forwardWorkingCopy.Vertices.Length - 1]);
+        //            } while (true);
+        //        }
+        //        else
+        //        { // check valid.
+        //            if (encoder.IsOnShortestPath(workingCopy.Vertices[0], workingCopy.Vertices[workingCopy.Vertices.Length - 1],
+        //                vertex1, vertex2))
+        //            { // current location is valid.
+        //                validCopy = workingCopy;
+        //                break;
+        //            }
+        //        }
 
-                if (validCopy != null)
-                { // current location is valid.
-                    break;
-                }
+        //        if (validCopy != null)
+        //        { // current location is valid.
+        //            break;
+        //        }
 
-                if(vertex1Valid)
-                { // vertex1 was already valid, no reason to continue searching.
-                    return;
-                }
+        //        if(vertex1Valid)
+        //        { // vertex1 was already valid, no reason to continue searching.
+        //            return;
+        //        }
 
-                // exclude current backward and continue.
-                backwardExcludeSet.Add(workingCopy.Vertices[0]);
-            }
+        //        // exclude current backward and continue.
+        //        backwardExcludeSet.Add(workingCopy.Vertices[0]);
+        //    }
 
-            // copy from working copy.
-            this.Edges = validCopy.Edges;
-            this.Vertices = validCopy.Vertices;
-            this.NegativeOffsetPercentage = validCopy.NegativeOffsetPercentage;
-            this.PositiveOffsetPercentage = validCopy.PositiveOffsetPercentage;
+        //    // copy from working copy.
+        //    this.Edges = validCopy.Edges;
+        //    this.Vertices = validCopy.Vertices;
+        //    this.NegativeOffsetPercentage = validCopy.NegativeOffsetPercentage;
+        //    this.PositiveOffsetPercentage = validCopy.PositiveOffsetPercentage;
             
-            // fill shapes.
-            this.EdgeShapes = new GeoCoordinateSimple[this.Edges.Length][];
-            for (int i = 0; i < this.Edges.Length; i++)
-            {
-                this.EdgeShapes[i] = encoder.Graph.GetEdgeShape(
-                    this.Vertices[i], this.Vertices[i + 1]);
-            }
-        }
+        //    // fill shapes.
+        //    this.EdgeShapes = new GeoCoordinateSimple[this.Edges.Length][];
+        //    for (int i = 0; i < this.Edges.Length; i++)
+        //    {
+        //        this.EdgeShapes[i] = encoder.RouterDb.GetEdgeShape(
+        //            this.Vertices[i], this.Vertices[i + 1]);
+        //    }
+        //}
 
-        /// <summary>
-        /// Tries to adjust this location backwards to a valid point.
-        /// </summary>
-        /// <returns></returns>
-        private bool TryAdjustToValidPointBackwards(ReferencedEncoderBase encoder, long vertex1, long vertex2,
-            HashSet<long> exclude)
-        {
-            var length = (float)this.Length(encoder).Value;
-            var positiveOffsetLength = (this.PositiveOffsetPercentage / 100) * length;
+        ///// <summary>
+        ///// Tries to adjust this location backwards to a valid point.
+        ///// </summary>
+        ///// <returns></returns>
+        //private bool TryAdjustToValidPointBackwards(ReferencedEncoderBase encoder, long vertex1, long vertex2,
+        //    HashSet<long> exclude)
+        //{
+        //    var length = (float)this.Length(encoder).Value;
+        //    var positiveOffsetLength = (this.PositiveOffsetPercentage / 100) * length;
 
-            exclude = new HashSet<long>(exclude);
-            foreach (var vertex in this.Vertices)
-            {
-                exclude.Add(vertex);
-            }
+        //    exclude = new HashSet<long>(exclude);
+        //    foreach (var vertex in this.Vertices)
+        //    {
+        //        exclude.Add(vertex);
+        //    }
 
-            if (!encoder.IsVertexValid(this.Vertices[0]))
-            { // from is not valid, try to find a valid point.
-                var pathToValid = encoder.FindValidVertexFor(this.Vertices[0], this.Edges[0], this.Vertices[1],
-                    exclude, false);
+        //    if (!encoder.IsVertexValid(this.Vertices[0]))
+        //    { // from is not valid, try to find a valid point.
+        //        var pathToValid = encoder.FindValidVertexFor(this.Vertices[0], this.Edges[0], this.Vertices[1],
+        //            exclude, false);
 
-                // build edges list.
-                if (pathToValid != null)
-                { // path found check if on shortest route.
-                    var shortestRoute = encoder.FindShortestPath(this.Vertices[1], pathToValid.Vertex, false);
-                    while (shortestRoute != null && !shortestRoute.Contains(this.Vertices[0]))
-                    { // the vertex that should be on this shortest route, isn't anymore.
-                        // exclude the current target vertex, 
-                        exclude.Add(pathToValid.Vertex);
-                        // calulate a new path-to-valid.
-                        pathToValid = encoder.FindValidVertexFor(this.Vertices[0], this.Edges[0], this.Vertices[1],
-                            exclude, false);
-                        if (pathToValid == null)
-                        { // a new path was not found.
-                            break;
-                        }
-                        shortestRoute = encoder.FindShortestPath(this.Vertices[1], pathToValid.Vertex, false);
-                    }
-                    if (pathToValid != null)
-                    { // no path found, just leave things as is.
-                        var newVertices = pathToValid.ToArray().Reverse().ToList();
-                        var newEdges = new List<LiveEdge>();
-                        for (int idx = 0; idx < newVertices.Count - 1; idx++)
-                        { // loop over edges.
-                            var edge = newVertices[idx].Edge;
-                            // Next OsmSharp version: use closest.Value.Value.Reverse()?
-                            var reverseEdge = new LiveEdge();
-                            reverseEdge.Tags = edge.Tags;
-                            reverseEdge.Forward = !edge.Forward;
-                            reverseEdge.Distance = edge.Distance;
+        //        // build edges list.
+        //        if (pathToValid != null)
+        //        { // path found check if on shortest route.
+        //            var shortestRoute = encoder.FindShortestPath(this.Vertices[1], pathToValid.Vertex, false);
+        //            while (shortestRoute != null && !shortestRoute.Contains(this.Vertices[0]))
+        //            { // the vertex that should be on this shortest route, isn't anymore.
+        //                // exclude the current target vertex, 
+        //                exclude.Add(pathToValid.Vertex);
+        //                // calulate a new path-to-valid.
+        //                pathToValid = encoder.FindValidVertexFor(this.Vertices[0], this.Edges[0], this.Vertices[1],
+        //                    exclude, false);
+        //                if (pathToValid == null)
+        //                { // a new path was not found.
+        //                    break;
+        //                }
+        //                shortestRoute = encoder.FindShortestPath(this.Vertices[1], pathToValid.Vertex, false);
+        //            }
+        //            if (pathToValid != null)
+        //            { // no path found, just leave things as is.
+        //                var newVertices = pathToValid.ToArray().Reverse().ToList();
+        //                var newEdges = new List<LiveEdge>();
+        //                for (int idx = 0; idx < newVertices.Count - 1; idx++)
+        //                { // loop over edges.
+        //                    var edge = newVertices[idx].Edge;
+        //                    // Next OsmSharp version: use closest.Value.Value.Reverse()?
+        //                    var reverseEdge = new LiveEdge();
+        //                    reverseEdge.Tags = edge.Tags;
+        //                    reverseEdge.Forward = !edge.Forward;
+        //                    reverseEdge.Distance = edge.Distance;
 
-                            edge = reverseEdge;
-                            newEdges.Add(edge);
-                        }
+        //                    edge = reverseEdge;
+        //                    newEdges.Add(edge);
+        //                }
 
-                        // create new location.
-                        var edgesArray = new LiveEdge[newEdges.Count + this.Edges.Length];
-                        newEdges.CopyTo(0, edgesArray, 0, newEdges.Count);
-                        this.Edges.CopyTo(0, edgesArray, newEdges.Count, this.Edges.Length);
-                        var vertexArray = new long[newVertices.Count - 1 + this.Vertices.Length];
-                        newVertices.ConvertAll(x => (long)x.Vertex).CopyTo(0, vertexArray, 0, newVertices.Count - 1);
-                        this.Vertices.CopyTo(0, vertexArray, newVertices.Count - 1, this.Vertices.Length);
+        //                // create new location.
+        //                var edgesArray = new LiveEdge[newEdges.Count + this.Edges.Length];
+        //                newEdges.CopyTo(0, edgesArray, 0, newEdges.Count);
+        //                this.Edges.CopyTo(0, edgesArray, newEdges.Count, this.Edges.Length);
+        //                var vertexArray = new long[newVertices.Count - 1 + this.Vertices.Length];
+        //                newVertices.ConvertAll(x => (long)x.Vertex).CopyTo(0, vertexArray, 0, newVertices.Count - 1);
+        //                this.Vertices.CopyTo(0, vertexArray, newVertices.Count - 1, this.Vertices.Length);
 
-                        this.Edges = edgesArray;
-                        this.Vertices = vertexArray;
+        //                this.Edges = edgesArray;
+        //                this.Vertices = vertexArray;
 
-                        // adjust offset length.
-                        var newLength = (float)this.Length(encoder).Value;
-                        positiveOffsetLength = positiveOffsetLength + (newLength - length);
-                        length = newLength;
-                    }
-                    else
-                    { // no valid path was found.
-                        return false;
-                    }
-                }
-                else
-                { // no valid path was found.
-                    return false;
-                }
-            }
+        //                // adjust offset length.
+        //                var newLength = (float)this.Length(encoder).Value;
+        //                positiveOffsetLength = positiveOffsetLength + (newLength - length);
+        //                length = newLength;
+        //            }
+        //            else
+        //            { // no valid path was found.
+        //                return false;
+        //            }
+        //        }
+        //        else
+        //        { // no valid path was found.
+        //            return false;
+        //        }
+        //    }
 
-            // update offset percentage.
-            this.PositiveOffsetPercentage = (float)((positiveOffsetLength / length) * 100.0);
+        //    // update offset percentage.
+        //    this.PositiveOffsetPercentage = (float)((positiveOffsetLength / length) * 100.0);
 
-            return true;
-        }
+        //    return true;
+        //}
 
-        private bool TryAdjustToValidPointForwards(ReferencedEncoderBase encoder, long vertex1, long vertex2,
-            HashSet<long> exclude)
-        {
-            var length = (float)this.Length(encoder).Value;
-            var negativeOffsetLength = (this.NegativeOffsetPercentage / 100) * length;
+        //private bool TryAdjustToValidPointForwards(ReferencedEncoderBase encoder, long vertex1, long vertex2,
+        //    HashSet<long> exclude)
+        //{
+        //    var length = (float)this.Length(encoder).Value;
+        //    var negativeOffsetLength = (this.NegativeOffsetPercentage / 100) * length;
 
-            exclude = new HashSet<long>(exclude);
-            foreach (var vertex in this.Vertices)
-            {
-                exclude.Add(vertex);
-            }
+        //    exclude = new HashSet<long>(exclude);
+        //    foreach (var vertex in this.Vertices)
+        //    {
+        //        exclude.Add(vertex);
+        //    }
 
-            if (!encoder.IsVertexValid(this.Vertices[this.Vertices.Length - 1]))
-            { // from is not valid, try to find a valid point.
-                var vertexCount = this.Vertices.Length;
-                var pathToValid = encoder.FindValidVertexFor(this.Vertices[vertexCount - 1], this.Edges[
-                    this.Edges.Length - 1].ToReverse(), this.Vertices[vertexCount - 2], exclude, true);
+        //    if (!encoder.IsVertexValid(this.Vertices[this.Vertices.Length - 1]))
+        //    { // from is not valid, try to find a valid point.
+        //        var vertexCount = this.Vertices.Length;
+        //        var pathToValid = encoder.FindValidVertexFor(this.Vertices[vertexCount - 1], this.Edges[
+        //            this.Edges.Length - 1].ToReverse(), this.Vertices[vertexCount - 2], exclude, true);
 
-                // build edges list.
-                if (pathToValid != null)
-                { // no path found, just leave things as is.
-                    var shortestRoute = encoder.FindShortestPath(this.Vertices[vertexCount - 2], pathToValid.Vertex, true);
-                    while (shortestRoute != null && !shortestRoute.Contains(this.Vertices[vertexCount - 1]))
-                    { // the vertex that should be on this shortest route, isn't anymore.
-                        // exclude the current target vertex, 
-                        exclude.Add(pathToValid.Vertex);
-                        // calulate a new path-to-valid.
-                        pathToValid = encoder.FindValidVertexFor(this.Vertices[vertexCount - 1], this.Edges[
-                            this.Edges.Length - 1].ToReverse(), this.Vertices[vertexCount - 2], exclude, true);
-                        if (pathToValid == null)
-                        { // a new path was not found.
-                            break;
-                        }
-                        shortestRoute = encoder.FindShortestPath(this.Vertices[vertexCount - 2], pathToValid.Vertex, true);
-                    }
-                    if (pathToValid != null)
-                    { // no path found, just leave things as is.
-                        var newVertices = pathToValid.ToArray().ToList();
-                        var newEdges = new List<LiveEdge>();
-                        for (int idx = 1; idx < newVertices.Count; idx++)
-                        { // loop over edges.
-                            var edge = newVertices[idx].Edge;
-                            newEdges.Add(edge);
-                        }
+        //        // build edges list.
+        //        if (pathToValid != null)
+        //        { // no path found, just leave things as is.
+        //            var shortestRoute = encoder.FindShortestPath(this.Vertices[vertexCount - 2], pathToValid.Vertex, true);
+        //            while (shortestRoute != null && !shortestRoute.Contains(this.Vertices[vertexCount - 1]))
+        //            { // the vertex that should be on this shortest route, isn't anymore.
+        //                // exclude the current target vertex, 
+        //                exclude.Add(pathToValid.Vertex);
+        //                // calulate a new path-to-valid.
+        //                pathToValid = encoder.FindValidVertexFor(this.Vertices[vertexCount - 1], this.Edges[
+        //                    this.Edges.Length - 1].ToReverse(), this.Vertices[vertexCount - 2], exclude, true);
+        //                if (pathToValid == null)
+        //                { // a new path was not found.
+        //                    break;
+        //                }
+        //                shortestRoute = encoder.FindShortestPath(this.Vertices[vertexCount - 2], pathToValid.Vertex, true);
+        //            }
+        //            if (pathToValid != null)
+        //            { // no path found, just leave things as is.
+        //                var newVertices = pathToValid.ToArray().ToList();
+        //                var newEdges = new List<LiveEdge>();
+        //                for (int idx = 1; idx < newVertices.Count; idx++)
+        //                { // loop over edges.
+        //                    var edge = newVertices[idx].Edge;
+        //                    newEdges.Add(edge);
+        //                }
 
-                        // create new location.
-                        var edgesArray = new LiveEdge[newEdges.Count + this.Edges.Length];
-                        this.Edges.CopyTo(0, edgesArray, 0, this.Edges.Length);
-                        newEdges.CopyTo(0, edgesArray, this.Edges.Length, newEdges.Count);
-                        var vertexArray = new long[newVertices.Count - 1 + this.Vertices.Length];
-                        this.Vertices.CopyTo(0, vertexArray, 0, this.Vertices.Length);
-                        newVertices.ConvertAll(x => (long)x.Vertex).CopyTo(1, vertexArray, this.Vertices.Length, newVertices.Count - 1);
+        //                // create new location.
+        //                var edgesArray = new LiveEdge[newEdges.Count + this.Edges.Length];
+        //                this.Edges.CopyTo(0, edgesArray, 0, this.Edges.Length);
+        //                newEdges.CopyTo(0, edgesArray, this.Edges.Length, newEdges.Count);
+        //                var vertexArray = new long[newVertices.Count - 1 + this.Vertices.Length];
+        //                this.Vertices.CopyTo(0, vertexArray, 0, this.Vertices.Length);
+        //                newVertices.ConvertAll(x => (long)x.Vertex).CopyTo(1, vertexArray, this.Vertices.Length, newVertices.Count - 1);
 
-                        this.Edges = edgesArray;
-                        this.Vertices = vertexArray;
+        //                this.Edges = edgesArray;
+        //                this.Vertices = vertexArray;
 
-                        // adjust offset length.
-                        var newLength = (float)this.Length(encoder).Value;
-                        negativeOffsetLength = negativeOffsetLength + (newLength - length);
-                        length = newLength;
-                    }
-                    else
-                    { // no valid path was found.
-                        return false;
-                    }
-                }
-                else
-                { // no valid path was found.
-                    return false;
-                }
-            }
+        //                // adjust offset length.
+        //                var newLength = (float)this.Length(encoder).Value;
+        //                negativeOffsetLength = negativeOffsetLength + (newLength - length);
+        //                length = newLength;
+        //            }
+        //            else
+        //            { // no valid path was found.
+        //                return false;
+        //            }
+        //        }
+        //        else
+        //        { // no valid path was found.
+        //            return false;
+        //        }
+        //    }
 
-            // update offset percentage
-            this.NegativeOffsetPercentage = (float)((negativeOffsetLength / length) * 100.0);
+        //    // update offset percentage
+        //    this.NegativeOffsetPercentage = (float)((negativeOffsetLength / length) * 100.0);
 
-            return true;
-        }
+        //    return true;
+        //}
 
         ///// <summary>
         ///// Adjusts this location to use valid LR-points.
@@ -690,64 +671,64 @@ namespace OpenLR.Referenced.Locations
         //    return true;
         //}
 
-        /// <summary>
-        /// Adjusts this location by inserting intermediate LR-points if needed.
-        /// </summary>
-        /// 
-        public void AdjustToValidDistances(ReferencedEncoderBase encoder, List<int> points)
-        {
-            this.AdjustToValidDistance(encoder, points, 0);
-        }
+        ///// <summary>
+        ///// Adjusts this location by inserting intermediate LR-points if needed.
+        ///// </summary>
+        ///// 
+        //public void AdjustToValidDistances(ReferencedEncoderBase encoder, List<int> points)
+        //{
+        //    this.AdjustToValidDistance(encoder, points, 0);
+        //}
 
-        /// <summary>
-        /// Adjusts the given location by inserting an intermediate LR-point at the point representing pointIdx.
-        /// </summary>
-        public void AdjustToValidDistance(ReferencedEncoderBase encoder, List<int> points, int start)
-        {
-            // get start/end vertex.
-            var vertexIdx1 = points[start];
-            var vertexIdx2 = points[start + 1];
-            var count = vertexIdx2 - vertexIdx1 + 1;
+        ///// <summary>
+        ///// Adjusts the given location by inserting an intermediate LR-point at the point representing pointIdx.
+        ///// </summary>
+        //public void AdjustToValidDistance(ReferencedEncoderBase encoder, List<int> points, int start)
+        //{
+        //    // get start/end vertex.
+        //    var vertexIdx1 = points[start];
+        //    var vertexIdx2 = points[start + 1];
+        //    var count = vertexIdx2 - vertexIdx1 + 1;
 
-            // calculate length to begin with.
-            var coordinates = this.GetCoordinates(encoder, vertexIdx1, count);
-            var length = coordinates.Length().Value;
-            if (length > 15000)
-            { // too long.
-                // find the best intermediate point.
-                var intermediatePoints = new SortedDictionary<double, int>();
-                for (int idx = vertexIdx1 + 1; idx < vertexIdx1 + count - 2; idx++)
-                {
-                    var score = 0.0;
-                    if (encoder.IsVertexValid(this.Vertices[idx]))
-                    { // a valid vertex is obviously a better choice!
-                        score = score + 4096;
-                    }
+        //    // calculate length to begin with.
+        //    var coordinates = this.GetCoordinates(encoder, vertexIdx1, count);
+        //    var length = coordinates.Length().Value;
+        //    if (length > 15000)
+        //    { // too long.
+        //        // find the best intermediate point.
+        //        var intermediatePoints = new SortedDictionary<double, int>();
+        //        for (int idx = vertexIdx1 + 1; idx < vertexIdx1 + count - 2; idx++)
+        //        {
+        //            var score = 0.0;
+        //            if (encoder.IsVertexValid(this.Vertices[idx]))
+        //            { // a valid vertex is obviously a better choice!
+        //                score = score + 4096;
+        //            }
 
-                    // the length is good when close to 15000 but not over.
-                    var lengthBefore = this.GetCoordinates(encoder, vertexIdx1, idx - vertexIdx1 + 1).Length();
-                    if (lengthBefore.Value < 15000)
-                    { // not over!
-                        score = score + (1024 * (lengthBefore.Value / 15000));
-                    }
-                    var lengthAfter = this.GetCoordinates(encoder, idx, count - idx).Length();
-                    if (lengthAfter.Value < 15000)
-                    { // not over!
-                        score = score + (1024 * (lengthAfter.Value / 15000));
-                    }
+        //            // the length is good when close to 15000 but not over.
+        //            var lengthBefore = this.GetCoordinates(encoder, vertexIdx1, idx - vertexIdx1 + 1).Length();
+        //            if (lengthBefore.Value < 15000)
+        //            { // not over!
+        //                score = score + (1024 * (lengthBefore.Value / 15000));
+        //            }
+        //            var lengthAfter = this.GetCoordinates(encoder, idx, count - idx).Length();
+        //            if (lengthAfter.Value < 15000)
+        //            { // not over!
+        //                score = score + (1024 * (lengthAfter.Value / 15000));
+        //            }
 
-                    // add to sorted dictionary.
-                    intermediatePoints[8192 - score] = idx;
-                }
+        //            // add to sorted dictionary.
+        //            intermediatePoints[8192 - score] = idx;
+        //        }
 
-                // select the best point and insert it in between.
-                var bestPoint = intermediatePoints.First().Value;
-                points.Insert(start + 1, bestPoint);
+        //        // select the best point and insert it in between.
+        //        var bestPoint = intermediatePoints.First().Value;
+        //        points.Insert(start + 1, bestPoint);
 
-                // test the two distances.
-                this.AdjustToValidDistance(encoder, points, start + 1);
-                this.AdjustToValidDistance(encoder, points, start);
-            }
-        }
+        //        // test the two distances.
+        //        this.AdjustToValidDistance(encoder, points, start + 1);
+        //        this.AdjustToValidDistance(encoder, points, start);
+        //    }
+        //}
     }
 }

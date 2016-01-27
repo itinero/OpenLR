@@ -1,12 +1,29 @@
-﻿using GeoAPI.Geometries;
-using NetTopologySuite.Features;
-using NetTopologySuite.Geometries;
-using OpenLR.Referenced;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// The MIT License (MIT)
+
+// Copyright (c) 2016 Ben Abelshausen
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
+using OsmSharp.Geo.Attributes;
+using OsmSharp.Geo.Features;
+using OsmSharp.Geo.Geometries;
+using OsmSharp.Math.Geo;
 
 namespace OpenLR.Referenced.Locations
 {
@@ -49,7 +66,6 @@ namespace OpenLR.Referenced.Locations
         /// <summary>
         /// Creates a new object that is a copy of the current instance.
         /// </summary>
-        /// <returns></returns>
         public override object Clone()
         {
             return new ReferencedGrid()
@@ -69,36 +85,34 @@ namespace OpenLR.Referenced.Locations
         /// <returns></returns>
         public FeatureCollection ToFeatures()
         {
-            // create the geometry factory.
-            var geometryFactory = new GeometryFactory();
-
             // create the feature collection.
             var featureCollection = new FeatureCollection();
 
-            //// create a point feature at each point in the grid.
-            //double lonDiff = (this.LowerLeftLongitude - this.UpperRightLongitude) / this.Columns;
-            //double latDiff = (this.UpperRightLatitude - this.LowerLeftLatitude) / this.Rows;
-            //for (int column = 0; column < this.Columns; column++)
-            //{
-            //    double longitude = this.LowerLeftLongitude - (column * lonDiff);
-            //    for (int row = 0; row < this.Rows; row++)
-            //    {
-            //        double latitude = this.UpperRightLatitude - (row * latDiff);
-            //        var point = geometryFactory.CreatePoint(new Coordinate(longitude, latitude));
-            //        var pointAttributes = new AttributesTable();
-            //        featureCollection.Add(new Feature(point, pointAttributes));
-            //    }
-            //}
+            // create a point feature at each point in the grid.
+            var lonDiff = (this.LowerLeftLongitude - this.UpperRightLongitude) / this.Columns;
+            var latDiff = (this.UpperRightLatitude - this.LowerLeftLatitude) / this.Rows;
+            for (int column = 0; column < this.Columns; column++)
+            {
+                var longitude = this.LowerLeftLongitude - (column * lonDiff);
+                for (int row = 0; row < this.Rows; row++)
+                {
+                    var latitude = this.UpperRightLatitude - (row * latDiff);
+                    var point = new Point(new GeoCoordinate(latitude, longitude));
+                    var pointAttributes = new SimpleGeometryAttributeCollection();
+                    featureCollection.Add(new Feature(point, pointAttributes));
+                }
+            }
 
             // create a lineair ring.
-            var lineairRingAttributes = new AttributesTable();
-            featureCollection.Add(new Feature(geometryFactory.CreateLinearRing(new Coordinate[] {
-                new Coordinate(this.LowerLeftLongitude, this.LowerLeftLatitude),
-                new Coordinate(this.LowerLeftLongitude, this.UpperRightLatitude),
-                new Coordinate(this.UpperRightLongitude, this.UpperRightLatitude),
-                new Coordinate(this.UpperRightLongitude, this.LowerLeftLatitude),
-                new Coordinate(this.LowerLeftLongitude, this.LowerLeftLatitude)
-            }), lineairRingAttributes));
+            var attributes = new SimpleGeometryAttributeCollection();
+            featureCollection.Add(new Feature(new OsmSharp.Geo.Geometries.LineairRing(
+                new GeoCoordinate[] {
+                    new GeoCoordinate(this.LowerLeftLatitude, this.LowerLeftLongitude),
+                    new GeoCoordinate(this.UpperRightLatitude, this.LowerLeftLongitude),
+                    new GeoCoordinate(this.UpperRightLatitude, this.UpperRightLongitude),
+                    new GeoCoordinate(this.LowerLeftLatitude, this.UpperRightLongitude),
+                    new GeoCoordinate(this.LowerLeftLatitude, this.LowerLeftLongitude)
+                }), attributes));
             return featureCollection;
         }
     }

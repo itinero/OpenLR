@@ -1,4 +1,26 @@
-﻿using OpenLR.Decoding;
+﻿// The MIT License (MIT)
+
+// Copyright (c) 2016 Ben Abelshausen
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
+using OpenLR.Decoding;
 using OpenLR.Locations;
 
 namespace OpenLR.Binary
@@ -11,7 +33,6 @@ namespace OpenLR.Binary
         /// <summary>
         /// Returns a circle location decoder.
         /// </summary>
-        /// <returns></returns>
         public override LocationDecoder<CircleLocation> CreateCircleLocationDecoder()
         {
             return new Decoders.CircleLocationDecoder();
@@ -20,7 +41,6 @@ namespace OpenLR.Binary
         /// <summary>
         /// Returns a closed line location decoder.
         /// </summary>
-        /// <returns></returns>
         public override LocationDecoder<ClosedLineLocation> CreateClosedLineLocationDecoder()
         {
             return new Decoders.ClosedLineLocationDecoder();
@@ -29,7 +49,6 @@ namespace OpenLR.Binary
         /// <summary>
         /// Returns a geo coordinate location decoder.
         /// </summary>
-        /// <returns></returns>
         public override LocationDecoder<GeoCoordinateLocation> CreateGeoCoordinateLocationDecoder()
         {
             return new Decoders.GeoCoordinateLocationDecoder();
@@ -38,7 +57,6 @@ namespace OpenLR.Binary
         /// <summary>
         /// Returns a grid location decoder.
         /// </summary>
-        /// <returns></returns>
         public override LocationDecoder<GridLocation> CreateGridLocationDecoder()
         {
             return new Decoders.GridLocationDecoder();
@@ -47,7 +65,6 @@ namespace OpenLR.Binary
         /// <summary>
         /// Returns a line location decoder.
         /// </summary>
-        /// <returns></returns>
         public override LocationDecoder<LineLocation> CreateLineLocationDecoder()
         {
             return new Decoders.LineLocationDecoder();
@@ -56,7 +73,6 @@ namespace OpenLR.Binary
         /// <summary>
         /// Returns a point along line location decoder.
         /// </summary>
-        /// <returns></returns>
         public override LocationDecoder<PointAlongLineLocation> CreatePointAlongLineLocationDecoder()
         {
             return new Decoders.PointAlongLineDecoder();
@@ -65,7 +81,6 @@ namespace OpenLR.Binary
         /// <summary>
         /// Returns a poi with access point location decoder.
         /// </summary>
-        /// <returns></returns>
         public override LocationDecoder<PoiWithAccessPointLocation> CreatePoiWithAccessPointLocationDecoder()
         {
             return new Decoders.PoiWithAccessPointLocationDecoder();
@@ -74,7 +89,6 @@ namespace OpenLR.Binary
         /// <summary>
         /// Returns a polygon location decoder.
         /// </summary>
-        /// <returns></returns>
         public override LocationDecoder<PolygonLocation> CreatePolygonLocationDecoder()
         {
             return new Decoders.PolygonLocationDecoder();
@@ -83,7 +97,6 @@ namespace OpenLR.Binary
         /// <summary>
         /// Returns a rectangle location decoder.
         /// </summary>
-        /// <returns></returns>
         public override LocationDecoder<RectangleLocation> CreateRectangleLocationDecoder()
         {
             return new Decoders.RectangleLocationDecoder();

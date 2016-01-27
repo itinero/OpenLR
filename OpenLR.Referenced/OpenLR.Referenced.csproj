@@ -56,66 +56,25 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Antlr3.Runtime.PCL.3.5.0.2\lib\portable-win+net40+sl40+wp\Antlr3.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="GeoAPI, Version=1.7.3.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\GeoAPI.1.7.3.1\lib\net45\GeoAPI.dll</HintPath>
+    <Reference Include="OsmSharp, Version=0.1.2.104, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OsmSharp.Core.0.1.2-rc1-0104\lib\net45\OsmSharp.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="NetTopologySuite, Version=1.13.3.0, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NetTopologySuite.1.13.3.2\lib\net45\NetTopologySuite.dll</HintPath>
+    <Reference Include="OsmSharp.Osm, Version=0.1.2.104, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OsmSharp.Core.0.1.2-rc1-0104\lib\net45\OsmSharp.Osm.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="NetTopologySuite.IO.GeoJSON, Version=1.13.3.0, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NetTopologySuite.IO.GeoJSON.1.13.3.2\lib\net45\NetTopologySuite.IO.GeoJSON.dll</HintPath>
-    </Reference>
-    <Reference Include="NetTopologySuite.IO.GeoTools, Version=1.13.3.0, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NetTopologySuite.IO.1.13.3.2\lib\net45\NetTopologySuite.IO.GeoTools.dll</HintPath>
-    </Reference>
-    <Reference Include="NetTopologySuite.IO.MsSqlSpatial">
-      <HintPath>..\packages\NetTopologySuite.IO.1.13.3.2\lib\net45\NetTopologySuite.IO.MsSqlSpatial.dll</HintPath>
-    </Reference>
-    <Reference Include="NetTopologySuite.IO.PostGis">
-      <HintPath>..\packages\NetTopologySuite.IO.1.13.3.2\lib\net45\NetTopologySuite.IO.PostGis.dll</HintPath>
-    </Reference>
-    <Reference Include="NetTopologySuite.IO.ShapeFile">
-      <HintPath>..\packages\NetTopologySuite.IO.1.13.3.2\lib\net45\NetTopologySuite.IO.ShapeFile.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.6.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="OsmSharp, Version=4.3.0.987, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\OsmSharp.4.3.0.987-beta\lib\net45\OsmSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="OsmSharp.Osm, Version=4.3.0.987, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\OsmSharp.4.3.0.987-beta\lib\net45\OsmSharp.Osm.dll</HintPath>
-    </Reference>
-    <Reference Include="OsmSharp.Routing, Version=4.3.0.987, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\OsmSharp.4.3.0.987-beta\lib\net45\OsmSharp.Routing.dll</HintPath>
-    </Reference>
-    <Reference Include="OsmSharp.Routing.Shape, Version=0.1.0.43, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\OsmSharp.Routing.Shape.0.1.0.43-beta\lib\net45\OsmSharp.Routing.Shape.dll</HintPath>
-    </Reference>
-    <Reference Include="OsmSharp.UI, Version=4.3.0.987, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\OsmSharp.4.3.0.987-beta\lib\net45\OsmSharp.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="OsmSharp.WinForms.UI, Version=4.3.0.987, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\OsmSharp.4.3.0.987-beta\lib\net45\OsmSharp.WinForms.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="PowerCollections, Version=1.0.0.0, Culture=neutral, PublicKeyToken=2573bf8a1bdddcd5, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NetTopologySuite.1.13.3.2\lib\net45\PowerCollections.dll</HintPath>
+    <Reference Include="OsmSharp.Routing, Version=0.1.1.108, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OsmSharp.Routing.0.1.1-beta-0108\lib\net45\OsmSharp.Routing.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
+    </Reference>
+    <Reference Include="Reminiscence, Version=0.1.0.31, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Reminiscence.0.1.0.31-beta\lib\portable-net403+sl50+win+wp80+Xamarin.iOS10+MonoAndroid10+MonoTouch10\Reminiscence.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -136,42 +95,57 @@
     <Compile Include="Decoding\Candidates\CandidateRoute.cs" />
     <Compile Include="Decoding\Candidates\CandidateVertexEdge.cs" />
     <Compile Include="Decoding\Candidates\CandidateVertexEdgeComparer.cs" />
-    <Compile Include="Encoding\BearingEncoder.cs" />
-    <Compile Include="Encoding\ReferencedEncoder.cs" />
-    <Compile Include="Encoding\ReferencedLineEncoder.cs" />
-    <Compile Include="Encoding\ReferencedPointAlongLineEncoder.cs" />
-    <Compile Include="Exceptions\BuildLocationFailedException.cs" />
-    <Compile Include="Locations\ReferencedCircle.cs" />
-    <Compile Include="Decoding\ReferencedCircleDecoder.cs" />
-    <Compile Include="Locations\ReferencedGeoCoordinate.cs" />
-    <Compile Include="Decoding\ReferencedGeoCoordinateDecoder.cs" />
-    <Compile Include="Decoding\ReferencedDecoder.cs" />
-    <Compile Include="Locations\ReferencedGrid.cs" />
-    <Compile Include="Decoding\ReferencedGridDecoder.cs" />
-    <Compile Include="Locations\ReferencedLine.cs" />
-    <Compile Include="Decoding\ReferencedLineDecoder.cs" />
-    <Compile Include="Locations\ReferencedPointAlongLine.cs" />
-    <Compile Include="Decoding\ReferencedPointAlongLineDecoder.cs" />
-    <Compile Include="Locations\ReferencedPolygon.cs" />
+    <Compile Include="Decoding\ReferencedCircleDecoder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Decoding\ReferencedDecoder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Decoding\ReferencedGeoCoordinateDecoder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Decoding\ReferencedGridDecoder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Decoding\ReferencedLineDecoder.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Decoding\ReferencedPolygonDecoder.cs" />
-    <Compile Include="Locations\ReferencedRectangle.cs" />
     <Compile Include="Decoding\ReferencedRectangleDecoder.cs" />
-    <Compile Include="Decoding\Scoring\CombinedScoreComparer.cs" />
     <Compile Include="Decoding\Scoring\CombinedScore.cs" />
-    <Compile Include="Extensions.cs" />
-    <Compile Include="Matching\MatchScoring.cs" />
+    <Compile Include="Decoding\Scoring\CombinedScoreComparer.cs" />
+    <Compile Include="Exceptions\BuildLocationFailedException.cs" />
+    <Compile Include="Extensions.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Locations\ReferencedCircle.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Locations\ReferencedGeoCoordinate.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Locations\ReferencedGrid.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Locations\ReferencedLine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Locations\ReferencedPointAlongLine.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Locations\ReferencedPolygon.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Locations\ReferencedRectangle.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReferencedDecoderBase.cs" />
-    <Compile Include="ReferencedDecoderBaseLiveEdge.cs" />
-    <Compile Include="ReferencedDecodingException.cs" />
-    <Compile Include="ReferencedEncoderBase.cs" />
-    <Compile Include="Osm\ReferencedOsmDecoder.cs" />
-    <Compile Include="Osm\ReferencedOsmEncoder.cs" />
-    <Compile Include="ReferencedEncoderBaseExtensions.cs" />
-    <Compile Include="ReferencedEncodingException.cs" />
-    <Compile Include="Router\BasicRouter.cs" />
-    <Compile Include="Router\BasicRouterDataSource.cs" />
-    <Compile Include="Router\PathSegment.cs" />
+    <Compile Include="ReferencedDecoderBase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ReferencedDecodingException.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Scoring\AddedScore.cs" />
     <Compile Include="Scoring\MultipliedScore.cs" />
     <Compile Include="Scoring\Score.cs" />
@@ -188,6 +162,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

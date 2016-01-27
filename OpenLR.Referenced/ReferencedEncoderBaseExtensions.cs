@@ -36,12 +36,12 @@ namespace OpenLR.Referenced
             if (location == null) { throw new ArgumentNullException("location"); }
 
             // get the closest edge that can be traversed to the given location.
-            var closest = encoder.Graph.GetClosestEdge(location, maxDistance, boxSize);
+            var closest = encoder.RouterDb.GetClosestEdge(location, maxDistance, boxSize);
             if (closest == null)
             { // no location could be found. 
                 throw new BuildLocationFailedException("No network features found near the given location. Make sure the network covers the given location.");
             }
-            var oneway = encoder.Vehicle.IsOneWay(encoder.Graph.TagsIndex.Get(closest.Item3.Tags));
+            var oneway = encoder.Vehicle.IsOneWay(encoder.RouterDb.TagsIndex.Get(closest.Item3.Tags));
             if(oneway.HasValue && oneway.Value != closest.Item3.Forward)
             { // when the edge is not traversible in the direct that it's given in, reverse it.
                 var reverseEdge = new LiveEdge();
@@ -58,14 +58,14 @@ namespace OpenLR.Referenced
             var endLocation = encoder.GetVertexLocation(closest.Item2).ToGeoCoordinate();
 
             // build a proper referenced line.
-            var referencedLine = new ReferencedLine(encoder.Graph);
+            var referencedLine = new ReferencedLine(encoder.RouterDb);
             referencedLine.Vertices = new long[] { closest.Item1, closest.Item2 };
             referencedLine.Edges = new LiveEdge[] { closest.Item3 };
             referencedLine.PositiveOffsetPercentage = 0;
             referencedLine.NegativeOffsetPercentage = 0;
             referencedLine.EdgeShapes = new GeoCoordinateSimple[][] 
             {
-                encoder.Graph.GetEdgeShape(
+                encoder.RouterDb.GetEdgeShape(
                     referencedLine.Vertices[0], referencedLine.Vertices[1])
             };
 
@@ -411,14 +411,14 @@ namespace OpenLR.Referenced
             if (endLocation2 == null) { throw new ArgumentNullException("endLocation2"); }
 
             // search start and end location hooks.
-            var startEdge = encoder.Graph.GetClosestEdge(startLocation1, startLocation2, tolerance);
+            var startEdge = encoder.RouterDb.GetClosestEdge(startLocation1, startLocation2, tolerance);
             if (startEdge == null)
             { // no closest edge found within tolerance, encoding has failed!
                 throw new BuildLocationFailedException("Location {0}->{1} is too far from the network used for encoding with used tolerance {2}",
                     startLocation1, startLocation2, tolerance);
             }
             // project the startlocation on the edge.
-            var coordinates = encoder.Graph.GetCoordinates(startEdge);
+            var coordinates = encoder.RouterDb.GetCoordinates(startEdge);
             var startEdgeLength = coordinates.Length();
             // construct from pathsegments.
             var startPaths = new List<PathSegment>();
@@ -432,7 +432,7 @@ namespace OpenLR.Referenced
             }
             else
             { // point is somewhere in between.
-                var tags = encoder.Graph.TagsIndex.Get(startEdge.Item3.Tags);
+                var tags = encoder.RouterDb.TagsIndex.Get(startEdge.Item3.Tags);
                 var oneway = encoder.Vehicle.IsOneWay(tags);
 
                 // weightBefore: vertex1->{x}
@@ -478,14 +478,14 @@ namespace OpenLR.Referenced
                 }
             }
 
-            var endEdge = encoder.Graph.GetClosestEdge(endLocation1, endLocation2, tolerance);
+            var endEdge = encoder.RouterDb.GetClosestEdge(endLocation1, endLocation2, tolerance);
             if (endEdge == null)
             { // no closest edge found within tolerance, encoding has failed!
                 throw new BuildLocationFailedException("Location {0}->{1} is too far from the network used for encoding with used tolerance {2}",
                     endLocation1, endLocation2, tolerance);
             }
             // project the endlocation on the edge.
-            coordinates = encoder.Graph.GetCoordinates(endEdge);
+            coordinates = encoder.RouterDb.GetCoordinates(endEdge);
             var endEdgeLength = coordinates.Length();
 
             // invert end offset to mean 'Y->D'.
@@ -504,7 +504,7 @@ namespace OpenLR.Referenced
             }
             else
             { // point is somewhere in between.
-                var tags = encoder.Graph.TagsIndex.Get(endEdge.Item3.Tags);
+                var tags = encoder.RouterDb.TagsIndex.Get(endEdge.Item3.Tags);
                 var oneway = encoder.Vehicle.IsOneWay(tags);
                 // weightBefore: vertex1->{x}
                 var weightBefore = encoder.Vehicle.Weight(tags, (float)endOffset.Value);
@@ -556,7 +556,7 @@ namespace OpenLR.Referenced
             if (startEdge.Item3.Equals(endEdge.Item3.Reverse()))
             { // same edge but reversed.
                 // invert end offset.
-                endOffset = encoder.Graph.GetCoordinates(startEdge).Length().Value - endOffset.Value;
+                endOffset = encoder.RouterDb.GetCoordinates(startEdge).Length().Value - endOffset.Value;
                 
                 // use exactly the same edge.
                 endEdge = startEdge;
@@ -564,7 +564,7 @@ namespace OpenLR.Referenced
            
             if (startEdge.Item3.Equals(endEdge.Item3))
             { // same identical edge.
-                var endOffsetFromStart = encoder.Graph.GetCoordinates(startEdge).Length().Value - endOffset.Value;
+                var endOffsetFromStart = encoder.RouterDb.GetCoordinates(startEdge).Length().Value - endOffset.Value;
                 if (endOffsetFromStart > startOffset.Value)
                 { // path from->to.
                     vertices.Add(startEdge.Item1);
@@ -579,10 +579,10 @@ namespace OpenLR.Referenced
                     edges.Add(reverseEdge);
 
                     // we need to reverse some stuff.
-                    startOffset = encoder.Graph.GetCoordinates(startEdge).Length().Value - startOffset.Value;
+                    startOffset = encoder.RouterDb.GetCoordinates(startEdge).Length().Value - startOffset.Value;
                     startEdge = new Tuple<long, long, LiveEdge>(
                         startEdge.Item2, startEdge.Item1, reverseEdge);
-                    endOffset = encoder.Graph.GetCoordinates(startEdge).Length().Value - endOffset.Value;
+                    endOffset = encoder.RouterDb.GetCoordinates(startEdge).Length().Value - endOffset.Value;
                     endEdge = startEdge;
                 }
             }
@@ -637,7 +637,7 @@ namespace OpenLR.Referenced
             }
 
             // calculate offset.
-            var referencedLine = new OpenLR.Referenced.Locations.ReferencedLine(encoder.Graph)
+            var referencedLine = new OpenLR.Referenced.Locations.ReferencedLine(encoder.RouterDb)
             {
                 Edges = edges.ToArray(),
                 Vertices = vertices.ToArray()
@@ -653,7 +653,7 @@ namespace OpenLR.Referenced
 
             // project again on the start edge.
             var positivePercentageOffset = 0f;
-            var edgeLength = encoder.Graph.GetCoordinates(startEdge).Length();
+            var edgeLength = encoder.RouterDb.GetCoordinates(startEdge).Length();
             if (startOffset.Value < epsilon && startEdge.Item1 == referencedLine.Vertices[0])
             { 
                 positivePercentageOffset = 0f;
@@ -677,7 +677,7 @@ namespace OpenLR.Referenced
 
             // project again on the end edge.
             var negativePercentageOffset = 0f;
-            edgeLength = encoder.Graph.GetCoordinates(endEdge).Length();
+            edgeLength = encoder.RouterDb.GetCoordinates(endEdge).Length();
             if (endOffset.Value < epsilon && endEdge.Item1 == referencedLine.Vertices[referencedLine.Vertices.Length - 1])
             {
                 negativePercentageOffset = 0f;
@@ -729,7 +729,7 @@ namespace OpenLR.Referenced
 
             // OK, now we have a naive location, we need to check if it's valid.
             // see: §F section 11.1 @ http://www.tomtom.com/lib/OpenLR/OpenLR-whitepaper.pdf
-            var referencedLine = new OpenLR.Referenced.Locations.ReferencedLine(encoder.Graph)
+            var referencedLine = new OpenLR.Referenced.Locations.ReferencedLine(encoder.RouterDb)
             {
                 Edges = edges.Clone() as LiveEdge[],
                 Vertices = vertices.Clone() as long[]
@@ -741,7 +741,7 @@ namespace OpenLR.Referenced
             referencedLine.EdgeShapes = new GeoCoordinateSimple[referencedLine.Edges.Length][];
             for (int i = 0; i < referencedLine.Edges.Length; i++)
             {
-                referencedLine.EdgeShapes[i] = encoder.Graph.GetEdgeShape(
+                referencedLine.EdgeShapes[i] = encoder.RouterDb.GetEdgeShape(
                     referencedLine.Vertices[i], referencedLine.Vertices[i + 1]);
             }
 
