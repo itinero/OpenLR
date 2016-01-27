@@ -90,7 +90,8 @@ namespace OpenLR.Referenced.Osm
             switch (frc)
             { // check there reference values against OSM: http://wiki.openstreetmap.org/wiki/Highway
                 case FunctionalRoadClass.Frc0: // main road.
-                    if (highway == "motorway" || highway == "trunk")
+                    if (highway == "motorway" || highway == "motorway_link" || 
+                        highway == "trunk" || highway == "trunk_link")
                     {
                         return 1;
                     }
