@@ -1,12 +1,8 @@
 ﻿using NUnit.Framework;
-using OpenLR.Binary.Decoders;
-using OpenLR.Locations;
+using OpenLR.Codecs.Binary.Decoders;
 using OpenLR.Model;
+using OpenLR.Model.Locations;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OpenLR.Tests.Binary
 {
@@ -25,12 +21,11 @@ namespace OpenLR.Tests.Binary
             double delta = 0.0001;
 
             // define a base64 string.
-            string stringData = "WwRboCNGfhJrBAAJ/zkb9AgTFQ==";
+            var stringData = Convert.FromBase64String("WwRboCNGfhJrBAAJ/zkb9AgTFQ==");
 
             // decode.
-            var decoder = new ClosedLineLocationDecoder();
-            Assert.IsTrue(decoder.CanDecode(stringData));
-            var location = decoder.Decode(stringData);
+            Assert.IsTrue(ClosedLineLocationCodec.CanDecode(stringData));
+            var location = ClosedLineLocationCodec.Decode(stringData);
 
             Assert.IsNotNull(location);
             Assert.IsInstanceOf<ClosedLineLocation>(location);

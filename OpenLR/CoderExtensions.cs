@@ -1,0 +1,290 @@
+﻿// The MIT License (MIT)
+
+// Copyright (c) 2016 Ben Abelshausen
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
+using Itinero;
+using Itinero.Algorithms;
+using Itinero.Algorithms.PriorityQueues;
+using Itinero.Algorithms.Weights;
+using Itinero.Attributes;
+using Itinero.Data.Network;
+using Itinero.Profiles;
+using OpenLR.Model;
+using OpenLR.Referenced;
+using OpenLR.Referenced.Codecs;
+using System;
+using System.Collections.Generic;
+
+namespace OpenLR
+{
+    /// <summary>
+    /// Contains extension methods related to the coder.
+    /// </summary>
+    public static class CoderExtensions
+    {
+        /// <summary>
+        /// Returns true if the given vertex is a valid candidate to use as a location reference point.
+        /// </summary>
+        public static bool IsVertexValid(this Coder coder, uint vertex)
+        {
+            var profile = coder.Profile;
+            var edges = coder.Router.Db.Network.GetEdges(vertex);
+
+            // go over each arc and count the traversible arcs.
+            var traversCount = 0;
+            foreach (var edge in edges)
+            {
+                var factor = profile.Profile.Factor(coder.Router.Db.EdgeProfiles.Get(edge.Data.Profile));
+                if (factor.Value != 0)
+                {
+                    traversCount++;
+                }
+            }
+            if (traversCount != 3)
+            { // no special cases, only 1=valid, 2=invalid or 4 and up=valid.
+                if (traversCount == 2)
+                { // only two traversable edges, no options here!
+                    return false;
+                }
+                return true;
+            }
+            else
+            { // special cases possible here, we need more info here.
+                var incoming = new List<Tuple<long, IAttributeCollection, uint>>();
+                var outgoing = new List<Tuple<long, IAttributeCollection, uint>>();
+                var bidirectional = new List<Tuple<long, IAttributeCollection, uint>>();
+                foreach (var edge in edges)
+                {
+                    var edgeProfile = coder.Router.Db.EdgeProfiles.Get(edge.Data.Profile);
+                    var factor = profile.Profile.Factor(edgeProfile);
+                    if (factor.Value != 0)
+                    {
+                        if (factor.Direction == 0)
+                        { // bidirectional, can be used as incoming.
+                            bidirectional.Add(new Tuple<long, IAttributeCollection, uint>(edge.From, edgeProfile, edge.Id));
+                        }
+                        else if ((factor.Direction == 2 && !edge.DataInverted) ||
+                                 (factor.Direction == 1 && edge.DataInverted))
+                        { // oneway is forward but arc is backward, arc is incoming.
+                            // oneway is backward and arc is forward, arc is incoming.
+                            incoming.Add(new Tuple<long, IAttributeCollection, uint>(edge.From, edgeProfile, edge.Id));
+                        }
+                        else if ((factor.Direction == 2 && edge.DataInverted) ||
+                                 (factor.Direction == 1 && !edge.DataInverted))
+                        { // oneway is forward and arc is forward, arc is outgoing.
+                            // oneway is backward and arc is backward, arc is outgoing.
+                            outgoing.Add(new Tuple<long, IAttributeCollection, uint>(edge.From, edgeProfile, edge.Id));
+                        }
+                    }
+                }
+
+                if (bidirectional.Count == 1 && incoming.Count == 1 && outgoing.Count == 1)
+                { // all special cases are found here.
+                    // get incoming's frc and fow.
+                    FormOfWay incomingFow, outgoingFow, bidirectionalFow;
+                    FunctionalRoadClass incomingFrc, outgoingFrc, bidirectionalFrc;
+                    if (profile.Extract(incoming[0].Item2, out incomingFrc, out incomingFow))
+                    {
+                        if (incomingFow == FormOfWay.Roundabout)
+                        { // is this a roundabout, always valid.
+                            return true;
+                        }
+                        if (profile.Extract(outgoing[0].Item2, out outgoingFrc, out outgoingFow))
+                        {
+                            if (outgoingFow == FormOfWay.Roundabout)
+                            { // is this a roundabout, always valid.
+                                return true;
+                            }
+
+                            if (incomingFrc != outgoingFrc)
+                            { // is there a difference in frc.
+                                return true;
+                            }
+
+                            if (profile.Extract(bidirectional[0].Item2, out bidirectionalFrc, out bidirectionalFow))
+                            {
+                                if (incomingFrc != bidirectionalFrc)
+                                { // is there a difference in frc.
+                                    return true;
+                                }
+                            }
+                        }
+
+                        // at this stage we have:
+                        // - two oneways, in opposite direction
+                        // - one bidirectional
+                        // - all same frc.
+
+                        // the only thing left to check is if the oneway edges go in the same general direction or not.
+                        // compare bearings but only if distance is large enough.
+                        var incomingShape = coder.Router.Db.Network.GetShape(coder.Router.Db.Network.GetEdge(incoming[0].Item3));
+                        var outgoingShape = coder.Router.Db.Network.GetShape(coder.Router.Db.Network.GetEdge(outgoing[0].Item3));
+
+                        if (incomingShape.Length() < 25 &&
+                            outgoingShape.Length() < 25)
+                        { // edges are too short to compare bearing in a way meaningful for determining this.
+                            // assume not valid.
+                            return false;
+                        }
+                        var incomingBearing = BearingEncoder.EncodeBearing(incomingShape);
+                        var outgoingBearing = BearingEncoder.EncodeBearing(outgoingShape);
+
+                        if (OpenLR.Extensions.AngleSmallestDifference(incomingBearing, outgoingBearing) > 30)
+                        { // edges are clearly not going in the same direction.
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+                return true;
+            }
+        }
+        
+        /// <summary>
+        /// Finds the shortest path between the given from->to.
+        /// </summary>
+        public static EdgePath<float> FindShortestPath(this Coder coder, uint from, uint to, bool searchForward)
+        {
+            var fromRouterPoint = coder.Router.Db.Network.CreateRouterPointForVertex(from);
+            var toRouterPoint = coder.Router.Db.Network.CreateRouterPointForVertex(to);
+
+            if (searchForward)
+            {
+                return coder.Router.TryCalculateRaw(coder.Profile.Profile, new DefaultWeightHandler(coder.Profile.Profile.GetGetFactor(coder.Router.Db)), 
+                    fromRouterPoint, toRouterPoint).Value;
+            }
+            return coder.Router.TryCalculateRaw(coder.Profile.Profile, new DefaultWeightHandler(coder.Profile.Profile.GetGetFactor(coder.Router.Db)),
+                toRouterPoint, fromRouterPoint).Value;
+        }
+
+        /// <summary>
+        /// Returns true if the sequence vertex1->vertex2 occurs on the shortest path between from and to.
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsOnShortestPath(this Coder coder, uint from, uint to, uint vertex1, uint vertex2)
+        {
+            var path = coder.FindShortestPath(from, to, true).ToListAsVertices();
+            for (var i = 1; i < path.Count; i++)
+            {
+                if (path[i - 1] == vertex1 &&
+                   path[i] == vertex2)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Finds a valid vertex for the given vertex but does not search in the direction of the target neighbour.
+        /// </summary>
+        public static EdgePath<float> FindValidVertexFor(this Coder coder, uint vertex, long targetDirectedEdgeId, uint targetVertex, HashSet<uint> excludeSet, bool searchForward)
+        {
+            var profile = coder.Profile.Profile;
+
+            // GIST: execute a dykstra search to find a vertex that is valid.
+            // this will return a vertex that is on the shortest path:
+            // foundVertex -> vertex -> targetNeighbour.
+
+            var targetEdge = Itinero.Constants.NO_EDGE;
+            if (targetDirectedEdgeId > 0)
+            {
+                targetEdge = (uint)(targetDirectedEdgeId - 1);
+            }
+            else
+            {
+                targetEdge = (uint)((-targetDirectedEdgeId) - 1);
+            }
+
+            // initialize settled set.
+            var settled = new HashSet<long>();
+            settled.Add(targetVertex);
+
+            // initialize heap.
+            var heap = new BinaryHeap<EdgePath<float>>(10);
+            heap.Push(new EdgePath<float>((uint)vertex), 0);
+
+            // find the path to the closest valid vertex.
+            EdgePath<float> pathTo = null;
+            var edgeEnumerator = coder.Router.Db.Network.GetEdgeEnumerator();
+            while (heap.Count > 0)
+            {
+                // get next.
+                var current = heap.Pop();
+                if (settled.Contains(current.Vertex))
+                { // don't consider vertices twice.
+                    continue;
+                }
+                settled.Add(current.Vertex);
+
+                // limit search.
+                if (settled.Count > coder.Profile.MaxSettles)
+                { // not valid vertex found.
+                    return null;
+                }
+
+                // check if valid.
+                if (current.Vertex != vertex &&
+                    coder.IsVertexValid(current.Vertex))
+                { // ok! vertex is valid.
+                    pathTo = current;
+                }
+                else
+                { // continue search.
+                    // add unsettled neighbours.
+                    edgeEnumerator.MoveTo(current.Vertex);
+                    foreach (var edge in edgeEnumerator)
+                    {
+                        if (!excludeSet.Contains(edge.To) &&
+                            !settled.Contains(edge.To) &&
+                            !(edge.Id == targetEdge))
+                        { // ok, new neighbour, and ok, not the edge and neighbour to ignore.
+                            var edgeProfile = coder.Router.Db.EdgeProfiles.Get(edge.Data.Profile);
+                            var factor = profile.Factor(edgeProfile);
+
+                            if (factor.Value > 0 && (factor.Direction == 0 ||
+                                (searchForward && (factor.Direction == 1) != edge.DataInverted) ||
+                                (!searchForward && (factor.Direction == 1) == edge.DataInverted)))
+                            { // ok, we can traverse this edge and no oneway or oneway reversed.
+                                var weight = current.Weight + factor.Value * edge.Data.Distance;
+                                var path = new EdgePath<float>(edge.To, weight, edge.Id, current);
+                                heap.Push(path, (float)path.Weight);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // ok, is there a path found.
+            if (pathTo == null)
+            { // oeps, probably something wrong with network-topology.
+                // just take the default option.
+                //throw new Exception(
+                //    string.Format("Could not find a valid vertex for invalid vertex [{0}].", vertex));
+                return null;
+            }
+
+            // add the path to the given location.
+            return pathTo;
+        }
+
+    }
+}

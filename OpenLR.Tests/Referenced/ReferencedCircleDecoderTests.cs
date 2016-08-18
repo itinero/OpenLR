@@ -1,7 +1,6 @@
 ﻿using NUnit.Framework;
-using OpenLR.Locations;
-using OpenLR.Referenced.Decoding;
-using OsmSharp.Routing.Osm.Graphs;
+using OpenLR.Model.Locations;
+using OpenLR.Referenced.Codecs;
 
 namespace OpenLR.Tests.Referenced
 {
@@ -25,9 +24,7 @@ namespace OpenLR.Tests.Referenced
             location.Radius = 170;
 
             // decode the location
-            //var decoder = new GeoCoordinateLocationDecoder();
-            var referencedDecoder = new ReferencedCircleDecoder(null, null);
-            var referencedLocation = referencedDecoder.Decode(location);
+            var referencedLocation = ReferencedCircleCodec.Decode(location);
 
             // confirm result.
             Assert.IsNotNull(referencedLocation);

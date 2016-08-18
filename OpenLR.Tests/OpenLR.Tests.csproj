@@ -51,12 +51,16 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Antlr3.Runtime.PCL.3.5.0.2\lib\portable-win+net40+sl40+wp\Antlr3.Runtime.dll</HintPath>
-    </Reference>
     <Reference Include="GeoAPI, Version=1.7.4.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
       <HintPath>..\packages\GeoAPI.1.7.4\lib\net45\GeoAPI.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Itinero, Version=0.15.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Itinero.0.15.1-rc1\lib\net45\Itinero.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Itinero.Geo, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Itinero.Geo.0.15.1-rc1\lib\net45\Itinero.Geo.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NetTopologySuite, Version=1.14.0.0, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
@@ -91,40 +95,20 @@
       <HintPath>..\packages\NetTopologySuite.IO.1.14.0.1\lib\net45\NetTopologySuite.IO.ShapeFile.Extended.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.6.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="OsmSharp, Version=0.0.2.103, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\OsmSharp.Core.0.0.2-rc1-0103\lib\net45\OsmSharp.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="OsmSharp.Osm, Version=0.0.2.103, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\OsmSharp.Core.0.0.2-rc1-0103\lib\net45\OsmSharp.Osm.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="OsmSharp.Routing, Version=4.3.0.949, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\OsmSharp.4.3.0.949-beta\lib\net45\OsmSharp.Routing.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="OsmSharp.Routing.Shape, Version=0.2.1.109, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\OsmSharp.Routing.Shape.0.2.1-beta-0109\lib\net45\OsmSharp.Routing.Shape.dll</HintPath>
+    <Reference Include="nunit.framework, Version=3.4.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.4.1\lib\net45\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="PowerCollections, Version=1.0.0.0, Culture=neutral, PublicKeyToken=2573bf8a1bdddcd5, processorArchitecture=MSIL">
       <HintPath>..\packages\NetTopologySuite.1.14\lib\net45\PowerCollections.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
-    </Reference>
-    <Reference Include="Reminiscence, Version=0.1.0.31, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Reminiscence.0.1.0.31-beta\lib\portable-net403+sl50+win+wp80+Xamarin.iOS10+MonoAndroid10+MonoTouch10\Reminiscence.dll</HintPath>
+    <Reference Include="Reminiscence, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Reminiscence.1.0.2\lib\portable-net403+sl50+win+wp80+Xamarin.iOS10+MonoAndroid10+MonoTouch10\Reminiscence.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -134,15 +118,11 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Zlib.Portable, Version=1.9.1.9000, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Zlib.Portable.1.9.2\lib\portable-net4+sl4+wp71+win8\Zlib.Portable.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssertGeo.cs" />
     <Compile Include="BearingTests.cs" />
-    <Compile Include="Binary\BinaryDecoderTests.cs" />
+    <Compile Include="Binary\BinaryCodecTests.cs" />
     <Compile Include="Binary\CircleLocationTests.cs" />
     <Compile Include="Binary\ClosedLineLocationTests.cs" />
     <Compile Include="Binary\Data\CombinedConversionTests.cs" />
@@ -163,48 +143,20 @@
     <Compile Include="Binary\PolygonLocationTests.cs" />
     <Compile Include="Binary\RectangleLocationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Referenced\EncoderMock.cs" />
-    <Compile Include="Referenced\MultiNet\ValidPointTests.cs" />
-    <Compile Include="Referenced\MultiNet\ReferencedPointAlongLineDecoderTests.cs" />
-    <Compile Include="Referenced\MultiNet\ReferencedPointAlongLineEncoderTests.cs" />
-    <Compile Include="Referenced\NWB\NWBMappingTests.cs" />
-    <Compile Include="Referenced\NWB\ReferencedPointAlongLineDecoderTests.cs" />
-    <Compile Include="Referenced\NWB\ReferencedPointAlongLineEncoderTests.cs" />
-    <Compile Include="Referenced\Osm\ReferencedLineEncoderTests.cs" />
-    <Compile Include="Referenced\Osm\ValidPointTests.cs" />
-    <Compile Include="Referenced\Real\Osm\RealGraphOsm.cs" />
-    <Compile Include="Referenced\Real\Osm\RealReferencedDecoderTests.cs" />
-    <Compile Include="Referenced\Osm\ReferencedPointAlongLineDecoderTests.cs" />
-    <Compile Include="Referenced\Osm\ReferencedPointAlongLineEncoderTests.cs" />
-    <Compile Include="Referenced\ReferencedPolygonDecoderTests.cs" />
-    <Compile Include="Referenced\ReferencedGridDecoderTests.cs" />
+    <Compile Include="Referenced\ReferencedPolygonCodecTests.cs" />
+    <Compile Include="Referenced\ReferencedGridCodecTests.cs" />
     <Compile Include="Referenced\ReferencedCircleDecoderTests.cs" />
-    <Compile Include="Referenced\ReferencedGeoCoordinateDecoderTests.cs" />
-    <Compile Include="Referenced\Osm\ReferencedLineDecoderTests.cs" />
-    <Compile Include="Referenced\ReferencedRectangleDecoderTests.cs" />
-    <Compile Include="Referenced\Router\BasicRouterTests.cs" />
-    <Compile Include="XmlSerializerTests.cs" />
+    <Compile Include="Referenced\ReferencedGeoCoordinateCodecTests.cs" />
+    <Compile Include="Referenced\ReferencedRectangleCodecTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OpenLR.Binary\OpenLR.Binary.csproj">
-      <Project>{252d884c-8bed-4711-a2da-21f8dc05d697}</Project>
-      <Name>OpenLR.Binary</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OpenLR.Referenced.MultiNet\OpenLR.Referenced.MultiNet.csproj">
-      <Project>{1130c7f7-c993-4669-9b93-010c9bbade1c}</Project>
-      <Name>OpenLR.Referenced.MultiNet</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OpenLR.Referenced.NWB\OpenLR.Referenced.NWB.csproj">
-      <Project>{e14b6468-c422-4811-828e-bcf522266eff}</Project>
-      <Name>OpenLR.Referenced.NWB</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OpenLR.Referenced\OpenLR.Referenced.csproj">
-      <Project>{61c1f8e2-9afb-4eda-8465-b0ecb20296d7}</Project>
-      <Name>OpenLR.Referenced</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OpenLR.XML\OpenLR.XML.csproj">
-      <Project>{cf358cf6-913d-47dc-9a83-de90153a82f2}</Project>
-      <Name>OpenLR.XML</Name>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OpenLR.Geo\OpenLR.Geo.csproj">
+      <Project>{9f81e567-35fb-4ef9-9675-c89b2cf00279}</Project>
+      <Name>OpenLR.Geo</Name>
     </ProjectReference>
     <ProjectReference Include="..\OpenLR\OpenLR.csproj">
       <Project>{036ad1da-006a-48b6-826c-83d12561411d}</Project>
@@ -212,20 +164,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Data\HDF-BEL.XML" />
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <EmbeddedResource Include="Data\mons.osm.pbf" />
-    <EmbeddedResource Include="Data\overijse.osm.pbf" />
-    <EmbeddedResource Include="Data\puurs.osm.pbf" />
-    <EmbeddedResource Include="Data\wavre.osm.pbf" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Data\ExampleLocation.xml" />
-  </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

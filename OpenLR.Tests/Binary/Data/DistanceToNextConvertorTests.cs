@@ -1,10 +1,5 @@
 ﻿using NUnit.Framework;
-using OpenLR.Binary.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using OpenLR.Codecs.Binary.Data;
 
 namespace OpenLR.Tests.Binary.Data
 {

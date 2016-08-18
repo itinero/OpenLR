@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
-using OpenLR.Binary.Decoders;
-using OpenLR.Locations;
+using OpenLR.Codecs.Binary.Decoders;
+using OpenLR.Model.Locations;
+using System;
 
 namespace OpenLR.Tests.Binary
 {
@@ -19,12 +20,11 @@ namespace OpenLR.Tests.Binary
             double delta = 0.0001;
 
             // define a base64 string.
-            string stringData = "AwRbYyNGu6o=";
+            var stringData = Convert.FromBase64String("AwRbYyNGu6o=");
 
             // decode.
-            var decoder = new CircleLocationDecoder();
-            Assert.IsTrue(decoder.CanDecode(stringData));
-            var location = decoder.Decode(stringData);
+            Assert.IsTrue(CircleLocationCodec.CanDecode(stringData));
+            var location = CircleLocationCodec.Decode(stringData);
 
             Assert.IsNotNull(location);
             Assert.IsInstanceOf<CircleLocation>(location);

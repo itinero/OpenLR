@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
-using OpenLR.Binary.Decoders;
-using OpenLR.Locations;
+using OpenLR.Codecs.Binary.Decoders;
+using OpenLR.Model.Locations;
+using System;
 
 namespace OpenLR.Tests.Binary
 {
@@ -19,12 +20,11 @@ namespace OpenLR.Tests.Binary
             double delta = 0.0001;
 
             // define a base64 string.
-            string stringData = "QwRbICNGeQBKAB8ABQAD";
+            var stringData = Convert.FromBase64String("QwRbICNGeQBKAB8ABQAD");
 
             // decode.
-            var decoder = new GridLocationDecoder();
-            Assert.IsTrue(decoder.CanDecode(stringData));
-            var location = decoder.Decode(stringData);
+            Assert.IsTrue(GridLocationCodec.CanDecode(stringData));
+            var location = GridLocationCodec.Decode(stringData);
 
             Assert.IsNotNull(location);
             Assert.IsInstanceOf<GridLocation>(location);

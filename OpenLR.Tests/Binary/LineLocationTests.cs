@@ -1,8 +1,8 @@
 ﻿using NUnit.Framework;
-using OpenLR.Binary.Decoders;
-using OpenLR.Binary.Encoders;
-using OpenLR.Locations;
+using OpenLR.Codecs.Binary.Decoders;
 using OpenLR.Model;
+using OpenLR.Model.Locations;
+using System;
 
 namespace OpenLR.Tests.Binary
 {
@@ -21,12 +21,11 @@ namespace OpenLR.Tests.Binary
             double delta = 0.0001;
 
             // define a base64 string we are sure is a line location.
-            string stringData = "CwRbWyNG9RpsCQCb/jsbtAT/6/+jK1lE";
+            var stringData = Convert.FromBase64String("CwRbWyNG9RpsCQCb/jsbtAT/6/+jK1lE");
 
             // decode.
-            var decoder = new LineLocationDecoder();
-            Assert.IsTrue(decoder.CanDecode(stringData));
-            var location = decoder.Decode(stringData);
+            Assert.IsTrue(LineLocationCodec.CanDecode(stringData));
+            var location = LineLocationCodec.Decode(stringData);
 
             Assert.IsNotNull(location);
             Assert.IsInstanceOf<LineLocation>(location);
@@ -90,12 +89,10 @@ namespace OpenLR.Tests.Binary
             location.Last.Bearing = 0;
 
             // encode.
-            var encoder = new LineEncoder();
-            var stringData = encoder.Encode(location);
+            var stringData = LineLocationCodec.Encode(location);
 
             // decode again (decoding was tested above).
-            var decoder = new LineLocationDecoder();
-            var decodedLocation = decoder.Decode(stringData);
+            var decodedLocation = LineLocationCodec.Decode(stringData);
 
             Assert.IsNotNull(decodedLocation);
             Assert.IsInstanceOf<LineLocation>(decodedLocation);
@@ -126,11 +123,8 @@ namespace OpenLR.Tests.Binary
             Assert.AreEqual(FormOfWay.SingleCarriageWay, lineLocation.Last.FormOfWay);
 
             // compare again with reference encoded string.
-            var referenceStringData = "CwRbWyNG9BpgAACa/jsboAD/6/+kKwAAAA==";
-            var referenceDecodedLocation = decoder.Decode(referenceStringData);
-
-            var referenceBinary = System.Convert.FromBase64String(referenceStringData);
-            var encodedBinary = System.Convert.FromBase64String(stringData);
+            var referenceBinary = Convert.FromBase64String("CwRbWyNG9BpgAACa/jsboAD/6/+kKwAAAA==");
+            var referenceDecodedLocation = LineLocationCodec.Decode(referenceBinary);
 
             // check first reference.
             Assert.IsNotNull(lineLocation.First);

@@ -1,11 +1,7 @@
 ﻿using NUnit.Framework;
-using OpenLR.Binary.Decoders;
-using OpenLR.Locations;
+using OpenLR.Codecs.Binary.Decoders;
+using OpenLR.Model.Locations;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OpenLR.Tests.Binary
 {
@@ -24,12 +20,11 @@ namespace OpenLR.Tests.Binary
             double delta = 0.0001;
 
             // define a base64 string we are sure is a line location.
-            string stringData = "EwRbHSNGdQFiAA//XADz/64AJP9b/7U=";
+            var stringData = Convert.FromBase64String("EwRbHSNGdQFiAA//XADz/64AJP9b/7U=");
 
             // decode.
-            var decoder = new PolygonLocationDecoder();
-            Assert.IsTrue(decoder.CanDecode(stringData));
-            var location = decoder.Decode(stringData);
+            Assert.IsTrue(PolygonLocationCodec.CanDecode(stringData));
+            var location = PolygonLocationCodec.Decode(stringData);
 
             Assert.IsNotNull(location);
             Assert.IsInstanceOf<PolygonLocation>(location);

@@ -1,6 +1,5 @@
 ﻿using NUnit.Framework;
-using OpenLR.Binary.Data;
-using OpenLR.Model;
+using OpenLR.Codecs.Binary.Data;
 using System;
 
 namespace OpenLR.Tests.Binary.Data

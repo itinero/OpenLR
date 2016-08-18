@@ -61,41 +61,120 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
+    <None Include="packages.config" />
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyVersion.cs">
       <Link>Properties\SharedAssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="Decoding\Decoder.cs" />
-    <Compile Include="Decoding\LocationDecoder.cs" />
-    <Compile Include="Encoding\Encoder.cs" />
-    <Compile Include="Encoding\LocationEncoder.cs" />
+    <Compile Include="Codecs\Binary\BinaryCodec.cs" />
+    <Compile Include="Codecs\Binary\Codecs\CircleLocationCodec.cs" />
+    <Compile Include="Codecs\Binary\Codecs\ClosedLineLocationCodec.cs" />
+    <Compile Include="Codecs\Binary\Codecs\GeoCoordinateLocationCodec.cs" />
+    <Compile Include="Codecs\Binary\Codecs\GridLocationCodec.cs" />
+    <Compile Include="Codecs\Binary\Codecs\LineLocationCodec.cs" />
+    <Compile Include="Codecs\Binary\Codecs\PointAlongLineLocationCodec.cs" />
+    <Compile Include="Codecs\Binary\Codecs\PoiWithAccessPointLocationCodec.cs" />
+    <Compile Include="Codecs\Binary\Codecs\PolygonLocationCodec.cs" />
+    <Compile Include="Codecs\Binary\Codecs\RectangleLocationCodec.cs" />
+    <Compile Include="Codecs\Binary\Data\BearingConvertor.cs" />
+    <Compile Include="Codecs\Binary\Data\CoordinateConverter.cs" />
+    <Compile Include="Codecs\Binary\Data\DistanceToNextConvertor.cs" />
+    <Compile Include="Codecs\Binary\Data\FormOfWayConvertor.cs" />
+    <Compile Include="Codecs\Binary\Data\FunctionalRoadClassConvertor.cs" />
+    <Compile Include="Codecs\Binary\Data\HeaderConvertor.cs" />
+    <Compile Include="Codecs\Binary\Data\OffsetConvertor.cs" />
+    <Compile Include="Codecs\Binary\Data\OrientationConvertor.cs" />
+    <Compile Include="Codecs\Binary\Data\SideOfRoadConverter.cs" />
+    <Compile Include="Codecs\CodecBase.cs" />
+    <Compile Include="Codecs\LocationCodecBase.cs" />
+    <Compile Include="Coder.cs" />
+    <Compile Include="CoderExtensions.cs" />
+    <Compile Include="CoderProfile.cs" />
+    <Compile Include="Collections\SortedDictionary.cs" />
+    <Compile Include="Exception\BuildLocationFailedException.cs" />
+    <Compile Include="Exception\ReferencedDecodingException.cs" />
+    <Compile Include="Exception\ReferencedEncodingException.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="ILocationReference.cs" />
-    <Compile Include="Locations\CircleLocation.cs" />
-    <Compile Include="Locations\ClosedLineLocation.cs" />
-    <Compile Include="Locations\GeoCoordinateLocation.cs" />
-    <Compile Include="Locations\GridLocation.cs" />
-    <Compile Include="Locations\ILocation.cs" />
-    <Compile Include="Locations\LineLocation.cs" />
-    <Compile Include="Locations\PointAlongLineLocation.cs" />
-    <Compile Include="Locations\PoiWithAccessPointLocation.cs" />
-    <Compile Include="Locations\PolygonLocation.cs" />
-    <Compile Include="Locations\RectangleLocation.cs" />
-    <Compile Include="LocationType.cs" />
+    <Compile Include="ItineroExtensions.cs" />
+    <Compile Include="LocationExtensions.cs" />
+    <Compile Include="Model\Locations\CircleLocation.cs" />
+    <Compile Include="Model\Locations\ClosedLineLocation.cs" />
+    <Compile Include="Model\Locations\GeoCoordinateLocation.cs" />
+    <Compile Include="Model\Locations\GridLocation.cs" />
+    <Compile Include="Model\Locations\ILocation.cs" />
+    <Compile Include="Model\Locations\LineLocation.cs" />
+    <Compile Include="Model\Locations\PointAlongLineLocation.cs" />
+    <Compile Include="Model\Locations\PoiWithAccessPointLocation.cs" />
+    <Compile Include="Model\Locations\PolygonLocation.cs" />
+    <Compile Include="Model\Locations\RectangleLocation.cs" />
+    <Compile Include="Model\LocationType.cs" />
     <Compile Include="Model\Coordinate.cs" />
     <Compile Include="Model\FormOfWay.cs" />
     <Compile Include="Model\FunctionalRoadClass.cs" />
     <Compile Include="Model\LocationReferencePoint.cs" />
     <Compile Include="Model\Orientation.cs" />
     <Compile Include="Model\SideOfRoad.cs" />
+    <Compile Include="Osm\OsmCoderProfile.cs" />
     <Compile Include="Parameters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Referenced\Decoding\ReferencedDecoder.cs" />
-    <Compile Include="Referenced\Decoding\ReferencedLocationDecoder.cs" />
-    <Compile Include="Referenced\Encoding\ReferencedEncoder.cs" />
-    <Compile Include="Referenced\Encoding\ReferencedLocationEncoder.cs" />
+    <Compile Include="Referenced\Codecs\BearingEncoder.cs" />
+    <Compile Include="Referenced\Codecs\Candidates\CandidateEdge.cs" />
+    <Compile Include="Referenced\Codecs\Candidates\CandidateRoute.cs" />
+    <Compile Include="Referenced\Codecs\Candidates\CandidateVertex.cs" />
+    <Compile Include="Referenced\Codecs\Candidates\CandidateVertexEdge.cs" />
+    <Compile Include="Referenced\Codecs\Candidates\CandidateVertexEdgeComparer.cs" />
+    <Compile Include="Referenced\Codecs\ReferencedCircleCodec.cs" />
+    <Compile Include="Referenced\Codecs\CoderExtensions.cs" />
+    <Compile Include="Referenced\Codecs\ReferencedGeoCoordinateCodec.cs" />
+    <Compile Include="Referenced\Codecs\ReferencedGridCodec.cs" />
+    <Compile Include="Referenced\Codecs\ReferencedLineCodec.cs" />
+    <Compile Include="Referenced\Codecs\ReferencedPointAlongLineCodec.cs" />
+    <Compile Include="Referenced\Codecs\ReferencedPolygonCodec.cs" />
+    <Compile Include="Referenced\Codecs\ReferencedRectangleCodec.cs" />
+    <Compile Include="Referenced\Codecs\Scores\CombinedScore.cs" />
+    <Compile Include="Referenced\Codecs\Scores\CombinedScoreComparer.cs" />
+    <Compile Include="Referenced\Locations\ReferencedCircle.cs" />
+    <Compile Include="Referenced\Locations\ReferencedGeoCoordinate.cs" />
+    <Compile Include="Referenced\Locations\ReferencedGrid.cs" />
+    <Compile Include="Referenced\Locations\ReferencedLine.cs" />
+    <Compile Include="Referenced\Locations\ReferencedPointAlongLine.cs" />
+    <Compile Include="Referenced\Locations\ReferencedPolygon.cs" />
+    <Compile Include="Referenced\Locations\ReferencedRectangle.cs" />
     <Compile Include="Referenced\ReferencedLocation.cs" />
+    <Compile Include="Referenced\ReferencedLocationCodec.cs" />
+    <Compile Include="Referenced\Scoring\AddedScore.cs" />
+    <Compile Include="Referenced\Scoring\MultipliedScore.cs" />
+    <Compile Include="Referenced\Scoring\Score.cs" />
+    <Compile Include="Referenced\Scoring\SimpleScore.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="GeoAPI, Version=1.7.4.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
+      <HintPath>..\packages\GeoAPI.1.7.4\lib\portable-net403+sl5+netcore45+wpa81+wp8+MonoAndroid10+XamariniOS10+MonoTouch10\GeoAPI.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="GeoAPI.Bootstrapper.NetTopologySuite, Version=1.14.0.0, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NetTopologySuite.1.14\lib\portable-net403+sl5+netcore45+wpa81+wp8+MonoAndroid10+XamariniOS10+MonoTouch10\GeoAPI.Bootstrapper.NetTopologySuite.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Itinero, Version=0.15.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Itinero.0.15.1-rc1\lib\portable-net40+sl4+win8+wp7\Itinero.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NetTopologySuite, Version=1.14.0.0, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NetTopologySuite.1.14\lib\portable-net403+sl5+netcore45+wpa81+wp8+MonoAndroid10+XamariniOS10+MonoTouch10\NetTopologySuite.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PowerCollections, Version=1.0.0.0, Culture=neutral, PublicKeyToken=2573bf8a1bdddcd5, processorArchitecture=MSIL">
+      <HintPath>..\packages\NetTopologySuite.1.14\lib\portable-net403+sl5+netcore45+wpa81+wp8+MonoAndroid10+XamariniOS10+MonoTouch10\PowerCollections.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Reminiscence, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Reminiscence.1.0.2\lib\portable-net403+sl50+win+wp80+Xamarin.iOS10+MonoAndroid10+MonoTouch10\Reminiscence.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />

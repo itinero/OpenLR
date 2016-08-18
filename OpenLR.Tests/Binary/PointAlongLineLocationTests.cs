@@ -1,8 +1,8 @@
 ﻿using NUnit.Framework;
-using OpenLR.Binary.Decoders;
-using OpenLR.Binary.Encoders;
-using OpenLR.Locations;
+using OpenLR.Codecs.Binary.Decoders;
 using OpenLR.Model;
+using OpenLR.Model.Locations;
+using System;
 
 namespace OpenLR.Tests.Binary
 {
@@ -21,12 +21,11 @@ namespace OpenLR.Tests.Binary
             double delta = 0.0001;
 
             // define a base64 string we are sure is a line location.
-            string stringData = "KwRbnyNGfhJBAv/P/7WSAEw=";
+            var stringData = Convert.FromBase64String("KwRbnyNGfhJBAv/P/7WSAEw=");
 
             // decode.
-            var decoder = new PointAlongLineDecoder();
-            Assert.IsTrue(decoder.CanDecode(stringData));
-            var location = decoder.Decode(stringData);
+            Assert.IsTrue(PointAlongLineLocationCodec.CanDecode(stringData));
+            var location = PointAlongLineLocationCodec.Decode(stringData);
 
             Assert.IsNotNull(location);
             Assert.IsInstanceOf<PointAlongLineLocation>(location);
@@ -93,12 +92,10 @@ namespace OpenLR.Tests.Binary
             location.PositiveOffsetPercentage = 30.19f;
 
             // encode.
-            var encoder = new PointAlongLineEncoder();
-            var stringData = encoder.Encode(location);
+            var stringData = PointAlongLineLocationCodec.Encode(location);
 
             // decode again (decoding was tested above).
-            var decoder = new PointAlongLineDecoder();
-            var decodedLocation = decoder.Decode(stringData);
+            var decodedLocation = PointAlongLineLocationCodec.Decode(stringData);
 
             Assert.IsNotNull(decodedLocation);
             Assert.IsInstanceOf<PointAlongLineLocation>(decodedLocation);
@@ -130,10 +127,9 @@ namespace OpenLR.Tests.Binary
 
             // compare again with reference encoded string.
             var referenceStringData = "KwRbnyNGfhJBAv/P/7WSAEw=";
-            var referenceDecodedLocation = decoder.Decode(referenceStringData);
+            var referenceDecodedLocation = PointAlongLineLocationCodec.Decode(Convert.FromBase64String(referenceStringData));
 
             var referenceBinary = System.Convert.FromBase64String(referenceStringData);
-            var encodedBinary = System.Convert.FromBase64String(stringData);
 
             // check first reference.
             Assert.IsNotNull(pointAlongLineLocation.First);
