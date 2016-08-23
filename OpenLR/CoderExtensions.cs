@@ -30,6 +30,7 @@ using Itinero.Profiles;
 using OpenLR.Model;
 using OpenLR.Referenced;
 using OpenLR.Referenced.Codecs;
+using OpenLR.Referenced.Locations;
 using System;
 using System.Collections.Generic;
 
@@ -265,7 +266,7 @@ namespace OpenLR
                                 (!searchForward && (factor.Direction == 1) == edge.DataInverted)))
                             { // ok, we can traverse this edge and no oneway or oneway reversed.
                                 var weight = current.Weight + factor.Value * edge.Data.Distance;
-                                var path = new EdgePath<float>(edge.To, weight, edge.Id, current);
+                                var path = new EdgePath<float>(edge.To, weight, edge.IdDirected(), current);
                                 heap.Push(path, (float)path.Weight);
                             }
                         }
@@ -286,5 +287,43 @@ namespace OpenLR
             return pathTo;
         }
 
+        /// <summary>
+        /// Builds a point along line location.
+        /// </summary>
+        public static ReferencedPointAlongLine BuildPointAlongLine(this Coder coder, float latitude, float longitude)
+        {
+            var routerPoint = coder.Router.TryResolve(coder.Profile.Profile, latitude, longitude);
+            if (routerPoint.IsError)
+            {
+                throw new Exception("Could not build point along line: Could not find an edge close to the given location.");
+            }
+
+            // build the location with one edge.
+            var edge = coder.Router.Db.Network.GetEdge(routerPoint.Value.EdgeId);
+            var referencedPointAlongLine = new ReferencedPointAlongLine()
+            {
+                Route = new ReferencedLine()
+                {
+                    Edges = new long[] { edge.IdDirected() },
+                    Vertices = new uint[] { edge.From, edge.To }
+                },
+                Latitude = latitude,
+                Longitude = longitude,
+                Orientation = Orientation.NoOrientation
+            };
+
+            // expand to valid location.
+            referencedPointAlongLine.Route.AdjustToValidPoints(coder);
+
+            return referencedPointAlongLine;
+        }
+
+        /// <summary>
+        /// Encodes a set of coordinates as a point along line.
+        /// </summary>
+        public static string EncodeAsPointAlongLine(this Coder coder, float latitude, float longitude)
+        {
+            return coder.Encode(coder.BuildPointAlongLine(latitude, longitude));
+        }
     }
 }

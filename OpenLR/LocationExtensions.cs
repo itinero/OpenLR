@@ -474,9 +474,11 @@ namespace OpenLR
                             newVertices.Add(pathToValidAsList[idx].Vertex);
                             if (idx > 0)
                             {
-                                newEdges.Add(pathToValidAsList[idx].Edge);
+                                newEdges.Add(-pathToValidAsList[idx].Edge); // need the reverse edges.
                             }
                         }
+                        newEdges.Reverse();
+                        newVertices.Reverse();
 
                         // create new location.
                         var edgesArray = new long[newEdges.Count + line.Edges.Length];

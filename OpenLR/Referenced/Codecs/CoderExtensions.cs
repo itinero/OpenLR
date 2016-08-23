@@ -20,8 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using Itinero.Algorithms;
 using Itinero.Algorithms.Search.Hilbert;
+using Itinero.Algorithms.Weights;
 using Itinero.Data.Network;
+using Itinero.Graphs;
 using Itinero.Refactoring;
 using OpenLR.Model;
 using OpenLR.Referenced.Codecs.Candidates;
@@ -149,29 +152,53 @@ namespace OpenLR.Referenced.Codecs
         public static CandidateRoute FindCandidateRoute(this Coder coder, CandidateVertexEdge from, CandidateVertexEdge to, FunctionalRoadClass minimum,
             bool ignoreFromEdge = false, bool ignoreToEdge = false)
         {
-            throw new NotImplementedException();
+            var weightHandler = coder.Profile.Profile.DefaultWeightHandler(coder.Router);
+            var path = coder.Router.TryCalculateRaw(coder.Profile.Profile, weightHandler,
+                from.ToRouterPoint(coder.Router.Db), to.ToRouterPoint(coder.Router.Db));
 
-            //var path = coder.Router.TryCalculateRaw(profile.Profile, from.ToRouterPoint(coder.Router.Db), to.ToRouterPoint(coder.Router.Db));
+            // if no route is found, score is 0.
+            if (path.IsError)
+            {
+                return new CandidateRoute()
+                {
+                    Route = null,
+                    Score = Score.New(Score.CANDIDATE_ROUTE, "Candidate route quality.", 0, 1)
+                };
+            }
 
-            //// if no route is found, score is 0.
-            //if (path == null)
-            //{
-            //    return new CandidateRoute()
-            //    {
-            //        Route = null,
-            //        Score = Score.New(Score.CANDIDATE_ROUTE, "Candidate route quality.", 0, 1)
-            //    };
-            //}
+            var pathAsList = path.Value.ToList();
+            var edges = new List<long>();
+            var vertices = new List<uint>();
+            for(var i = 0; i < pathAsList.Count; i++)
+            {
+                vertices.Add(pathAsList[i].Vertex);
+                if (i > 0)
+                {
+                    if (pathAsList[i].Edge != Itinero.Constants.NO_EDGE &&
+                        pathAsList[i].Edge != -Itinero.Constants.NO_EDGE)
+                    {
+                        edges.Add(pathAsList[i].Edge);
+                    }
+                    else
+                    {
+                        var edgeEnumerator = coder.Router.Db.Network.GeometricGraph.Graph.GetEdgeEnumerator();
+                        float best;
+                        var edge = edgeEnumerator.FindBestEdge(weightHandler, vertices[vertices.Count - 2],
+                            vertices[vertices.Count - 1], out best);
+                        edges.Add(edge);
+                    }
+                }
+            }
 
-            //return new CandidateRoute()
-            //{
-            //    Route = new ReferencedLine(coder.Router.Db)
-            //    {
-            //        Edges = edges.ToArray(),
-            //        Vertices = vertices.ToArray()
-            //    },
-            //    Score = Score.New(Score.CANDIDATE_ROUTE, "Candidate route quality.", 1, 1)
-            //};
+            return new CandidateRoute()
+            {
+                Route = new ReferencedLine()
+                {
+                    Edges = edges.ToArray(),
+                    Vertices = vertices.ToArray()
+                },
+                Score = Score.New(Score.CANDIDATE_ROUTE, "Candidate route quality.", 1, 1)
+            };
         }
     }
 }

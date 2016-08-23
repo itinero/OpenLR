@@ -460,8 +460,8 @@ namespace OpenLR
         {
             return new OpenLR.Model.Coordinate()
             {
-                Latitude  = coordinate.Longitude,
-                Longitude = coordinate.Latitude
+                Latitude  = coordinate.Latitude,
+                Longitude = coordinate.Longitude
             };
         }
 
