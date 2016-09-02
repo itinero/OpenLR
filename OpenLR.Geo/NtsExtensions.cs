@@ -23,9 +23,12 @@
 using GeoAPI.Geometries;
 using Itinero;
 using Itinero.Attributes;
+using Itinero.Data.Network;
+using Itinero.Geo;
 using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 using OpenLR.Referenced;
+using OpenLR.Referenced.Codecs.Candidates;
 using OpenLR.Referenced.Locations;
 using System.Collections.Generic;
 
@@ -92,6 +95,32 @@ namespace OpenLR.Geo
                 featureCollection.Add(new Feature(new LineString(coordinates.ToArray()), table));
                 coordinates.Clear();
             }
+            return featureCollection;
+        }
+        
+        /// <summary>
+        /// Converts this line location to features.
+        /// </summary>
+        public static FeatureCollection ToFeatures(this ReferencedPointAlongLine line, RouterDb routerDb)
+        {
+            var features = line.Route.ToFeatures(routerDb);
+
+            features.Add(new Feature(new Point(new Coordinate(line.Longitude, line.Latitude)),
+                new AttributesTable()));
+
+            return features;
+        }
+
+        /// <summary>
+        /// Converts the given candidate to a feature collection.
+        /// </summary>
+        public static FeatureCollection ToFeatures(this CandidateVertexEdge candidateEdge, RouterDb routerDb)
+        {
+            var featureCollection = new FeatureCollection();
+            
+            featureCollection.Add(routerDb.GetFeatureForEdge(candidateEdge.EdgeId));
+            featureCollection.Add(routerDb.GetFeatureForVertex(candidateEdge.VertexId));
+
             return featureCollection;
         }
     }

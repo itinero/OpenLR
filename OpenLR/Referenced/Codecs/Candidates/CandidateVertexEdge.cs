@@ -44,20 +44,6 @@ namespace OpenLR.Referenced.Codecs.Candidates
         /// </summary>
         public uint VertexId { get; set; }
 
-        ///// <summary>
-        ///// Converts this referenced location to a geometry.
-        ///// </summary>
-        //public FeatureCollection ToFeatures(RouterDb db)
-        //{
-        //    var featureCollection = new FeatureCollection();
-
-        //    // build linestring.
-        //    featureCollection.Add(new Feature(db.Network.GetAsLineString(this.EdgeId), 
-        //        new AttributesTable()));
-
-        //    return featureCollection;
-        //}
-
         /// <summary>
         /// Determines whether this object is equal to the given object.
         /// </summary>

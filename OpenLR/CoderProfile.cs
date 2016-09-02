@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using Itinero;
 using Itinero.Attributes;
 using Itinero.Profiles;
 using OpenLR.Model;
@@ -34,18 +35,25 @@ namespace OpenLR
     {
         private readonly Profile _profile;
         private readonly float _scoreThreshold;
+        private readonly float _maxSearch;
+
+        private readonly RoutingSettings<float> _routingSettings;
 
         /// <summary>
         /// Creates a new coder profile.
         /// </summary>
-        public CoderProfile(Profile profile, float scoreThreshold)
+        public CoderProfile(Profile profile, float scoreThreshold, float maxSearch)
         {
             if (profile == null) { throw new ArgumentNullException("profile"); }
 
             _profile = profile;
             _scoreThreshold = scoreThreshold;
+            _maxSearch = maxSearch;
 
             this.MaxSettles = 65536;
+
+            _routingSettings = new RoutingSettings<float>();
+            _routingSettings.SetMaxSearch(profile.Name, _maxSearch);
         }
 
         /// <summary>
@@ -67,6 +75,28 @@ namespace OpenLR
             get
             {
                 return _scoreThreshold;
+            }
+        }
+
+        /// <summary>
+        /// Gets the maximum search (time or distance depending on used profile).
+        /// </summary>
+        public float MaxSearch
+        {
+            get
+            {
+                return _maxSearch;
+            }
+        }
+        
+        /// <summary>
+        /// Gets the routing settings.
+        /// </summary>
+        public RoutingSettings<float> RoutingSettings
+        {
+            get
+            {
+                return _routingSettings; 
             }
         }
 

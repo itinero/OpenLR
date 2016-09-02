@@ -37,12 +37,12 @@
       <HintPath>..\packages\GeoAPI.1.7.4\lib\net45\GeoAPI.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Itinero, Version=0.16.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Itinero.0.16.1-rc1\lib\net45\Itinero.dll</HintPath>
+    <Reference Include="Itinero, Version=0.22.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Itinero.0.22.0-rc1\lib\net45\Itinero.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Itinero.Geo, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Itinero.Geo.0.16.1-rc1\lib\net45\Itinero.Geo.dll</HintPath>
+    <Reference Include="Itinero.Geo, Version=0.22.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Itinero.Geo.0.22.0-rc1\lib\net45\Itinero.Geo.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NetTopologySuite, Version=1.14.0.0, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">

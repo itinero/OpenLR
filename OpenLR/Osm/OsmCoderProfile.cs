@@ -35,7 +35,7 @@ namespace OpenLR.Osm
         /// Creates a new coder profile.
         /// </summary>
         public OsmCoderProfile(float scoreThreshold)
-            : base(Vehicle.Car.Shortest(), scoreThreshold)
+            : base(Vehicle.Car.Shortest(), scoreThreshold, 20000) // default maximum search radius of 20 km.
         {
 
         }

@@ -162,18 +162,32 @@ namespace OpenLR
             {
                 return coordinates;
             }
-            coordinates.Add(routerDb.Network.GetVertex(referencedLine.Vertices[start]));
+            //coordinates.Add(routerDb.Network.GetVertex(referencedLine.Vertices[start]));
             for (var i = start; i < start + count - 1; i++)
             {
                 var shape = routerDb.Network.GetShape(routerDb.Network.GetEdge(referencedLine.Edges[i]));
                 if (shape != null)
                 {
-                    for (var j = 1; j < shape.Count - 1; j++)
+                    if (coordinates.Count > 0)
                     {
-                        coordinates.Add(shape[j]);
+                        coordinates.RemoveAt(coordinates.Count - 1);
+                    }
+                    if (referencedLine.Edges[i] > 0)
+                    {
+                        for (var j = 0; j < shape.Count; j++)
+                        {
+                            coordinates.Add(shape[j]);
+                        }
+                    }
+                    else
+                    {
+                        for (var j = shape.Count - 1; j >= 0; j--)
+                        {
+                            coordinates.Add(shape[j]);
+                        }
                     }
                 }
-                coordinates.Add(routerDb.Network.GetVertex(referencedLine.Vertices[i + 1]));
+                //coordinates.Add(routerDb.Network.GetVertex(referencedLine.Vertices[i + 1]));
             }
             return coordinates;
         }

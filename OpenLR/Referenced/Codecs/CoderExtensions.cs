@@ -131,8 +131,8 @@ namespace OpenLR.Referenced.Codecs
                     { // ok, there is a match.
                       // check bearing.
                         var shape = coder.Router.Db.Network.GetShape(edge);
-                        var localBearing = BearingEncoder.EncodeBearing(shape, true);
-                        var localBearingDiff = Extensions.AngleSmallestDifference(localBearing, bearing);
+                        var localBearing = BearingEncoder.EncodeBearing(shape, false);
+                        var localBearingDiff = System.Math.Abs(Extensions.AngleSmallestDifference(localBearing, bearing));
 
                         relevantEdges.Add(new CandidateEdge()
                         {
@@ -153,8 +153,23 @@ namespace OpenLR.Referenced.Codecs
             bool ignoreFromEdge = false, bool ignoreToEdge = false)
         {
             var weightHandler = coder.Profile.Profile.DefaultWeightHandler(coder.Router);
+
+            var edgeFrom = coder.Router.Db.Network.GetEdge(from.EdgeId);
+            long directedEdgeFrom = from.EdgeId + 1;
+            if (edgeFrom.To == from.VertexId)
+            {
+                directedEdgeFrom = -directedEdgeFrom;
+            }
+
+            var edgeTo = coder.Router.Db.Network.GetEdge(to.EdgeId);
+            long directedEdgeTo = to.EdgeId + 1;
+            if (edgeTo.From == to.VertexId)
+            {
+                directedEdgeTo = -directedEdgeTo;
+            }
+
             var path = coder.Router.TryCalculateRaw(coder.Profile.Profile, weightHandler,
-                from.ToRouterPoint(coder.Router.Db), to.ToRouterPoint(coder.Router.Db));
+                directedEdgeFrom, directedEdgeTo, coder.Profile.RoutingSettings);
 
             // if no route is found, score is 0.
             if (path.IsError)

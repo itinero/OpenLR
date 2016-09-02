@@ -24,11 +24,8 @@ using Itinero.Graphs.Geometric;
 using Itinero.LocalGeo;
 using Itinero.Algorithms.Search.Hilbert;
 using Itinero;
-using Itinero.Data.Network;
-using System;
 using OpenLR.Referenced.Codecs.Candidates;
 using System.Collections.Generic;
-using Itinero.Algorithms;
 
 namespace OpenLR.Referenced
 {
@@ -68,26 +65,7 @@ namespace OpenLR.Referenced
             }
             return bestEdge;
         }
-
-        /// <summary>
-        /// Gets the edge with the given id.
-        /// </summary>
-        public static RoutingEdge GetEdge(this RoutingNetwork network, long directedEdgeId)
-        {
-            if (directedEdgeId == 0) { throw new ArgumentOutOfRangeException("directedEdgeId"); }
-
-            uint edgeId;
-            if (directedEdgeId > 0)
-            {
-                edgeId = (uint)directedEdgeId - 1;
-            }
-            else
-            {
-                edgeId = (uint)((-directedEdgeId) - 1);
-            }
-            return network.GetEdge(edgeId);
-        }
-
+        
         /// <summary>
         /// Converts the candidated to a router point.
         /// </summary>

@@ -170,10 +170,10 @@ namespace OpenLR
             if (searchForward)
             {
                 return coder.Router.TryCalculateRaw(coder.Profile.Profile, new DefaultWeightHandler(coder.Profile.Profile.GetGetFactor(coder.Router.Db)), 
-                    fromRouterPoint, toRouterPoint).Value;
+                    fromRouterPoint, toRouterPoint, coder.Profile.RoutingSettings).Value;
             }
             return coder.Router.TryCalculateRaw(coder.Profile.Profile, new DefaultWeightHandler(coder.Profile.Profile.GetGetFactor(coder.Router.Db)),
-                toRouterPoint, fromRouterPoint).Value;
+                toRouterPoint, fromRouterPoint, coder.Profile.RoutingSettings).Value;
         }
 
         /// <summary>

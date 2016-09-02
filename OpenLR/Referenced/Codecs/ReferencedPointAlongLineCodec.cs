@@ -40,6 +40,11 @@ namespace OpenLR.Referenced.Codecs
     public static class ReferencedPointAlongLineCodec
     {
         /// <summary>
+        /// Holds the maximum distance of the to-encode lat/lon to the project lat/lon.
+        /// </summary>
+        public static float MaxDistanceFromProjected = 10;
+
+        /// <summary>
         /// Decodes the given location.
         /// </summary>
         public static ReferencedPointAlongLine Decode(PointAlongLineLocation location, Coder coder)
@@ -252,7 +257,33 @@ namespace OpenLR.Referenced.Codecs
                 if (!coordinates.ProjectOn(referencedLocation.Latitude, referencedLocation.Longitude, out projectedLatitude, out projectedLongitude,
                     out projectedDistanceFromFirst, out projectedShapeIndex, out distanceToProjected, out totalLength, out position))
                 { // the projection on the edge failed.
-                    throw new ReferencedEncodingException(referencedLocation, "The point in the ReferencedPointAlongLine could not be projected on the referenced edge.");
+                    // try to find the closest point.
+                    distanceToProjected = float.MaxValue;
+                    totalLength = 0;
+                    for (var i = 0; i < coordinates.Count; i++)
+                    {
+                        var distance = Itinero.LocalGeo.Coordinate.DistanceEstimateInMeter(coordinates[i].Latitude, coordinates[i].Longitude,
+                            referencedLocation.Latitude, referencedLocation.Longitude);
+                        if (i > 0)
+                        {
+                            totalLength += Itinero.LocalGeo.Coordinate.DistanceEstimateInMeter(coordinates[i-1].Latitude, coordinates[i-1].Longitude,
+                                coordinates[i].Latitude, coordinates[i].Longitude);
+                        }
+                        if (distance < distanceToProjected)
+                        {
+                            projectedDistanceFromFirst = totalLength;
+                            distanceToProjected = distance;
+                            projectedShapeIndex = i;
+                            position = LinePointPosition.On;
+                            projectedLatitude = coordinates[i].Latitude;
+                            projectedLongitude = coordinates[i].Longitude;
+                        }
+                    }
+                }
+                if (distanceToProjected > MaxDistanceFromProjected)
+                {
+                    throw new ReferencedEncodingException(referencedLocation, string.Format("The point in the ReferencedPointAlongLine is too far from the referenced edge: {0}m with a max allowed of {1}m.",
+                        distanceToProjected, MaxDistanceFromProjected));
                 }
 
                 location.Orientation = referencedLocation.Orientation;
