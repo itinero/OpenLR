@@ -169,11 +169,26 @@ namespace OpenLR
 
             if (searchForward)
             {
-                return coder.Router.TryCalculateRaw(coder.Profile.Profile, new DefaultWeightHandler(coder.Profile.Profile.GetGetFactor(coder.Router.Db)), 
-                    fromRouterPoint, toRouterPoint, coder.Profile.RoutingSettings).Value;
+                var result = coder.Router.TryCalculateRaw(coder.Profile.Profile, new DefaultWeightHandler(coder.Profile.Profile.GetGetFactor(coder.Router.Db)),
+                    fromRouterPoint, toRouterPoint, coder.Profile.RoutingSettings);
+                if (result.IsError)
+                {
+                    result = coder.Router.TryCalculateRaw(coder.Profile.Profile, new DefaultWeightHandler(coder.Profile.Profile.GetGetFactor(coder.Router.Db)),
+                        fromRouterPoint, toRouterPoint, coder.Profile.GetAggressiveRoutingSettings(100));
+                }
+                return result.Value;
             }
-            return coder.Router.TryCalculateRaw(coder.Profile.Profile, new DefaultWeightHandler(coder.Profile.Profile.GetGetFactor(coder.Router.Db)),
-                toRouterPoint, fromRouterPoint, coder.Profile.RoutingSettings).Value;
+            else
+            {
+                var result = coder.Router.TryCalculateRaw(coder.Profile.Profile, new DefaultWeightHandler(coder.Profile.Profile.GetGetFactor(coder.Router.Db)),
+                    toRouterPoint, fromRouterPoint, coder.Profile.RoutingSettings);
+                if (result.IsError)
+                {
+                    result = coder.Router.TryCalculateRaw(coder.Profile.Profile, new DefaultWeightHandler(coder.Profile.Profile.GetGetFactor(coder.Router.Db)),
+                        toRouterPoint, fromRouterPoint, coder.Profile.GetAggressiveRoutingSettings(100));
+                }
+                return result.Value;
+            }
         }
 
         /// <summary>

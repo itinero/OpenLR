@@ -101,6 +101,17 @@ namespace OpenLR
         }
 
         /// <summary>
+        /// Gets more aggressive routing settings.
+        /// </summary>
+        public RoutingSettings<float> GetAggressiveRoutingSettings(float factor)
+        {
+            var routingSettings = new RoutingSettings<float>();
+            routingSettings.SetMaxSearch(_profile.Name, _maxSearch * factor);
+
+            return routingSettings;
+        }
+
+        /// <summary>
         /// Gets the max settles.
         /// </summary>
         public int MaxSettles { get; internal set; }

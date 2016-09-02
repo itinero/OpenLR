@@ -13,7 +13,10 @@ namespace OpenLR.Tests.Functional
 
             Download.DownloadAll();
 
-            Netherlands.Test();
+            Action netherlandsTest = () => Netherlands.Test();
+            netherlandsTest.TestPerf("Testing netherlands performance");
+
+            Console.ReadLine();
         }
     }
 }
