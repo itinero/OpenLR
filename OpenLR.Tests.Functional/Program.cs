@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Itinero;
+using Itinero.Osm.Vehicles;
+using System;
+using System.IO;
 
 namespace OpenLR.Tests.Functional
 {
@@ -12,8 +15,11 @@ namespace OpenLR.Tests.Functional
             };
 
             Download.DownloadAll();
-
-            Action netherlandsTest = () => Netherlands.Test();
+            
+            // executes the netherlands tests.
+            var routerDb = RouterDb.Deserialize(File.OpenRead(@"netherlands.c.cf.routerdb"));
+            routerDb.RemoveContracted(Vehicle.Car.Shortest());
+            Action netherlandsTest = () => { Netherlands.TestAll(routerDb); };
             netherlandsTest.TestPerf("Testing netherlands performance");
 
             Console.ReadLine();

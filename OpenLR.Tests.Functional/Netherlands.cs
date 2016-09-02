@@ -22,6 +22,7 @@
 
 using Itinero;
 using Itinero.LocalGeo;
+using NetTopologySuite.Algorithm.Distance;
 using NUnit.Framework;
 using OpenLR.Geo;
 using OpenLR.Osm;
@@ -41,14 +42,56 @@ namespace OpenLR.Tests.Functional
         /// <summary>
         /// Tests encoding/decoding on OSM-data.
         /// </summary>
-        public static void Test()
+        public static void TestAll(RouterDb routerDb)
         {
-            var routerDb = RouterDb.Deserialize(File.OpenRead(@"netherlands.c.cf.routerdb"));
+            // TestEncodeDecodePointAlongLine(routerDb);
+            TestEncodeDecodeRoutes(routerDb);
+        }
 
+        /// <summary>
+        /// Tests encoding/decoding short routes.
+        /// </summary>
+        public static void TestEncodeDecodeRoutes(RouterDb routerDb)
+        {
+            var coder = new Coder(routerDb, new OsmCoderProfile(0.3f), new OpenLR.Codecs.Binary.BinaryCodec());
+
+            TestEncodeDecoderRoute(coder, @".\Netherlands\route1.geojson");
+            TestEncodeDecoderRoute(coder, @".\Netherlands\route2.geojson");
+            TestEncodeDecoderRoute(coder, @".\Netherlands\route3.geojson");
+            TestEncodeDecoderRoute(coder, @".\Netherlands\route4.geojson");
+            TestEncodeDecoderRoute(coder, @".\Netherlands\route5.geojson");
+            TestEncodeDecoderRoute(coder, @".\Netherlands\route6.geojson");
+            TestEncodeDecoderRoute(coder, @".\Netherlands\route7.geojson");
+        }
+
+        /// <summary>
+        /// Tests encoding/decoding a route.
+        /// </summary>
+        public static void TestEncodeDecoderRoute(Coder coder, string geoJsonFile)
+        {
+            var points = Extensions.PointsFromGeoJsonFile(geoJsonFile);
+            var referencedLine = coder.BuildLine(points[0], points[1]);
+            var referencedLineJson = referencedLine.ToFeatures(coder.Router.Db).ToGeoJson();
+
+            var encoded = coder.Encode(referencedLine);
+
+            var decodedReferencedLine = coder.Decode(encoded) as ReferencedLine;
+            var decodedReferencedLineJson = decodedReferencedLine.ToFeatures(coder.Router.Db).ToGeoJson();
+
+            var distance = DiscreteHausdorffDistance.Distance(referencedLine.ToLineString(coder.Router.Db),
+                decodedReferencedLine.ToLineString(coder.Router.Db));
+
+            Assert.IsTrue(distance < .1);
+        }
+
+        /// <summary>
+        /// Tests encoding/decoding point along line locations.
+        /// </summary>
+        public static void TestEncodeDecodePointAlongLine(RouterDb routerDb)
+        {
             var coder = new Coder(routerDb, new OsmCoderProfile(0.3f), new OpenLR.Codecs.Binary.BinaryCodec());
 
             var locations = new List<Coordinate>();
-
             locations.Add(new Coordinate(51.4498f, 5.44964f));
             locations.Add(new Coordinate(51.3654f, 5.29525f));
             locations.Add(new Coordinate(51.8501f, 4.31797f));
@@ -855,10 +898,6 @@ namespace OpenLR.Tests.Functional
         {
             var location = coder.BuildPointAlongLine(latitude, longitude);
             var locationGeoJson = location.ToFeatures(coder.Router.Db).ToGeoJson();
-
-            //var unreferencedLocation = OpenLR.Referenced.Codecs.ReferencedPointAlongLineCodec.Encode(location, coder);
-            //var firstCandidates = new List<CandidateVertexEdge>(coder.FindCandidatesFor(unreferencedLocation.First, true));
-            //var json = firstCandidates[0].ToFeatures(coder.Router.Db).ToGeoJson();
             
             var encoded = coder.Encode(location);
 

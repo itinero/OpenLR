@@ -97,6 +97,37 @@ namespace OpenLR.Geo
             }
             return featureCollection;
         }
+
+        /// <summary>
+        /// Converts this line location to a line string.
+        /// </summary>
+        public static LineString ToLineString(this ReferencedLine line, RouterDb routerDb)
+        {
+            // build coordinates list.
+            var coordinates = new List<Coordinate>();
+            for (int idx = 0; idx < line.Edges.Length; idx++)
+            {
+                var shape = routerDb.Network.GetShape(
+                    routerDb.Network.GetEdge(line.Edges[idx]));
+                if (idx > 0)
+                {
+                    coordinates.RemoveAt(coordinates.Count - 1);
+                }
+                if (line.Edges[idx] > 0)
+                {
+                    coordinates.AddRange(shape.ToCoordinates());
+                }
+                else
+                {
+                    for(var i = shape.Count - 1; i >= 0; i--)
+                    {
+                        coordinates.Add(shape[i].ToGeoAPICoordinate());
+                    }
+                }
+            }
+            
+            return new LineString(coordinates.ToArray());
+        }
         
         /// <summary>
         /// Converts this line location to features.
