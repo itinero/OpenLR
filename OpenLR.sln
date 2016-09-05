@@ -15,7 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{BAE4
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samples.NWB", "samples\Samples.NWB\Samples.NWB.csproj", "{EC408DBE-A08C-4132-AFC1-4939690E3D75}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samples.OSM", "Samples.OSM\Samples.OSM.csproj", "{EC179DC9-835B-4549-B996-AD616A3566EF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samples.OSM", "samples\Samples.OSM\Samples.OSM.csproj", "{EC179DC9-835B-4549-B996-AD616A3566EF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
