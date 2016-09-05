@@ -38,7 +38,18 @@ namespace OpenLR
         private readonly CoderProfile _profile;
 
         /// <summary>
-        /// Creates a new codec.
+        /// Creates a new coder with a default binary codec.
+        /// </summary>
+        /// <param name="routerDb"></param>
+        /// <param name="profile"></param>
+        public Coder(RouterDb routerDb, CoderProfile profile)
+            : this(routerDb, profile, new Codecs.Binary.BinaryCodec())
+        {
+
+        }
+        
+        /// <summary>
+        /// Creates a new coder.
         /// </summary>
         public Coder(RouterDb routerDb, CoderProfile profile, Codecs.CodecBase rawCodec)
         {

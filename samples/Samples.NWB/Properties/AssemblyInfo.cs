@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Samples.BuildRouterDb")]
+[assembly: AssemblyTitle("Samples.NWB")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Samples.BuildRouterDb")]
+[assembly: AssemblyProduct("Samples.NWB")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("27e64f1c-e79b-493b-9dc1-37a8e50f1158")]
+[assembly: Guid("ec408dbe-a08c-4132-afc1-4939690e3d75")]
 
 // Version information for an assembly consists of the following four values:
 //

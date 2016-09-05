@@ -23,6 +23,7 @@
 using Itinero;
 using Itinero.Attributes;
 using Itinero.Profiles;
+using OpenLR.Matching;
 using OpenLR.Model;
 using System;
 
@@ -117,9 +118,18 @@ namespace OpenLR
         public int MaxSettles { get; internal set; }
 
         /// <summary>
-        /// Tries to match the given attributes to the given fow/frc and returns a score of the match.
+        /// Matches nwb/fow.
         /// </summary>
-        public abstract float Match(IAttributeCollection attributes, FormOfWay fow, FunctionalRoadClass frc);
+        public virtual float Match(IAttributeCollection attributes, FormOfWay fow, FunctionalRoadClass frc)
+        {
+            FormOfWay actualFow;
+            FunctionalRoadClass actualFrc;
+            if (this.Extract(attributes, out actualFrc, out actualFow))
+            { // a mapping was found. match and score.
+                return MatchScoring.MatchAndScore(frc, fow, actualFrc, actualFow);
+            }
+            return 0;
+        }
 
         /// <summary>
         /// Tries to extract fow/frc from the given attributes.

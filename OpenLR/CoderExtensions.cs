@@ -304,6 +304,15 @@ namespace OpenLR
             return pathTo;
         }
 
+
+        /// <summary>
+        /// Builds a point along line location.
+        /// </summary>
+        public static ReferencedPointAlongLine BuildPointAlongLine(this Coder coder, Itinero.LocalGeo.Coordinate coordinate)
+        {
+            return coder.BuildPointAlongLine(coordinate.Latitude, coordinate.Longitude);
+        }
+
         /// <summary>
         /// Builds a point along line location.
         /// </summary>
@@ -342,23 +351,36 @@ namespace OpenLR
         {
             return coder.Encode(coder.BuildPointAlongLine(latitude, longitude));
         }
-
+        
         /// <summary>
         /// Builds the shortest path between the two coordinates as a referenced line.
         /// </summary>
         public static ReferencedLine BuildLine(this Coder coder, Itinero.LocalGeo.Coordinate coordinate1, Itinero.LocalGeo.Coordinate coordinate2)
         {
+            Route route;
+            return coder.BuildLine(coordinate1, coordinate2, out route);
+        }
+        
+        /// <summary>
+        /// Builds the shortest path between the two coordinates as a referenced line.
+        /// </summary>
+        public static ReferencedLine BuildLine(this Coder coder, Itinero.LocalGeo.Coordinate coordinate1, Itinero.LocalGeo.Coordinate coordinate2, out Route route)
+        {
             // calculate raw path.
             var weightHandler = coder.Router.GetDefaultWeightHandler(coder.Profile.Profile);
-            var path = coder.Router.TryCalculateRaw<float>(coder.Profile.Profile, weightHandler,
-                coder.Router.Resolve(coder.Profile.Profile, coordinate1),
-                coder.Router.Resolve(coder.Profile.Profile, coordinate2), coder.Profile.RoutingSettings);
+            var source = coder.Router.Resolve(coder.Profile.Profile, coordinate1, 100);
+            var target = coder.Router.Resolve(coder.Profile.Profile, coordinate2, 100);
+            var path = coder.Router.TryCalculateRaw(coder.Profile.Profile, weightHandler,
+                source, target, coder.Profile.RoutingSettings);
             if (path.IsError)
             {
                 throw new InvalidOperationException("No route found.");
             }
             var pathDistance = path.Value.Weight;
 
+            // build route.
+            route = coder.Router.BuildRoute(coder.Profile.Profile, weightHandler, source, target, path.Value).Value;
+            
             // build referenced line by building vertices and edge list.
             var pathAsList = path.Value.ToList();
             var edges = new List<long>();

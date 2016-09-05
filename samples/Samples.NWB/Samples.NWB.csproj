@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{27E64F1C-E79B-493B-9DC1-37A8E50F1158}</ProjectGuid>
+    <ProjectGuid>{EC408DBE-A08C-4132-AFC1-4939690E3D75}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Samples.BuildRouterDb</RootNamespace>
-    <AssemblyName>Samples.BuildRouterDb</AssemblyName>
+    <RootNamespace>Samples.NWB</RootNamespace>
+    <AssemblyName>Samples.NWB</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -34,54 +34,64 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="GeoAPI, Version=1.7.4.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
-      <HintPath>..\packages\GeoAPI.1.7.4\lib\net45\GeoAPI.dll</HintPath>
+      <HintPath>..\..\packages\GeoAPI.1.7.4\lib\net45\GeoAPI.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Itinero, Version=0.22.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Itinero.0.22.0-rc1\lib\net45\Itinero.dll</HintPath>
+    <Reference Include="Itinero, Version=0.23.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Itinero.0.23.1-rc1\lib\net45\Itinero.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Itinero.IO.Shape">
-      <HintPath>..\..\..\itinero\shape\Itinero.IO.Shape\bin\Debug\net45\Itinero.IO.Shape.dll</HintPath>
+    <Reference Include="Itinero.IO.Shape, Version=0.23.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Itinero.IO.Shape.0.23.1-rc1\lib\net45\Itinero.IO.Shape.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="NetTopologySuite, Version=1.14.0.0, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
-      <HintPath>..\packages\NetTopologySuite.1.14\lib\net45\NetTopologySuite.dll</HintPath>
+      <HintPath>..\..\packages\NetTopologySuite.1.14\lib\net45\NetTopologySuite.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NetTopologySuite.IO, Version=1.14.0.0, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
-      <HintPath>..\packages\NetTopologySuite.IO.1.14.0.1\lib\net45\NetTopologySuite.IO.dll</HintPath>
+      <HintPath>..\..\packages\NetTopologySuite.IO.1.14.0.1\lib\net45\NetTopologySuite.IO.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NetTopologySuite.IO.GeoJSON, Version=1.14.0.0, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NetTopologySuite.IO.GeoJSON.1.14\lib\net45\NetTopologySuite.IO.GeoJSON.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NetTopologySuite.IO.GeoTools, Version=1.14.0.0, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
-      <HintPath>..\packages\NetTopologySuite.IO.1.14.0.1\lib\net45\NetTopologySuite.IO.GeoTools.dll</HintPath>
+      <HintPath>..\..\packages\NetTopologySuite.IO.1.14.0.1\lib\net45\NetTopologySuite.IO.GeoTools.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NetTopologySuite.IO.MsSqlSpatial, Version=1.14.0.0, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
-      <HintPath>..\packages\NetTopologySuite.IO.1.14.0.1\lib\net45\NetTopologySuite.IO.MsSqlSpatial.dll</HintPath>
+      <HintPath>..\..\packages\NetTopologySuite.IO.1.14.0.1\lib\net45\NetTopologySuite.IO.MsSqlSpatial.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NetTopologySuite.IO.PostGis, Version=1.14.0.0, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
-      <HintPath>..\packages\NetTopologySuite.IO.1.14.0.1\lib\net45\NetTopologySuite.IO.PostGis.dll</HintPath>
+      <HintPath>..\..\packages\NetTopologySuite.IO.1.14.0.1\lib\net45\NetTopologySuite.IO.PostGis.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NetTopologySuite.IO.ShapeFile, Version=1.14.0.0, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
-      <HintPath>..\packages\NetTopologySuite.IO.1.14.0.1\lib\net45\NetTopologySuite.IO.ShapeFile.dll</HintPath>
+      <HintPath>..\..\packages\NetTopologySuite.IO.1.14.0.1\lib\net45\NetTopologySuite.IO.ShapeFile.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NetTopologySuite.IO.ShapeFile.Extended, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NetTopologySuite.IO.1.14.0.1\lib\net45\NetTopologySuite.IO.ShapeFile.Extended.dll</HintPath>
+      <HintPath>..\..\packages\NetTopologySuite.IO.1.14.0.1\lib\net45\NetTopologySuite.IO.ShapeFile.Extended.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="PowerCollections, Version=1.0.0.0, Culture=neutral, PublicKeyToken=2573bf8a1bdddcd5, processorArchitecture=MSIL">
-      <HintPath>..\packages\NetTopologySuite.1.14\lib\net45\PowerCollections.dll</HintPath>
+      <HintPath>..\..\packages\NetTopologySuite.1.14\lib\net45\PowerCollections.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Reminiscence, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Reminiscence.1.0.5-rc1\lib\net45\Reminiscence.dll</HintPath>
+      <HintPath>..\..\packages\Reminiscence.1.0.5-rc1\lib\net45\Reminiscence.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -90,13 +100,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Car.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="NWBCar.cs" />
+    <Compile Include="NWBCoderProfile.cs" />
+    <Compile Include="Download.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\OpenLR.Geo\OpenLR.Geo.csproj">
+      <Project>{9f81e567-35fb-4ef9-9675-c89b2cf00279}</Project>
+      <Name>OpenLR.Geo</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\OpenLR\OpenLR.csproj">
+      <Project>{036ad1da-006a-48b6-826c-83d12561411d}</Project>
+      <Name>OpenLR</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

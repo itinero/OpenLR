@@ -21,29 +21,20 @@
 // THE SOFTWARE.
 
 using Itinero;
-using Itinero.Data.Edges;
-using Itinero.IO.Shape;
-using System;
+using NetTopologySuite.Features;
+using System.IO;
 
-namespace Samples.BuildRouterDb
+namespace Samples.NWB
 {
-    class Program
+    public static class Extensions
     {
-        /// <summary>
-        /// Builds a router db from a shapefile.
-        /// </summary>
-        static void Main(string[] args)
+        public static string ToGeoJson(this FeatureCollection featureCollection)
         {
-            Itinero.Logging.Logger.LogAction = (o, level, message, parameters) =>
-            {
-                Console.WriteLine(string.Format("[{0}] {1} - {2}", o, level, message));
-            };
-
-            var routerDb = new RouterDb(EdgeDataSerializer.MAX_DISTANCE);
-
-            routerDb.LoadFromShape(@"C:\work\data\OSM\shape\belgium", "belgium.shp", "startid", "endid", new Car());
-
-            routerDb.Serialize(System.IO.File.OpenWrite(@"belgium.routing"));
+            var jsonSerializer = new NetTopologySuite.IO.GeoJsonSerializer();
+            var jsonStream = new StringWriter();
+            jsonSerializer.Serialize(jsonStream, featureCollection);
+            var json = jsonStream.ToInvariantString();
+            return json;
         }
     }
 }
