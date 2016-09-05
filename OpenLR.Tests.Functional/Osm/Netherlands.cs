@@ -27,8 +27,9 @@ using NUnit.Framework;
 using OpenLR.Geo;
 using OpenLR.Osm;
 using OpenLR.Referenced.Locations;
+using OpenLR.Tests.Functional.NWB;
 
-namespace OpenLR.Tests.Functional
+namespace OpenLR.Tests.Functional.Osm
 {
     /// <summary>
     /// Contains tests for the netherlands.
@@ -882,7 +883,7 @@ namespace OpenLR.Tests.Functional
             for (var i = 0; i < locations.Length; i++)
             {
                 System.Console.WriteLine("Testing location {0}/{1} @ {2}", i + 1, locations.Length, locations[i].ToInvariantString());
-                Netherlands.TestEncodeDecodePointAlongLine(coder, locations[i].Latitude, locations[i].Longitude, 30);
+                Netherlands.TestEncodeDecodePointAlongLine(coder, locations[i].Item1.Latitude, locations[i].Item1.Longitude, 30);
             }
         }
 

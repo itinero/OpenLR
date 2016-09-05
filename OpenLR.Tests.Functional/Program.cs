@@ -16,13 +16,21 @@ namespace OpenLR.Tests.Functional
 
             Download.DownloadAll();
             
-            // executes the netherlands tests.
+            // executes the netherlands tests based on OSM.
             var routerDb = RouterDb.Deserialize(File.OpenRead(@"netherlands.c.cf.routerdb"));
             routerDb.RemoveContracted(Vehicle.Car.Shortest());
-            Action netherlandsTest = () => { Netherlands.TestEncodeDecodePointAlongLine(routerDb); };
+            Action netherlandsTest = () => { Osm.Netherlands.TestEncodeDecodePointAlongLine(routerDb); };
             netherlandsTest.TestPerf("Testing netherlands point along line performance");
-            netherlandsTest = () => { Netherlands.TestEncodeDecodeRoutes(routerDb); };
+            netherlandsTest = () => { Osm.Netherlands.TestEncodeDecodeRoutes(routerDb); };
             netherlandsTest.TestPerf("Testing netherlands line performance");
+
+            // TODO: fix the NWB tests.
+            //// executes the netherlands tests based on NWB.
+            //routerDb = NWB.Netherlands.DownloadExtractAndBuildRouterDb();
+            //netherlandsTest = () => { NWB.Netherlands.TestEncodeDecodePointAlongLine(routerDb); };
+            //netherlandsTest.TestPerf("Testing netherlands point along line performance");
+            //netherlandsTest = () => { NWB.Netherlands.TestEncodeDecodeRoutes(routerDb); };
+            //netherlandsTest.TestPerf("Testing netherlands line performance");
 
             Console.ReadLine();
         }

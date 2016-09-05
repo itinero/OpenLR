@@ -56,6 +56,11 @@ namespace OpenLR
             _router = new Router(routerDb);
             _rawCodec = rawCodec;
             _profile = profile;
+
+            if (!_router.SupportsAll(profile.Profile))
+            {
+                throw new ArgumentException("The router db does not support the profile in the coder profile. Are you using the correct vehicle profile?");
+            }
         }
 
         /// <summary>

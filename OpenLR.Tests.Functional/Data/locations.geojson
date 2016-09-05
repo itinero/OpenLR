@@ -31,7 +31,8 @@
       },
       "properties": {
         "country": "NL",
-        "osm": "yes"
+        "osm": "yes",
+        "nwb": "no"
       }
     },
     {
@@ -218,7 +219,8 @@
       },
       "properties": {
         "country": "NL",
-        "osm": "yes"
+        "osm": "yes",
+        "nwb":  "no"
       }
     },
     {

@@ -324,19 +324,47 @@ namespace OpenLR
                 throw new Exception("Could not build point along line: Could not find an edge close to the given location.");
             }
 
-            // build the location with one edge.
+            // get edge info.
             var edge = coder.Router.Db.Network.GetEdge(routerPoint.Value.EdgeId);
-            var referencedPointAlongLine = new ReferencedPointAlongLine()
+
+            // check direction.
+            var forward = true;
+            var factor = coder.Profile.Profile.Factor(coder.Router.Db.EdgeProfiles.Get(edge.Data.Profile));
+            if (factor.Direction == 2)
             {
-                Route = new ReferencedLine()
+                forward = false;
+            }
+
+            // build the location with one edge.
+            ReferencedPointAlongLine referencedPointAlongLine = null;
+            if (forward)
+            {
+                referencedPointAlongLine = new ReferencedPointAlongLine()
                 {
-                    Edges = new long[] { edge.IdDirected() },
-                    Vertices = new uint[] { edge.From, edge.To }
-                },
-                Latitude = latitude,
-                Longitude = longitude,
-                Orientation = Orientation.NoOrientation
-            };
+                    Route = new ReferencedLine()
+                    {
+                        Edges = new long[] { edge.IdDirected() },
+                        Vertices = new uint[] { edge.From, edge.To }
+                    },
+                    Latitude = latitude,
+                    Longitude = longitude,
+                    Orientation = Orientation.NoOrientation
+                };
+            }
+            else
+            {
+                referencedPointAlongLine = new ReferencedPointAlongLine()
+                {
+                    Route = new ReferencedLine()
+                    {
+                        Edges = new long[] { -edge.IdDirected() },
+                        Vertices = new uint[] { edge.To, edge.From  }
+                    },
+                    Latitude = latitude,
+                    Longitude = longitude,
+                    Orientation = Orientation.NoOrientation
+                };
+            }
 
             // expand to valid location.
             referencedPointAlongLine.Route.AdjustToValidPoints(coder);
