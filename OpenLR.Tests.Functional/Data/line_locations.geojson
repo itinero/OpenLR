@@ -1,0 +1,165 @@
+﻿{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            4.946079254150391,
+            51.95833631000295
+          ],
+          [
+            4.954748153686523,
+            51.94288923910573
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            5.416468977928162,
+            51.62329884925355
+          ],
+          [
+            5.416152477264404,
+            51.61980014332322
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            5.786769390106201,
+            52.26148613072795
+          ],
+          [
+            5.775034725666046,
+            52.26816722230228
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            5.939140319824219,
+            52.38974440723657
+          ],
+          [
+            5.925579071044922,
+            52.34624647178617
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.52113676071167,
+            52.99570256594489
+          ],
+          [
+            6.571339666843414,
+            53.035586129223425
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.681157350540161,
+            52.932473732715806
+          ],
+          [
+            6.651771068572998,
+            52.94319447282838
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            5.016806423664093,
+            51.670166464574244
+          ],
+          [
+            5.006214380264281,
+            51.66091162064711
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            6.437288224697113,
+            52.679883293192184
+          ],
+          [
+            6.487595736980438,
+            52.676440626408976
+          ]
+        ]
+      }
+    }
+  ]
+}

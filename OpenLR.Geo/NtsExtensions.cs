@@ -69,6 +69,7 @@ namespace OpenLR.Geo
 
             // build coordinates list.
             var coordinates = new List<Coordinate>();
+            var allCoordinates = new List<Coordinate>();
             for (int idx = 0; idx < line.Edges.Length; idx++)
             {
                 var edge = routerDb.Network.GetEdge(line.Edges[idx]);
@@ -87,14 +88,27 @@ namespace OpenLR.Geo
                 }
                 coordinates.Add(routerDb.Network.GetVertex(line.Vertices[idx + 1]).ToGeoAPICoordinate());
 
+                if (allCoordinates.Count > 0)
+                {
+                    allCoordinates.RemoveAt(allCoordinates.Count - 1);
+                }
+                allCoordinates.AddRange(coordinates);
+
                 var tags = new AttributeCollection();
                 tags.AddOrReplace(routerDb.EdgeProfiles.Get(edge.Data.Profile));
                 tags.AddOrReplace(routerDb.EdgeMeta.Get(edge.Data.MetaId));
+                tags.AddOrReplace("edge_id", edge.IdDirected().ToInvariantString());
                 var table = tags.ToAttributes();
                 
                 featureCollection.Add(new Feature(new LineString(coordinates.ToArray()), table));
                 coordinates.Clear();
             }
+
+            var positiveLocation = line.GetPositiveOffsetLocation(routerDb).ToGeoAPICoordinate();
+            featureCollection.Add(new Feature(new Point(positiveLocation), (new AttributeCollection(new Attribute("type", "positive_offset_location"))).ToAttributes()));
+            var negativeLocation = line.GetNegativeOffsetLocation(routerDb).ToGeoAPICoordinate();
+            featureCollection.Add(new Feature(new Point(negativeLocation), (new AttributeCollection(new Attribute("type", "negative_offset_location"))).ToAttributes()));
+
             return featureCollection;
         }
 

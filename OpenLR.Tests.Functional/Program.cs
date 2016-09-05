@@ -19,8 +19,10 @@ namespace OpenLR.Tests.Functional
             // executes the netherlands tests.
             var routerDb = RouterDb.Deserialize(File.OpenRead(@"netherlands.c.cf.routerdb"));
             routerDb.RemoveContracted(Vehicle.Car.Shortest());
-            Action netherlandsTest = () => { Netherlands.TestAll(routerDb); };
-            netherlandsTest.TestPerf("Testing netherlands performance");
+            Action netherlandsTest = () => { Netherlands.TestEncodeDecodePointAlongLine(routerDb); };
+            netherlandsTest.TestPerf("Testing netherlands point along line performance");
+            netherlandsTest = () => { Netherlands.TestEncodeDecodeRoutes(routerDb); };
+            netherlandsTest.TestPerf("Testing netherlands line performance");
 
             Console.ReadLine();
         }

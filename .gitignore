@@ -28,6 +28,7 @@ OutputWindowsPhone*/
 test-results*/
 *.vsp
 .DotSettings
+.vs*/
 
 packages/*
 !packages/repositories.config

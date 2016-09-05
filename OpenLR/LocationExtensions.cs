@@ -145,6 +145,26 @@ namespace OpenLR
         }
 
         /// <summary>
+        /// Gets the positive offset location.
+        /// </summary>
+        public static Coordinate GetPositiveOffsetLocation(this ReferencedLine referencedLine, RouterDb routerDb)
+        {
+            var coordinates = referencedLine.GetCoordinates(routerDb);
+
+            return coordinates.GetPositionLocation(referencedLine.PositiveOffsetPercentage / 100.0f);
+        }
+
+        /// <summary>
+        /// Gets the negative offset location.
+        /// </summary>
+        public static Coordinate GetNegativeOffsetLocation(this ReferencedLine referencedLine, RouterDb routerDb)
+        {
+            var coordinates = referencedLine.GetCoordinates(routerDb);
+
+            return coordinates.GetPositionLocation(1f - (referencedLine.NegativeOffsetPercentage / 100.0f));
+        }
+
+        /// <summary>
         /// Converts the referenced line location to features.
         /// </summary>
         public static List<Coordinate> GetCoordinates(this ReferencedLine referencedLine, RouterDb routerDb)

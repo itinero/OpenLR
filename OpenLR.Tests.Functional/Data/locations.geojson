@@ -1,0 +1,5978 @@
+﻿{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.4496397972106934, 51.449798583984375 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.2952499389648438, 51.365398406982422 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.317969799041748, 51.850101470947266 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.9042301177978516, 52.556800842285156 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.9811501502990723, 52.874599456787109 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.2842001914978027, 51.947700500488281 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.8201899528503418, 51.062099456787109 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.26908016204834, 51.530300140380859 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.7698202133178711, 52.374698638916016 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.6953301429748535, 51.244300842285156 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.4785399436950684, 51.513099670410156 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.6009798049926758, 52.412700653076172 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.9082198143005371, 52.76300048828125 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.7138099670410156, 51.250999450683594 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.1788301467895508, 51.960399627685547 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.8849701881408691, 52.556900024414062 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.4566202163696289, 52.164199829101562 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.0306301116943359, 51.948200225830078 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.20173978805542, 52.6432991027832 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.9805498123168945, 50.876201629638672 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.1160798072814941, 52.780601501464844 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.7000398635864258, 51.238300323486328 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.7584314346313477, 52.666839599609375 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.7606892585754395, 52.241718292236328 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.8209028244018555, 52.284996032714844 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.834559440612793, 52.287433624267578 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.8429489135742188, 52.225505828857422 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.9032454490661621, 53.343875885009766 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.874201774597168, 52.408111572265625 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.8728232383728027, 52.19085693359375 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.8920483589172363, 52.751735687255859 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.8901505470275879, 52.215724945068359 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.9037508964538574, 52.317489624023438 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.9279680252075195, 52.788738250732422 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.91208553314209, 52.221981048583984 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.9215826988220215, 52.287403106689453 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.9717679023742676, 53.175678253173828 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.9410300254821777, 52.216522216796875 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.987877368927002, 52.986133575439453 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.9734172821044922, 52.221694946289062 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 7.0078125, 53.103561401367188 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 3.8735880851745605, 51.508831024169922 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.1091580390930176, 51.7474250793457 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 3.5009517669677734, 51.561508178710938 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.8330001831054688, 50.876495361328125 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.8292446136474609, 50.877498626708984 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.8793540000915527, 50.8824348449707 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.8052444458007812, 50.9866943359375 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.7843928337097168, 50.989692687988281 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.7992815971374512, 50.998802185058594 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.7988119125366211, 50.9989128112793 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.7903313636779785, 51.001510620117188 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.8092083930969238, 51.019367218017578 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.8218879699707031, 51.030632019042969 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.8446836471557617, 51.044563293457031 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.8229761123657227, 51.069976806640625 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.9953622817993164, 51.193019866943359 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.9955658912658691, 51.193439483642578 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.9953336715698242, 51.192958831787109 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.89940071105957, 51.215171813964844 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.8908605575561523, 51.217689514160156 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.6861591339111328, 51.251640319824219 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.7069005966186523, 51.252113342285156 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.7227702140808105, 51.252975463867188 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.7216181755065918, 51.26953125 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.7259922027587891, 51.270332336425781 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.4496397972106934, 51.449798583984375 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.2952499389648438, 51.365398406982422 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.317969799041748, 51.850101470947266 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.9042301177978516, 52.556800842285156 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.9811501502990723, 52.874599456787109 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.2842001914978027, 51.947700500488281 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.8201899528503418, 51.062099456787109 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.26908016204834, 51.530300140380859 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.7698202133178711, 52.374698638916016 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.6953301429748535, 51.244300842285156 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.4785399436950684, 51.513099670410156 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.6009798049926758, 52.412700653076172 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.9082198143005371, 52.76300048828125 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.7138099670410156, 51.250999450683594 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.1788301467895508, 51.960399627685547 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.8849701881408691, 52.556900024414062 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.4566202163696289, 52.164199829101562 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.0306301116943359, 51.948200225830078 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.20173978805542, 52.6432991027832 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.9805498123168945, 50.876201629638672 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.1160798072814941, 52.780601501464844 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.7000398635864258, 51.238300323486328 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 3.5527541637420654, 51.563728332519531 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 3.816054105758667, 51.470516204833984 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 3.82436466217041, 51.340560913085938 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 3.8256931304931641, 51.325775146484375 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 3.8568270206451416, 51.437080383300781 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 3.8735880851745605, 51.508831024169922 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 3.88250994682312, 51.791717529296875 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 3.9031095504760742, 51.652587890625 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.0939908027648926, 51.667396545410156 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.1828670501708984, 51.547176361083984 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.2722983360290527, 51.502758026123047 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.2639341354370117, 52.026885986328125 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.2851662635803223, 51.475269317626953 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.3004155158996582, 51.492988586425781 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.2874584197998047, 52.045608520507812 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.28720760345459, 52.117435455322266 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.3043031692504883, 51.493328094482422 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.31525993347168, 51.9091682434082 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.3169732093811035, 51.905010223388672 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.31850004196167, 52.065799713134766 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.3551697731018066, 51.866107940673828 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.3575220108032227, 52.075599670410156 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.3752956390380859, 51.910488128662109 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.3954143524169922, 51.861141204833984 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.3964338302612305, 52.201663970947266 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.4285473823547363, 51.936508178710938 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.42556619644165, 52.183609008789062 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.4407486915588379, 51.513656616210938 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.4488973617553711, 51.520809173583984 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.4445257186889648, 52.014724731445312 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.44183874130249, 52.192081451416016 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.4590210914611816, 51.523845672607422 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.4646506309509277, 51.915054321289062 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.4737305641174316, 51.522823333740234 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.4686117172241211, 51.8972053527832 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.4694352149963379, 51.874195098876953 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.4690761566162109, 52.1770133972168 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.4780278205871582, 51.994003295898438 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.475616455078125, 52.142734527587891 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.4786777496337891, 52.19415283203125 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.513336181640625, 51.8970832824707 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.5092220306396484, 52.149650573730469 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.5112338066101074, 52.056205749511719 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.5107412338256836, 52.173709869384766 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.5290079116821289, 51.880485534667969 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.5463190078735352, 51.879280090332031 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.5709347724914551, 51.951976776123047 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.5894412994384766, 51.914772033691406 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.6003818511962891, 51.864131927490234 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.601048469543457, 51.941593170166016 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.620020866394043, 52.274135589599609 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.6279573440551758, 51.826988220214844 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.6366429328918457, 51.846645355224609 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.6367502212524414, 52.264671325683594 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.6408147811889648, 52.474163055419922 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.6531262397766113, 52.375755310058594 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.6639184951782227, 51.791236877441406 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.6582574844360352, 52.151859283447266 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.6565446853637695, 52.304248809814453 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.6623578071594238, 52.356830596923828 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.6670923233032227, 52.129802703857422 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.6704001426696777, 51.982963562011719 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.666783332824707, 52.353610992431641 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.6802353858947754, 52.498744964599609 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.6799163818359375, 52.6363410949707 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.7393784523010254, 51.490066528320312 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.7404794692993164, 52.014263153076172 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.7545933723449707, 51.609237670898438 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.7509870529174805, 52.505550384521484 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.750403881072998, 52.895004272460938 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.769467830657959, 51.607589721679688 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.7674522399902344, 52.500381469726562 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.76424503326416, 52.96453857421875 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.7838153839111328, 52.36712646484375 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.7914266586303711, 52.4620475769043 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.7850265502929688, 53.056808471679688 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.8087306022644043, 51.594474792480469 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.8122377395629883, 51.672645568847656 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.8062067031860352, 52.356773376464844 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.835484504699707, 52.674739837646484 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.8440937995910645, 52.423954010009766 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.8629026412963867, 51.659214019775391 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.8602104187011719, 52.314258575439453 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.8643155097961426, 52.308418273925781 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.8692450523376465, 52.332599639892578 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.8755688667297363, 52.441429138183594 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.9192972183227539, 52.406448364257812 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.9223976135253906, 52.304958343505859 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.9361796379089355, 52.221378326416016 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.94444465637207, 52.510951995849609 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.9565815925598145, 52.523036956787109 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.026970386505127, 51.595401763916016 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.0354442596435547, 52.099124908447266 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.079615592956543, 52.499973297119141 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.0828866958618164, 52.033210754394531 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.086759090423584, 52.028438568115234 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.0923309326171875, 51.590614318847656 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.0910043716430664, 52.027462005615234 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.0970139503479, 52.077262878417969 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.10589599609375, 52.093086242675781 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.1174969673156738, 52.117626190185547 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.1595544815063477, 52.230785369873047 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.1602320671081543, 52.279468536376953 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.1623148918151855, 52.028297424316406 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.1710891723632812, 52.394390106201172 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.1804838180541992, 52.095317840576172 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.1826939582824707, 52.673336029052734 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.1905388832092285, 52.357460021972656 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.2166123390197754, 52.371322631835938 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.2436060905456543, 51.948814392089844 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.2421841621398926, 52.695640563964844 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.28724479675293, 51.660125732421875 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.3013129234313965, 52.217262268066406 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.3123207092285156, 51.508110046386719 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.3842887878417969, 51.489982604980469 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.3984899520874023, 51.270347595214844 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.4008965492248535, 51.684310913085938 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.4187722206115723, 51.405876159667969 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.4195194244384766, 51.679477691650391 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.4260969161987305, 52.169120788574219 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.4309701919555664, 52.193515777587891 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.4451122283935547, 51.89111328125 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.4518799781799316, 51.427341461181641 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.45256233215332, 51.473606109619141 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.45400333404541, 51.362079620361328 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.4601030349731445, 52.517547607421875 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.4628820419311523, 52.580684661865234 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.46896505355835, 52.221641540527344 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.4869275093078613, 51.550174713134766 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.5021095275878906, 52.12103271484375 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.5262660980224609, 51.771854400634766 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.5370650291442871, 51.427337646484375 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.54713249206543, 51.621479034423828 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.5566768646240234, 51.634937286376953 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.558466911315918, 51.624549865722656 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.558964729309082, 51.434791564941406 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.568718433380127, 52.896324157714844 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.5655031204223633, 52.040725708007812 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.57110595703125, 53.146083831787109 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.567253589630127, 51.95904541015625 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.5691204071044922, 52.023464202880859 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.619265079498291, 51.654953002929688 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.6350374221801758, 53.178741455078125 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.643256664276123, 53.021476745605469 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.6495261192321777, 50.842575073242188 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.6579909324646, 50.854244232177734 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.6742868423461914, 51.998542785644531 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.6932768821716309, 51.564914703369141 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.728447437286377, 51.3846549987793 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.7491912841796875, 52.8651237487793 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.7578372955322266, 51.214111328125 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.7689895629882812, 51.464546203613281 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.8059072494506836, 51.838844299316406 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.8157782554626465, 51.849250793457031 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.8149142265319824, 51.465126037597656 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.82366418838501, 50.988052368164062 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.849517822265625, 53.205802917480469 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.8496565818786621, 52.448276519775391 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.8525176048278809, 51.002315521240234 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.872307300567627, 52.419227600097656 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.8665223121643066, 51.841381072998047 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.8718910217285156, 51.953983306884766 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.8716073036193848, 51.063930511474609 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.8810911178588867, 51.009891510009766 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.9090080261230469, 52.958351135253906 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.9210848808288574, 51.908000946044922 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.922295093536377, 51.960487365722656 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.9455218315124512, 52.181858062744141 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.9404044151306152, 51.663295745849609 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.967010498046875, 52.184688568115234 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.9665679931640625, 51.981735229492188 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.9778900146484375, 51.985431671142578 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.967339038848877, 50.926605224609375 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.97522497177124, 51.178291320800781 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.9902763366699219, 52.203678131103516 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.9927492141723633, 52.187824249267578 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.9964423179626465, 52.223075866699219 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.9964303970336914, 52.20794677734375 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.9992690086364746, 52.212684631347656 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.9949536323547363, 51.664608001708984 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.98889684677124, 51.203144073486328 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.0432229042053223, 52.393898010253906 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.048795223236084, 51.357540130615234 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.045684814453125, 51.122947692871094 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.0781550407409668, 52.530399322509766 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.1043543815612793, 53.096382141113281 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.0966901779174805, 52.509342193603516 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.098381519317627, 52.528022766113281 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.098778247833252, 51.39129638671875 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.1426053047180176, 53.1092529296875 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.1406421661376953, 52.491355895996094 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.1506414413452148, 52.258792877197266 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.150761604309082, 51.907642364501953 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.1518230438232422, 51.365631103515625 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.17659854888916, 52.2360954284668 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.1809868812561035, 52.064670562744141 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.19423770904541, 52.714996337890625 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.1736135482788086, 51.350532531738281 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.2109036445617676, 52.238243103027344 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.23517370223999, 52.134536743164062 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.267909049987793, 52.341880798339844 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.3134546279907227, 51.947906494140625 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.3789920806884766, 53.181983947753906 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.3674201965332031, 51.903701782226562 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.4037256240844727, 52.164726257324219 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.4227409362792969, 52.282691955566406 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.4705514907836914, 52.374137878417969 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.5099711418151855, 52.361248016357422 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.5456814765930176, 53.008373260498047 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.5270428657531738, 52.117057800292969 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.57150936126709, 52.459941864013672 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.6007819175720215, 53.279315948486328 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.5915265083312988, 52.357624053955078 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.6429100036621094, 52.343589782714844 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.6944365501403809, 52.829082489013672 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.7562847137451172, 53.173011779785156 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.7608623504638672, 53.010402679443359 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.7584314346313477, 52.666839599609375 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.7606892585754395, 52.241718292236328 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.874201774597168, 52.408111572265625 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.8728232383728027, 52.19085693359375 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.8920483589172363, 52.751735687255859 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.9037508964538574, 52.317489624023438 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.91208553314209, 52.221981048583984 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.9215826988220215, 52.287403106689453 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.9717679023742676, 53.175678253173828 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.9410300254821777, 52.216522216796875 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.9734172821044922, 52.221694946289062 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 7.0078125, 53.103561401367188 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 3.5527541637420654, 51.563728332519531 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 3.816054105758667, 51.470516204833984 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 3.82436466217041, 51.340560913085938 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 3.8256931304931641, 51.325775146484375 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 3.8568270206451416, 51.437080383300781 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 3.8735880851745605, 51.508831024169922 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 3.88250994682312, 51.791717529296875 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 3.9031095504760742, 51.652587890625 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.0939908027648926, 51.667396545410156 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.1828670501708984, 51.547176361083984 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.2722983360290527, 51.502758026123047 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.2639341354370117, 52.026885986328125 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.2851662635803223, 51.475269317626953 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.3004155158996582, 51.492988586425781 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.28720760345459, 52.117435455322266 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.3043031692504883, 51.493328094482422 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.31525993347168, 51.9091682434082 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.3169732093811035, 51.905010223388672 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.31850004196167, 52.065799713134766 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.3551697731018066, 51.866107940673828 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.3575220108032227, 52.075599670410156 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.3752956390380859, 51.910488128662109 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.3954143524169922, 51.861141204833984 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.3964338302612305, 52.201663970947266 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.4285473823547363, 51.936508178710938 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.42556619644165, 52.183609008789062 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.4407486915588379, 51.513656616210938 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.4488973617553711, 51.520809173583984 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.4445257186889648, 52.014724731445312 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.44183874130249, 52.192081451416016 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.4590210914611816, 51.523845672607422 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.4646506309509277, 51.915054321289062 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.4737305641174316, 51.522823333740234 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.4686117172241211, 51.8972053527832 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.4694352149963379, 51.874195098876953 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.4690761566162109, 52.1770133972168 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.4780278205871582, 51.994003295898438 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.475616455078125, 52.142734527587891 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.4786777496337891, 52.19415283203125 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.513336181640625, 51.8970832824707 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.5092220306396484, 52.149650573730469 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.5112338066101074, 52.056205749511719 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.5107412338256836, 52.173709869384766 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.5290079116821289, 51.880485534667969 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.5463190078735352, 51.879280090332031 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.5709347724914551, 51.951976776123047 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.5894412994384766, 51.914772033691406 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.6003818511962891, 51.864131927490234 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.601048469543457, 51.941593170166016 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.620020866394043, 52.274135589599609 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.6279573440551758, 51.826988220214844 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.6366429328918457, 51.846645355224609 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.6367502212524414, 52.264671325683594 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.6408147811889648, 52.474163055419922 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.6531262397766113, 52.375755310058594 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.6639184951782227, 51.791236877441406 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.6582574844360352, 52.151859283447266 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.6565446853637695, 52.304248809814453 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.6623578071594238, 52.356830596923828 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.6670923233032227, 52.129802703857422 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.6704001426696777, 51.982963562011719 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.666783332824707, 52.353610992431641 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.6802353858947754, 52.498744964599609 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.6799163818359375, 52.6363410949707 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.7393784523010254, 51.490066528320312 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.7404794692993164, 52.014263153076172 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.7545933723449707, 51.609237670898438 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.7509870529174805, 52.505550384521484 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.750403881072998, 52.895004272460938 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.769467830657959, 51.607589721679688 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.7674522399902344, 52.500381469726562 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.76424503326416, 52.96453857421875 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.7838153839111328, 52.36712646484375 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.7914266586303711, 52.4620475769043 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.8087306022644043, 51.594474792480469 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.8122377395629883, 51.672645568847656 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.835484504699707, 52.674739837646484 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.8440937995910645, 52.423954010009766 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.8629026412963867, 51.659214019775391 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.8602104187011719, 52.314258575439453 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.8643155097961426, 52.308418273925781 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.8692450523376465, 52.332599639892578 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.8755688667297363, 52.441429138183594 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.9192972183227539, 52.406448364257812 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.9223976135253906, 52.304958343505859 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.9361796379089355, 52.221378326416016 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 4.9565815925598145, 52.523036956787109 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.0262246131896973, 51.579059600830078 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.026970386505127, 51.595401763916016 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.0354442596435547, 52.099124908447266 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.079615592956543, 52.499973297119141 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.0828866958618164, 52.033210754394531 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.086759090423584, 52.028438568115234 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.0923309326171875, 51.590614318847656 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.0910043716430664, 52.027462005615234 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.0970139503479, 52.077262878417969 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.10589599609375, 52.093086242675781 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.1174969673156738, 52.117626190185547 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.1595544815063477, 52.230785369873047 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.1602320671081543, 52.279468536376953 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.1623148918151855, 52.028297424316406 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.1710891723632812, 52.394390106201172 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.1804838180541992, 52.095317840576172 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.1826939582824707, 52.673336029052734 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.1905388832092285, 52.357460021972656 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.2166123390197754, 52.371322631835938 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.2436060905456543, 51.948814392089844 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.2421841621398926, 52.695640563964844 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.28724479675293, 51.660125732421875 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.295137882232666, 52.398818969726562 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.3013129234313965, 52.217262268066406 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.3123207092285156, 51.508110046386719 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.3842887878417969, 51.489982604980469 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.3984899520874023, 51.270347595214844 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.4008965492248535, 51.684310913085938 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.4131250381469727, 51.878005981445312 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.4187722206115723, 51.405876159667969 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.4195194244384766, 51.679477691650391 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.4260969161987305, 52.169120788574219 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.4309701919555664, 52.193515777587891 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.4451122283935547, 51.89111328125 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.4518799781799316, 51.427341461181641 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.45256233215332, 51.473606109619141 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.45400333404541, 51.362079620361328 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.4601030349731445, 52.517547607421875 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.4628820419311523, 52.580684661865234 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.46896505355835, 52.221641540527344 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.4869275093078613, 51.550174713134766 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.5021095275878906, 52.12103271484375 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.5262660980224609, 51.771854400634766 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.5370650291442871, 51.427337646484375 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.54713249206543, 51.621479034423828 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.5566768646240234, 51.634937286376953 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.558466911315918, 51.624549865722656 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.558964729309082, 51.434791564941406 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.568718433380127, 52.896324157714844 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.5655031204223633, 52.040725708007812 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.57110595703125, 53.146083831787109 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.567253589630127, 51.95904541015625 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.5691204071044922, 52.023464202880859 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.619265079498291, 51.654953002929688 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.6350374221801758, 53.178741455078125 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.643256664276123, 53.021476745605469 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.6495261192321777, 50.842575073242188 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.6579909324646, 50.854244232177734 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.6742868423461914, 51.998542785644531 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.6932768821716309, 51.564914703369141 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.728447437286377, 51.3846549987793 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.7491912841796875, 52.8651237487793 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.7578372955322266, 51.214111328125 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.7689895629882812, 51.464546203613281 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.8059072494506836, 51.838844299316406 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.8157782554626465, 51.849250793457031 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.8149142265319824, 51.465126037597656 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.82366418838501, 50.988052368164062 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.849517822265625, 53.205802917480469 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.8496565818786621, 52.448276519775391 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.8525176048278809, 51.002315521240234 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.872307300567627, 52.419227600097656 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.8665223121643066, 51.841381072998047 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.8716073036193848, 51.063930511474609 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.8810911178588867, 51.009891510009766 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.9090080261230469, 52.958351135253906 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.9210848808288574, 51.908000946044922 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.922295093536377, 51.960487365722656 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.9455218315124512, 52.181858062744141 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.9404044151306152, 51.663295745849609 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.967010498046875, 52.184688568115234 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.9665679931640625, 51.981735229492188 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.9778900146484375, 51.985431671142578 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.967339038848877, 50.926605224609375 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.97522497177124, 51.178291320800781 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.9902763366699219, 52.203678131103516 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.9927492141723633, 52.187824249267578 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.9964423179626465, 52.223075866699219 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.9964303970336914, 52.20794677734375 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.9992690086364746, 52.212684631347656 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.9949536323547363, 51.664608001708984 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 5.98889684677124, 51.203144073486328 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.0432229042053223, 52.393898010253906 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.048795223236084, 51.357540130615234 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.0781550407409668, 52.530399322509766 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.1043543815612793, 53.096382141113281 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.0966901779174805, 52.509342193603516 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.098778247833252, 51.39129638671875 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.1426053047180176, 53.1092529296875 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.1406421661376953, 52.491355895996094 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.1506414413452148, 52.258792877197266 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.150761604309082, 51.907642364501953 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.1518230438232422, 51.365631103515625 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.17659854888916, 52.2360954284668 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.1809868812561035, 52.064670562744141 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.19423770904541, 52.714996337890625 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.1736135482788086, 51.350532531738281 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.2109036445617676, 52.238243103027344 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.23517370223999, 52.134536743164062 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.267909049987793, 52.341880798339844 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.2976741790771484, 53.311897277832031 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.3134546279907227, 51.947906494140625 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.3789920806884766, 53.181983947753906 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.3674201965332031, 51.903701782226562 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.4037256240844727, 52.164726257324219 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.4227409362792969, 52.282691955566406 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.4705514907836914, 52.374137878417969 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.5099711418151855, 52.361248016357422 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.5456814765930176, 53.008373260498047 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.5270428657531738, 52.117057800292969 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.57150936126709, 52.459941864013672 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.6007819175720215, 53.279315948486328 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.5915265083312988, 52.357624053955078 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.6429100036621094, 52.343589782714844 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.6944365501403809, 52.829082489013672 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.7562847137451172, 53.173011779785156 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.7608623504638672, 53.010402679443359 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.7584314346313477, 52.666839599609375 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.7606892585754395, 52.241718292236328 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.8372807502746582, 52.2206916809082 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.874201774597168, 52.408111572265625 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.8728232383728027, 52.19085693359375 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.8920483589172363, 52.751735687255859 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.9037508964538574, 52.317489624023438 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.9215826988220215, 52.287403106689453 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.9717679023742676, 53.175678253173828 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.9410300254821777, 52.216522216796875 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 6.9734172821044922, 52.221694946289062 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 7.0078125, 53.103561401367188 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    }
+  ]
+}
