@@ -1,74 +1,42 @@
-# OpenLR Encoder/decoder
+# OpenLR for .NET
 
-** This is still a work in progress
-
-This is an implementation of the OpenLR (Open Location Reference) protocol based on OsmSharp. Development is sponsered by via.nl (http://via.nl/) and Be-Mobile (http://www.be-mobile-international.com/). 
-
-Decoding/encoding is possible using different datasources, OpenStreetMap, NWB and TomTom MultiNet.
+This is an implementation of the OpenLR (Open Location Reference) protocol using Itinero. Development was initially sponsered by via.nl (http://via.nl/) and Be-Mobile (http://www.be-mobile-international.com/). 
 
 ## Dependencies
 
-* OsmSharp: For a basic graph structure, loading data and routing. Use OpenStreetMap for encoding/decoding.
-* OsmSharp.Routing.Shape: Use shapefiles for routing and encoding/decoding.
+* Itinero: For a basic routing graph structure, loading data and routing.
+* NetTopologySuite: A geo library for .NET.
 
 ## Usage
 
 ### The basics
 
-Using this library is very simple. There is one decoder and and one encoder for each type of network, OpenStreetMap, NWB or MultiNet. A decoder or encoder needs a routing graph. How to [create a routing graph dump file](#create_routing_graph) read below.
+By default, just like in Itinero, all code is there to decode/encode based on an OpenStreetMap network. 
 
-The most basic code sample to create an NWB or MultiNet encoder/decoder:
-```csharp
-var serializer = new LiveEdgeFlatfileSerializer();
-var nwbGraph = serializer.Deserialize(
-     new FileInfo(@"path\to\nwbdata.dump").OpenRead());
-var nwbEncoder = ReferencedNWBEncoder.CreateBinary(nwbGraph);
-var nwbDecoder = ReferencedNWBDecoder.CreateBinary(nwbGraph);
-
-var multinetGraph = serializer.Deserialize(
-     new FileInfo(@"path\to\multinetdata.dump").OpenRead());
-var multinetEncoder = ReferencedMultiNetEncoder.CreateBinary(multinetGraph);
-var multinetDecoder = ReferencedMultiNetDecoder.CreateBinary(multinetGraph);
-```
-
-Encoding is done by calling 'Encode' on the encoder given a location to encode:
+The most basic code sample encoding/decoding a line location:
 
 ```csharp
-string encoded = nwbEncoder.Encode(location);
+    // build routerdb from raw OSM data.
+    // check this for more info on RouterDb's: https://github.com/itinero/routing/wiki/RouterDb
+    var routerDb = new RouterDb();
+    using (var sourceStream = File.OpenRead(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "luxembourg-latest.osm.pbf")))
+    {
+        routerDb.LoadOsmData(sourceStream, Vehicle.Car);
+    }
+
+    // create coder.
+    var coder = new Coder(routerDb, new OsmCoderProfile());
+
+    // build a line location from a shortest path.
+    var line = coder.BuildLine(new Itinero.LocalGeo.Coordinate(49.67218282319583f, 6.142280101776122f),
+        new Itinero.LocalGeo.Coordinate(49.67776489459803f, 6.1342549324035645f));
+
+    // encode this location.
+    var encoded = coder.Encode(line);
+
+    // decode this location.
+    var decodedLine = coder.Decode(encoded) as ReferencedLine;
 ```
+### Samples
 
-Decoding is very similar and done by calling 'Decode' on the decoder given an encoded string:
-
-```csharp
-var decodedLocation = nwbDecoder.Decode(encoded);
-```
-
-### <a name="create_routing_graph"/>Create a memory dump
-
-The raw loader of OsmSharp can be used to load OpenStreetMap-data or load a shapefile. This codesample loads MultiNet data from a shapefile into a routing graph:
-
-```csharp
-// create a list of usefull keys (or columns to keep).
-var usefullKeys = new HashSet<string>();
-usefullKeys.Add("F_JNCTID");
-usefullKeys.Add("T_JNCTID");
-usefullKeys.Add("ONEWAY");
-usefullKeys.Add("FRC");
-usefullKeys.Add("FOW");
-
-// create an instance of the graph reader and define the columns that contain the 'node-ids'.
-var graphReader = new ShapefileLiveGraphReader("F_JNCTID", "T_JNCTID");
-// read the graph from the folder where the shapefiles are placed.
-var graph = graphReader.Read(@"\path\to\multinetshapes", "*nw.shp", 
-     new ShapefileRoutingInterpreter(usefullKeys));
-```
-
-Loading networks this way can take a while. It's best to make a memory-dump of the routing graph for reuse later:
-
-```csharp
-// this serializes the routing graph to disk to load again later.
-var stream = new FileInfo(@"path\to\data.dump").OpenWrite();
-var serializer = new LiveEdgeFlatfileSerializer();
-serializer.Serialize(stream, graph, new TagsCollection());
-stream.Flush();
-```
+Check the samples here: https://github.com/itinero/OpenLR/tree/develop/samples/
