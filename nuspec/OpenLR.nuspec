@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>OpenLR</id>
+    <version>$version$</version>
+    <title>OpenLR</title>
+    <authors>Ben Abelshausen, VIA</authors>
+    <owners>Ben Abelshausen</owners>
+    <licenseUrl>https://github.com/itinero/OpenLR/blob/develop/LICENSE.md</licenseUrl>
+    <projectUrl>https://github.com/Itinero/OpenLR</projectUrl>
+    <iconUrl>http://www.itinero.tech/logos/openlr_logo64.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>OpenLR library for .NET.</description>
+    <summary>OpenLR library for .NET.</summary>
+    <copyright>Ben Abelshausen</copyright>
+    <tags>routing, openlr, osmsharp</tags>
+    <dependencies>
+      <dependency id="Itinero" version="0.23.1-rc1" />
+      <dependency id="Itinero.Geo" version="0.23.1-rc1" />
+      <dependency id="GeoAPI" version="[1.7.4,2)" />
+      <dependency id="NetTopologySuite" version="[1.14,2)" />
+      <dependency id="NetTopologySuite.IO" version="[1.14,2)" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="Output\OpenLR.dll" target="lib\net45\OpenLR.dll" />
+    <file src="Output\OpenLR.Geo.dll" target="lib\net45\OpenLR.Geo.dll" />
+  </files>
+</package>
