@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenLR", "OpenLR\OpenLR.csproj", "{036AD1DA-006A-48B6-826C-83D12561411D}"
 EndProject
@@ -16,6 +16,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenLR.Referenced.MultiNet", "OpenLR.Referenced.MultiNet\OpenLR.Referenced.MultiNet.csproj", "{1130C7F7-C993-4669-9B93-010C9BBADE1C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenLR.Referenced.NWB", "OpenLR.Referenced.NWB\OpenLR.Referenced.NWB.csproj", "{E14B6468-C422-4811-828E-BCF522266EFF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{4E9C52C9-A228-41C8-91C4-25C65FDE2411}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.EncodeRoute", "samples\Sample.EncodeRoute\Sample.EncodeRoute.csproj", "{C97DCD83-68DB-4E79-8D22-847EA160CCA7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,8 +85,19 @@ Global
 		{E14B6468-C422-4811-828E-BCF522266EFF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E14B6468-C422-4811-828E-BCF522266EFF}.Release|x64.ActiveCfg = Release|x64
 		{E14B6468-C422-4811-828E-BCF522266EFF}.Release|x64.Build.0 = Release|x64
+		{C97DCD83-68DB-4E79-8D22-847EA160CCA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C97DCD83-68DB-4E79-8D22-847EA160CCA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C97DCD83-68DB-4E79-8D22-847EA160CCA7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C97DCD83-68DB-4E79-8D22-847EA160CCA7}.Debug|x64.Build.0 = Debug|Any CPU
+		{C97DCD83-68DB-4E79-8D22-847EA160CCA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C97DCD83-68DB-4E79-8D22-847EA160CCA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C97DCD83-68DB-4E79-8D22-847EA160CCA7}.Release|x64.ActiveCfg = Release|Any CPU
+		{C97DCD83-68DB-4E79-8D22-847EA160CCA7}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C97DCD83-68DB-4E79-8D22-847EA160CCA7} = {4E9C52C9-A228-41C8-91C4-25C65FDE2411}
 	EndGlobalSection
 EndGlobal
