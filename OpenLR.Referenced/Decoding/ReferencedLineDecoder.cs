@@ -101,7 +101,7 @@ namespace OpenLR.Referenced.Decoding
                     if (candidate != null && candidate.Route != null)
                     { // calculate bearing and compare with reference bearing.
                         // calculate distance and compare with distancetonext.
-                        var distance = candidate.Route.GetCoordinates(this.MainDecoder).Length().Value;
+                        var distance = candidate.Route.GetCoordinates(this.MainDecoder.Graph).Length().Value;
                         var expectedDistance = source.DistanceToNext;
 
                         // default a perfect score, only compare large distances.
@@ -163,6 +163,9 @@ namespace OpenLR.Referenced.Decoding
             {
                 lineLocation.Add(lineLocationSegments[i]);
             }
+
+            lineLocation.PositiveOffsetPercentage = location.PositiveOffsetPercentage.Value;
+            lineLocation.NegativeOffsetPercentage = location.NegativeOffsetPercentage.Value;
 
             return lineLocation;
         }

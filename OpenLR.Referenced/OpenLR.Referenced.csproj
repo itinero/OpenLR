@@ -183,6 +183,7 @@
     <Compile Include="Router\BasicRouter.cs" />
     <Compile Include="Router\BasicRouterDataSource.cs" />
     <Compile Include="Router\PathSegment.cs" />
+    <Compile Include="Router\TypedRouterLiveEdge.cs" />
     <Compile Include="Scoring\AddedScore.cs" />
     <Compile Include="Scoring\MultipliedScore.cs" />
     <Compile Include="Scoring\Score.cs" />

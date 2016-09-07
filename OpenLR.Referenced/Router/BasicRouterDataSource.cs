@@ -55,6 +55,17 @@ namespace OpenLR.Referenced.Router
         }
 
         /// <summary>
+        /// Gets the data.
+        /// </summary>
+        public IBasicRouterDataSource<TEdge> Data
+        {
+            get
+            {
+                return _datasource;
+            }
+        }
+
+        /// <summary>
         /// Clears all modifications.
         /// </summary>
         public void ClearModifications()

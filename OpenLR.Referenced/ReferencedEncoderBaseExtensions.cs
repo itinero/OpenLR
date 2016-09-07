@@ -6,6 +6,7 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Simple;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Routing.Osm.Graphs;
+using OsmSharp.Routing.Shape;
 using OsmSharp.Units.Distance;
 using System;
 using System.Collections.Generic;
@@ -399,6 +400,8 @@ namespace OpenLR.Referenced
         /// <param name="tolerance">The tolerance value, the minimum distance between a given start or endlocation and the network used for encoding.</param>
         /// <returns></returns>
         /// <remarks>The edges need to be traversible from first to second point.</remarks>
+        /// 
+
         public static ReferencedLine BuildLineLocationVertexExact(this ReferencedEncoderBase encoder, 
             GeoCoordinate startLocation1, GeoCoordinate startLocation2, Meter startOffset,
             GeoCoordinate endLocation1, GeoCoordinate endLocation2, Meter endOffset, Meter tolerance)
@@ -746,6 +749,203 @@ namespace OpenLR.Referenced
             }
 
             return referencedLine;
+        }
+
+        /// <summary>
+        /// Builds a line location along the shortest path between the two given coordinates.
+        /// </summary>
+        public static ReferencedLine BuildLineLocationFromShortestPath(this ReferencedEncoderBase encoder, GeoCoordinate coordinate1, GeoCoordinate coordinate2,
+            out OsmSharp.Routing.Route route)
+        {
+            // creates the live edge router.
+            var interpreter = new ShapefileRoutingInterpreter();
+            var basicRouter = new OsmSharp.Routing.Graph.Routing.Dykstra();
+            var data = encoder.Graph.Data;
+            var liveEdgeRouter = new TypedRouterLiveEdge(
+                data, interpreter, basicRouter);
+            var router = new OsmSharp.Routing.Router(liveEdgeRouter);
+
+            // resolve source/target.
+            var point1 = router.Resolve(encoder.Vehicle, coordinate1);
+            var point2 = router.Resolve(encoder.Vehicle, coordinate2);
+            var point1Source = liveEdgeRouter.RouteResolvedGraph(encoder.Vehicle, point1, false);
+
+            var point1Vertices = point1Source.GetVertices().ToList();
+            var edge1 = GetEdge(data, (uint)point1Vertices[0], (uint)point1Vertices[1]);
+
+            var point2Source = liveEdgeRouter.RouteResolvedGraph(encoder.Vehicle, point2, true);
+
+            var point2Vertices = point2Source.GetVertices().ToList();
+            var edge2 = GetEdge(data, (uint)point2Vertices[0], (uint)point2Vertices[1]);
+
+            // calculate the route.
+            var rawPath = basicRouter.Calculate(data, interpreter, encoder.Vehicle, point1Source, point2Source, float.MaxValue, null);
+            route = liveEdgeRouter.ConstructRouteFromPath(encoder.Vehicle, rawPath, point1, point2, true);
+
+            // convert route to vertex/edge array.
+            var rawRoute = new List<Tuple<long, LiveEdge>>();
+            var routeArray = rawPath.ToArrayWithWeight();
+            for (var i = 0; i < routeArray.Length; i++)
+            {
+                if (routeArray[i].Item1 > -int.MaxValue)
+                {
+                    rawRoute.Add(new Tuple<long, LiveEdge>(routeArray[i].Item1, new LiveEdge()));
+
+                    if (i > 1)
+                    {
+                        var vertex1 = rawRoute[rawRoute.Count - 2].Item1;
+                        var vertex2 = rawRoute[rawRoute.Count - 1].Item1;
+
+                        if (vertex1 > 0 && vertex2 > 0 &&
+                            vertex1 < data.VertexCount && vertex2 < data.VertexCount)
+                        {
+                            var edge = data.GetEdge((uint)vertex1, (uint)vertex2);
+                            rawRoute[rawRoute.Count - 1] = new Tuple<long, LiveEdge>(vertex2, edge);
+                        }
+                    }
+                }
+            }
+
+            // replace first parts with resolved edge.
+            for (var i = 0; i < rawRoute.Count; i++)
+            {
+                var vertex = rawRoute[i].Item1;
+                if (vertex > 0 && vertex < data.VertexCount)
+                { // this is the first valid vertex.
+                    while (i > 0)
+                    {
+                        rawRoute.RemoveAt(0);
+                        i--;
+                    }
+
+                    if (vertex == point1Vertices[0])
+                    {
+                        rawRoute[0] = new Tuple<long, LiveEdge>(rawRoute[0].Item1, (LiveEdge)edge1.Reverse());
+                        rawRoute.Insert(0, new Tuple<long, LiveEdge>(point1Vertices[1], new LiveEdge()));
+                    }
+                    else
+                    {
+                        rawRoute[0] = new Tuple<long, LiveEdge>(rawRoute[0].Item1, (LiveEdge)edge1);
+                        rawRoute.Insert(0, new Tuple<long, LiveEdge>(point1Vertices[0], new LiveEdge()));
+                    }
+                    break;
+                }
+            }
+
+            for (var i = rawRoute.Count - 1; i >= 0; i--)
+            {
+                var vertex = rawRoute[i].Item1;
+                if (vertex > 0 && vertex < data.VertexCount)
+                {
+                    while (i <= rawRoute.Count - 1)
+                    {
+                        rawRoute.RemoveAt(rawRoute.Count - 1);
+                        i++;
+                    }
+
+                    if (vertex == point2Vertices[0])
+                    {
+                        rawRoute.Add(new Tuple<long, LiveEdge>(point2Vertices[1], edge2));
+                    }
+                    else
+                    {
+                        rawRoute.Add(new Tuple<long, LiveEdge>(point2Vertices[0], (LiveEdge)edge2.Reverse()));
+                    }
+                    break;
+                }
+            }
+
+            var vertices = new long[rawRoute.Count];
+            var edges = new LiveEdge[rawRoute.Count - 1];
+            for (var i = 0; i < rawRoute.Count; i++)
+            {
+                vertices[i] = rawRoute[i].Item1;
+                if (i > 0)
+                {
+                    edges[i - 1] = rawRoute[i].Item2;
+                }
+            }
+
+            var lineLocation = encoder.BuildLineLocation(vertices, edges, 0, 0);
+
+            var coordinates = lineLocation.GetCoordinates(encoder.Graph);
+            var total = (float)coordinates.Length().Value;
+
+            // project point1.
+            var positiveOffset = 0f;
+            PointF2D bestProjected;
+            LinePointPosition useless1;
+            Meter bestOffset;
+            int bestIndex;
+            if (!coordinates.ProjectOn(point1.Location, out bestProjected, out useless1, out bestOffset, out bestIndex))
+            {
+                var distanceToProjected = float.MaxValue;
+                var totalLength = 0f;
+                for (var i = 0; i < coordinates.Count; i++)
+                {
+                    var distance = (float)coordinates[i].DistanceEstimate(point1.Location).Value;
+                    if (i > 0)
+                    {
+                        totalLength += (float)coordinates[i].DistanceEstimate(coordinates[i - 1]).Value;
+                    }
+                    if (distance < distanceToProjected)
+                    {
+                        distanceToProjected = distance;
+                        bestOffset = totalLength;
+                        bestIndex = i;
+                        useless1 = LinePointPosition.On;
+                        bestProjected = coordinates[i];
+                    }
+                }
+            }
+            positiveOffset = (float)bestOffset.Value;
+
+            // project point2.
+            var negativeOffset = 0f;
+            if (!coordinates.ProjectOn(point2.Location, out bestProjected, out useless1, out bestOffset, out bestIndex))
+            {
+                var distanceToProjected = float.MaxValue;
+                var totalLength = 0f;
+                for (var i = 0; i < coordinates.Count; i++)
+                {
+                    var distance = (float)coordinates[i].DistanceEstimate(point2.Location).Value;
+                    if (i > 0)
+                    {
+                        totalLength += (float)coordinates[i].DistanceEstimate(coordinates[i - 1]).Value;
+                    }
+                    if (distance < distanceToProjected)
+                    {
+                        distanceToProjected = distance;
+                        bestOffset = totalLength;
+                        bestIndex = i;
+                        useless1 = LinePointPosition.On;
+                        bestProjected = coordinates[i];
+                    }
+                }
+            }
+            negativeOffset = total - (float)bestOffset.Value;
+
+            lineLocation.NegativeOffsetPercentage = 100.0f * (negativeOffset / total);
+            lineLocation.PositiveOffsetPercentage = 100.0f * (positiveOffset / total);
+
+            return lineLocation;
+        }
+
+        /// <summary>
+        /// Gets the edge between the two vertices.
+        /// </summary>
+        public static LiveEdge GetEdge(this OsmSharp.Routing.Graph.Routing.IBasicRouterDataSource<LiveEdge> data, uint vertex1, uint vertex2)
+        {
+            LiveEdge edge;
+            if (!data.GetEdge(vertex1, vertex2, out edge))
+            {
+                if (!data.GetEdge(vertex2, vertex1, out edge))
+                {
+
+                }
+                edge = (LiveEdge)edge.Reverse();
+            }
+            return edge;
         }
     }
 }

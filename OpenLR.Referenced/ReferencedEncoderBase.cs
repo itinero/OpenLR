@@ -193,7 +193,7 @@ namespace OpenLR.Referenced
             FunctionalRoadClass frc;
 
             // get all coordinates along the sequence starting at 'start' and ending at 'end'.
-            var coordinates = referencedLocation.GetCoordinates(this, start, end - start + 1);
+            var coordinates = referencedLocation.GetCoordinates(this.Graph, start, end - start + 1);
 
             // create location reference point.
             var locationReferencePoint = new LocationReferencePoint();
@@ -241,7 +241,7 @@ namespace OpenLR.Referenced
             var end = referencedLocation.Vertices.Length - 1;
 
             // get all coordinates along the sequence starting at 'before' and ending at 'end'.
-            var coordinates = referencedLocation.GetCoordinates(this, before, end - before + 1);
+            var coordinates = referencedLocation.GetCoordinates(this.Graph, before, end - before + 1);
 
             // create location reference point.
             var locationReferencedPoint = new LocationReferencePoint();

@@ -73,7 +73,7 @@ namespace OpenLR.Referenced.Encoding
                 // referencedLocation.Route.AdjustToValidDistances(this.MainEncoder, points);
 
                 // Step – 10    Create physical representation of the location reference.
-                var coordinates = referencedLocation.Route.GetCoordinates(this.MainEncoder);
+                var coordinates = referencedLocation.Route.GetCoordinates(this.MainEncoder.Graph);
                 var lengthInMeter = coordinates.Length();
 
                 var location = new PointAlongLineLocation();

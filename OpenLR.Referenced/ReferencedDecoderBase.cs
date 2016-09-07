@@ -89,7 +89,7 @@ namespace OpenLR.Referenced
         /// <summary>
         /// Returns the graph.
         /// </summary>
-        protected BasicRouterDataSource<LiveEdge> Graph
+        public BasicRouterDataSource<LiveEdge> Graph
         {
             get
             {

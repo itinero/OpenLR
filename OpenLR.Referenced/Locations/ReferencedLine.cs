@@ -204,6 +204,16 @@ namespace OpenLR.Referenced.Locations
                 featureCollection.Add(new Feature(geometryFactory.CreateLineString(coordinates.ToArray()), table));
                 coordinates.Clear();
             }
+
+            var positiveLocation = this.GetPositiveOffsetLocation(_graph).ToGeoAPICoordinate();
+            var positiveLocationAttributes = new AttributesTable();
+            positiveLocationAttributes.AddAttribute("type", "positive_offset_location");
+            featureCollection.Add(new Feature(new Point(positiveLocation), positiveLocationAttributes));
+            var negativeLocation = this.GetNegativeOffsetLocation(_graph).ToGeoAPICoordinate();
+            var negativeLocationAttributes = new AttributesTable();
+            negativeLocationAttributes.AddAttribute("type", "negative_offset_location");
+            featureCollection.Add(new Feature(new Point(negativeLocation), positiveLocationAttributes));
+            
             return featureCollection;
         }
 
@@ -710,7 +720,7 @@ namespace OpenLR.Referenced.Locations
             var count = vertexIdx2 - vertexIdx1 + 1;
 
             // calculate length to begin with.
-            var coordinates = this.GetCoordinates(encoder, vertexIdx1, count);
+            var coordinates = this.GetCoordinates(encoder.Graph, vertexIdx1, count);
             var length = coordinates.Length().Value;
             if (length > 15000)
             { // too long.
@@ -725,12 +735,12 @@ namespace OpenLR.Referenced.Locations
                     }
 
                     // the length is good when close to 15000 but not over.
-                    var lengthBefore = this.GetCoordinates(encoder, vertexIdx1, idx - vertexIdx1 + 1).Length();
+                    var lengthBefore = this.GetCoordinates(encoder.Graph, vertexIdx1, idx - vertexIdx1 + 1).Length();
                     if (lengthBefore.Value < 15000)
                     { // not over!
                         score = score + (1024 * (lengthBefore.Value / 15000));
                     }
-                    var lengthAfter = this.GetCoordinates(encoder, idx, count - idx).Length();
+                    var lengthAfter = this.GetCoordinates(encoder.Graph, idx, count - idx).Length();
                     if (lengthAfter.Value < 15000)
                     { // not over!
                         score = score + (1024 * (lengthAfter.Value / 15000));

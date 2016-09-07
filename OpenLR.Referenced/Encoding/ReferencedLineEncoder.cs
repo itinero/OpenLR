@@ -68,7 +68,7 @@ namespace OpenLR.Referenced.Encoding
                 referencedLocation.AdjustToValidDistances(this.MainEncoder, points);
 
                 // Step – 10    Create physical representation of the location reference.
-                var coordinates = referencedLocation.GetCoordinates(this.MainEncoder);
+                var coordinates = referencedLocation.GetCoordinates(this.MainEncoder.Graph);
                 var length = coordinates.Length();
 
                 // 3: The actual encoding now!

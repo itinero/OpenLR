@@ -298,74 +298,24 @@ namespace OpenLR.Referenced
         }
 
         /// <summary>
-        /// Converts the referenced line location to features.
+        /// Converts the referenced line location to a list of sorted coordinates.
         /// </summary>
-        /// <param name="referencedLine">The referenced line.</param>
-        /// <param name="encoder">The encoder.</param>
-        /// <returns></returns>
-        public static List<GeoCoordinate> GetCoordinates(this ReferencedLine referencedLine, ReferencedEncoderBase encoder)
+        public static List<GeoCoordinate> GetCoordinates(this ReferencedLine referencedLine, Router.BasicRouterDataSource<LiveEdge> data)
         {
-            return referencedLine.GetCoordinates(encoder, 0, referencedLine.Vertices.Length);
-        }
-
-        /// <summary>
-        /// Converts the referenced line location to features.
-        /// </summary>
-        /// <param name="referencedLine">The referenced line.</param>
-        /// <param name="encoder">The encoder.</param>
-        /// <param name="start">The start vertex.</param>
-        /// <param name="count">The vertices to return coordinates for.</param>
-        /// <returns></returns>
-        public static List<GeoCoordinate> GetCoordinates(this ReferencedLine referencedLine, ReferencedEncoderBase encoder, int start, int count)
-        {
-            var coordinates = new List<GeoCoordinate>();
-            if(count <= 0)
-            {
-                return coordinates;
-            }
-            coordinates.Add(encoder.GetVertexLocation(referencedLine.Vertices[start]).ToGeoCoordinate());
-            for (var i = start; i < start + count - 1; i++)
-            {
-                if (referencedLine.EdgeShapes[i] != null)
-                {
-                    for (var j = 0; j < referencedLine.EdgeShapes[i].Length; j++)
-                    {
-                        coordinates.Add(new GeoCoordinate(
-                            referencedLine.EdgeShapes[i][j].Latitude, referencedLine.EdgeShapes[i][j].Longitude));
-                    }
-                }
-                coordinates.Add(encoder.GetVertexLocation(referencedLine.Vertices[i + 1]).ToGeoCoordinate());
-            }
-            return coordinates;
+            return referencedLine.GetCoordinates(data, 0, referencedLine.Vertices.Length);
         }
 
         /// <summary>
         /// Converts the referenced line location to a list of sorted coordinates.
         /// </summary>
-        /// <param name="referencedLine">The referenced line.</param>
-        /// <param name="decoder">The decoder.</param>
-        /// <returns></returns>
-        public static List<GeoCoordinate> GetCoordinates(this ReferencedLine referencedLine, ReferencedDecoderBase decoder)
-        {
-            return referencedLine.GetCoordinates(decoder, 0, referencedLine.Vertices.Length);
-        }
-
-        /// <summary>
-        /// Converts the referenced line location to a list of sorted coordinates.
-        /// </summary>
-        /// <param name="referencedLine">The referenced line.</param>
-        /// <param name="decoder">The decoder.</param>
-        /// <param name="start">The start vertex.</param>
-        /// <param name="count">The vertices to return coordinates for.</param>
-        /// <returns></returns>
-        public static List<GeoCoordinate> GetCoordinates(this ReferencedLine referencedLine, ReferencedDecoderBase decoder, int start, int count)
+        public static List<GeoCoordinate> GetCoordinates(this ReferencedLine referencedLine, Router.BasicRouterDataSource<LiveEdge> data, int start, int count)
         {
             var coordinates = new List<GeoCoordinate>();
             if (count <= 0)
             {
                 return coordinates;
             }
-            coordinates.Add(decoder.GetVertexLocation(referencedLine.Vertices[start]).ToGeoCoordinate());
+            coordinates.Add(data.GetVertexLocation(referencedLine.Vertices[start]));
             for (var i = start; i < start + count - 1; i++)
             {
                 if (referencedLine.EdgeShapes[i] != null)
@@ -376,9 +326,22 @@ namespace OpenLR.Referenced
                             referencedLine.EdgeShapes[i][j].Latitude, referencedLine.EdgeShapes[i][j].Longitude));
                     }
                 }
-                coordinates.Add(decoder.GetVertexLocation(referencedLine.Vertices[i + 1]).ToGeoCoordinate());
+                coordinates.Add(data.GetVertexLocation(referencedLine.Vertices[i + 1]));
             }
             return coordinates;
+        }
+        
+        /// <summary>
+        /// Returns the location of the given vertex.
+        /// </summary>
+        public static GeoCoordinate GetVertexLocation(this Router.BasicRouterDataSource<LiveEdge> data, long vertex)
+        {
+            float latitude, longitude;
+            if (!data.GetVertex(vertex, out latitude, out longitude))
+            { // oeps, vertex does not exist!
+                throw new ArgumentOutOfRangeException("vertex", string.Format("Vertex {0} not found!", vertex));
+            }
+            return new GeoCoordinate(latitude, longitude);
         }
 
         /// <summary>
@@ -394,7 +357,7 @@ namespace OpenLR.Referenced
             if (route.Vertices.Length != route.Edges.Length + 1) { throw new ArgumentOutOfRangeException("route", "Route is invalid: there should be n vertices and n-1 edges."); }
 
             // calculate the total length first.
-            var totalLength = route.GetCoordinates(decoder).Length();
+            var totalLength = route.GetCoordinates(decoder.Graph).Length();
 
             // calculate the lenght at the offst.
             offsetLength = (Meter)(totalLength.Value * offsetRatio);
@@ -1173,6 +1136,34 @@ namespace OpenLR.Referenced
             //    reverseEdge.Coordinates = reverse;
             //}
             return reverseEdge;
+        }
+
+        /// <summary>
+        /// Gets the positive offset location.
+        /// </summary>
+        public static GeoCoordinate GetPositiveOffsetLocation(this ReferencedLine referencedLine, Router.BasicRouterDataSource<LiveEdge> data)
+        {
+            var coordinates = referencedLine.GetCoordinates(data);
+
+            return coordinates.GetPositionLocation(referencedLine.PositiveOffsetPercentage / 100.0f);
+        }
+
+        /// <summary>
+        /// Gets the negative offset location.
+        /// </summary>
+        public static GeoCoordinate GetNegativeOffsetLocation(this ReferencedLine referencedLine, Router.BasicRouterDataSource<LiveEdge> data)
+        {
+            var coordinates = referencedLine.GetCoordinates(data);
+
+            return coordinates.GetPositionLocation(1f - (referencedLine.NegativeOffsetPercentage / 100.0f));
+        }
+
+        /// <summary>
+        /// Converts the coordinate to a geo api coordinate.
+        /// </summary>
+        public static GeoAPI.Geometries.Coordinate ToGeoAPICoordinate(this GeoCoordinate coordinate)
+        {
+            return new Coordinate(coordinate.Longitude, coordinate.Latitude);
         }
     }
 }
