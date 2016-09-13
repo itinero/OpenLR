@@ -698,5 +698,71 @@ namespace OpenLR
 
             return locationReferencedPoint;
         }
+
+        /// <summary>
+        /// Gets the edge closest to the location in the point along line.
+        /// </summary>
+        public static long GetLocationEdge(this ReferencedPointAlongLine pointAlongLine, Coder coder)
+        {
+            return pointAlongLine.Route.ProjectOn(coder, pointAlongLine.Latitude, pointAlongLine.Longitude);
+        }
+
+        /// <summary>
+        /// Projects the given coordinates on the referenced line and returns the edge.
+        /// </summary>
+        public static long ProjectOn(this ReferencedLine line, Coder coder, float latitude, float longitude)
+        {
+            long edge = Itinero.Constants.NO_EDGE;
+            var bestDistance = float.MaxValue;
+
+            for(var j = 0; j < line.Edges.Length; j++)
+            {
+                var shape = coder.Router.Db.Network.GetShape(coder.Router.Db.Network.GetEdge(line.Edges[j]));
+                if (line.Edges[j] < 0)
+                {
+                    shape.Reverse();
+                }
+                
+                float projectedLatitude;
+                float projectedLongitude;
+                float projectedDistanceFromFirst;
+                int projectedShapeIndex;
+                float distanceToProjected;
+                float totalLength;
+                LinePointPosition position;
+                if (!shape.ProjectOn(latitude, longitude, out projectedLatitude, out projectedLongitude,
+                    out projectedDistanceFromFirst, out projectedShapeIndex, out distanceToProjected, out totalLength, out position))
+                {
+                    // try to find the closest point.
+                    distanceToProjected = float.MaxValue;
+                    totalLength = 0;
+                    for (var i = 0; i < shape.Count; i++)
+                    {
+                        var distance = Itinero.LocalGeo.Coordinate.DistanceEstimateInMeter(shape[i].Latitude, shape[i].Longitude,
+                            latitude, longitude);
+                        if (i > 0)
+                        {
+                            totalLength += Itinero.LocalGeo.Coordinate.DistanceEstimateInMeter(shape[i - 1].Latitude, shape[i - 1].Longitude,
+                                shape[i].Latitude, shape[i].Longitude);
+                        }
+                        if (distance < distanceToProjected)
+                        {
+                            projectedDistanceFromFirst = totalLength;
+                            distanceToProjected = distance;
+                            projectedShapeIndex = i;
+                            position = LinePointPosition.On;
+                            projectedLatitude = shape[i].Latitude;
+                            projectedLongitude = shape[i].Longitude;
+                        }
+                    }
+                }
+
+                if (distanceToProjected < bestDistance)
+                {
+                    edge = line.Edges[j];
+                }
+            }
+            return edge;
+        }
     }
 }
