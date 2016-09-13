@@ -704,7 +704,16 @@ namespace OpenLR
         /// </summary>
         public static long GetLocationEdge(this ReferencedPointAlongLine pointAlongLine, Coder coder)
         {
-            return pointAlongLine.Route.ProjectOn(coder, pointAlongLine.Latitude, pointAlongLine.Longitude);
+            var offsetInMeter = float.MaxValue;
+            return pointAlongLine.GetLocationEdge(coder, out offsetInMeter);
+        }
+
+        /// <summary>
+        /// Gets the edge closest to the location in the point along line.
+        /// </summary>
+        public static long GetLocationEdge(this ReferencedPointAlongLine pointAlongLine, Coder coder, out float offsetInMeter)
+        {
+            return pointAlongLine.Route.ProjectOn(coder, pointAlongLine.Latitude, pointAlongLine.Longitude, out offsetInMeter);
         }
 
         /// <summary>
@@ -712,8 +721,18 @@ namespace OpenLR
         /// </summary>
         public static long ProjectOn(this ReferencedLine line, Coder coder, float latitude, float longitude)
         {
+            var offsetInMeter = float.MaxValue;
+            return line.ProjectOn(coder, latitude, longitude, out offsetInMeter);
+        }
+
+        /// <summary>
+        /// Projects the given coordinates on the referenced line and returns the edge.
+        /// </summary>
+        public static long ProjectOn(this ReferencedLine line, Coder coder, float latitude, float longitude, out float offsetInMeter)
+        {
             long edge = Itinero.Constants.NO_EDGE;
             var bestDistance = float.MaxValue;
+            offsetInMeter = float.MaxValue;
 
             for(var j = 0; j < line.Edges.Length; j++)
             {
@@ -725,13 +744,12 @@ namespace OpenLR
                 
                 float projectedLatitude;
                 float projectedLongitude;
-                float projectedDistanceFromFirst;
                 int projectedShapeIndex;
                 float distanceToProjected;
                 float totalLength;
                 LinePointPosition position;
                 if (!shape.ProjectOn(latitude, longitude, out projectedLatitude, out projectedLongitude,
-                    out projectedDistanceFromFirst, out projectedShapeIndex, out distanceToProjected, out totalLength, out position))
+                    out offsetInMeter, out projectedShapeIndex, out distanceToProjected, out totalLength, out position))
                 {
                     // try to find the closest point.
                     distanceToProjected = float.MaxValue;
@@ -747,7 +765,7 @@ namespace OpenLR
                         }
                         if (distance < distanceToProjected)
                         {
-                            projectedDistanceFromFirst = totalLength;
+                            offsetInMeter = totalLength;
                             distanceToProjected = distance;
                             projectedShapeIndex = i;
                             position = LinePointPosition.On;
