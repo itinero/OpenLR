@@ -71,6 +71,10 @@ namespace OpenLR
                 var edgeShapes = edge.Shape;
                 if (edgeShapes != null)
                 { // there are intermediate coordinates.
+                    if (route.Edges[edgeIdx] < 0)
+                    {
+                        edgeShapes = edgeShapes.Reverse();
+                    }
                     foreach(var shape in edgeShapes)
                     {
                         coordinates.Add(shape);
