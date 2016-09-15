@@ -904,8 +904,10 @@ namespace OpenLR.Tests.Functional.Osm
         /// </summary>
         private static ReferencedPointAlongLine EncodeDecodePointAlongLine(Coder coder, float latitude, float longitude)
         {
-            var location = coder.BuildPointAlongLine(latitude, longitude);
+            RouterPoint resolvedPoint;
+            var location = coder.BuildPointAlongLine(latitude, longitude, out resolvedPoint);
             var locationGeoJson = location.ToFeatures(coder.Router.Db).ToGeoJson();
+            var resolvedLocation = resolvedPoint.LocationOnNetwork(coder.Router.Db);
             
             var encoded = coder.Encode(location);
 

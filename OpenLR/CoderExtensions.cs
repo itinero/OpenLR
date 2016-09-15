@@ -303,14 +303,22 @@ namespace OpenLR
             // add the path to the given location.
             return pathTo;
         }
-
-
+        
         /// <summary>
         /// Builds a point along line location.
         /// </summary>
         public static ReferencedPointAlongLine BuildPointAlongLine(this Coder coder, Itinero.LocalGeo.Coordinate coordinate)
         {
-            return coder.BuildPointAlongLine(coordinate.Latitude, coordinate.Longitude);
+            RouterPoint resolvedPoint;
+            return coder.BuildPointAlongLine(coordinate, out resolvedPoint);
+        }
+        
+        /// <summary>
+        /// Builds a point along line location.
+        /// </summary>
+        public static ReferencedPointAlongLine BuildPointAlongLine(this Coder coder, Itinero.LocalGeo.Coordinate coordinate, out RouterPoint resolvedPoint)
+        {
+            return coder.BuildPointAlongLine(coordinate.Latitude, coordinate.Longitude, out resolvedPoint);
         }
 
         /// <summary>
@@ -318,11 +326,21 @@ namespace OpenLR
         /// </summary>
         public static ReferencedPointAlongLine BuildPointAlongLine(this Coder coder, float latitude, float longitude)
         {
+            RouterPoint resolvedPoint;
+            return coder.BuildPointAlongLine(latitude, longitude, out resolvedPoint);
+        }
+
+        /// <summary>
+        /// Builds a point along line location.
+        /// </summary>
+        public static ReferencedPointAlongLine BuildPointAlongLine(this Coder coder, float latitude, float longitude, out RouterPoint resolvedPoint)
+        {
             var routerPoint = coder.Router.TryResolve(coder.Profile.Profile, latitude, longitude);
             if (routerPoint.IsError)
             {
                 throw new Exception("Could not build point along line: Could not find an edge close to the given location.");
             }
+            resolvedPoint = routerPoint.Value;
 
             // get edge info.
             var edge = coder.Router.Db.Network.GetEdge(routerPoint.Value.EdgeId);
@@ -377,7 +395,16 @@ namespace OpenLR
         /// </summary>
         public static string EncodeAsPointAlongLine(this Coder coder, float latitude, float longitude)
         {
-            return coder.Encode(coder.BuildPointAlongLine(latitude, longitude));
+            RouterPoint resolvedPoint;
+            return coder.EncodeAsPointAlongLine(latitude, longitude, out resolvedPoint);
+        }
+
+        /// <summary>
+        /// Encodes a set of coordinates as a point along line.
+        /// </summary>
+        public static string EncodeAsPointAlongLine(this Coder coder, float latitude, float longitude, out RouterPoint resolvedPoint)
+        {
+            return coder.Encode(coder.BuildPointAlongLine(latitude, longitude, out resolvedPoint));
         }
         
         /// <summary>
