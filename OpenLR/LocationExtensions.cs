@@ -702,33 +702,33 @@ namespace OpenLR
         /// <summary>
         /// Gets the edge closest to the location in the point along line.
         /// </summary>
-        public static long GetLocationEdge(this ReferencedPointAlongLine pointAlongLine, Coder coder)
+        public static long GetLocationEdge(this ReferencedPointAlongLine pointAlongLine, RouterDb routerDb)
         {
             var offsetInMeter = float.MaxValue;
-            return pointAlongLine.GetLocationEdge(coder, out offsetInMeter);
+            return pointAlongLine.GetLocationEdge(routerDb, out offsetInMeter);
         }
 
         /// <summary>
         /// Gets the edge closest to the location in the point along line.
         /// </summary>
-        public static long GetLocationEdge(this ReferencedPointAlongLine pointAlongLine, Coder coder, out float offsetInMeter)
+        public static long GetLocationEdge(this ReferencedPointAlongLine pointAlongLine, RouterDb routerDb, out float offsetInMeter)
         {
-            return pointAlongLine.Route.ProjectOn(coder, pointAlongLine.Latitude, pointAlongLine.Longitude, out offsetInMeter);
+            return pointAlongLine.Route.ProjectOn(routerDb, pointAlongLine.Latitude, pointAlongLine.Longitude, out offsetInMeter);
         }
 
         /// <summary>
         /// Projects the given coordinates on the referenced line and returns the edge.
         /// </summary>
-        public static long ProjectOn(this ReferencedLine line, Coder coder, float latitude, float longitude)
+        public static long ProjectOn(this ReferencedLine line, RouterDb routerDb, float latitude, float longitude)
         {
             var offsetInMeter = float.MaxValue;
-            return line.ProjectOn(coder, latitude, longitude, out offsetInMeter);
+            return line.ProjectOn(routerDb, latitude, longitude, out offsetInMeter);
         }
 
         /// <summary>
         /// Projects the given coordinates on the referenced line and returns the edge.
         /// </summary>
-        public static long ProjectOn(this ReferencedLine line, Coder coder, float latitude, float longitude, out float offsetInMeter)
+        public static long ProjectOn(this ReferencedLine line, RouterDb routerDb, float latitude, float longitude, out float offsetInMeter)
         {
             long edge = Itinero.Constants.NO_EDGE;
             var bestDistance = float.MaxValue;
@@ -736,7 +736,7 @@ namespace OpenLR
 
             for(var j = 0; j < line.Edges.Length; j++)
             {
-                var shape = coder.Router.Db.Network.GetShape(coder.Router.Db.Network.GetEdge(line.Edges[j]));
+                var shape = routerDb.Network.GetShape(routerDb.Network.GetEdge(line.Edges[j]));
                 if (line.Edges[j] < 0)
                 {
                     shape.Reverse();
@@ -781,6 +781,137 @@ namespace OpenLR
                 }
             }
             return edge;
+        }
+
+        /// <summary>
+        /// Builds a path from the given referenced line start and the first referenced point and ending at the last.
+        /// </summary>
+        public static EdgePath<float> BuildPathFromLine(this ReferencedLine referencedLine, RouterDb routerDb, out RouterPoint source, out RouterPoint target)
+        {
+            float postiveOffsetInMeters, negativeOffsetInMeters;
+            return referencedLine.BuildPathFromLine(routerDb, out source, out postiveOffsetInMeters, out target, out negativeOffsetInMeters);
+        }
+
+        /// <summary>
+        /// Builds a path from the given referenced line start and the first referenced point and ending at the last.
+        /// </summary>
+        public static EdgePath<float> BuildPathFromLine(this ReferencedLine referencedLine, RouterDb routerDb, out float postiveOffsetInMeters, out float negativeOffsetInMeters)
+        {
+            RouterPoint source;
+            RouterPoint target;
+            return referencedLine.BuildPathFromLine(routerDb, out source, out postiveOffsetInMeters, out target, out negativeOffsetInMeters);
+        }
+
+        /// <summary>
+        /// Builds a path from the given referenced line start and the first referenced point and ending at the last.
+        /// </summary>
+        public static EdgePath<float> BuildPathFromLine(this ReferencedLine referencedLine, RouterDb routerDb, out RouterPoint source, out float postiveOffsetInMeters, 
+            out RouterPoint target, out float negativeOffsetInMeters)
+        {
+            source = referencedLine.GetPositiveOffsetRouterPoint(routerDb);
+            target = referencedLine.GetNegativeOffsetRouterPoint(routerDb);
+            negativeOffsetInMeters = 0;
+            postiveOffsetInMeters = 0;
+
+            var started = false;
+            var path = new EdgePath<float>();
+            for(var e = 0; e < referencedLine.Edges.Length; e++)
+            {
+                var directedEdgeId = referencedLine.Edges[e];
+                var edge = routerDb.Network.GetEdge(directedEdgeId);
+
+                var to = edge.To;
+                if (directedEdgeId < 0)
+                {
+                    to = edge.From;
+                }
+
+                if (!started)
+                {
+                    if (edge.Id != source.EdgeId)
+                    {
+                        continue;
+                    }
+                    negativeOffsetInMeters = (source.Offset / (float)ushort.MaxValue) * edge.Data.Distance;
+                    if (directedEdgeId < 0)
+                    {
+                        negativeOffsetInMeters = edge.Data.Distance - negativeOffsetInMeters;
+                    }
+                    path = new EdgePath<float>(to, edge.Data.Distance - negativeOffsetInMeters, directedEdgeId, path);
+                    started = true;
+                    continue;
+                }
+
+                if (edge.Id  == target.EdgeId)
+                {
+                    postiveOffsetInMeters = (target.Offset / (float)ushort.MaxValue) * edge.Data.Distance;
+                    if (directedEdgeId > 0)
+                    {
+                        postiveOffsetInMeters = edge.Data.Distance - postiveOffsetInMeters;
+                    }
+                    path = new EdgePath<float>(Constants.NO_VERTEX, path.Weight + edge.Data.Distance - postiveOffsetInMeters, directedEdgeId, path);
+                    break;
+                }
+                else
+                {
+                    path = new EdgePath<float>(to, path.Weight + edge.Data.Distance, directedEdgeId, path);
+                }
+            }
+            
+            return path;
+        }
+
+        /// <summary>
+        /// Gets the positive offset routerpoint.
+        /// </summary>
+        public static RouterPoint GetPositiveOffsetRouterPoint(this ReferencedLine referencedLine, RouterDb routerDb)
+        {
+            return referencedLine.GetOffsetRouterPoint(routerDb, referencedLine.PositiveOffsetPercentage);
+        }
+
+        /// <summary>
+        /// Gets the negative offset routerpoint.
+        /// </summary>
+        public static RouterPoint GetNegativeOffsetRouterPoint(this ReferencedLine referencedLine, RouterDb routerDb)
+        {
+            return referencedLine.GetOffsetRouterPoint(routerDb, 100 - referencedLine.NegativeOffsetPercentage);
+        }
+        
+        /// <summary>
+        /// Gets a positive offset routerpoint.
+        /// </summary>
+        public static RouterPoint GetOffsetRouterPoint(this ReferencedLine referencedLine, RouterDb routerDb, float positiveOffsetPercentage)
+        {
+            var length = referencedLine.Length(routerDb);
+            var lengthOffset = (positiveOffsetPercentage / 100.0f) * length;
+
+            var totalLength = 0f;
+            for (var e = 0; e < referencedLine.Edges.Length; e++)
+            {
+                var directedEdgeId = referencedLine.Edges[e];
+                var edge = routerDb.Network.GetEdge(directedEdgeId);
+                var shape = routerDb.Network.GetShape(edge);
+                if (directedEdgeId < 0)
+                {
+                    shape.Reverse();
+                }
+
+                var shapeLength = shape.Length();
+                if (lengthOffset < shapeLength + totalLength)
+                { // offset is in this edge.
+                    var relativeOffset = (lengthOffset - totalLength) / shapeLength;
+                    var offset = (ushort)(ushort.MaxValue * relativeOffset);
+                    if (directedEdgeId < 0)
+                    {
+                        offset = (ushort)(ushort.MaxValue - offset);
+                    }
+                    var routerPoint = new RouterPoint(0, 0, edge.Id, offset);
+                    var location = routerPoint.LocationOnNetwork(routerDb);
+                    return new RouterPoint(location.Latitude, location.Longitude, edge.Id, offset);
+                }
+                totalLength += shapeLength;
+            }
+            return routerDb.CreateRouterPointForEdge(referencedLine.Edges[referencedLine.Edges.Length - 1], false);
         }
     }
 }

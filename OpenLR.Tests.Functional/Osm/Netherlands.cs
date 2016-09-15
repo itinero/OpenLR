@@ -79,6 +79,11 @@ namespace OpenLR.Tests.Functional.Osm
             var referencedLine = coder.BuildLine(points[0], points[1]);
             var referencedLineJson = referencedLine.ToFeatures(coder.Router.Db).ToGeoJson();
 
+            float positiveOffset, negativeOffset;
+            RouterPoint source, target;
+            var path = referencedLine.BuildPathFromLine(coder.Router.Db, out source, out positiveOffset, out target, out negativeOffset);
+            var route = coder.Router.BuildRoute(coder.Profile.Profile, coder.Router.GetDefaultWeightHandler(coder.Profile.Profile), source, target, path);
+
             var encoded = coder.Encode(referencedLine);
 
             var decodedReferencedLine = coder.Decode(encoded) as ReferencedLine;
