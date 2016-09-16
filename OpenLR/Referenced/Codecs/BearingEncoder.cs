@@ -72,6 +72,10 @@ namespace OpenLR.Referenced.Codecs
 
             var angleRadians = DirectionCalculator.Angle(bearingPosition.Value, coordinates[0], north);
             var angleDegrees = (float)(angleRadians * (180 / Math.PI));
+            if (System.Math.Round(angleDegrees) == 360)
+            { // make sure any 360 degree angle is converted to 0, range allowed is [0, 360[
+                angleDegrees = 0;
+            }
             return angleDegrees;
         }
 

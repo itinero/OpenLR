@@ -94,9 +94,12 @@ namespace OpenLR.Tests.Functional.NWB
                 points[0] = new Coordinate((float)coordinates[0].Y, (float)coordinates[0].X);
                 points[1] = new Coordinate((float)coordinates[1].Y, (float)coordinates[1].X);
 
-                System.Console.WriteLine("Testing line location {0}/{1} @ {2}->{3}", i + 1, features.Features.Count, 
+                if (!feature.Attributes.Contains("nwb", "no"))
+                {
+                    System.Console.WriteLine("Testing line location {0}/{1} @ {2}->{3}", i + 1, features.Features.Count,
                     points[0].ToInvariantString(), points[1].ToInvariantString());
-                TestEncodeDecoderRoute(coder, points);
+                    TestEncodeDecoderRoute(coder, points);
+                }
 
                 i++;
             }

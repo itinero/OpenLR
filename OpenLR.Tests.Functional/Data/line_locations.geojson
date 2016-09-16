@@ -45,7 +45,8 @@
       "type": "Feature",
       "properties": {
         "country": "NL",
-        "osm": "yes"
+        "osm": "yes",
+        "nwb":  "no"
       },
       "geometry": {
         "type": "LineString",

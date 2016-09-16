@@ -45,14 +45,13 @@ namespace OpenLR.Tests.Functional
             netherlandsTest.TestPerf("Testing netherlands point along line performance");
             netherlandsTest = () => { Osm.Netherlands.TestEncodeDecodeRoutes(routerDb); };
             netherlandsTest.TestPerf("Testing netherlands line performance");
-
-            // TODO: fix the NWB tests.
-            //// executes the netherlands tests based on NWB.
-            //routerDb = NWB.Netherlands.DownloadExtractAndBuildRouterDb();
-            //netherlandsTest = () => { NWB.Netherlands.TestEncodeDecodePointAlongLine(routerDb); };
-            //netherlandsTest.TestPerf("Testing netherlands point along line performance");
-            //netherlandsTest = () => { NWB.Netherlands.TestEncodeDecodeRoutes(routerDb); };
-            //netherlandsTest.TestPerf("Testing netherlands line performance");
+            
+            // executes the netherlands tests based on NWB.
+            routerDb = NWB.Netherlands.DownloadExtractAndBuildRouterDb();
+            netherlandsTest = () => { NWB.Netherlands.TestEncodeDecodePointAlongLine(routerDb); };
+            netherlandsTest.TestPerf("Testing netherlands point along line performance");
+            netherlandsTest = () => { NWB.Netherlands.TestEncodeDecodeRoutes(routerDb); };
+            netherlandsTest.TestPerf("Testing netherlands line performance");
 
             Console.ReadLine();
         }

@@ -220,7 +220,7 @@
       "properties": {
         "country": "NL",
         "osm": "yes",
-        "nwb":  "no"
+        "nwb": "no"
       }
     },
     {
@@ -374,7 +374,8 @@
       },
       "properties": {
         "country": "NL",
-        "osm": "yes"
+        "osm": "yes",
+        "nwb": "no"
       }
     },
     {
@@ -2266,7 +2267,8 @@
       },
       "properties": {
         "country": "NL",
-        "osm": "yes"
+        "osm": "yes",
+        "nwb": "no"
       }
     },
     {
@@ -4774,7 +4776,8 @@
       },
       "properties": {
         "country": "NL",
-        "osm": "yes"
+        "osm": "yes",
+        "nwb": "no"
       }
     },
     {
@@ -5970,6 +5973,17 @@
       "geometry": {
         "type": "Point",
         "coordinates": [ 7.0078125, 53.103561401367188 ]
+      },
+      "properties": {
+        "country": "NL",
+        "osm": "yes"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [ 3.36441, 51.3138 ]
       },
       "properties": {
         "country": "NL",
