@@ -747,9 +747,10 @@ namespace OpenLR
                 int projectedShapeIndex;
                 float distanceToProjected;
                 float totalLength;
+                float projectedOffsetInMeter;
                 LinePointPosition position;
                 if (!shape.ProjectOn(latitude, longitude, out projectedLatitude, out projectedLongitude,
-                    out offsetInMeter, out projectedShapeIndex, out distanceToProjected, out totalLength, out position))
+                    out projectedOffsetInMeter, out projectedShapeIndex, out distanceToProjected, out totalLength, out position))
                 {
                     // try to find the closest point.
                     distanceToProjected = float.MaxValue;
@@ -765,7 +766,7 @@ namespace OpenLR
                         }
                         if (distance < distanceToProjected)
                         {
-                            offsetInMeter = totalLength;
+                            projectedOffsetInMeter = totalLength;
                             distanceToProjected = distance;
                             projectedShapeIndex = i;
                             position = LinePointPosition.On;
@@ -778,6 +779,8 @@ namespace OpenLR
                 if (distanceToProjected < bestDistance)
                 {
                     edge = line.Edges[j];
+                    offsetInMeter = projectedOffsetInMeter;
+                    bestDistance = distanceToProjected;
                 }
             }
             return edge;

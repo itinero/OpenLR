@@ -53,7 +53,9 @@ namespace OpenLR.Tests.Functional
             netherlandsTest = () => { NWB.Netherlands.TestEncodeDecodeRoutes(routerDb); };
             netherlandsTest.TestPerf("Testing netherlands line performance");
 
+#if DEBUG
             Console.ReadLine();
+#endif
         }
     }
 }
