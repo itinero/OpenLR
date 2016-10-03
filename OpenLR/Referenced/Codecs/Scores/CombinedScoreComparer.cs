@@ -37,8 +37,11 @@ namespace OpenLR.Referenced.Codecs.Scoring
             var comparison = y.Score.Value.CompareTo(x.Score.Value);
             if(comparison == 0)
             {
-                if (y.Target.VertexId == x.Target.VertexId && x.Source.VertexId == y.Source.VertexId &&
-                    y.Target.EdgeId.Equals(x.Target.EdgeId) && x.Source.EdgeId.Equals(y.Source.EdgeId))
+                if (y.Target.Path.Equals(x.Target.Path) && x.Source.Path.Equals(y.Source.Path) &&
+                    y.Target.Location.EdgeId.Equals(x.Target.Location.EdgeId) && 
+                    x.Source.Location.EdgeId.Equals(y.Source.Location.EdgeId) &&
+                    y.Target.Location.Offset.Equals(x.Target.Location.Offset) &&
+                    x.Source.Location.Offset.Equals(y.Source.Location.Offset))
                 { // only return 0 on items that are actually equal.
                     return 0;
                 }

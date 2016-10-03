@@ -53,7 +53,7 @@ namespace OpenLR.Referenced.Codecs
             CombinedScore bestCombinedEdge = null;
 
             // get candidate vertices and edges.
-            var candidates = new List<SortedSet<CandidateVertexEdge>>();
+            var candidates = new List<SortedSet<CandidatePathSegment>>();
             var lrps = new List<LocationReferencePoint>();
             var fromBearingReference = location.First.Bearing;
             var toBearingReference = location.Last.Bearing;
@@ -71,7 +71,8 @@ namespace OpenLR.Referenced.Codecs
             {
                 foreach (var currentCandidate in candidates[1])
                 {
-                    if (previousCandidate.VertexId != currentCandidate.VertexId)
+                    if (previousCandidate.Location.EdgeId != currentCandidate.Location.EdgeId ||
+                        previousCandidate.Location.Offset != currentCandidate.Location.Offset)
                     { // make sure vertices are different.
                         combinedScoresSet.Add(new CombinedScore()
                         {

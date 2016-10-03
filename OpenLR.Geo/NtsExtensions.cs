@@ -155,18 +155,5 @@ namespace OpenLR.Geo
 
             return features;
         }
-
-        /// <summary>
-        /// Converts the given candidate to a feature collection.
-        /// </summary>
-        public static FeatureCollection ToFeatures(this CandidateVertexEdge candidateEdge, RouterDb routerDb)
-        {
-            var featureCollection = new FeatureCollection();
-            
-            featureCollection.Add(routerDb.GetFeatureForEdge(candidateEdge.EdgeId));
-            featureCollection.Add(routerDb.GetFeatureForVertex(candidateEdge.VertexId));
-
-            return featureCollection;
-        }
     }
 }

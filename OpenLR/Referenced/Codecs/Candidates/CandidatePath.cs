@@ -20,14 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using Itinero;
+using Itinero.Algorithms;
 using OpenLR.Referenced.Scoring;
 
 namespace OpenLR.Referenced.Codecs.Candidates
 {
     /// <summary>
-    /// Represents a candidate vertex/edge pair and associated score.
+    /// Represents a candidate path and associated score.
     /// </summary>
-    public class CandidateVertexEdge
+    public class CandidatePathSegment
     {
         /// <summary>
         /// The combined score of vertex and edge.
@@ -35,24 +37,25 @@ namespace OpenLR.Referenced.Codecs.Candidates
         public Score Score { get; set; }
 
         /// <summary>
-        /// Gets or sets the candidate edge.
+        /// Gets or sets the candidate path segment.
         /// </summary>
-        public uint EdgeId { get; set; }
+        public EdgePath<float> Path { get; set; }
 
         /// <summary>
-        /// Gets or sets the candidate vertex.
+        /// Gets or sets the candidate location.
         /// </summary>
-        public uint VertexId { get; set; }
+        public RouterPoint Location { get; set; }
 
         /// <summary>
         /// Determines whether this object is equal to the given object.
         /// </summary>
         public override bool Equals(object obj)
         {
-            var other = (obj as CandidateVertexEdge);
+            var other = (obj as CandidatePathSegment);
             return other != null && other.Score == this.Score && 
-                other.EdgeId == this.EdgeId &&
-                other.VertexId == this.VertexId;
+                other.Path.Equals(this.Path) &&
+                other.Location.EdgeId == this.Location.EdgeId &&
+                other.Location.Offset == this.Location.Offset;
         }
 
         /// <summary>
@@ -61,8 +64,9 @@ namespace OpenLR.Referenced.Codecs.Candidates
         public override int GetHashCode()
         {
             return this.Score.GetHashCode() ^
-                this.EdgeId.GetHashCode() ^
-                this.VertexId.GetHashCode();
+                this.Path.GetHashCode() ^
+                this.Location.EdgeId.GetHashCode() ^
+                this.Location.Offset.GetHashCode();
         }
 
         /// <summary>
@@ -70,9 +74,9 @@ namespace OpenLR.Referenced.Codecs.Candidates
         /// </summary>
         public override string ToString()
         {
-            return string.Format("{0} on {1}: {2}",
-                this.VertexId.ToString(), 
-                this.EdgeId.ToString(),
+            return string.Format("{0} -> {1}: {2}",
+                this.Location.ToString(), 
+                this.Path.ToString(),
                 this.Score.ToString());
         }
     }

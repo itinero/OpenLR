@@ -20,14 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using Itinero;
 using OpenLR.Referenced.Scoring;
 
 namespace OpenLR.Referenced.Codecs.Candidates
 {
     /// <summary>
-    /// Represents a candidate vertex/edge pair and associated score.
+    /// Represents a candidate point and it's score, a location on the network that could be an LRP.
     /// </summary>
-    public class CandidateVertex
+    public class CandidateLocation
     {
         /// <summary>
         /// Gets or sets the score.
@@ -35,18 +36,19 @@ namespace OpenLR.Referenced.Codecs.Candidates
         public Score Score { get; set; }
 
         /// <summary>
-        /// Gets or sets the vertex.
+        /// Gets or sets the location.
         /// </summary>
-        public uint Vertex { get; set; }
+        public RouterPoint Location { get; set; }
         
         /// <summary>
         /// Determines whether this object is equal to the given object.
         /// </summary>
         public override bool Equals(object obj)
         {
-            var other = (obj as CandidateVertex);
+            var other = (obj as CandidateLocation);
             return other != null && other.Score == this.Score &&
-                other.Vertex == this.Vertex;
+                other.Location.EdgeId == this.Location.EdgeId &&
+                other.Location.Offset == this.Location.Offset;
         }
 
         /// <summary>
@@ -55,7 +57,8 @@ namespace OpenLR.Referenced.Codecs.Candidates
         public override int GetHashCode()
         {
             return this.Score.GetHashCode() ^
-                this.Vertex.GetHashCode();
+                this.Location.EdgeId.GetHashCode() ^
+                this.Location.Offset.GetHashCode();
         }
 
         /// <summary>
@@ -64,7 +67,7 @@ namespace OpenLR.Referenced.Codecs.Candidates
         public override string ToString()
         {
             return string.Format("{0}: {1}",
-                this.Vertex.ToString(),
+                this.Location.ToString(),
                 this.Score.ToString());
         }
     }

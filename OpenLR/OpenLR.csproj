@@ -122,10 +122,9 @@
     <Compile Include="Parameters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Referenced\Codecs\BearingEncoder.cs" />
-    <Compile Include="Referenced\Codecs\Candidates\CandidateEdge.cs" />
     <Compile Include="Referenced\Codecs\Candidates\CandidateRoute.cs" />
-    <Compile Include="Referenced\Codecs\Candidates\CandidateVertex.cs" />
-    <Compile Include="Referenced\Codecs\Candidates\CandidateVertexEdge.cs" />
+    <Compile Include="Referenced\Codecs\Candidates\CandidateLocation.cs" />
+    <Compile Include="Referenced\Codecs\Candidates\CandidatePath.cs" />
     <Compile Include="Referenced\Codecs\Candidates\CandidateVertexEdgeComparer.cs" />
     <Compile Include="Referenced\Codecs\ReferencedCircleCodec.cs" />
     <Compile Include="Referenced\Codecs\CoderExtensions.cs" />
@@ -160,8 +159,8 @@
       <HintPath>..\packages\NetTopologySuite.1.14\lib\portable-net403+sl5+netcore45+wpa81+wp8+MonoAndroid10+XamariniOS10+MonoTouch10\GeoAPI.Bootstrapper.NetTopologySuite.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Itinero, Version=0.25.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Itinero.0.25.1-rc1\lib\portable-net40+sl4+win8+wp7\Itinero.dll</HintPath>
+    <Reference Include="Itinero, Version=0.27.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Itinero.0.27.6-rc1\lib\portable-net40+sl4+win8+wp7\Itinero.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NetTopologySuite, Version=1.14.0.0, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">

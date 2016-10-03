@@ -26,6 +26,10 @@ using Itinero.Algorithms.Search.Hilbert;
 using Itinero;
 using OpenLR.Referenced.Codecs.Candidates;
 using System.Collections.Generic;
+using Itinero.Profiles;
+using Itinero.Algorithms.Search;
+using Itinero.Data.Network;
+using System;
 
 namespace OpenLR.Referenced
 {
@@ -64,20 +68,6 @@ namespace OpenLR.Referenced
                 }
             }
             return bestEdge;
-        }
-        
-        /// <summary>
-        /// Converts the candidated to a router point.
-        /// </summary>
-        public static RouterPoint ToRouterPoint(this CandidateVertexEdge candidate, RouterDb routerDb)
-        {
-            var edge = routerDb.Network.GetEdge(candidate.EdgeId);
-            var location = routerDb.Network.GetVertex(candidate.VertexId);
-            if (edge.From == candidate.VertexId)
-            {
-                return new RouterPoint(location.Latitude, location.Longitude, edge.Id, 0);
-            }
-            return new RouterPoint(location.Latitude, location.Longitude, edge.Id, ushort.MaxValue);
         }
 
         /// <summary>
@@ -189,6 +179,65 @@ namespace OpenLR.Referenced
             {
                 return LinePointPosition.On;
             }
+        }
+
+        /// <summary>
+        /// Resolves multiple routerpoints.
+        /// </summary>
+        public static List<RouterPoint> ResolveMultiple(this Router router, Profile[] profiles, float latitude, float longitude, float maxOffsetDistance)
+        {
+            var algorithm = new ResolveMultipleAlgorithm(router.Db.Network.GeometricGraph, latitude, longitude, 0.01f, maxOffsetDistance,
+                router.GetIsAcceptable(profiles));
+            algorithm.Run();
+            if (!algorithm.HasSucceeded)
+            {
+                return new List<RouterPoint>();
+            }
+            return algorithm.Results;
+        }
+        
+        /// <summary>
+        /// Creates a router point for the given edge.
+        /// </summary>
+        public static RouterPoint CreateRouterPointForEdgeAndVertex(this RouterDb routerDb, long directedEdgeId, uint vertex)
+        {
+            var edge = routerDb.Network.GetEdge(directedEdgeId);
+            var location = routerDb.Network.GetVertex(vertex);
+
+            if (edge.From == vertex)
+            {
+                return new RouterPoint(location.Latitude, location.Longitude, edge.Id, 0);
+            }
+            else if (edge.To == vertex)
+            {
+                return new RouterPoint(location.Latitude, location.Longitude, edge.Id, ushort.MaxValue);
+            }
+            throw new System.Exception("Cannot create router point: vertex not on given edge.");
+        }
+
+        /// <summary>
+        /// Creates a router point for the given vertex.
+        /// </summary>
+        public static bool TryCreateRouterPointForVertex(this RouterDb routerDb, uint vertex, Profile profile, out RouterPoint routerPoint)
+        {
+            float latitude, longitude;
+            if (!routerDb.Network.GeometricGraph.GetVertex(vertex, out latitude, out longitude))
+            {
+                throw new ArgumentException("Vertex doesn't exist, cannot create routerpoint.");
+            }
+            var edges = routerDb.Network.GetEdgeEnumerator(vertex);
+            while (edges.MoveNext())
+            {
+                var edgeProfile = routerDb.EdgeProfiles.Get(edges.Data.Profile);
+                var factor = profile.Factor(edgeProfile);
+                if (factor.Value != 0)
+                {
+                    routerPoint = routerDb.CreateRouterPointForEdgeAndVertex(edges.IdDirected(), vertex);
+                    return true;
+                }
+            }
+            routerPoint = null;
+            return false;
         }
     }
 

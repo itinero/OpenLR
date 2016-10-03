@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using Itinero;
 using System;
 
 namespace OpenLR.Referenced.Locations
@@ -48,6 +49,22 @@ namespace OpenLR.Referenced.Locations
         public long[] Edges { get; set; }
 
         /// <summary>
+        /// Gets or sets the start location.
+        /// </summary>
+        /// <remarks>
+        /// When the first vertex in the vertices array equals Itinero.Constants.NO_VERTEX this location is not a vertex but a location on the first edge.
+        /// </remarks>
+        public RouterPoint StartLocation { get; set; }
+
+        /// <summary>
+        /// Gets or sets the end location.
+        /// </summary>
+        /// <remarks>
+        /// When the end vertex in the vertices array equals Itinero.Constants.NO_VERTEX this location is not a vertex but a location on the last edge.
+        /// </remarks>
+        public RouterPoint EndLocation { get; set; }
+
+        /// <summary>
         /// Gets or sets the offset at the beginning of the path representing this location.
         /// </summary>
         public float PositiveOffsetPercentage { get; set; }
@@ -68,7 +85,17 @@ namespace OpenLR.Referenced.Locations
                 Edges = this.Edges == null ? null : this.Edges.Clone() as long[],
                 Vertices = this.Vertices == null ? null : this.Vertices.Clone() as uint[],
                 NegativeOffsetPercentage = this.NegativeOffsetPercentage,
-                PositiveOffsetPercentage = this.PositiveOffsetPercentage
+                PositiveOffsetPercentage = this.PositiveOffsetPercentage,
+                StartLocation = new RouterPoint(
+                    this.StartLocation.Latitude,
+                    this.StartLocation.Longitude,
+                    this.StartLocation.EdgeId,
+                    this.StartLocation.Offset),
+                EndLocation = new RouterPoint(
+                    this.EndLocation.Latitude,
+                    this.EndLocation.Longitude,
+                    this.EndLocation.EdgeId,
+                    this.EndLocation.Offset)
             };
         }
 

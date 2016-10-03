@@ -55,12 +55,12 @@
       <HintPath>..\packages\GeoAPI.1.7.4\lib\net45\GeoAPI.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Itinero, Version=0.25.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Itinero.0.25.1-rc1\lib\net45\Itinero.dll</HintPath>
+    <Reference Include="Itinero, Version=0.27.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Itinero.0.27.6-rc1\lib\net45\Itinero.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Itinero.Geo, Version=0.25.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Itinero.Geo.0.25.1-rc1\lib\net45\Itinero.Geo.dll</HintPath>
+    <Reference Include="Itinero.Geo, Version=0.27.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Itinero.Geo.0.27.6-rc1\lib\net45\Itinero.Geo.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NetTopologySuite, Version=1.14.0.0, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
@@ -142,16 +142,20 @@
     <Compile Include="Binary\PoiWithAccessPointLocationDecoderTests.cs" />
     <Compile Include="Binary\PolygonLocationTests.cs" />
     <Compile Include="Binary\RectangleLocationTests.cs" />
+    <Compile Include="LocationExtensionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Referenced\ReferencedPolygonCodecTests.cs" />
     <Compile Include="Referenced\ReferencedGridCodecTests.cs" />
     <Compile Include="Referenced\ReferencedCircleDecoderTests.cs" />
     <Compile Include="Referenced\ReferencedGeoCoordinateCodecTests.cs" />
     <Compile Include="Referenced\ReferencedRectangleCodecTests.cs" />
+    <Compile Include="TestNetworkBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <EmbeddedResource Include="test-data\networks\network1.geojson" />
+    <EmbeddedResource Include="test-data\networks\network2.geojson" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OpenLR.Geo\OpenLR.Geo.csproj">

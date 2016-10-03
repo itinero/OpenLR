@@ -186,32 +186,51 @@ namespace OpenLR
             {
                 return coordinates;
             }
-            //coordinates.Add(routerDb.Network.GetVertex(referencedLine.Vertices[start]));
+
             for (var i = start; i < start + count - 1; i++)
             {
-                var shape = routerDb.Network.GetShape(routerDb.Network.GetEdge(referencedLine.Edges[i]));
+                List<Coordinate> shape = null;
+                if (i == 0 && referencedLine.Vertices[0] == Itinero.Constants.NO_VERTEX)
+                { // shape from startlocation -> vertex1.
+                    if (referencedLine.Edges.Length == 1)
+                    { // only 1 edge, shape from startLocation -> endLocation.
+                        shape = referencedLine.StartLocation.ShapePointsTo(routerDb, referencedLine.EndLocation);
+                        shape.Insert(0, referencedLine.StartLocation.LocationOnNetwork(routerDb));
+                        shape.Add(referencedLine.EndLocation.LocationOnNetwork(routerDb));
+                    }
+                    else
+                    { // just get shape to first vertex.
+                        shape = referencedLine.StartLocation.ShapePointsTo(routerDb, referencedLine.Vertices[1]);
+                        shape.Insert(0, referencedLine.StartLocation.LocationOnNetwork(routerDb));
+                        shape.Add(routerDb.Network.GetVertex(referencedLine.Vertices[1]));
+                    }
+                }
+                else if (i == referencedLine.Edges.Length - 1 && referencedLine.Vertices[referencedLine.Vertices.Length - 1] == Itinero.Constants.NO_VERTEX)
+                { // shape from second last vertex -> endlocation.
+                    shape = referencedLine.StartLocation.ShapePointsTo(routerDb, referencedLine.Vertices[referencedLine.Vertices.Length - 1]);
+                    shape.Reverse();
+                    shape.Insert(0, routerDb.Network.GetVertex(referencedLine.Vertices[referencedLine.Vertices.Length - 1]));
+                    shape.Add(referencedLine.EndLocation.LocationOnNetwork(routerDb));
+                }
+                else
+                { // regular 2 vertices and edge.
+                    shape = routerDb.Network.GetShape(routerDb.Network.GetEdge(referencedLine.Edges[i]));
+                    if (referencedLine.Edges[i] < 0)
+                    {
+                        shape.Reverse();
+                    }
+                }
                 if (shape != null)
                 {
                     if (coordinates.Count > 0)
                     {
                         coordinates.RemoveAt(coordinates.Count - 1);
                     }
-                    if (referencedLine.Edges[i] > 0)
+                    for (var j = 0; j < shape.Count; j++)
                     {
-                        for (var j = 0; j < shape.Count; j++)
-                        {
-                            coordinates.Add(shape[j]);
-                        }
-                    }
-                    else
-                    {
-                        for (var j = shape.Count - 1; j >= 0; j--)
-                        {
-                            coordinates.Add(shape[j]);
-                        }
+                        coordinates.Add(shape[j]);
                     }
                 }
-                //coordinates.Add(routerDb.Network.GetVertex(referencedLine.Vertices[i + 1]));
             }
             return coordinates;
         }
@@ -387,6 +406,7 @@ namespace OpenLR
         {
             var length = (float)line.Length(coder.Router.Db);
             var negativeOffsetLength = (line.NegativeOffsetPercentage / 100) * length;
+            var positiveOffsetLength = (line.PositiveOffsetPercentage / 100) * length;
 
             exclude = new HashSet<uint>(exclude);
             foreach (var vertex in line.Vertices)
@@ -460,6 +480,7 @@ namespace OpenLR
 
             // update offset percentage
             line.NegativeOffsetPercentage = (float)((negativeOffsetLength / length) * 100.0);
+            line.PositiveOffsetPercentage = (float)((positiveOffsetLength / length) * 100.0);
 
             return true;
         }

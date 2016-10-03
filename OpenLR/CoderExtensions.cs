@@ -362,7 +362,9 @@ namespace OpenLR
                     Route = new ReferencedLine()
                     {
                         Edges = new long[] { edge.IdDirected() },
-                        Vertices = new uint[] { edge.From, edge.To }
+                        Vertices = new uint[] { edge.From, edge.To },
+                        StartLocation = coder.Router.Db.CreateRouterPointForEdgeAndVertex(edge.IdDirected(), edge.From),
+                        EndLocation = coder.Router.Db.CreateRouterPointForEdgeAndVertex(edge.IdDirected(), edge.To)
                     },
                     Latitude = latitude,
                     Longitude = longitude,
@@ -376,7 +378,9 @@ namespace OpenLR
                     Route = new ReferencedLine()
                     {
                         Edges = new long[] { -edge.IdDirected() },
-                        Vertices = new uint[] { edge.To, edge.From  }
+                        Vertices = new uint[] { edge.To, edge.From },
+                        StartLocation = coder.Router.Db.CreateRouterPointForEdgeAndVertex(edge.IdDirected(), edge.To),
+                        EndLocation = coder.Router.Db.CreateRouterPointForEdgeAndVertex(edge.IdDirected(), edge.From)
                     },
                     Latitude = latitude,
                     Longitude = longitude,
@@ -386,6 +390,11 @@ namespace OpenLR
 
             // expand to valid location.
             referencedPointAlongLine.Route.AdjustToValidPoints(coder);
+            referencedPointAlongLine.Route.StartLocation = coder.Router.Db.CreateRouterPointForEdgeAndVertex(
+                referencedPointAlongLine.Route.Edges[0], referencedPointAlongLine.Route.Vertices[0]);
+            referencedPointAlongLine.Route.EndLocation = coder.Router.Db.CreateRouterPointForEdgeAndVertex(
+                referencedPointAlongLine.Route.Edges[referencedPointAlongLine.Route.Edges.Length - 1], 
+                referencedPointAlongLine.Route.Vertices[referencedPointAlongLine.Route.Vertices.Length - 1]);
 
             return referencedPointAlongLine;
         }
@@ -512,7 +521,9 @@ namespace OpenLR
                 Edges = edges.ToArray(),
                 Vertices = vertices.ToArray(),
                 NegativeOffsetPercentage = 100.0f * (targetOffset / totalDistance),
-                PositiveOffsetPercentage = 100.0f * (sourceOffset / totalDistance)
+                PositiveOffsetPercentage = 100.0f * (sourceOffset / totalDistance),
+                StartLocation = coder.Router.Db.CreateRouterPointForEdgeAndVertex(edges[0],  vertices[0]),
+                EndLocation = coder.Router.Db.CreateRouterPointForEdgeAndVertex(edges[edges.Count - 1], vertices[vertices.Count - 1])
             };
         }
     }

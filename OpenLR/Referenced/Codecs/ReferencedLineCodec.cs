@@ -43,7 +43,7 @@ namespace OpenLR.Referenced.Codecs
         public static ReferencedLine Decode(LineLocation location, Coder coder)
         {
             // get candidate vertices and edges.
-            var candidates = new List<SortedSet<CandidateVertexEdge>>();
+            var candidates = new List<SortedSet<CandidatePathSegment>>();
             var lrps = new List<LocationReferencePoint>();
 
             // loop over all lrps.
@@ -87,7 +87,7 @@ namespace OpenLR.Referenced.Codecs
 
                 // find the best candidate route.
                 CandidateRoute best = null;
-                CandidateVertexEdge bestSource = null;
+                CandidatePathSegment bestSource = null;
                 while (combinedScores.Count > 0)
                 {
                     // get the first pair.
@@ -158,7 +158,7 @@ namespace OpenLR.Referenced.Codecs
 
                 // assign new next.
                 target = source;
-                targetCandidates = new SortedSet<CandidateVertexEdge>();
+                targetCandidates = new SortedSet<CandidatePathSegment>();
                 targetCandidates.Add(bestSource); // only the best source can be re-used for the next segment.
             }
 
