@@ -63,34 +63,58 @@ namespace OpenLR
             float currentOffsetLength = 0;
             float currentEdgeLength = 0;
             var coordinates = new List<Coordinate>();
-            coordinates.Add(coder.Router.Db.Network.GetVertex(route.Vertices[0]));
-            for (int edgeIdx = 0; edgeIdx < route.Edges.Length; edgeIdx++)
+            for (var i = 0; i < route.Edges.Length; i++)
             {
+                List<Coordinate> shape = null;
                 currentEdgeLength = 0;
-                var edge = coder.Router.Db.Network.GetEdge(route.Edges[edgeIdx]);
-                var edgeShapes = edge.Shape;
-                if (edgeShapes != null)
-                { // there are intermediate coordinates.
-                    if (route.Edges[edgeIdx] < 0)
-                    {
-                        edgeShapes = edgeShapes.Reverse();
+                if (i == 0 && route.Vertices[0] == Itinero.Constants.NO_VERTEX)
+                { // shape from startlocation -> vertex1.
+                    if (route.Edges.Length == 1)
+                    { // only 1 edge, shape from startLocation -> endLocation.
+                        shape = route.StartLocation.ShapePointsTo(coder.Router.Db, route.EndLocation);
+                        shape.Insert(0, route.StartLocation.LocationOnNetwork(coder.Router.Db));
+                        shape.Add(route.EndLocation.LocationOnNetwork(coder.Router.Db));
                     }
-                    foreach(var shape in edgeShapes)
-                    {
-                        coordinates.Add(shape);
-                        currentEdgeLength = currentEdgeLength + Coordinate.DistanceEstimateInMeter(coordinates[coordinates.Count - 2],
-                            coordinates[coordinates.Count - 1]);
+                    else
+                    { // just get shape to first vertex.
+                        shape = route.StartLocation.ShapePointsTo(coder.Router.Db, route.Vertices[1]);
+                        shape.Insert(0, route.StartLocation.LocationOnNetwork(coder.Router.Db));
+                        shape.Add(coder.Router.Db.Network.GetVertex(route.Vertices[1]));
                     }
                 }
-                coordinates.Add(coder.Router.Db.Network.GetVertex(route.Vertices[edgeIdx + 1]));
-                currentEdgeLength = currentEdgeLength + Coordinate.DistanceEstimateInMeter(coordinates[coordinates.Count - 2],
-                    coordinates[coordinates.Count - 1]);
-
+                else if (i == route.Edges.Length - 1 && route.Vertices[route.Vertices.Length - 1] == Itinero.Constants.NO_VERTEX)
+                { // shape from second last vertex -> endlocation.
+                    shape = route.StartLocation.ShapePointsTo(coder.Router.Db, route.Vertices[route.Vertices.Length - 1]);
+                    shape.Reverse();
+                    shape.Insert(0, coder.Router.Db.Network.GetVertex(route.Vertices[route.Vertices.Length - 1]));
+                    shape.Add(route.EndLocation.LocationOnNetwork(coder.Router.Db));
+                }
+                else
+                { // regular 2 vertices and edge.
+                    shape = coder.Router.Db.Network.GetShape(coder.Router.Db.Network.GetEdge(route.Edges[i]));
+                    if (route.Edges[i] < 0)
+                    {
+                        shape.Reverse();
+                    }
+                }
+                if (shape != null)
+                {
+                    currentEdgeLength = currentEdgeLength + shape.Length();
+                    if (coordinates.Count > 0)
+                    {
+                        coordinates.RemoveAt(coordinates.Count - 1);
+                    }
+                    for (var j = 0; j < shape.Count; j++)
+                    {
+                        coordinates.Add(shape[j]);
+                    }
+                }
+                
                 // add current edge length to current offset.
                 if ((currentOffsetLength + currentEdgeLength) >= offsetLength &&
                     edgeLength < 0)
                 { // it's this edge that has the valuable info.
-                    offsetEdgeIdx = edgeIdx;
+                    offsetEdgeIdx = i;
                     offsetEdgeLength = offsetLength - currentOffsetLength;
                     edgeLength = currentEdgeLength;
                 }

@@ -68,39 +68,61 @@ namespace OpenLR.Geo
             var featureCollection = new FeatureCollection();
 
             // build coordinates list.
-            var coordinates = new List<Coordinate>();
-            var allCoordinates = new List<Coordinate>();
-            for (int idx = 0; idx < line.Edges.Length; idx++)
+            var coordinates = new List<Itinero.LocalGeo.Coordinate>();
+            for (var i = 0; i < line.Edges.Length; i++)
             {
-                var edge = routerDb.Network.GetEdge(line.Edges[idx]);
-                coordinates.Add(routerDb.Network.GetVertex(line.Vertices[idx]).ToGeoAPICoordinate());
-                if (edge.Shape != null)
-                {
-                    var shape = edge.Shape;
-                    if (line.Edges[idx] < 0)
-                    {
-                        shape = shape.Reverse();
-                    }
-                    foreach (var c in shape)
-                    {
-                        coordinates.Add(c.ToGeoAPICoordinate());
-                    }
-                }
-                coordinates.Add(routerDb.Network.GetVertex(line.Vertices[idx + 1]).ToGeoAPICoordinate());
+                var edge = routerDb.Network.GetEdge(line.Edges[i]);
 
-                if (allCoordinates.Count > 0)
-                {
-                    allCoordinates.RemoveAt(allCoordinates.Count - 1);
+                List<Itinero.LocalGeo.Coordinate> shape = null;
+                if (i == 0 && line.Vertices[0] == Itinero.Constants.NO_VERTEX)
+                { // shape from startlocation -> vertex1.
+                    if (line.Edges.Length == 1)
+                    { // only 1 edge, shape from startLocation -> endLocation.
+                        shape = line.StartLocation.ShapePointsTo(routerDb, line.EndLocation);
+                        shape.Insert(0, line.StartLocation.LocationOnNetwork(routerDb));
+                        shape.Add(line.EndLocation.LocationOnNetwork(routerDb));
+                    }
+                    else
+                    { // just get shape to first vertex.
+                        shape = line.StartLocation.ShapePointsTo(routerDb, line.Vertices[1]);
+                        shape.Insert(0, line.StartLocation.LocationOnNetwork(routerDb));
+                        shape.Add(routerDb.Network.GetVertex(line.Vertices[1]));
+                    }
                 }
-                allCoordinates.AddRange(coordinates);
+                else if (i == line.Edges.Length - 1 && line.Vertices[line.Vertices.Length - 1] == Itinero.Constants.NO_VERTEX)
+                { // shape from second last vertex -> endlocation.
+                    shape = line.StartLocation.ShapePointsTo(routerDb, line.Vertices[line.Vertices.Length - 1]);
+                    shape.Reverse();
+                    shape.Insert(0, routerDb.Network.GetVertex(line.Vertices[line.Vertices.Length - 1]));
+                    shape.Add(line.EndLocation.LocationOnNetwork(routerDb));
+                }
+                else
+                { // regular 2 vertices and edge.
+                    shape = routerDb.Network.GetShape(routerDb.Network.GetEdge(line.Edges[i]));
+                    if (line.Edges[i] < 0)
+                    {
+                        shape.Reverse();
+                    }
+                }
+                if (shape != null)
+                {
+                    if (coordinates.Count > 0)
+                    {
+                        coordinates.RemoveAt(coordinates.Count - 1);
+                    }
+                    for (var j = 0; j < shape.Count; j++)
+                    {
+                        coordinates.Add(shape[j]);
+                    }
+                }
 
                 var tags = new AttributeCollection();
                 tags.AddOrReplace(routerDb.EdgeProfiles.Get(edge.Data.Profile));
                 tags.AddOrReplace(routerDb.EdgeMeta.Get(edge.Data.MetaId));
                 tags.AddOrReplace("edge_id", edge.IdDirected().ToInvariantString());
                 var table = tags.ToAttributes();
-                
-                featureCollection.Add(new Feature(new LineString(coordinates.ToArray()), table));
+
+                featureCollection.Add(new Feature(new LineString(shape.ToCoordinates().ToArray()), table));
                 coordinates.Clear();
             }
 

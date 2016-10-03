@@ -261,14 +261,25 @@ namespace OpenLR.Referenced.Codecs
                 }
             }
 
+            var startLocation = from.Location;
             if (!from.Location.IsVertex())
-            {
+            { // first vertex is virtual.
                 vertices[0] = Itinero.Constants.NO_VERTEX;
             }
+            else
+            { // make sure routerpoint has same edge.
+                startLocation = coder.Router.Db.CreateRouterPointForEdgeAndVertex(edges[0], vertices[0]);
+            }
+
+            var endLocation = to.Location;
             if (!to.Location.IsVertex())
-            {
+            { // last vertex is virtual.
                 vertices[vertices.Count - 1] = Itinero.Constants.NO_VERTEX;
             }
+            else
+            { // make sure routerpoint has the same edge.
+                endLocation = coder.Router.Db.CreateRouterPointForEdgeAndVertex(edges[edges.Count - 1], vertices[vertices.Count - 1]);
+            }            
 
             return new CandidateRoute()
             {
@@ -276,8 +287,8 @@ namespace OpenLR.Referenced.Codecs
                 {
                     Edges = edges.ToArray(),
                     Vertices = vertices.ToArray(),
-                    StartLocation = from.Location,
-                    EndLocation = to.Location
+                    StartLocation = startLocation,
+                    EndLocation = endLocation
                 },
                 Score = Score.New(Score.CANDIDATE_ROUTE, "Candidate route quality.", 1, 1)
             };
