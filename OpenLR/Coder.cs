@@ -86,6 +86,17 @@ namespace OpenLR
         }
 
         /// <summary>
+        /// Gets the raw codec.
+        /// </summary>
+        public Codecs.CodecBase RawCodec
+        {
+            get
+            {
+                return _rawCodec;
+            }
+        }
+
+        /// <summary>
         /// Encodes a location into an OpenLR string.
         /// </summary>
         public string Encode(ReferencedLocation location)

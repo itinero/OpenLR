@@ -177,5 +177,54 @@ namespace OpenLR.Geo
 
             return features;
         }
+
+        /// <summary>
+        /// Converts this location to a feature collection.
+        /// </summary>
+        public static FeatureCollection ToFeatures(this OpenLR.Model.Locations.PointAlongLineLocation location)
+        {
+            var features = new FeatureCollection();
+
+            var first = location.First.ToFeature();
+            first.Attributes.AddAttribute("positive_offset_percentage", location.PositiveOffsetPercentage == null ? string.Empty :
+                location.PositiveOffsetPercentage.ToInvariantString());
+            first.Attributes.AddAttribute("orientation", location.Orientation == null ? string.Empty :
+                location.Orientation.ToInvariantString());
+            first.Attributes.AddAttribute("side_of_road", location.SideOfRoad == null ? string.Empty : 
+                location.SideOfRoad.ToInvariantString());
+            first.Attributes.AddAttribute("type", "first");
+            features.Add(first);
+            var last = location.Last.ToFeature();
+            last.Attributes.AddAttribute("negative_offset_percentage", location.NegativeOffsetPercentage == null ? string.Empty :
+                location.NegativeOffsetPercentage.ToInvariantString());
+            last.Attributes.AddAttribute("type", "last");
+            features.Add(last);
+
+            return features;
+        }
+
+        /// <summary>
+        /// Converts this LRP to a feature.
+        /// </summary>
+        public static Feature ToFeature(this OpenLR.Model.LocationReferencePoint point)
+        {
+            var tags = new AttributeCollection();
+            tags.AddOrReplace("bearing", point.Bearing == null ? string.Empty : point.Bearing.ToInvariantString());
+            tags.AddOrReplace("distance_to_next", point.DistanceToNext.ToInvariantString());
+            tags.AddOrReplace("form_of_way", point.FormOfWay == null ? string.Empty : point.FormOfWay.ToInvariantString());
+            tags.AddOrReplace("functional_road_class", point.FuntionalRoadClass == null ? string.Empty : point.FuntionalRoadClass.ToInvariantString());
+            tags.AddOrReplace("lowest_functional_road_class", point.LowestFunctionalRoadClassToNext == null ? string.Empty :
+                point.LowestFunctionalRoadClassToNext.ToInvariantString());
+            var table = tags.ToAttributes();
+            return new Feature(new Point(point.Coordinate.ToCoordinate()), table);
+        }
+
+        /// <summary>
+        /// Converts this line location to features.
+        /// </summary>
+        public static Coordinate ToCoordinate(this OpenLR.Model.Coordinate coordinate)
+        {
+            return new Coordinate(coordinate.Longitude, coordinate.Latitude);
+        }
     }
 }
