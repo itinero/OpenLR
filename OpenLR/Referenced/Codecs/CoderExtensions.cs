@@ -179,34 +179,28 @@ namespace OpenLR.Referenced.Codecs
                     edgeEnumerator.MoveToEdge(path.Edge);
                     var edge = edgeEnumerator.Current;
                     var edgeProfile = coder.Router.Db.EdgeProfiles.Get(edge.Data.Profile);
-                    var factor = profile.Profile.Factor(edgeProfile);
 
-                    if (factor.Value > 0 && (factor.Direction == 0 ||
-                        (forward && (factor.Direction == 1) != edge.DataInverted) ||
-                        (!forward && (factor.Direction == 1) == edge.DataInverted)))
-                    {
-                        var matchScore = Score.New(Score.MATCH_ARC, "Metric indicating a match with fow, frc etc...",
-                            profile.Match(edgeProfile, fow, frc), 2);
-                        if (matchScore.Value > 0)
-                        { // ok, there is a match.
-                          // check bearing.
+                    var matchScore = Score.New(Score.MATCH_ARC, "Metric indicating a match with fow, frc etc...",
+                        profile.Match(edgeProfile, fow, frc), 2);
+                    if (matchScore.Value > 0)
+                    { // ok, there is a match.
+                      // check bearing.
 
-                            // get shape from location -> path.
-                            var shape = location.Location.ShapePointsTo(coder.Router.Db, path.Vertex);
-                            shape.Insert(0, locationOnNetwork);
-                            shape.Add(coder.Router.Db.Network.GetVertex(path.Vertex));
+                        // get shape from location -> path.
+                        var shape = location.Location.ShapePointsTo(coder.Router.Db, path.Vertex);
+                        shape.Insert(0, locationOnNetwork);
+                        shape.Add(coder.Router.Db.Network.GetVertex(path.Vertex));
 
-                            var localBearing = BearingEncoder.EncodeBearing(shape, false);
-                            var localBearingDiff = System.Math.Abs(Extensions.AngleSmallestDifference(localBearing, bearing));
+                        var localBearing = BearingEncoder.EncodeBearing(shape, false);
+                        var localBearingDiff = System.Math.Abs(Extensions.AngleSmallestDifference(localBearing, bearing));
 
-                            var bearingScore = Score.New(Score.BEARING_DIFF, "Bearing difference (0=0 & 180=1)", ((180f - localBearingDiff) / 180f), 1);
-                            relevantEdges.Add(new CandidatePathSegment()
-                            {
-                                Score = location.Score * (matchScore + bearingScore),
-                                Location = location.Location,
-                                Path = path
-                            });
-                        }
+                        var bearingScore = Score.New(Score.BEARING_DIFF, "Bearing difference (0=0 & 180=1)", ((180f - localBearingDiff) / 180f), 1);
+                        relevantEdges.Add(new CandidatePathSegment()
+                        {
+                            Score = location.Score * (matchScore + bearingScore),
+                            Location = location.Location,
+                            Path = path
+                        });
                     }
                 }
             }

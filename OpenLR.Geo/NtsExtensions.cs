@@ -220,11 +220,54 @@ namespace OpenLR.Geo
         }
 
         /// <summary>
+        /// Converts one feature into a feature collection.
+        /// </summary>
+        public static FeatureCollection ToFeatures(this Feature feature)
+        {
+            var features = new FeatureCollection();
+            features.Add(feature);
+            return features;
+        }
+
+        /// <summary>
         /// Converts this line location to features.
         /// </summary>
         public static Coordinate ToCoordinate(this OpenLR.Model.Coordinate coordinate)
         {
             return new Coordinate(coordinate.Longitude, coordinate.Latitude);
+        }
+
+        /// <summary>
+        /// Converts this candidate to a feature collection.
+        /// </summary>
+        public static FeatureCollection ToFeatures(this CandidatePathSegment candidate, RouterDb routerDb)
+        {
+            var features = new FeatureCollection();
+
+            features.Add(candidate.Location.ToFeature(routerDb));
+
+            return features;
+        }
+
+        /// <summary>
+        /// Converts this router point to a feature.
+        /// </summary>
+        public static Feature ToFeature(this RouterPoint routerPoint, RouterDb routerDb)
+        {
+            var attributes = new AttributesTable();
+            attributes.AddAttribute("edge_id", routerPoint.EdgeId.ToInvariantString());
+            attributes.AddAttribute("offset", routerPoint.Offset.ToInvariantString());
+            if (routerPoint.Attributes != null)
+            {
+                foreach(var attribute in routerPoint.Attributes)
+                {
+                    attributes.AddAttribute(attribute.Key, attribute.Value);
+                }
+            }
+
+            var location = routerPoint.LocationOnNetwork(routerDb).ToGeoAPICoordinate();
+            var point = new Point(location);
+            return new Feature(point, attributes);
         }
     }
 }
