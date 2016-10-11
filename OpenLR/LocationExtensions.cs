@@ -84,9 +84,9 @@ namespace OpenLR
                 }
                 else if (i == route.Edges.Length - 1 && route.Vertices[route.Vertices.Length - 1] == Itinero.Constants.NO_VERTEX)
                 { // shape from second last vertex -> endlocation.
-                    shape = route.StartLocation.ShapePointsTo(coder.Router.Db, route.Vertices[route.Vertices.Length - 1]);
+                    shape = route.EndLocation.ShapePointsTo(coder.Router.Db, route.Vertices[route.Vertices.Length - 2]);
                     shape.Reverse();
-                    shape.Insert(0, coder.Router.Db.Network.GetVertex(route.Vertices[route.Vertices.Length - 1]));
+                    shape.Insert(0, coder.Router.Db.Network.GetVertex(route.Vertices[route.Vertices.Length - 2]));
                     shape.Add(route.EndLocation.LocationOnNetwork(coder.Router.Db));
                 }
                 else
@@ -231,9 +231,9 @@ namespace OpenLR
                 }
                 else if (i == referencedLine.Edges.Length - 1 && referencedLine.Vertices[referencedLine.Vertices.Length - 1] == Itinero.Constants.NO_VERTEX)
                 { // shape from second last vertex -> endlocation.
-                    shape = referencedLine.StartLocation.ShapePointsTo(routerDb, referencedLine.Vertices[referencedLine.Vertices.Length - 1]);
+                    shape = referencedLine.EndLocation.ShapePointsTo(routerDb, referencedLine.Vertices[referencedLine.Vertices.Length - 2]);
                     shape.Reverse();
-                    shape.Insert(0, routerDb.Network.GetVertex(referencedLine.Vertices[referencedLine.Vertices.Length - 1]));
+                    shape.Insert(0, routerDb.Network.GetVertex(referencedLine.Vertices[referencedLine.Vertices.Length - 2]));
                     shape.Add(referencedLine.EndLocation.LocationOnNetwork(routerDb));
                 }
                 else

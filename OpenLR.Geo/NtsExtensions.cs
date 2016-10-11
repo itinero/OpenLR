@@ -91,9 +91,9 @@ namespace OpenLR.Geo
                 }
                 else if (i == line.Edges.Length - 1 && line.Vertices[line.Vertices.Length - 1] == Itinero.Constants.NO_VERTEX)
                 { // shape from second last vertex -> endlocation.
-                    shape = line.StartLocation.ShapePointsTo(routerDb, line.Vertices[line.Vertices.Length - 1]);
+                    shape = line.EndLocation.ShapePointsTo(routerDb, line.Vertices[line.Vertices.Length - 2]);
                     shape.Reverse();
-                    shape.Insert(0, routerDb.Network.GetVertex(line.Vertices[line.Vertices.Length - 1]));
+                    shape.Insert(0, routerDb.Network.GetVertex(line.Vertices[line.Vertices.Length - 2]));
                     shape.Add(line.EndLocation.LocationOnNetwork(routerDb));
                 }
                 else
