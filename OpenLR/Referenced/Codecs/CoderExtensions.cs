@@ -103,7 +103,17 @@ namespace OpenLR.Referenced.Codecs
                 }
             }
 
-            if (scoredCandidates.Count == 0)
+            var candidatesQualityOK = false;
+            foreach(var candidate in scoredCandidates)
+            {
+                if (candidate.Score.Value / candidate.Score.Reference >= 
+                    System.Math.Min(coder.Profile.ScoreThreshold + coder.Profile.ScoreThreshold, 0.7))
+                { // at least one above threshold, keep it.
+                    candidatesQualityOK = true;
+                }
+            }
+
+            if (!candidatesQualityOK)
             { // no candidates, create a virtual candidate.
                 var routerPoints = coder.Router.ResolveMultiple(new Itinero.Profiles.Profile[] { coder.Profile.Profile }, lrpCoordinate.Latitude, lrpCoordinate.Longitude, maxVertexDistanceInMeter);
                 if (routerPoints.Count == 0)
