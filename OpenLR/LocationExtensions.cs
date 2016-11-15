@@ -24,6 +24,7 @@ using Itinero;
 using Itinero.Algorithms;
 using Itinero.Data.Network;
 using Itinero.LocalGeo;
+using Itinero.Profiles;
 using OpenLR.Referenced;
 using OpenLR.Referenced.Codecs;
 using OpenLR.Referenced.Locations;
