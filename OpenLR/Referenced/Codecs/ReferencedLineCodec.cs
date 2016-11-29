@@ -170,7 +170,7 @@ namespace OpenLR.Referenced.Codecs
             }
 
             lineLocation.PositiveOffsetPercentage = (location.PositiveOffsetPercentage == null) ? 0 : location.PositiveOffsetPercentage.Value;
-            lineLocation.NegativeOffsetPercentage = (location.NegativeOffsetPercentage == null) ? 0 : location.PositiveOffsetPercentage.Value;
+            lineLocation.NegativeOffsetPercentage = (location.NegativeOffsetPercentage == null) ? 0 : location.NegativeOffsetPercentage.Value;
 
             return lineLocation;
         }            
