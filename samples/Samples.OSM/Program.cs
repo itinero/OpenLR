@@ -59,9 +59,9 @@ namespace Samples.OSM
             var encoded = coder.Encode(line);
             Console.WriteLine(encoded);
 
-            // decoder this location.
+            // decode this location.
             var decodedLine = coder.Decode(encoded) as ReferencedLine;
-            var decodedLineGeoJson = line.ToFeatures(coder.Router.Db).ToGeoJson();
+            var decodedLineGeoJson = decodedLine.ToFeatures(coder.Router.Db).ToGeoJson();
 
             Console.ReadLine();
         }

@@ -169,8 +169,8 @@ namespace OpenLR.Referenced.Codecs
                 lineLocation.Add(lineLocationSegments[i]);
             }
 
-            lineLocation.PositiveOffsetPercentage = location.PositiveOffsetPercentage.Value;
-            lineLocation.NegativeOffsetPercentage = location.NegativeOffsetPercentage.Value;
+            lineLocation.PositiveOffsetPercentage = (location.PositiveOffsetPercentage == null) ? 0 : location.PositiveOffsetPercentage.Value;
+            lineLocation.NegativeOffsetPercentage = (location.NegativeOffsetPercentage == null) ? 0 : location.PositiveOffsetPercentage.Value;
 
             return lineLocation;
         }            
