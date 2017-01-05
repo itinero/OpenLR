@@ -22,12 +22,12 @@
 
 using Itinero;
 using Itinero.Algorithms;
+using Itinero.Algorithms.Collections;
 using Itinero.Algorithms.Search.Hilbert;
 using Itinero.Algorithms.Weights;
 using Itinero.Data.Network;
 using Itinero.Graphs;
 using Itinero.Profiles;
-using Itinero.Refactoring;
 using OpenLR.Model;
 using OpenLR.Referenced.Codecs.Candidates;
 using OpenLR.Referenced.Locations;

@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using Itinero.Refactoring;
+using Itinero.Algorithms.Collections;
 using OpenLR.Exceptions;
 using OpenLR.Model;
 using OpenLR.Model.Locations;
