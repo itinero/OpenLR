@@ -152,5 +152,71 @@ namespace OpenLR.Tests.Binary
             Assert.AreEqual(referenceDecodedLocation.Last.FormOfWay, lineLocation.Last.FormOfWay);
             Assert.AreEqual(referenceDecodedLocation.Last.Bearing.Value, lineLocation.Last.Bearing.Value, 11.25); // binary encode loses accuracy for bearing.
         }
+
+        /// <summary>
+        /// A regression tests for issue:
+        /// https://github.com/itinero/OpenLR/issues/76
+        /// </summary>
+        [Test]
+        public void RegressionEncodeDecodeNegativeLongitude()
+        {
+            double delta = 0.0001;
+
+            var location = new LineLocation()
+            {
+                First = new LocationReferencePoint()
+                {
+                    Bearing = 101,
+                    Coordinate = new Coordinate()
+                    {
+                        Latitude = 52.932136535644531f,
+                        Longitude = -1.5213972330093384f
+                    },
+                    DistanceToNext = 1111,
+                    FormOfWay = FormOfWay.Motorway,
+                    FuntionalRoadClass = FunctionalRoadClass.Frc0,
+                    LowestFunctionalRoadClassToNext = FunctionalRoadClass.Frc0
+                },
+                Last = new LocationReferencePoint()
+                {
+                    Bearing = 276,
+                    Coordinate = new Coordinate()
+                    {
+                        Latitude = 52.929317474365234f,
+                        Longitude = -1.5055110454559326
+                    },
+                    DistanceToNext = 0,
+                    FormOfWay = FormOfWay.Motorway,
+                    FuntionalRoadClass = FunctionalRoadClass.Frc0
+                },
+                NegativeOffsetPercentage = 2.12239432f,
+                PositiveOffsetPercentage = 1.46861947f
+            };
+
+            // encode.
+            var stringData = LineLocationCodec.Encode(location);
+
+            // decode again (decoding was tested above).
+            var decodedLocation = LineLocationCodec.Decode(stringData);
+            
+            Assert.IsNotNull(decodedLocation);
+            Assert.IsInstanceOf<LineLocation>(decodedLocation);
+            var lineLocation = (decodedLocation as LineLocation);
+
+            // check first reference.
+            Assert.IsNotNull(lineLocation.First);
+            Assert.AreEqual(52.932136535644531f, lineLocation.First.Coordinate.Latitude, delta);
+            Assert.AreEqual(-1.5213972330093384f, lineLocation.First.Coordinate.Longitude, delta);
+            Assert.AreEqual(FunctionalRoadClass.Frc0, lineLocation.First.FuntionalRoadClass);
+            Assert.AreEqual(FormOfWay.Motorway, lineLocation.First.FormOfWay);
+            Assert.AreEqual(FunctionalRoadClass.Frc0, lineLocation.First.LowestFunctionalRoadClassToNext);
+
+            // check second reference.
+            Assert.IsNotNull(lineLocation.Last);
+            Assert.AreEqual(-1.5055110454559326f, lineLocation.Last.Coordinate.Longitude, delta); // 6.12817°
+            Assert.AreEqual(52.929317474365234f, lineLocation.Last.Coordinate.Latitude, delta); // 49.60305°
+            Assert.AreEqual(FunctionalRoadClass.Frc0, lineLocation.Last.FuntionalRoadClass);
+            Assert.AreEqual(FormOfWay.Motorway, lineLocation.Last.FormOfWay);
+        }
     }
 }

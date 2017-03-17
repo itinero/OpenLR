@@ -21,6 +21,7 @@
 // THE SOFTWARE.
 
 using OpenLR.Model;
+using System;
 
 namespace OpenLR.Codecs.Binary.Data
 {
@@ -82,43 +83,6 @@ namespace OpenLR.Codecs.Binary.Data
         }
 
         /// <summary>
-        /// Decodes a little-endian 24-bit signed integer from the given byte array into a 32-bit signed integer.
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="startIndex"></param>
-        /// <returns></returns>
-        private static int DecodeInt24(byte[] data, int startIndex)
-        {
-            int result = ((byte)(data[startIndex + 0] & 127) * (1 << 16)) |    // Bottom 8 bits
-                (data[startIndex + 1] * (1 << 8)) |    // Next 8 bits, i.e. multiply by 256
-                (data[startIndex + 2] * (1 << 0));   // Next 8 bits, i.e. multiply by 65,536
-            // take into account the sign-bit.
-            if ((data[startIndex + 0] & (1 << 8 - 1)) != 0)
-            { // negative!
-                return -result;
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// Decodes a little-endian 16-bit signed integer from the given byte array into a 32-bit signed integer.
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="startIndex"></param>
-        /// <returns></returns>
-        private static int DecodeInt16(byte[] data, int startIndex)
-        {
-            int result = (data[startIndex + 0] * (1 << 8)) |    // Bottom 8 bits
-                (data[startIndex + 1] * (1 << 0));   // Next 8 bits, i.e. multiply by 65,536
-            // take into account the sign-bit.
-            if ((data[startIndex + 0] & (1 << 8 - 1)) != 0)
-            { // negative!
-                return result-65536;
-            }
-            return result;
-        }
-
-        /// <summary>
         /// Decodes an integer-encoded coordinate.
         /// </summary>
         /// <param name="valueInt"></param>
@@ -172,8 +136,12 @@ namespace OpenLR.Codecs.Binary.Data
         {
             data[startIndex + 0]  = (byte)(value >> 16);
             if (value < 0)
-            { // the sign bit.
-                data[startIndex + 0] = (byte)(data[startIndex + 0] | (byte)(1 << 8 - 1));
+            { // set sign bit.
+                data[startIndex + 0] = (byte)(data[startIndex + 0] | (1 << 7));
+            }
+            else
+            { // turn off sign bit.
+                data[startIndex + 0] = (byte)(data[startIndex + 0] & ((1 << 7) - 1));
             }
             value = value % (1 << 16);
             data[startIndex + 1] = (byte)(value >> 8);
@@ -191,11 +159,58 @@ namespace OpenLR.Codecs.Binary.Data
         {
             data[startIndex + 0] = (byte)(value >> 8);
             if (value < 0)
-            { // the sign bit.
-                data[startIndex + 0] = (byte)(data[startIndex + 0] | (byte)(1 << 8 - 1));
+            { // set sign bit.
+                data[startIndex + 0] = (byte)(data[startIndex + 0] | (1 << 7));
+            }
+            else
+            { // turn off sign bit.
+                data[startIndex + 0] = (byte)(data[startIndex + 0] & ((1 << 7) - 1));
             }
             value = value % (1 << 8);
             data[startIndex + 1] = (byte)value;
+        }
+
+        /// <summary>
+        /// Decodes a little-endian 24-bit signed integer from the given byte array into a 32-bit signed integer.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="startIndex"></param>
+        /// <returns></returns>
+        public static int DecodeInt24(byte[] data, int startIndex)
+        {
+            var bytes = new byte[4];
+            bytes[0] = data[startIndex + 2];
+            bytes[1] = data[startIndex + 1];
+            bytes[2] = data[startIndex + 0];
+            bytes[3] = 0;
+            // take into account the sign-bit.
+            if ((bytes[2] & (1 << 8 - 1)) != 0)
+            { // negative, remove sign bit and make sure decodes properly.
+                bytes[3] = 255;
+            }
+            return BitConverter.ToInt32(bytes, 0);
+        }
+
+        /// <summary>
+        /// Decodes a little-endian 16-bit signed integer from the given byte array into a 32-bit signed integer.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="startIndex"></param>
+        /// <returns></returns>
+        public static int DecodeInt16(byte[] data, int startIndex)
+        {
+            var bytes = new byte[4];
+            bytes[0] = data[startIndex + 1];
+            bytes[1] = data[startIndex + 0];
+            bytes[2] = 0;
+            bytes[3] = 0;
+            // take into account the sign-bit.
+            if ((bytes[1] & (1 << 8 - 1)) != 0)
+            { // make sure decodes properly.
+                bytes[2] = 255;
+                bytes[3] = 255;
+            }
+            return BitConverter.ToInt32(bytes, 0);
         }
     }
 }

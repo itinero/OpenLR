@@ -189,5 +189,107 @@ namespace OpenLR.Tests.Binary.Data
             Assert.AreEqual(data[2], 254);
             Assert.AreEqual(data[3], 59);
         }
+
+        /// <summary>
+        /// Tests encoding decoding negative lat/lons, regression test for issue:
+        /// https://github.com/itinero/OpenLR/issues/76
+        /// </summary>
+        [Test]
+        public void RegressionTestEncodeDecodeNegative()
+        {
+            var delta = 0.0001;
+
+            // specify coordinate.
+            var coordinate = new Coordinate()
+            {
+                Latitude = -52.932136535644531,
+                Longitude = -1.5213972330093384
+            };
+
+            // encode.
+            var data = new byte[1024];
+            CoordinateConverter.Encode(coordinate, data, 0);
+            var decoded = CoordinateConverter.Decode(data);
+
+            Assert.AreEqual(coordinate.Latitude, decoded.Latitude, delta);
+            Assert.AreEqual(coordinate.Longitude, decoded.Longitude, delta);
+        }
+
+        /// <summary>
+        /// Encodes and decodes negative integers, regression test for issue:
+        /// https://github.com/itinero/OpenLR/issues/76
+        /// </summary>
+        [Test]
+        public void RegressionEncodeDecodeNegativeInt()
+        {
+            var i = -10284;
+            var data = new byte[1024];
+            CoordinateConverter.EncodeInt24(i, data, 0);
+
+            Assert.AreEqual(i, CoordinateConverter.DecodeInt24(data, 0));
+
+            i = -10284;
+            CoordinateConverter.EncodeInt24(i, data, 0);
+            Assert.AreEqual(i, CoordinateConverter.DecodeInt24(data, 0));
+
+            i = -184;
+            CoordinateConverter.EncodeInt24(i, data, 0);
+            Assert.AreEqual(i, CoordinateConverter.DecodeInt24(data, 0));
+
+            i = -78124;
+            CoordinateConverter.EncodeInt24(i, data, 0);
+            Assert.AreEqual(i, CoordinateConverter.DecodeInt24(data, 0));
+
+            i = 10284;
+            CoordinateConverter.EncodeInt24(i, data, 0);
+
+            Assert.AreEqual(i, CoordinateConverter.DecodeInt24(data, 0));
+
+            i = 10284;
+            CoordinateConverter.EncodeInt24(i, data, 0);
+            Assert.AreEqual(i, CoordinateConverter.DecodeInt24(data, 0));
+
+            i = 184;
+            CoordinateConverter.EncodeInt24(i, data, 0);
+            Assert.AreEqual(i, CoordinateConverter.DecodeInt24(data, 0));
+
+            i = 78124;
+            CoordinateConverter.EncodeInt24(i, data, 0);
+            Assert.AreEqual(i, CoordinateConverter.DecodeInt24(data, 0));
+
+            // try the 16-bit code.
+            i = -10000;
+            CoordinateConverter.EncodeInt16(i, data, 0);
+            Assert.AreEqual(i, CoordinateConverter.DecodeInt16(data, 0));
+
+            i = -1024;
+            CoordinateConverter.EncodeInt16(i, data, 0);
+            Assert.AreEqual(i, CoordinateConverter.DecodeInt16(data, 0));
+
+            i = -184;
+            CoordinateConverter.EncodeInt16(i, data, 0);
+            Assert.AreEqual(i, CoordinateConverter.DecodeInt16(data, 0));
+
+            i = -781;
+            CoordinateConverter.EncodeInt16(i, data, 0);
+            Assert.AreEqual(i, CoordinateConverter.DecodeInt16(data, 0));
+
+            i = 14;
+            CoordinateConverter.EncodeInt16(i, data, 0);
+
+            Assert.AreEqual(i, CoordinateConverter.DecodeInt16(data, 0));
+
+            i = 104;
+            CoordinateConverter.EncodeInt16(i, data, 0);
+            Assert.AreEqual(i, CoordinateConverter.DecodeInt16(data, 0));
+
+            i = 184;
+            CoordinateConverter.EncodeInt16(i, data, 0);
+            Assert.AreEqual(i, CoordinateConverter.DecodeInt16(data, 0));
+
+            i = 724;
+            CoordinateConverter.EncodeInt16(i, data, 0);
+            Assert.AreEqual(i, CoordinateConverter.DecodeInt16(data, 0));
+        }
     }
 }
