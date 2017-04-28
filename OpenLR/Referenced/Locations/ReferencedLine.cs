@@ -120,6 +120,9 @@ namespace OpenLR.Referenced.Locations
                 this.Edges.CopyTo(edges, 0);
                 location.Edges.CopyTo(edges, this.Edges.Length);
                 this.Edges = edges;
+                // Update EndLocation and NegativeOffset
+                this.EndLocation = location.EndLocation;
+                this.NegativeOffsetPercentage = location.NegativeOffsetPercentage;
                 return;
             }
             throw new Exception("Cannot add a location without them having one vertex incommon.");
