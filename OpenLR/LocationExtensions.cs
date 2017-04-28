@@ -705,7 +705,7 @@ namespace OpenLR
                 }
 
                 if (!lowest.HasValue ||
-                    frc < lowest)
+                    frc > lowest)
                 {
                     lowest = frc;
                 }
