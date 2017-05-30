@@ -24,6 +24,7 @@ using Itinero;
 using Itinero.Data.Edges;
 using Itinero.IO.Shape;
 using Itinero.LocalGeo;
+using Itinero.Profiles;
 using NetTopologySuite.Algorithm.Distance;
 using OpenLR;
 using OpenLR.Geo;
@@ -55,8 +56,8 @@ namespace Samples.NWB
             var routerDb = RouterDb.Deserialize(File.OpenRead(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "nwb.routerdb")));
 
             // create 'coder'.
-            var vehicle = new NWBCar();
-            var coder = new Coder(routerDb, new NWBCoderProfile());
+            var vehicle = routerDb.GetSupportedVehicle("nwb.car");
+            var coder = new Coder(routerDb, new NWBCoderProfile(vehicle.Shortest()));
 
             // encode/decode some shortest paths.
             EncodeDecodeRoute(coder, new Coordinate(52.41239352799169f, 5.832839012145995f), new Coordinate(52.41021421939001f, 5.848240256309509f));
@@ -97,10 +98,13 @@ namespace Samples.NWB
         static void DownloadExtractAndBuildRouterDb()
         {
             // download test data and extract to 'temp' directory relative to application base directory.
-            Download.DownloadAndExtractShape("http://files.itinero.tech/data/open-data/NWB/WGS84_2016-09-01.zip", "WGS84_2016-09-01.zip");
+            if (!File.Exists("WGS84_2016-09-01.zip"))
+            {
+                Download.DownloadAndExtractShape("http://files.itinero.tech/data/open-data/NWB/WGS84_2016-09-01.zip", "WGS84_2016-09-01.zip");
+            }
 
             // create a new router db and load the shapefile.
-            var vehicle = new NWBCar(); // load data for the car profile.
+            var vehicle = DynamicVehicle.LoadFromStream(File.OpenRead("car.lua")); // load data for the car profile.
             var routerDb = new RouterDb(EdgeDataSerializer.MAX_DISTANCE);
             routerDb.LoadFromShape(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "temp"), "wegvakken.shp", "JTE_ID_BEG", "JTE_ID_END", vehicle);
 

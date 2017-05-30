@@ -21,6 +21,7 @@
 // THE SOFTWARE.
 
 using Itinero.Attributes;
+using Itinero.Profiles;
 using OpenLR.Model;
 
 namespace Samples.NWB
@@ -39,8 +40,8 @@ namespace Samples.NWB
         /// <summary>
         /// Creates a new NWB coder profile.
         /// </summary>
-        public NWBCoderProfile()
-            : base((new NWBCar()).Shortest(), 0.3f, 7500)
+        public NWBCoderProfile(Profile profile)
+            : base(profile, 0.3f, 7500)
         {
 
         }
