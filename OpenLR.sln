@@ -27,6 +27,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		SharedAssemblyVersion.cs = SharedAssemblyVersion.cs
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nuspec", "nuspec", "{B99B5EA0-09DC-4939-A9C9-53E0E3B11400}"
+	ProjectSection(SolutionItems) = preProject
+		nuspec\OpenLR.nuspec = nuspec\OpenLR.nuspec
+		nuspec\OpenLR_logo64.png = nuspec\OpenLR_logo64.png
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

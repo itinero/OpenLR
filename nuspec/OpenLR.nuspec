@@ -15,8 +15,8 @@
     <copyright>Ben Abelshausen</copyright>
     <tags>routing, openlr, osmsharp</tags>
     <dependencies>
-      <dependency id="Itinero" version="0.35.2-rc1" />
-      <dependency id="Itinero.Geo" version="0.35.2-rc1" />
+      <dependency id="Itinero" version="1.0.4" />
+      <dependency id="Itinero.Geo" version="1.0.4" />
       <dependency id="GeoAPI" version="[1.7.4,2)" />
       <dependency id="NetTopologySuite" version="[1.14,2)" />
       <dependency id="NetTopologySuite.IO" version="[1.14,2)" />

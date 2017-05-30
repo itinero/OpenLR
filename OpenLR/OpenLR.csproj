@@ -159,9 +159,8 @@
       <HintPath>..\packages\NetTopologySuite.1.14\lib\portable-net403+sl5+netcore45+wpa81+wp8+MonoAndroid10+XamariniOS10+MonoTouch10\GeoAPI.Bootstrapper.NetTopologySuite.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Itinero, Version=0.35.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Itinero.0.35.2-rc1\lib\portable-net40+sl4+win8+wp7\Itinero.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Itinero, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Itinero.1.0.4\lib\portable-net40+sl4+win8+wp7\Itinero.dll</HintPath>
     </Reference>
     <Reference Include="NetTopologySuite, Version=1.14.0.0, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
       <HintPath>..\packages\NetTopologySuite.1.14\lib\portable-net403+sl5+netcore45+wpa81+wp8+MonoAndroid10+XamariniOS10+MonoTouch10\NetTopologySuite.dll</HintPath>

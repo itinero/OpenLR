@@ -37,17 +37,14 @@
       <HintPath>..\..\packages\GeoAPI.1.7.4\lib\net45\GeoAPI.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Itinero, Version=0.35.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Itinero.0.35.2-rc1\lib\net45\Itinero.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Itinero, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Itinero.1.0.4\lib\net45\Itinero.dll</HintPath>
     </Reference>
-    <Reference Include="Itinero.Geo, Version=0.35.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Itinero.Geo.0.35.2-rc1\lib\net45\Itinero.Geo.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Itinero.Geo, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Itinero.Geo.1.0.4\lib\net45\Itinero.Geo.dll</HintPath>
     </Reference>
-    <Reference Include="Itinero.IO.Shape, Version=0.35.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Itinero.IO.Shape.0.35.2-rc1\lib\net45\Itinero.IO.Shape.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Itinero.IO.Shape, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Itinero.IO.Shape.1.0.4\lib\net45\Itinero.IO.Shape.dll</HintPath>
     </Reference>
     <Reference Include="NetTopologySuite, Version=1.14.0.0, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NetTopologySuite.1.14\lib\net45\NetTopologySuite.dll</HintPath>
