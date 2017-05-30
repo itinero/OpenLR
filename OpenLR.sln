@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenLR", "OpenLR\OpenLR.csproj", "{036AD1DA-006A-48B6-826C-83D12561411D}"
 EndProject
@@ -18,6 +18,14 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samples.OSM", "samples\Samples.OSM\Samples.OSM.csproj", "{EC179DC9-835B-4549-B996-AD616A3566EF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samples.EncodeRoute", "samples\Samples.EncodeRoute\Samples.EncodeRoute.csproj", "{57FF5D71-1A7F-4BFD-851C-5ABE59CB6FDC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BF70F0CC-0A91-443F-B76F-83AF5F66ACC7}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		LICENSE.md = LICENSE.md
+		README.md = README.md
+		SharedAssemblyVersion.cs = SharedAssemblyVersion.cs
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
