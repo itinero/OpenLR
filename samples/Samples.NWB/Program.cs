@@ -68,6 +68,9 @@ namespace Samples.NWB
             EncodeDecodePointAlongLine(coder, new Coordinate(52.40624144888954f, 6.239939332008362f));
             EncodeDecodePointAlongLine(coder, new Coordinate(52.41021421939001f, 5.848240256309509f));
             EncodeDecodePointAlongLine(coder, new Coordinate(52.38836282749006f, 6.246392726898193f));
+
+            // decode a string.
+            var decoded = coder.Decode("KwMvwyTrWi+5Av9S/+kvBgA=");
         }
 
         static void EncodeDecodeRoute(Coder coder, Coordinate coordinate1, Coordinate coordinate2)
