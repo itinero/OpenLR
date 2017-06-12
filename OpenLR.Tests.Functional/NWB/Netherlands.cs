@@ -24,6 +24,7 @@ using Itinero;
 using Itinero.Data.Edges;
 using Itinero.IO.Shape;
 using Itinero.LocalGeo;
+using Itinero.Profiles;
 using NetTopologySuite.Algorithm.Distance;
 using NUnit.Framework;
 using OpenLR.Geo;
@@ -50,7 +51,8 @@ namespace OpenLR.Tests.Functional.NWB
                 Download.DownloadAndExtractShape("http://files.itinero.tech/data/open-data/NWB/WGS84_2016-09-01.zip", "WGS84_2016-09-01.zip");
 
                 // create a new router db and load the shapefile.
-                var vehicle = new NWBCar(); // load data for the car profile.
+                var vehicle = DynamicVehicle.LoadFromEmbeddedResource(System.Reflection.Assembly.GetExecutingAssembly(),
+                    "OpenLR.Tests.Functional.NWB.car.lua"); // load data for the car profile.
                 var routerDb = new RouterDb(EdgeDataSerializer.MAX_DISTANCE);
                 routerDb.LoadFromShape(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "temp"), "wegvakken.shp", "JTE_ID_BEG", "JTE_ID_END", vehicle);
 
@@ -81,7 +83,7 @@ namespace OpenLR.Tests.Functional.NWB
         /// </summary>
         public static void TestEncodeDecodeRoutes(RouterDb routerDb)
         {
-            var coder = new Coder(routerDb, new NWBCoderProfile());
+            var coder = new Coder(routerDb, new NWBCoderProfile(routerDb.GetSupportedVehicle("nwb.car")));
 
             var features = Extensions.FromGeoJsonFile(@".\Data\line_locations.geojson");
 
@@ -129,7 +131,7 @@ namespace OpenLR.Tests.Functional.NWB
         /// </summary>
         public static void TestEncodeDecodePointAlongLine(RouterDb routerDb)
         {
-            var coder = new Coder(routerDb, new NWBCoderProfile());
+            var coder = new Coder(routerDb, new NWBCoderProfile(routerDb.GetSupportedVehicle("nwb.car")));
             
             var locations = Extensions.PointsFromGeoJsonFile(@".\Data\locations.geojson");
 

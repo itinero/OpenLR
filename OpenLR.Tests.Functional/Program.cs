@@ -21,7 +21,10 @@
 // THE SOFTWARE.
 
 using Itinero;
+using Itinero.LocalGeo;
 using Itinero.Osm.Vehicles;
+using NetTopologySuite.Features;
+using OpenLR.Geo;
 using System;
 using System.IO;
 
@@ -37,7 +40,7 @@ namespace OpenLR.Tests.Functional
             };
 
             Download.DownloadAll();
-            
+
             // executes the netherlands tests based on OSM.
             var routerDb = RouterDb.Deserialize(File.OpenRead(@"netherlands.c.cf.routerdb"));
             routerDb.RemoveContracted(Vehicle.Car.Shortest());
@@ -45,7 +48,7 @@ namespace OpenLR.Tests.Functional
             netherlandsTest.TestPerf("Testing netherlands point along line performance");
             netherlandsTest = () => { Osm.Netherlands.TestEncodeDecodeRoutes(routerDb); };
             netherlandsTest.TestPerf("Testing netherlands line performance");
-            
+
             // executes the netherlands tests based on NWB.
             routerDb = NWB.Netherlands.DownloadExtractAndBuildRouterDb();
             netherlandsTest = () => { NWB.Netherlands.TestEncodeDecodePointAlongLine(routerDb); };
@@ -53,9 +56,37 @@ namespace OpenLR.Tests.Functional
             netherlandsTest = () => { NWB.Netherlands.TestEncodeDecodeRoutes(routerDb); };
             netherlandsTest.TestPerf("Testing netherlands line performance");
 
+            //var coder = new Coder(routerDb, new NWB.NWBCoderProfile(routerDb.GetSupportedVehicle("nwb.car")));
+            //var locations = new Coordinate[]
+            //{
+            //    new Coordinate(52.9741401672363f, 6.77369213104248f),
+            //    new Coordinate(52.9855003356934f, 6.83290004730225f),
+            //    new Coordinate(53.0042343139648f, 6.93771266937256f)
+            //};
+            //var line = coder.BuildLine(locations);
+            //var json = ToJson(line.ToFeatures(routerDb));
+            //var encoded = coder.Encode(line);
+
+            //locations = new Coordinate[]
+            //{
+            //    new Coordinate(52.9741401672363f, 6.77369213104248f),
+            //    new Coordinate(53.0042343139648f, 6.93771266937256f)
+            //};
+            //line = coder.BuildLine(locations);
+            //json = ToJson(line.ToFeatures(routerDb));
+
 #if DEBUG
             Console.ReadLine();
 #endif
+        }
+
+        private static string ToJson(FeatureCollection featureCollection)
+        {
+            var jsonSerializer = new NetTopologySuite.IO.GeoJsonSerializer();
+            var jsonStream = new StringWriter();
+            jsonSerializer.Serialize(jsonStream, featureCollection);
+            var json = jsonStream.ToInvariantString();
+            return json;
         }
     }
 }

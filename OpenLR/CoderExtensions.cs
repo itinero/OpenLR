@@ -526,5 +526,153 @@ namespace OpenLR
                 EndLocation = coder.Router.Db.CreateRouterPointForEdgeAndVertex(edges[edges.Count - 1], vertices[vertices.Count - 1])
             };
         }
+
+        /// <summary>
+        /// Builds the shortest path along all the given coordinates as a referenced line.
+        /// </summary>
+        public static ReferencedLine BuildLine(this Coder coder, Itinero.LocalGeo.Coordinate[] coordinates)
+        {
+            var edgesTotal = new List<long>();
+            var verticesTotal = new List<uint>();
+            float pathDistance = 0;
+            var sourceOffset = 0f;
+            var targetOffset = 0f;
+            var totalDistance = 0f;
+            for (int w = 1; w < coordinates.Length; w++)
+            {
+                var coordinate1 = coordinates[w - 1];
+                var coordinate2 = coordinates[w];
+
+                // calculate raw path.
+                var weightHandler = coder.Router.GetDefaultWeightHandler(coder.Profile.Profile);
+                var source = coder.Router.Resolve(coder.Profile.Profile, coordinate1, 100);
+                var target = coder.Router.Resolve(coder.Profile.Profile, coordinate2, 100);
+                var path = coder.Router.TryCalculateRaw(coder.Profile.Profile, weightHandler,
+                    source, target, coder.Profile.RoutingSettings);
+                if (path.IsError)
+                {
+                    throw new InvalidOperationException("No route found.");
+                }
+
+                // build route.
+                var route = coder.Router.BuildRoute(coder.Profile.Profile, weightHandler, source, target, path.Value).Value;
+                //pathDistance += path.Value.Weight;
+                pathDistance += route.TotalDistance;
+                
+                // build referenced line by building vertices and edge list.
+                var pathAsList = path.Value.ToList();
+                var edges = new List<long>();
+                var vertices = new List<uint>();
+                for (var i = 0; i < pathAsList.Count; i++)
+                {
+                    vertices.Add(pathAsList[i].Vertex);
+                    if (i > 0)
+                    {
+                        if (pathAsList[i].Edge != Itinero.Constants.NO_EDGE &&
+                            pathAsList[i].Edge != -Itinero.Constants.NO_EDGE)
+                        {
+                            edges.Add(pathAsList[i].Edge);
+                        }
+                        else
+                        {
+                            var edgeEnumerator = coder.Router.Db.Network.GeometricGraph.Graph.GetEdgeEnumerator();
+                            float best;
+                            var edge = edgeEnumerator.FindBestEdge(weightHandler, vertices[vertices.Count - 2],
+                                vertices[vertices.Count - 1], out best);
+                            edges.Add(edge);
+                        }
+                    }
+                }
+
+                if (vertices[0] == Constants.NO_VERTEX)
+                {
+                    var edge = coder.Router.Db.Network.GetEdge(edges[0]);
+                    if (edge.From == vertices[1])
+                    {
+                        vertices[0] = edge.To;
+                    }
+                    else if (edge.To == vertices[1])
+                    {
+                        vertices[0] = edge.From;
+                    }
+                    else
+                    {
+                        throw new Exception("First edge does not match first vertex.");
+                    }
+                }
+
+                if (vertices[vertices.Count - 1] == Constants.NO_VERTEX)
+                {
+                    var edge = coder.Router.Db.Network.GetEdge(edges[edges.Count - 1]);
+                    if (edge.From == vertices[vertices.Count - 2])
+                    {
+                        vertices[vertices.Count - 1] = edge.To;
+                    }
+                    else if (edge.To == vertices[vertices.Count - 2])
+                    {
+                        vertices[vertices.Count - 1] = edge.From;
+                    }
+                    else
+                    {
+                        throw new Exception("Last edge does not match last vertex.");
+                    }
+                }
+
+                if (edgesTotal.Count > 0)
+                    edges.RemoveAt(0);
+                edgesTotal.AddRange(edges);
+
+                if (verticesTotal.Count > 0)
+                {
+                    vertices.RemoveAt(0);
+                    vertices.RemoveAt(0);
+                }
+                verticesTotal.AddRange(vertices);
+            }
+
+            var edge_ = coder.Router.Db.Network.GetEdge(edgesTotal[0]);
+            if (edge_.From == verticesTotal[1])
+            {
+                sourceOffset = Itinero.LocalGeo.Coordinate.DistanceEstimateInMeter(coordinates[0],
+                    coder.Router.Db.Network.GetVertex(edge_.To));
+            }
+            else if (edge_.To == verticesTotal[1])
+            {
+                sourceOffset = Itinero.LocalGeo.Coordinate.DistanceEstimateInMeter(coordinates[0],
+                coder.Router.Db.Network.GetVertex(edge_.From));
+            }
+            else
+            {
+                throw new Exception("First edge does not match first vertex.");
+            }
+
+            edge_ = coder.Router.Db.Network.GetEdge(edgesTotal[edgesTotal.Count - 1]);
+            if (edge_.From == verticesTotal[verticesTotal.Count - 2])
+            {
+                targetOffset = Itinero.LocalGeo.Coordinate.DistanceEstimateInMeter(coordinates[coordinates.Length - 1],
+                    coder.Router.Db.Network.GetVertex(edge_.To));
+            }
+            else if (edge_.To == verticesTotal[verticesTotal.Count - 2])
+            {
+                targetOffset = Itinero.LocalGeo.Coordinate.DistanceEstimateInMeter(coordinates[coordinates.Length - 1],
+                    coder.Router.Db.Network.GetVertex(edge_.From));
+            }
+            else
+            {
+                throw new Exception("Last edge does not match last vertex.");
+            }
+
+            totalDistance = pathDistance + sourceOffset + targetOffset;
+
+            return new ReferencedLine()
+            {
+                Edges = edgesTotal.ToArray(),
+                Vertices = verticesTotal.ToArray(),
+                NegativeOffsetPercentage = 100.0f * (targetOffset / totalDistance),
+                PositiveOffsetPercentage = 100.0f * (sourceOffset / totalDistance),
+                StartLocation = coder.Router.Db.CreateRouterPointForEdgeAndVertex(edgesTotal[0], verticesTotal[0]),
+                EndLocation = coder.Router.Db.CreateRouterPointForEdgeAndVertex(edgesTotal[edgesTotal.Count - 1], verticesTotal[verticesTotal.Count - 1])
+            };
+        }
     }
 }

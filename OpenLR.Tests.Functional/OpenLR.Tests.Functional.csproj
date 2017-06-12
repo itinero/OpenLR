@@ -112,7 +112,6 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="NWB\Netherlands.cs" />
     <Compile Include="Osm\Netherlands.cs" />
-    <Compile Include="NWB\NWBCar.cs" />
     <Compile Include="NWB\NWBCoderProfile.cs" />
     <Compile Include="PerformanceInfoConsumer.cs" />
     <Compile Include="PerformanceInfoConsumerExtensions.cs" />
@@ -124,6 +123,7 @@
     <None Include="Data\locations.geojson">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <EmbeddedResource Include="NWB\car.lua" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
