@@ -30,6 +30,7 @@ using OpenLR.Osm;
 using OpenLR.Referenced.Codecs;
 using OpenLR.Referenced.Locations;
 using OpenLR.Tests.Functional;
+using System.Collections.Generic;
 
 namespace OpenLR.Tests.Referenced
 {
@@ -147,6 +148,66 @@ namespace OpenLR.Tests.Referenced
                 decoded.StartLocation.LocationOnNetwork(routerDb), start) < 1);
             Assert.IsTrue(Itinero.LocalGeo.Coordinate.DistanceEstimateInMeter(
                 decoded.EndLocation.LocationOnNetwork(routerDb), end) < 1);
+        }
+
+        /// <summary>
+        /// Tests encoding a referenced line location that doesn't represent a shortest path.
+        /// </summary>
+        [Test]
+        public void EncodeReferencedLineLocationNotShortestPath()
+        {
+            var e = 0.00001f;
+
+            // setup a routing network to test against.
+            var routerDb = new RouterDb();
+            routerDb.LoadTestNetwork(
+                System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                    "OpenLR.Tests.test_data.networks.network3.geojson"));
+            routerDb.Sort();
+            routerDb.AddSupportedVehicle(Itinero.Osm.Vehicles.Vehicle.Car);
+
+            // setup test location and data to verify this.
+            var vertex2 = routerDb.Network.GetVertex(2);
+            var vertex3 = routerDb.Network.GetVertex(3);
+            var vertex4 = routerDb.Network.GetVertex(4);
+            var vertex5 = routerDb.Network.GetVertex(5);
+            var vertex6 = routerDb.Network.GetVertex(6);
+            var vertex7 = routerDb.Network.GetVertex(7);
+            var location = new ReferencedLine()
+            {
+                Edges = new long[] { 1, 3, 4, 5, 2 },
+                Vertices = new uint[] { 7, 4, 3, 2, 5, 6 },
+                StartLocation = routerDb.CreateRouterPointForVertex(7, routerDb.GetSupportedProfile("car")),
+                EndLocation = routerDb.CreateRouterPointForVertex(6, routerDb.GetSupportedProfile("car")),
+                NegativeOffsetPercentage = 0,
+                PositiveOffsetPercentage = 0
+            };
+            var json = location.ToFeatures(routerDb).ToGeoJson();
+
+            var length = Itinero.LocalGeo.Coordinate.DistanceEstimateInMeter(
+                new List<Itinero.LocalGeo.Coordinate>(new Itinero.LocalGeo.Coordinate[]
+                {
+                    vertex7,
+                    vertex4,
+                    vertex3,
+                    vertex2,
+                    vertex5,
+                    vertex6
+                }));
+
+            // encode and verify result.
+            var encoded = ReferencedLineCodec.Encode(location, new Coder(routerDb, new OsmCoderProfile()));
+            Assert.IsNotNull(encoded.First);
+            Assert.AreEqual(vertex7.Latitude, encoded.First.Coordinate.Latitude, e);
+            Assert.AreEqual(vertex7.Longitude, encoded.First.Coordinate.Longitude, e);
+            Assert.IsTrue(encoded.Intermediate != null && encoded.Intermediate.Length == 1);
+            Assert.AreEqual(vertex6.Latitude, encoded.Last.Coordinate.Latitude, e);
+            Assert.AreEqual(vertex6.Longitude, encoded.Last.Coordinate.Longitude, e);
+            Assert.AreEqual(0, encoded.NegativeOffsetPercentage);
+            Assert.AreEqual(0, encoded.PositiveOffsetPercentage);
+            Assert.AreEqual(FunctionalRoadClass.Frc4, encoded.First.FuntionalRoadClass);
+            Assert.AreEqual(FunctionalRoadClass.Frc4, encoded.First.LowestFunctionalRoadClassToNext);
+            Assert.AreEqual(length, encoded.First.DistanceToNext + encoded.Intermediate[0].DistanceToNext, 1);
         }
     }
 }

@@ -67,14 +67,8 @@ namespace OpenLR.Tests.Functional
             var json = ToJson(line.ToFeatures(routerDb));
             var encoded = coder.Encode(line);
 
-            locations = new Coordinate[]
-            {
-                new Coordinate(52.9741401672363f, 6.77369213104248f),
-                new Coordinate(53.0042343139648f, 6.93771266937256f)
-            };
-            line = coder.BuildLine(locations);
-            json = ToJson(line.ToFeatures(routerDb));
-
+            var decoded = coder.Decode(encoded) as Referenced.Locations.ReferencedLine;
+            var json2 = ToJson(decoded.ToFeatures(routerDb));
 #if DEBUG
             Console.ReadLine();
 #endif
