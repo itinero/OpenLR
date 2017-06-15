@@ -933,9 +933,12 @@ namespace OpenLR.Tests.Functional.NWB
         /// </summary>
         public static void TestEncodeDecodePointAlongLine(Coder coder, float latitude, float longitude, float tolerance)
         {
-            var decoded = EncodeDecodePointAlongLine(coder, latitude, longitude);
+            RouterPoint routerPoint;
+            var decoded = EncodeDecodePointAlongLine(coder, latitude, longitude, out routerPoint);
+            var encodedLocation = routerPoint.LocationOnNetwork(coder.Router.Db); // the actual encoded location.
 
-            var distance = Itinero.LocalGeo.Coordinate.DistanceEstimateInMeter(latitude, longitude, decoded.Latitude, decoded.Longitude);
+            var distance = Itinero.LocalGeo.Coordinate.DistanceEstimateInMeter(encodedLocation.Latitude, encodedLocation.Longitude,
+                decoded.Latitude, decoded.Longitude);
 
             Assert.IsTrue(distance < tolerance);
         }
@@ -943,9 +946,10 @@ namespace OpenLR.Tests.Functional.NWB
         /// <summary>
         /// Encode/decode a point along line location.
         /// </summary>
-        private static ReferencedPointAlongLine EncodeDecodePointAlongLine(Coder coder, float latitude, float longitude)
+        private static ReferencedPointAlongLine EncodeDecodePointAlongLine(Coder coder, float latitude, float longitude,
+            out RouterPoint routerPoint)
         {
-            var location = coder.BuildPointAlongLine(latitude, longitude);
+            var location = coder.BuildPointAlongLine(latitude, longitude, out routerPoint);
             var locationGeoJson = location.ToFeatures(coder.Router.Db).ToGeoJson();
             
             var encoded = coder.Encode(location);

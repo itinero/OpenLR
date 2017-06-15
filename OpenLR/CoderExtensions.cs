@@ -341,6 +341,7 @@ namespace OpenLR
                 throw new Exception("Could not build point along line: Could not find an edge close to the given location.");
             }
             resolvedPoint = routerPoint.Value;
+            var locationOnNetwork = resolvedPoint.LocationOnNetwork(coder.Router.Db);
 
             // get edge info.
             var edge = coder.Router.Db.Network.GetEdge(routerPoint.Value.EdgeId);
@@ -366,8 +367,8 @@ namespace OpenLR
                         StartLocation = coder.Router.Db.CreateRouterPointForEdgeAndVertex(edge.IdDirected(), edge.From),
                         EndLocation = coder.Router.Db.CreateRouterPointForEdgeAndVertex(edge.IdDirected(), edge.To)
                     },
-                    Latitude = latitude,
-                    Longitude = longitude,
+                    Latitude = locationOnNetwork.Latitude,
+                    Longitude = locationOnNetwork.Longitude,
                     Orientation = Orientation.NoOrientation
                 };
             }
@@ -382,8 +383,8 @@ namespace OpenLR
                         StartLocation = coder.Router.Db.CreateRouterPointForEdgeAndVertex(edge.IdDirected(), edge.To),
                         EndLocation = coder.Router.Db.CreateRouterPointForEdgeAndVertex(edge.IdDirected(), edge.From)
                     },
-                    Latitude = latitude,
-                    Longitude = longitude,
+                    Latitude = locationOnNetwork.Latitude,
+                    Longitude = locationOnNetwork.Longitude,
                     Orientation = Orientation.NoOrientation
                 };
             }

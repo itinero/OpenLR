@@ -49,7 +49,7 @@ namespace OpenLR.Tests.Functional
             //netherlandsTest = () => { Osm.Netherlands.TestEncodeDecodeRoutes(routerDb); };
             //netherlandsTest.TestPerf("Testing netherlands line performance");
 
-            // executes the netherlands tests based on NWB.
+            //// executes the netherlands tests based on NWB.
             var routerDb = NWB.Netherlands.DownloadExtractAndBuildRouterDb();
             //netherlandsTest = () => { NWB.Netherlands.TestEncodeDecodePointAlongLine(routerDb); };
             //netherlandsTest.TestPerf("Testing netherlands point along line performance");
@@ -69,6 +69,21 @@ namespace OpenLR.Tests.Functional
 
             var decoded = coder.Decode(encoded) as Referenced.Locations.ReferencedLine;
             var json2 = ToJson(decoded.ToFeatures(routerDb));
+
+            coder = new Coder(routerDb, new NWB.NWBCoderProfile(routerDb.GetSupportedVehicle("nwb.car")));
+            locations = new Coordinate[]
+            {
+                new Coordinate(52.2756652832031f, 6.82557249069214f),
+                new Coordinate(52.3101997375488f, 6.9128098487854f),
+                new Coordinate(52.3209991455078f, 6.93901014328003f),
+                new Coordinate(52.3690414428711f, 6.99834203720093f)
+            };
+            line = coder.BuildLine(locations);
+            json = ToJson(line.ToFeatures(routerDb));
+            encoded = coder.Encode(line);
+
+            decoded = coder.Decode(encoded) as Referenced.Locations.ReferencedLine;
+            json2 = ToJson(decoded.ToFeatures(routerDb));
 #if DEBUG
             Console.ReadLine();
 #endif

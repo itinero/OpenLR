@@ -54,7 +54,7 @@ namespace OpenLR
             this.MaxSettles = 65536;
 
             _routingSettings = new RoutingSettings<float>();
-            _routingSettings.SetMaxSearch(profile.Name, _maxSearch);
+            _routingSettings.SetMaxSearch(profile.FullName, _maxSearch);
         }
 
         /// <summary>
