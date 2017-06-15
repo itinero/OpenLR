@@ -26,7 +26,6 @@ namespace OpenLR.Tests.Referenced
             location.Coordinates[4] = new Model.Coordinate() { Latitude = 49.60795, Longitude = 6.12492 };
 
             // decode the location
-            //var decoder = new GeoCoordinateLocationDecoder();
             var referencedLocation = ReferencedPolygonCodec.Decode(location);
 
             // confirm result.

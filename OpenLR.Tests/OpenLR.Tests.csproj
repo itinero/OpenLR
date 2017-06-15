@@ -55,11 +55,11 @@
       <HintPath>..\packages\GeoAPI.1.7.4\lib\net45\GeoAPI.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Itinero, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Itinero.1.0.4\lib\net45\Itinero.dll</HintPath>
+    <Reference Include="Itinero, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Itinero.1.0.5\lib\net45\Itinero.dll</HintPath>
     </Reference>
-    <Reference Include="Itinero.Geo, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Itinero.Geo.1.0.4\lib\net45\Itinero.Geo.dll</HintPath>
+    <Reference Include="Itinero.Geo, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Itinero.Geo.1.0.5\lib\net45\Itinero.Geo.dll</HintPath>
     </Reference>
     <Reference Include="NetTopologySuite, Version=1.14.0.0, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
       <HintPath>..\packages\NetTopologySuite.1.14\lib\net45\NetTopologySuite.dll</HintPath>
@@ -140,8 +140,10 @@
     <Compile Include="Binary\PoiWithAccessPointLocationDecoderTests.cs" />
     <Compile Include="Binary\PolygonLocationTests.cs" />
     <Compile Include="Binary\RectangleLocationTests.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="LocationExtensionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Referenced\ReferencedLineCodecTests.cs" />
     <Compile Include="Referenced\ReferencedPolygonCodecTests.cs" />
     <Compile Include="Referenced\ReferencedGridCodecTests.cs" />
     <Compile Include="Referenced\ReferencedCircleDecoderTests.cs" />
@@ -154,6 +156,7 @@
     <None Include="packages.config" />
     <EmbeddedResource Include="test-data\networks\network1.geojson" />
     <EmbeddedResource Include="test-data\networks\network2.geojson" />
+    <EmbeddedResource Include="test-data\networks\network3.geojson" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OpenLR.Geo\OpenLR.Geo.csproj">
