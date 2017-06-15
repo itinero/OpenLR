@@ -174,12 +174,21 @@ namespace OpenLR.Referenced.Codecs
             lineLocation.NegativeOffsetPercentage = (location.NegativeOffsetPercentage == null) ? 0 : location.NegativeOffsetPercentage.Value;
 
             return lineLocation;
-        }            
+        }
+
 
         /// <summary>
         /// Encodes the given location.
         /// </summary>
         public static LineLocation Encode(ReferencedLine referencedLocation, Coder coder)
+        {
+            return Encode(referencedLocation, coder, EncodingSettings.Default);
+        }
+
+        /// <summary>
+        /// Encodes the given location.
+        /// </summary>
+        public static LineLocation Encode(ReferencedLine referencedLocation, Coder coder, EncodingSettings settings)
         {
             try
             {
@@ -204,62 +213,62 @@ namespace OpenLR.Referenced.Codecs
                 //              completely by a shortest-path.
                 // Step – 6     Go to step 3 and restart shortest path calculation between the new intermediate location reference 
                 //              point and the end of the location.
+                if (settings.VerifyShortestPath)
+                {
+                    bool isOnShortestPath = false;
+                    while (!isOnShortestPath)
+                    { // keep on adding intermediates until all paths between intermediates are on shortest paths.
+                        isOnShortestPath = true;
 
-                // TODO: sometime we know 100% sure the location is a shortest path because that's it's source.
-                // in that case there is no need to verifiy this, add an option to disable these checks.
-                bool isOnShortestPath = false;
-                while(!isOnShortestPath)
-                { // keep on adding intermediates until all paths between intermediates are on shortest paths.
-                    isOnShortestPath = true;
-
-                    // loop over all LRP-pairs.
-                    for (var i = 0; i < points.Count - 1; i++)
-                    {
-                        var fromPoint = points[i];
-                        var toPoint = points[i + 1];
-
-                        var fromEdge = referencedLocation.Edges[fromPoint];
-                        var toEdge = referencedLocation.Edges[toPoint - 1];
-                        var edgeCount = toPoint - fromPoint;
-
-                        // calculate shortest path between their first and last edge.
-                        var pathResult = coder.Router.TryCalculateRaw(coder.Profile.Profile, 
-                            coder.Router.GetDefaultWeightHandler(coder.Profile.Profile),
-                                fromEdge, toEdge, coder.Profile.RoutingSettings);
-                        if (pathResult.IsError)
+                        // loop over all LRP-pairs.
+                        for (var i = 0; i < points.Count - 1; i++)
                         {
-                            throw new Exception("No path found between two edges of the line location.");
-                        }
-                        var path = pathResult.Value;
-                        var edges = new List<long>();
-                        while (path.From != null)
-                        {
-                            edges.Add(path.Edge);
-                            path = path.From;
-                        }
-                        edges.Reverse();
+                            var fromPoint = points[i];
+                            var toPoint = points[i + 1];
 
-                        // calculate converage.
-                        var splitAt = -1;
-                        for(var j = 0; j < edges.Count; j++)
-                        {
-                            var locationEdgeIdx = j + fromPoint;
-                            if (locationEdgeIdx >= referencedLocation.Edges.Length ||
-                                edges[j] != referencedLocation.Edges[locationEdgeIdx])
+                            var fromEdge = referencedLocation.Edges[fromPoint];
+                            var toEdge = referencedLocation.Edges[toPoint - 1];
+                            var edgeCount = toPoint - fromPoint;
+
+                            // calculate shortest path between their first and last edge.
+                            var pathResult = coder.Router.TryCalculateRaw(coder.Profile.Profile,
+                                coder.Router.GetDefaultWeightHandler(coder.Profile.Profile),
+                                    fromEdge, toEdge, coder.Profile.RoutingSettings);
+                            if (pathResult.IsError)
                             {
-                                splitAt = j + fromPoint + 1;
+                                throw new Exception("No path found between two edges of the line location.");
+                            }
+                            var path = pathResult.Value;
+                            var edges = new List<long>();
+                            while (path.From != null)
+                            {
+                                edges.Add(path.Edge);
+                                path = path.From;
+                            }
+                            edges.Reverse();
+
+                            // calculate converage.
+                            var splitAt = -1;
+                            for (var j = 0; j < edges.Count; j++)
+                            {
+                                var locationEdgeIdx = j + fromPoint;
+                                if (locationEdgeIdx >= referencedLocation.Edges.Length ||
+                                    edges[j] != referencedLocation.Edges[locationEdgeIdx])
+                                {
+                                    splitAt = j + fromPoint + 1;
+                                    break;
+                                }
+                            }
+
+                            // split if needed.
+                            if (splitAt != -1)
+                            {
+                                points.Add(splitAt);
+                                points.Sort();
+
+                                isOnShortestPath = false;
                                 break;
                             }
-                        }
-
-                        // split if needed.
-                        if (splitAt != -1)
-                        {
-                            points.Add(splitAt);
-                            points.Sort();
-
-                            isOnShortestPath = false;
-                            break;
                         }
                     }
                 }

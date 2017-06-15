@@ -93,6 +93,7 @@
     <Compile Include="CoderExtensions.cs" />
     <Compile Include="CoderProfile.cs" />
     <Compile Include="Collections\SortedDictionary.cs" />
+    <Compile Include="EncodingSettings.cs" />
     <Compile Include="Exception\BuildLocationFailedException.cs" />
     <Compile Include="Exception\ReferencedDecodingException.cs" />
     <Compile Include="Exception\ReferencedEncodingException.cs" />

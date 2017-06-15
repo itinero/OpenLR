@@ -101,6 +101,14 @@ namespace OpenLR
         /// </summary>
         public string Encode(ReferencedLocation location)
         {
+            return this.Encode(location, EncodingSettings.Default);
+        }
+
+        /// <summary>
+        /// Encodes a location into an OpenLR string.
+        /// </summary>
+        public string Encode(ReferencedLocation location, EncodingSettings settings)
+        {
             if (location is ReferencedCircle)
             {
                 return _rawCodec.Encode(Referenced.Codecs.ReferencedCircleCodec.Encode(location as ReferencedCircle));
@@ -115,7 +123,7 @@ namespace OpenLR
             }
             if (location is ReferencedLine)
             {
-                return _rawCodec.Encode(Referenced.Codecs.ReferencedLineCodec.Encode(location as ReferencedLine, this));
+                return _rawCodec.Encode(Referenced.Codecs.ReferencedLineCodec.Encode(location as ReferencedLine, this, settings));
             }
             if (location is ReferencedPointAlongLine)
             {
