@@ -29,6 +29,7 @@ using OpenLR.Osm;
 using OpenLR.Referenced.Locations;
 using OpenLR.Tests.Functional.NWB;
 using System;
+using System.Collections.Generic;
 
 namespace OpenLR.Tests.Functional.Osm
 {
@@ -58,15 +59,17 @@ namespace OpenLR.Tests.Functional.Osm
             var i = 0;
             foreach (var feature in features.Features)
             {
-                var points = new Coordinate[2];
+                var points = new List<Coordinate>();
                 var coordinates = (feature.Geometry as NetTopologySuite.Geometries.LineString).Coordinates;
 
-                points[0] = new Coordinate((float)coordinates[0].Y, (float)coordinates[0].X);
-                points[1] = new Coordinate((float)coordinates[1].Y, (float)coordinates[1].X);
+                foreach (var c in coordinates)
+                {
+                    points.Add(new Coordinate((float)c.Y, (float)c.X));
+                }
 
                 System.Console.WriteLine("Testing line location {0}/{1} @ {2}->{3}", i + 1, features.Features.Count, 
                     points[0].ToInvariantString(), points[1].ToInvariantString());
-                TestEncodeDecoderRoute(coder, points);
+                TestEncodeDecoderRoute(coder, points.ToArray());
 
                 i++;
             }
@@ -77,7 +80,7 @@ namespace OpenLR.Tests.Functional.Osm
         /// </summary>
         public static void TestEncodeDecoderRoute(Coder coder, Coordinate[] points)
         {
-            var referencedLine = coder.BuildLine(points[0], points[1]);
+            var referencedLine = coder.BuildLine(points);
             var referencedLineJson = referencedLine.ToFeatures(coder.Router.Db).ToGeoJson();
 
             float positiveOffset, negativeOffset;

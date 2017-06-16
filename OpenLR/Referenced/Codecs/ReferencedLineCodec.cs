@@ -89,6 +89,7 @@ namespace OpenLR.Referenced.Codecs
                 // find the best candidate route.
                 CandidateRoute best = null;
                 CandidatePathSegment bestSource = null;
+                var targetIsLast = idx == lrps.Count - 2;
                 while (combinedScores.Count > 0)
                 {
                     // get the first pair.
@@ -97,7 +98,7 @@ namespace OpenLR.Referenced.Codecs
 
                     // find a route.
                     var candidate = coder.FindCandidateRoute(combinedScore.Source, combinedScore.Target,
-                        source.LowestFunctionalRoadClassToNext.Value, false, idx < lrps.Count - 2);
+                        source.LowestFunctionalRoadClassToNext.Value, targetIsLast);
 
                     // bring score of from/to also into the mix.
                     candidate.Score = candidate.Score + combinedScore.Score;
@@ -154,6 +155,13 @@ namespace OpenLR.Referenced.Codecs
                 { // no location reference found between two points.
                     return null;
                 }
+
+                if (!targetIsLast)
+                { // strip last edge and vertex, these will overlap with the previous.
+                    best.Route.Vertices = best.Route.Vertices.Range(0, best.Route.Vertices.Length - 1);
+                    best.Route.Edges = best.Route.Edges.Range(0, best.Route.Edges.Length - 1);
+                }
+
                 // keep the segment.
                 lineLocationSegments.Insert(0, best.Route);
 
@@ -236,7 +244,25 @@ namespace OpenLR.Referenced.Codecs
                                     fromEdge, toEdge, coder.Profile.RoutingSettings);
                             if (pathResult.IsError)
                             {
-                                throw new Exception("No path found between two edges of the line location.");
+                                try
+                                {
+                                    coder.Profile.RoutingSettings.SetMaxSearch(coder.Profile.Profile.FullName, float.MaxValue);
+                                    pathResult = coder.Router.TryCalculateRaw(coder.Profile.Profile,
+                                        coder.Router.GetDefaultWeightHandler(coder.Profile.Profile),
+                                            fromEdge, toEdge, coder.Profile.RoutingSettings);
+                                    if (pathResult.IsError)
+                                    {
+                                        throw new Exception("No path found between two edges of the line location.");
+                                    }
+                                }
+                                catch
+                                {
+                                    throw;
+                                }
+                                finally
+                                {
+                                    coder.Profile.RoutingSettings.SetMaxSearch(coder.Profile.Profile.FullName, coder.Profile.MaxSearch);
+                                }
                             }
                             var path = pathResult.Value;
                             var edges = new List<long>();

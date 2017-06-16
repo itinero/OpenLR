@@ -222,12 +222,16 @@ namespace OpenLR.Referenced.Codecs
         /// Calculates a route between the two given vertices.
         /// </summary>
         public static CandidateRoute FindCandidateRoute(this Coder coder, CandidatePathSegment from, CandidatePathSegment to, FunctionalRoadClass minimum,
-            bool ignoreFromEdge = false, bool ignoreToEdge = false)
+            bool invertTargetEdge = true)
         {
             var weightHandler = coder.Profile.Profile.DefaultWeightHandler(coder.Router);
 
             var directedEdgeFrom = from.Path.Edge;
             var directedEdgeTo = -to.Path.Edge;
+            if (!invertTargetEdge)
+            {
+                directedEdgeTo = -directedEdgeTo;
+            }
 
             var path = coder.Router.TryCalculateRaw(coder.Profile.Profile, weightHandler,
                 directedEdgeFrom, directedEdgeTo, coder.Profile.RoutingSettings);

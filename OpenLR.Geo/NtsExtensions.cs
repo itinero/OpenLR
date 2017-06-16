@@ -27,6 +27,7 @@ using Itinero.Data.Network;
 using Itinero.Geo;
 using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
+using OpenLR.Model.Locations;
 using OpenLR.Referenced;
 using OpenLR.Referenced.Codecs.Candidates;
 using OpenLR.Referenced.Locations;
@@ -45,6 +46,26 @@ namespace OpenLR.Geo
         public static Coordinate ToGeoAPICoordinate(this Itinero.LocalGeo.Coordinate coordinate)
         {
             return new Coordinate(coordinate.Longitude, coordinate.Latitude);
+        }
+
+        /// <summary>
+        /// Converts the given line location to features.
+        /// </summary>
+        public static FeatureCollection ToFeatures(this LineLocation line)
+        {
+            var featureCollection = new FeatureCollection();
+
+            featureCollection.Add(line.First.ToFeature());
+            if (line.Intermediate != null)
+            {
+                foreach(var p in line.Intermediate)
+                {
+                    featureCollection.Add(p.ToFeature());
+                }
+            }
+            featureCollection.Add(line.Last.ToFeature());
+
+            return featureCollection;
         }
 
         /// <summary>

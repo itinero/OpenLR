@@ -39,7 +39,7 @@ namespace OpenLR
         /// <typeparam name="T"></typeparam>
         /// <param name="source">The array to copy from.</param>
         /// <param name="index">The start of the elements </param>
-        /// <param name="count"></param>
+        /// <param name="count">The # of elements.</param>
         /// <param name="array">The array to copy to.</param>
         /// <param name="arrayIndex">The index to start copying to in the array.</param>
         public static void CopyTo<T>(this T[] source, int index, T[] array, int arrayIndex, int count)
@@ -49,6 +49,20 @@ namespace OpenLR
                 array[arrayIndex] = source[idx];
                 arrayIndex++;
             }
+        }
+
+        /// <summary>
+        /// Gets a specific range from the array and copies it to a new one.
+        /// </summary>
+        /// <param name="source">The array to copy from.</param>
+        /// <param name="index">The start of the elements </param>
+        /// <param name="count">The # of elements.</param>
+        /// <returns></returns>
+        public static T[] Range<T>(this T[] source, int index, int count)
+        {
+            var result = new T[count];
+            source.CopyTo(index, result, 0, count);
+            return result;
         }
 
         /// <summary>
