@@ -32,5 +32,10 @@ namespace OpenLR
         /// </summary>
         /// <remarks>This parameter can be changed but decoding/encoding locations might not work anymore when this parameters has been changed in the meantime.</remarks>
         public static int BEARDIST = 20;
+
+        /// <summary>
+        /// Holds the tolerance of the distance difference to care about.
+        /// </summary>
+        public static int DONT_CARE_DISTANCE = 100;
     }
 }
