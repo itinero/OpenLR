@@ -165,7 +165,7 @@ namespace OpenLR.Referenced.Codecs
                             var localBearing = BearingEncoder.EncodeBearing(shape, false);
                             var localBearingDiff = System.Math.Abs(Extensions.AngleSmallestDifference(localBearing, bearing));
 
-                            var bearingScore = Score.New(Score.BEARING_DIFF, "Bearing difference (0=0 & 180=1)", ((180f - localBearingDiff) / 180f), 1);
+                            var bearingScore = Score.New(Score.BEARING_DIFF, "Bearing difference score (0=1 & 180=0)", 1f - (localBearingDiff / 180f), 1);
                             relevantEdges.Add(new CandidatePathSegment()
                             {
                                 Score = location.Score * (matchScore + bearingScore),
@@ -235,6 +235,27 @@ namespace OpenLR.Referenced.Codecs
 
             var path = coder.Router.TryCalculateRaw(coder.Profile.Profile, weightHandler,
                 directedEdgeFrom, directedEdgeTo, coder.Profile.RoutingSettings);
+            if (Itinero.LocalGeo.Coordinate.DistanceEstimateInMeter(from.Location.Location(), to.Location.Location()) > coder.Profile.MaxSearch / 2)
+            {
+                try
+                {
+                    coder.Profile.RoutingSettings.SetMaxSearch(coder.Profile.Profile.FullName, coder.Profile.MaxSearch * 4);
+                    path = coder.Router.TryCalculateRaw(coder.Profile.Profile, weightHandler,
+                        directedEdgeFrom, directedEdgeTo, coder.Profile.RoutingSettings);
+                    if (path.IsError)
+                    {
+                        throw new Exception("No path found between two edges of the line location.");
+                    }
+                }
+                catch
+                {
+                    throw;
+                }
+                finally
+                {
+                    coder.Profile.RoutingSettings.SetMaxSearch(coder.Profile.Profile.FullName, coder.Profile.MaxSearch);
+                }
+            }
 
             // if no route is found, score is 0.
             if (path.IsError)
