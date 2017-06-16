@@ -218,5 +218,36 @@ namespace OpenLR.Tests.Binary
             Assert.AreEqual(FunctionalRoadClass.Frc0, lineLocation.Last.FuntionalRoadClass);
             Assert.AreEqual(FormOfWay.Motorway, lineLocation.Last.FormOfWay);
         }
+
+        /// <summary>
+        /// A regression test for encoding a location with intermediate points.
+        /// </summary>
+        [Test]
+        public void RegressionEncodeDecode()
+        {
+            var e = 0.0001f;
+
+            var json = "{\r\n  \"First\": {\r\n    \"Coordinate\": {\r\n      \"Latitude\": 52.275665283203125,\r\n      \"Longitude\": 6.825572490692139\r\n    },\r\n    \"Bearing\": 83,\r\n    \"FuntionalRoadClass\": 5,\r\n    \"FormOfWay\": 7,\r\n    \"LowestFunctionalRoadClassToNext\": 5,\r\n    \"DistanceToNext\": 7012\r\n  },\r\n  \"Intermediate\": [\r\n    {\r\n      \"Coordinate\": {\r\n        \"Latitude\": 52.30723190307617,\r\n        \"Longitude\": 6.911031246185303\r\n      },\r\n      \"Bearing\": 95,\r\n      \"FuntionalRoadClass\": 5,\r\n      \"FormOfWay\": 7,\r\n      \"LowestFunctionalRoadClassToNext\": 5,\r\n      \"DistanceToNext\": 70\r\n    },\r\n    {\r\n      \"Coordinate\": {\r\n        \"Latitude\": 52.307552337646484,\r\n        \"Longitude\": 6.9113054275512695\r\n      },\r\n      \"Bearing\": 27,\r\n      \"FuntionalRoadClass\": 3,\r\n      \"FormOfWay\": 6,\r\n      \"LowestFunctionalRoadClassToNext\": 3,\r\n      \"DistanceToNext\": 1924\r\n    },\r\n    {\r\n      \"Coordinate\": {\r\n        \"Latitude\": 52.32027053833008,\r\n        \"Longitude\": 6.928611755371094\r\n      },\r\n      \"Bearing\": 73,\r\n      \"FuntionalRoadClass\": 3,\r\n      \"FormOfWay\": 2,\r\n      \"LowestFunctionalRoadClassToNext\": 5,\r\n      \"DistanceToNext\": 7658\r\n    }\r\n  ],\r\n  \"Last\": {\r\n    \"Coordinate\": {\r\n      \"Latitude\": 52.36980438232422,\r\n      \"Longitude\": 6.999289512634277\r\n    },\r\n    \"Bearing\": 230,\r\n    \"FuntionalRoadClass\": 5,\r\n    \"FormOfWay\": 7,\r\n    \"LowestFunctionalRoadClassToNext\": null,\r\n    \"DistanceToNext\": 0\r\n  },\r\n  \"PositiveOffsetPercentage\": 0,\r\n  \"NegativeOffsetPercentage\": 0.638994753\r\n}";
+            var location = Newtonsoft.Json.JsonConvert.DeserializeObject<LineLocation>(json);
+            
+            // encode.
+            var stringData = LineLocationCodec.Encode(location);
+
+            // decode again (decoding was tested above).
+            var decodedLocation = LineLocationCodec.Decode(stringData);
+
+            Assert.AreEqual(location.First.Coordinate.Latitude, decodedLocation.First.Coordinate.Latitude, e);
+            Assert.AreEqual(location.First.Coordinate.Longitude, decodedLocation.First.Coordinate.Longitude, e);
+
+            Assert.AreEqual(location.Intermediate.Length, decodedLocation.Intermediate.Length);
+            for(var i = 0; i < location.Intermediate.Length; i++)
+            {
+                Assert.AreEqual(location.Intermediate[i].Coordinate.Latitude, decodedLocation.Intermediate[i].Coordinate.Latitude, e);
+                Assert.AreEqual(location.Intermediate[i].Coordinate.Longitude, decodedLocation.Intermediate[i].Coordinate.Longitude, e);
+            }
+
+            Assert.AreEqual(location.Last.Coordinate.Latitude, decodedLocation.Last.Coordinate.Latitude, e);
+            Assert.AreEqual(location.Last.Coordinate.Longitude, decodedLocation.Last.Coordinate.Longitude, e);
+        }
     }
 }

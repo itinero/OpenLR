@@ -156,7 +156,7 @@ namespace OpenLR.Codecs.Binary.Decoders
                 for (int idx = 0; idx < location.Intermediate.Length; idx++)
                 { // create an intermediate point.
                     var intermediate = location.Intermediate[idx];
-                    CoordinateConverter.EncodeRelative(location.First.Coordinate, intermediate.Coordinate, data, position);
+                    CoordinateConverter.EncodeRelative(reference, intermediate.Coordinate, data, position);
                     reference = intermediate.Coordinate;
                     position = position + 4;
                     FunctionalRoadClassConvertor.Encode(intermediate.FuntionalRoadClass.Value, data, position, 2);
