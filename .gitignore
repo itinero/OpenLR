@@ -29,6 +29,7 @@ test-results*/
 *.vsp
 .DotSettings
 .vs*/
+*TestResult.xml
 
 *.routerdb
 
