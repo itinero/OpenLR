@@ -11,6 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenLR.Geo", "src\OpenLR.Ge
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nuget", "nuget", "{C698DA28-DCEF-4DE6-8F2E-9147E241CFE0}"
 	ProjectSection(SolutionItems) = preProject
+		nuspec\OpenLR.Geo.nuspec = nuspec\OpenLR.Geo.nuspec
 		nuspec\OpenLR.nuspec = nuspec\OpenLR.nuspec
 		nuspec\OpenLR_logo64.png = nuspec\OpenLR_logo64.png
 	EndProjectSection
@@ -20,6 +21,13 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenLR.Test.Functional", "test\OpenLR.Test.Functional\OpenLR.Test.Functional.csproj", "{FB4094CB-9898-4112-B2CB-CD4F91818890}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenLR.Test", "test\OpenLR.Test\OpenLR.Test.csproj", "{9DAC0F4B-F928-4C53-AAFD-E60BCE6182F7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1108EDD1-DBA6-4728-9FCE-C403C1E2C0BD}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		LICENSE.md = LICENSE.md
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

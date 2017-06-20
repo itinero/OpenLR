@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
-    <id>OpenLR</id>
+    <id>OpenLR.Geo</id>
     <version>$version$</version>
     <authors>Ben Abelshausen</authors>
-    <owners>OpenLR</owners>
+    <owners>OpenLR.Geo</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>OpenLR library for .NET.</description>
     <summary>OpenLR library for .NET. Development was sponsored by VIA and BeMobile.</summary>
@@ -12,18 +12,17 @@
     <projectUrl>https://github.com/Itinero/OpenLR</projectUrl>
     <iconUrl>http://www.itinero.tech/logos/openlr_logo64.png</iconUrl>
     <dependencies>
-      <group targetFramework=".NETFramework4.5">
-        <dependency id="Itinero" version="1.0.5" exclude="Build,Analyzers" />
-      </group>
       <group targetFramework=".NETFramework4.0">
-        <dependency id="Itinero" version="1.0.5" exclude="Build,Analyzers" />
+        <dependency id="OpenLR" version="1.0.0" exclude="Build,Analyzers" />
+        <dependency id="GeoAPI" version="1.7.4" exclude="Build,Analyzers" />
+        <dependency id="NetTopologySuite" version="1.14.0" exclude="Build,Analyzers" />
+        <dependency id="Itinero.Geo" version="1.0.5" exclude="Build,Analyzers" />
       </group>
       <group targetFramework=".NETFramework4.5.1">
-        <dependency id="Itinero" version="1.0.5" exclude="Build,Analyzers" />
-      </group>
-      <group targetFramework=".NETStandard1.3">
-        <dependency id="Itinero" version="1.0.5" exclude="Build,Analyzers" />
-        <dependency id="NETStandard.Library" version="1.6.0" exclude="Build,Analyzers" />
+        <dependency id="OpenLR" version="1.0.0" exclude="Build,Analyzers" />
+        <dependency id="GeoAPI" version="1.7.4" exclude="Build,Analyzers" />
+        <dependency id="NetTopologySuite" version="1.14.0" exclude="Build,Analyzers" />
+        <dependency id="Itinero.Geo" version="1.0.5" exclude="Build,Analyzers" />
       </group>
     </dependencies>
   </metadata>
