@@ -30,5 +30,7 @@ test-results*/
 .DotSettings
 .vs*/
 
+*.routerdb
+
 packages/*
 !packages/repositories.config
