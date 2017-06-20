@@ -27,4 +27,10 @@
       </group>
     </dependencies>
   </metadata>
+  <files>
+    <file src="src\OpenLR\bin\Release\net40\OpenLR.dll" target="lib\net40\OpenLR.dll" />
+    <file src="src\OpenLR\bin\Release\net45\OpenLR.dll" target="lib\net45\OpenLR.dll" />
+    <file src="src\OpenLR\bin\Release\net451\OpenLR.dll" target="lib\net451\OpenLR.dll" />
+    <file src="src\OpenLR\bin\Release\netstandard1.3\OpenLR.dll" target="lib\netstandard1.3\OpenLR.dll" />
+  </files>
 </package>

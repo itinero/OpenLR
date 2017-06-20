@@ -26,4 +26,8 @@
       </group>
     </dependencies>
   </metadata>
+  <files>
+    <file src="src\OpenLR.Geo\bin\Release\net40\OpenLR.Geo.dll" target="lib\net40\OpenLR.Geo.dll" />
+    <file src="src\OpenLR.Geo\bin\Release\net451\OpenLR.Geo.dll" target="lib\net451\OpenLR.Geo.dll" />
+  </files>
 </package>
