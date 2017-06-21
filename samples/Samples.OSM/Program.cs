@@ -24,7 +24,6 @@ using Itinero;
 using Itinero.IO.Osm;
 using Itinero.Osm.Vehicles;
 using OpenLR;
-using OpenLR.Geo;
 using OpenLR.Osm;
 using OpenLR.Referenced.Locations;
 using System;
@@ -41,7 +40,7 @@ namespace Samples.OSM
             // build routerdb from raw OSM data.
             // check this for more info on RouterDb's: https://github.com/itinero/routing/wiki/RouterDb
             var routerDb = new RouterDb();
-            using (var sourceStream = File.OpenRead(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "luxembourg-latest.osm.pbf")))
+            using (var sourceStream = File.OpenRead("luxembourg-latest.osm.pbf"))
             {
                 routerDb.LoadOsmData(sourceStream, Vehicle.Car);
             }
@@ -53,7 +52,6 @@ namespace Samples.OSM
             // REMARK: this functionality is NOT part of the OpenLR-spec, just a convenient way to build a line location.
             var line = coder.BuildLine(new Itinero.LocalGeo.Coordinate(49.67218282319583f, 6.142280101776122f),
                 new Itinero.LocalGeo.Coordinate(49.67776489459803f, 6.1342549324035645f));
-            var lineGeoJson = line.ToFeatures(coder.Router.Db).ToGeoJson();
 
             // encode this location.
             var encoded = coder.Encode(line);
@@ -61,7 +59,6 @@ namespace Samples.OSM
 
             // decode this location.
             var decodedLine = coder.Decode(encoded) as ReferencedLine;
-            var decodedLineGeoJson = decodedLine.ToFeatures(coder.Router.Db).ToGeoJson();
 
             Console.ReadLine();
         }

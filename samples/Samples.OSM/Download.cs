@@ -42,7 +42,7 @@ namespace Samples.OSM
             {
                 var client = new HttpClient();
                 using (var stream = await client.GetStreamAsync(url))
-                using (var outputStream = File.OpenWrite(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, filename)))
+                using (var outputStream = File.OpenWrite(filename))
                 {
                     stream.CopyTo(outputStream);
                 }
@@ -64,8 +64,8 @@ namespace Samples.OSM
         /// <param name="file"></param>
         public static void Extract(string file)
         {
-            var archive = new ZipArchive(File.OpenRead(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, file)));
-            var baseDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "temp");
+            var archive = new ZipArchive(File.OpenRead(file));
+            var baseDir = "temp";
             if (!Directory.Exists(baseDir))
             {
                 Directory.CreateDirectory(baseDir);
