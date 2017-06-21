@@ -50,4 +50,10 @@
     <Reference Include="System.Net.Http" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="car.lua">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
