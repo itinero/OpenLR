@@ -59,8 +59,9 @@ namespace Samples.OSM
 
             // decode this location.
             var decodedLine = coder.Decode(encoded) as ReferencedLine;
-
+#if DEBUG
             Console.ReadLine();
+#endif
         }
     }
 }
