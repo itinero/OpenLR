@@ -4,8 +4,7 @@ This is an implementation of the OpenLR (Open Location Reference) protocol using
 
 ## Dependencies
 
-* Itinero: For a basic routing graph structure, loading data and routing.
-* NetTopologySuite: A geo library for .NET.
+* [Itinero](https://github.com/itinero/routing): For a basic routing graph structure, loading data and routing.
 
 ## Usage
 
@@ -37,6 +36,9 @@ The most basic code sample encoding/decoding a line location:
     // decode this location.
     var decodedLine = coder.Decode(encoded) as ReferencedLine;
 ```
-### Samples
+
+### Samples & Docs
 
 Check the samples here: https://github.com/itinero/OpenLR/tree/develop/samples/
+
+There is also basic documentation here: https://github.com/itinero/OpenLR/wiki
