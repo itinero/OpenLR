@@ -1,1 +1,0 @@
-﻿This project contains the implementation to read and write binary OpenLR data.

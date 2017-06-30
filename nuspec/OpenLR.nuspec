@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>OpenLR</id>
+    <version>$version$</version>
+    <authors>Ben Abelshausen</authors>
+    <owners>OpenLR</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>OpenLR library for .NET.</description>
+    <summary>OpenLR library for .NET. Development was sponsored by VIA and BeMobile.</summary>
+    <licenseUrl>https://github.com/itinero/OpenLR/blob/develop/LICENSE.md</licenseUrl>
+    <projectUrl>https://github.com/Itinero/OpenLR</projectUrl>
+    <iconUrl>http://www.itinero.tech/logos/openlr_logo64.png</iconUrl>
+    <dependencies>
+      <group targetFramework=".NETFramework4.5">
+        <dependency id="Itinero" version="1.1.1" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETFramework4.0">
+        <dependency id="Itinero" version="1.1.1" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETFramework4.5.1">
+        <dependency id="Itinero" version="1.1.1" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETStandard1.3">
+        <dependency id="Itinero" version="1.1.1" exclude="Build,Analyzers" />
+        <dependency id="NETStandard.Library" version="1.6.0" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="src\OpenLR\bin\Release\net40\OpenLR.dll" target="lib\net40\OpenLR.dll" />
+    <file src="src\OpenLR\bin\Release\net45\OpenLR.dll" target="lib\net45\OpenLR.dll" />
+    <file src="src\OpenLR\bin\Release\net451\OpenLR.dll" target="lib\net451\OpenLR.dll" />
+    <file src="src\OpenLR\bin\Release\netstandard1.3\OpenLR.dll" target="lib\netstandard1.3\OpenLR.dll" />
+  </files>
+</package>

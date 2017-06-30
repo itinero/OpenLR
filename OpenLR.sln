@@ -1,21 +1,46 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+<<<<<<< HEAD
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
+=======
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.4
+>>>>>>> develop
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenLR", "OpenLR\OpenLR.csproj", "{036AD1DA-006A-48B6-826C-83D12561411D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenLR", "src\OpenLR\OpenLR.csproj", "{EC64B4E2-6637-4BC5-8FFE-0A16049ACD04}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenLR.Binary", "OpenLR.Binary\OpenLR.Binary.csproj", "{252D884C-8BED-4711-A2DA-21F8DC05D697}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{684B6559-C01F-4862-BA85-F0BF7642FB77}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenLR.Tests", "OpenLR.Tests\OpenLR.Tests.csproj", "{FBE5BE08-EF13-4108-92B2-46A960879F33}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenLR.Geo", "src\OpenLR.Geo\OpenLR.Geo.csproj", "{A2D0D3EA-6D13-46A4-A5DD-7C181F6F00AD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenLR.XML", "OpenLR.XML\OpenLR.XML.csproj", "{CF358CF6-913D-47DC-9A83-DE90153A82F2}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nuget", "nuget", "{C698DA28-DCEF-4DE6-8F2E-9147E241CFE0}"
+	ProjectSection(SolutionItems) = preProject
+		nuspec\OpenLR.Geo.nuspec = nuspec\OpenLR.Geo.nuspec
+		nuspec\OpenLR.nuspec = nuspec\OpenLR.nuspec
+		nuspec\OpenLR_logo64.png = nuspec\OpenLR_logo64.png
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenLR.Referenced", "OpenLR.Referenced\OpenLR.Referenced.csproj", "{61C1F8E2-9AFB-4EDA-8465-B0ECB20296D7}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{E9F7404A-912C-429C-AD40-E4A8E4E47D20}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenLR.Referenced.MultiNet", "OpenLR.Referenced.MultiNet\OpenLR.Referenced.MultiNet.csproj", "{1130C7F7-C993-4669-9B93-010C9BBADE1C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenLR.Test.Functional", "test\OpenLR.Test.Functional\OpenLR.Test.Functional.csproj", "{FB4094CB-9898-4112-B2CB-CD4F91818890}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenLR.Referenced.NWB", "OpenLR.Referenced.NWB\OpenLR.Referenced.NWB.csproj", "{E14B6468-C422-4811-828E-BCF522266EFF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenLR.Test", "test\OpenLR.Test\OpenLR.Test.csproj", "{9DAC0F4B-F928-4C53-AAFD-E60BCE6182F7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1108EDD1-DBA6-4728-9FCE-C403C1E2C0BD}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		LICENSE.md = LICENSE.md
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenLR.Test.Runner", "test\OpenLR.Test.Runner\OpenLR.Test.Runner.csproj", "{DC53D05F-CF36-40D0-A6FD-221C93074BAA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{082AB082-0910-4B42-AC57-330BE7C57771}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samples.NWB", "samples\Samples.NWB\Samples.NWB.csproj", "{EC408DBE-A08C-4132-AFC1-4939690E3D75}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samples.OSM", "samples\Samples.OSM\Samples.OSM.csproj", "{EC179DC9-835B-4549-B996-AD616A3566EF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{4E9C52C9-A228-41C8-91C4-25C65FDE2411}"
 EndProject
@@ -24,11 +49,10 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
-		Debug|x64 = Debug|x64
 		Release|Any CPU = Release|Any CPU
-		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+<<<<<<< HEAD
 		{036AD1DA-006A-48B6-826C-83D12561411D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{036AD1DA-006A-48B6-826C-83D12561411D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{036AD1DA-006A-48B6-826C-83D12561411D}.Debug|x64.ActiveCfg = Debug|x64
@@ -93,11 +117,51 @@ Global
 		{C97DCD83-68DB-4E79-8D22-847EA160CCA7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C97DCD83-68DB-4E79-8D22-847EA160CCA7}.Release|x64.ActiveCfg = Release|Any CPU
 		{C97DCD83-68DB-4E79-8D22-847EA160CCA7}.Release|x64.Build.0 = Release|Any CPU
+=======
+		{EC64B4E2-6637-4BC5-8FFE-0A16049ACD04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC64B4E2-6637-4BC5-8FFE-0A16049ACD04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC64B4E2-6637-4BC5-8FFE-0A16049ACD04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC64B4E2-6637-4BC5-8FFE-0A16049ACD04}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2D0D3EA-6D13-46A4-A5DD-7C181F6F00AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2D0D3EA-6D13-46A4-A5DD-7C181F6F00AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2D0D3EA-6D13-46A4-A5DD-7C181F6F00AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2D0D3EA-6D13-46A4-A5DD-7C181F6F00AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB4094CB-9898-4112-B2CB-CD4F91818890}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB4094CB-9898-4112-B2CB-CD4F91818890}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB4094CB-9898-4112-B2CB-CD4F91818890}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB4094CB-9898-4112-B2CB-CD4F91818890}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9DAC0F4B-F928-4C53-AAFD-E60BCE6182F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DAC0F4B-F928-4C53-AAFD-E60BCE6182F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DAC0F4B-F928-4C53-AAFD-E60BCE6182F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9DAC0F4B-F928-4C53-AAFD-E60BCE6182F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC53D05F-CF36-40D0-A6FD-221C93074BAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC53D05F-CF36-40D0-A6FD-221C93074BAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC53D05F-CF36-40D0-A6FD-221C93074BAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC53D05F-CF36-40D0-A6FD-221C93074BAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC408DBE-A08C-4132-AFC1-4939690E3D75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC408DBE-A08C-4132-AFC1-4939690E3D75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC408DBE-A08C-4132-AFC1-4939690E3D75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC408DBE-A08C-4132-AFC1-4939690E3D75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC179DC9-835B-4549-B996-AD616A3566EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC179DC9-835B-4549-B996-AD616A3566EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC179DC9-835B-4549-B996-AD616A3566EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC179DC9-835B-4549-B996-AD616A3566EF}.Release|Any CPU.Build.0 = Release|Any CPU
+>>>>>>> develop
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+<<<<<<< HEAD
 		{C97DCD83-68DB-4E79-8D22-847EA160CCA7} = {4E9C52C9-A228-41C8-91C4-25C65FDE2411}
+=======
+		{EC64B4E2-6637-4BC5-8FFE-0A16049ACD04} = {684B6559-C01F-4862-BA85-F0BF7642FB77}
+		{A2D0D3EA-6D13-46A4-A5DD-7C181F6F00AD} = {684B6559-C01F-4862-BA85-F0BF7642FB77}
+		{FB4094CB-9898-4112-B2CB-CD4F91818890} = {E9F7404A-912C-429C-AD40-E4A8E4E47D20}
+		{9DAC0F4B-F928-4C53-AAFD-E60BCE6182F7} = {E9F7404A-912C-429C-AD40-E4A8E4E47D20}
+		{DC53D05F-CF36-40D0-A6FD-221C93074BAA} = {E9F7404A-912C-429C-AD40-E4A8E4E47D20}
+		{EC408DBE-A08C-4132-AFC1-4939690E3D75} = {082AB082-0910-4B42-AC57-330BE7C57771}
+		{EC179DC9-835B-4549-B996-AD616A3566EF} = {082AB082-0910-4B42-AC57-330BE7C57771}
+>>>>>>> develop
 	EndGlobalSection
 EndGlobal

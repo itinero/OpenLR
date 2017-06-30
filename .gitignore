@@ -28,6 +28,11 @@ OutputWindowsPhone*/
 test-results*/
 *.vsp
 .DotSettings
+.vs*/
+*TestResult.xml
+
+*.routerdb
+*.osm.pbf
 
 packages/*
 !packages/repositories.config
