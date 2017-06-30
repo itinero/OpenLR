@@ -169,24 +169,25 @@ namespace OpenLR
             var fromRouterPoint = coder.Router.Db.Network.CreateRouterPointForVertex(from);
             var toRouterPoint = coder.Router.Db.Network.CreateRouterPointForVertex(to);
 
+            var weightHandler = coder.Router.GetDefaultWeightHandler(coder.Profile.Profile);
             if (searchForward)
             {
-                var result = coder.Router.TryCalculateRaw(coder.Profile.Profile, new DefaultWeightHandler(coder.Profile.Profile.GetGetFactor(coder.Router.Db)),
+                var result = coder.Router.TryCalculateRaw(coder.Profile.Profile, weightHandler,
                     fromRouterPoint, toRouterPoint, coder.Profile.RoutingSettings);
                 if (result.IsError)
                 {
-                    result = coder.Router.TryCalculateRaw(coder.Profile.Profile, new DefaultWeightHandler(coder.Profile.Profile.GetGetFactor(coder.Router.Db)),
+                    result = coder.Router.TryCalculateRaw(coder.Profile.Profile, weightHandler,
                         fromRouterPoint, toRouterPoint, coder.Profile.GetAggressiveRoutingSettings(100));
                 }
                 return result.Value;
             }
             else
             {
-                var result = coder.Router.TryCalculateRaw(coder.Profile.Profile, new DefaultWeightHandler(coder.Profile.Profile.GetGetFactor(coder.Router.Db)),
+                var result = coder.Router.TryCalculateRaw(coder.Profile.Profile, weightHandler,
                     toRouterPoint, fromRouterPoint, coder.Profile.RoutingSettings);
                 if (result.IsError)
                 {
-                    result = coder.Router.TryCalculateRaw(coder.Profile.Profile, new DefaultWeightHandler(coder.Profile.Profile.GetGetFactor(coder.Router.Db)),
+                    result = coder.Router.TryCalculateRaw(coder.Profile.Profile, weightHandler,
                         toRouterPoint, fromRouterPoint, coder.Profile.GetAggressiveRoutingSettings(100));
                 }
                 return result.Value;

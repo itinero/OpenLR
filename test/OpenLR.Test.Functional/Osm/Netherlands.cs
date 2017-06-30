@@ -21,7 +21,9 @@
 // THE SOFTWARE.
 
 using Itinero;
+using Itinero.IO.Osm;
 using Itinero.LocalGeo;
+using Itinero.Profiles;
 using NetTopologySuite.Algorithm.Distance;
 using NUnit.Framework;
 using OpenLR.Geo;
@@ -30,6 +32,7 @@ using OpenLR.Referenced.Locations;
 using OpenLR.Tests.Functional.NWB;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace OpenLR.Tests.Functional.Osm
 {
@@ -38,6 +41,36 @@ namespace OpenLR.Tests.Functional.Osm
     /// </summary>
     public static class Netherlands
     {
+        /// <summary>
+        /// Downloads and builds the nwb router db.
+        /// </summary>
+        public static RouterDb DownloadAndBuildRouterDb()
+        {
+            if (!File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "netherlands.c.routerdb")))
+            {
+                // download test data and extract to 'temp' directory relative to application base directory.
+                Download.DownloadPbf("netherlands-latest.osm.pbf");
+
+                // create a new router db and load the osm data.
+                var routerDb = new RouterDb();
+                using (var stream = File.OpenRead("netherlands-latest.osm.pbf"))
+                {
+                    routerDb.LoadOsmData(stream, Itinero.Osm.Vehicles.Vehicle.Car);
+                }
+
+                // write the router db to disk for later use.
+                using (var ouputStream = File.OpenWrite(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "netherlands.c.routerdb")))
+                {
+                    routerDb.Serialize(ouputStream);
+                }
+                return routerDb;
+            }
+            else
+            {
+                return RouterDb.Deserialize(File.OpenRead(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "netherlands.c.routerdb")));
+            }
+        }
+
         /// <summary>
         /// Tests encoding/decoding on OSM-data.
         /// </summary>

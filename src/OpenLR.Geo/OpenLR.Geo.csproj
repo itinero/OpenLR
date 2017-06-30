@@ -18,8 +18,8 @@
 
   <ItemGroup>
     <PackageReference Include="GeoAPI" Version="1.7.4" />
+    <PackageReference Include="Itinero.Geo" Version="1.1.1" />
     <PackageReference Include="NetTopologySuite" Version="1.14.0" />
-    <PackageReference Include="Itinero.Geo" Version="1.0.5" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">

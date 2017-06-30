@@ -32,6 +32,7 @@ test-results*/
 *TestResult.xml
 
 *.routerdb
+*.osm.pbf
 
 packages/*
 !packages/repositories.config

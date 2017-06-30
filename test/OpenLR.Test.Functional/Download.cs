@@ -31,18 +31,18 @@ namespace OpenLR.Tests.Functional
 {
     public static class Download
     {
-        public static string NetherlandsRouterDbUrl = "http://files.itinero.tech/data/itinero/routerdbs/planet/europe/netherlands.c.cf.routerdb";
+        public static string NetherlandsPbf = "http://files.itinero.tech/data/OSM/planet/europe/netherlands-latest.osm.pbf";
 
         /// <summary>
         /// Downloads all test-data.
         /// </summary>
-        public static void DownloadAll()
+        public static void DownloadPbf(string filename)
         {
-            if (!File.Exists("netherlands.c.cf.routerdb"))
+            if (!File.Exists(filename))
             {
                 var client = new WebClient();
-                client.DownloadFile(Download.NetherlandsRouterDbUrl,
-                    "netherlands.c.cf.routerdb");
+                client.DownloadFile(Download.NetherlandsPbf,
+                    filename);
             }
         }
 

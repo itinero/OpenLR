@@ -233,6 +233,7 @@ namespace OpenLR.Referenced.Codecs
                 directedEdgeTo = -directedEdgeTo;
             }
 
+            // TODO: probably the bug is one-edge routes.
             var path = coder.Router.TryCalculateRaw(coder.Profile.Profile, weightHandler,
                 directedEdgeFrom, directedEdgeTo, coder.Profile.RoutingSettings);
             if (Itinero.LocalGeo.Coordinate.DistanceEstimateInMeter(from.Location.Location(), to.Location.Location()) > coder.Profile.MaxSearch / 2)

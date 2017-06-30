@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net45</TargetFramework>
+    <TargetFramework>net451</TargetFramework>
     <AssemblyName>OpenLR.Test</AssemblyName>
     <PackageId>OpenLR.Test</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
@@ -25,13 +25,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Itinero" Version="1.1.1" />
     <PackageReference Include="NetTopologySuite" Version="1.14.0" />
     <PackageReference Include="NetTopologySuite.IO.GeoJSON" Version="1.14.0" />
     <PackageReference Include="Newtonsoft.Json" Version="7.0.1" />
     <PackageReference Include="NUnit" Version="3.6.1" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">
     <Reference Include="System.Xml" />
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
@@ -45,7 +46,5 @@
   <ItemGroup>
     <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
   </ItemGroup>
-
-
 
 </Project>

@@ -28,9 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Itinero" Version="1.0.5" />
-    <PackageReference Include="Itinero.IO.Osm" Version="1.0.5" />
-    <PackageReference Include="Itinero.IO.Shape" Version="1.0.5" />
+    <PackageReference Include="Itinero.IO.Shape" Version="1.1.1" />
     <PackageReference Include="NetTopologySuite.IO" Version="1.14.0.1" />
     <PackageReference Include="NetTopologySuite.IO.GeoJSON" Version="1.14.0" />
     <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
