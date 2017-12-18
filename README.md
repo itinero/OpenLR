@@ -1,11 +1,11 @@
 # OpenLR for .NET
 
-![Build status](http://build.itinero.tech/app/rest/builds/buildType:(id:Itinero_Openlr)/statusIcon)
+[![Build status](http://build.itinero.tech:8080/app/rest/builds/buildType:(id:Itinero_Openlr)/statusIcon)](https://build.itinero.tech/viewType.html?buildTypeId=Itinero_Openlr)
 [![Visit our website](https://img.shields.io/badge/website-itinero.tech-020031.svg) ](http://www.itinero.tech/)
 [![GPL licensed](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/itinero/openlr/blob/develop/LICENSE.md)
 
-- OpenLR: [![NuGet](https://img.shields.io/nuget/v/OpenLR.svg?style=flat)](https://www.nuget.org/packages/OpenLR/)  
-- OpenLR.Geo: [![NuGet](https://img.shields.io/nuget/v/OpenLR.Geo.svg?style=flat)](https://www.nuget.org/packages/OpenLR.Geo/)  
+- OpenLR: [![NuGet Badge](https://buildstats.info/nuget/OpenLR)](https://www.nuget.org/packages/OpenLR/)
+- OpenLR.Geo: [![NuGet Badge](https://buildstats.info/nuget/OpenLR.Geo)](https://www.nuget.org/packages/OpenLR.Geo/)
 
 This is an implementation of the OpenLR (Open Location Reference) protocol using Itinero. Development was initially sponsered by via.nl (http://via.nl/) and Be-Mobile (http://www.be-mobile-international.com/). 
 
