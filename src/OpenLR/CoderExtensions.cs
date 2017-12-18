@@ -426,6 +426,31 @@ namespace OpenLR
             Route route;
             return coder.BuildLine(coordinate1, coordinate2, out route);
         }
+
+        /// <summary>
+        /// Builds a referenced line representing a single edge.
+        /// </summary>
+        public static ReferencedLine BuildEdge(this Coder coder, long directedEdgeId)
+        {
+            var edge = coder.Router.Db.Network.GetEdge(directedEdgeId);
+
+            return new ReferencedLine()
+            {
+                Edges = new long[]
+                {
+                    directedEdgeId
+                },
+                Vertices = new uint[]
+                {
+                    edge.From,
+                    edge.To
+                },
+                NegativeOffsetPercentage = 0,
+                PositiveOffsetPercentage = 0,
+                StartLocation = coder.Router.Db.CreateRouterPointForEdgeAndVertex(directedEdgeId, edge.From),
+                EndLocation = coder.Router.Db.CreateRouterPointForEdgeAndVertex(directedEdgeId, edge.To)
+            };
+        }
         
         /// <summary>
         /// Builds the shortest path between the two coordinates as a referenced line.
