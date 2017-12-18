@@ -25,6 +25,7 @@ using Itinero.IO.Osm;
 using Itinero.Osm.Vehicles;
 using OpenLR;
 using OpenLR.Osm;
+using OpenLR.Referenced;
 using OpenLR.Referenced.Locations;
 using System;
 using System.IO;
@@ -56,6 +57,10 @@ namespace Samples.OSM
             // encode this location.
             var encoded = coder.Encode(line);
             Console.WriteLine(encoded);
+
+            // encode edge(s).
+            var resolved1 = coder.Router.Resolve(coder.Profile.Profile, new Itinero.LocalGeo.Coordinate(49.719760878136874f, 6.117909550666809f));
+            var encoded1 = coder.BuildEdge(resolved1.EdgeIdDirected());
 
             // decode this location.
             var decodedLine = coder.Decode(encoded) as ReferencedLine;
