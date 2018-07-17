@@ -28,18 +28,16 @@ using OpenLR.Geo;
 using OpenLR.Model.Locations;
 using System;
 using System.IO;
+using Serilog;
 
-namespace OpenLR.Tests.Functional
+namespace OpenLR.Test.Functional
 {
     class Program
     {
         static void Main(string[] args)
         {
-            Itinero.Logging.Logger.LogAction = (o, level, message, parameters) =>
-            {
-                Console.WriteLine(string.Format("[{0}] {1} - {2}", o, level, message));
-            };
-
+            SetupLogging();
+            
             // executes the netherlands tests based on OSM.
             var routerDb = Osm.Netherlands.DownloadAndBuildRouterDb();
             routerDb.RemoveContracted(Vehicle.Car.Shortest());
@@ -59,9 +57,73 @@ namespace OpenLR.Tests.Functional
 #endif
         }
 
+        private static void SetupLogging()
+        {
+            var logFile = Path.Combine("logs", "log.txt");
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .Enrich.FromLogContext()
+#if DEBUG
+                .WriteTo.File(logFile, rollingInterval: RollingInterval.Day)
+#endif
+                .WriteTo.Console()
+                .CreateLogger();
+            
+            // enable logging.
+            // Link logging to OsmSharp.
+            OsmSharp.Logging.Logger.LogAction = (o, level, message, parameters) =>
+            {
+                var messageTemplate = "{@Origin}: {@Message}";
+                if (level == OsmSharp.Logging.TraceEventType.Information.ToString().ToLower())
+                {
+                    Log.Information(messageTemplate, o, message);
+                }
+                else if (level == OsmSharp.Logging.TraceEventType.Warning.ToString().ToLower())
+                {
+                    Log.Warning(messageTemplate, o, message);
+                }
+                else if (level == OsmSharp.Logging.TraceEventType.Critical.ToString().ToLower())
+                {
+                    Log.Fatal(messageTemplate, o, message);
+                }
+                else if (level == OsmSharp.Logging.TraceEventType.Error.ToString().ToLower())
+                {
+                    Log.Error(messageTemplate, o, message);
+                }
+                else
+                {
+                    Log.Debug(messageTemplate, o, message);
+                }
+            };
+            Itinero.Logging.Logger.LogAction = (o, level, message, parameters) =>
+            {
+                var messageTemplate = "{@Origin}: {@Message}";
+                if (level == Itinero.Logging.TraceEventType.Information.ToString().ToLower())
+                {
+                    Log.Information(messageTemplate, o, message);
+                }
+                else if (level == Itinero.Logging.TraceEventType.Warning.ToString().ToLower())
+                {
+                    Log.Warning(messageTemplate, o, message);
+                }
+                else if (level == Itinero.Logging.TraceEventType.Critical.ToString().ToLower())
+                {
+                    Log.Fatal(messageTemplate, o, message);
+                }
+                else if (level == Itinero.Logging.TraceEventType.Error.ToString().ToLower())
+                {
+                    Log.Error(messageTemplate, o, message);
+                }
+                else
+                {
+                    Log.Debug(messageTemplate, o, message);
+                }
+            };
+        }
+
         private static string ToJson(FeatureCollection featureCollection)
         {
-            var jsonSerializer = new NetTopologySuite.IO.GeoJsonSerializer();
+            var jsonSerializer = NetTopologySuite.IO.GeoJsonSerializer.Create();
             var jsonStream = new StringWriter();
             jsonSerializer.Serialize(jsonStream, featureCollection);
             var json = jsonStream.ToInvariantString();

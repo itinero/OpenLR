@@ -30,7 +30,7 @@ using Itinero.Geo;
 using Itinero.Data.Network.Restrictions;
 using Itinero;
 
-namespace OpenLR.Tests
+namespace OpenLR.Test
 {
     /// <summary>
     /// Builds test networks based on geojson files.

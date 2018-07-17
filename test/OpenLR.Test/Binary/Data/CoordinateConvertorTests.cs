@@ -2,7 +2,7 @@
 using OpenLR.Codecs.Binary.Data;
 using OpenLR.Model;
 
-namespace OpenLR.Tests.Binary.Data
+namespace OpenLR.Test.Binary.Data
 {
     /// <summary>
     /// Holds some coordinate encoding/decoding tests.

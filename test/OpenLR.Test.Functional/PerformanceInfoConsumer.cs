@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OpenLR.Tests.Functional
+namespace OpenLR.Test.Functional
 {
     /// <summary>
     /// A class that consumes perfomance information.

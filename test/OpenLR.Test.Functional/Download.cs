@@ -27,7 +27,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace OpenLR.Tests.Functional
+namespace OpenLR.Test.Functional
 {
     public static class Download
     {

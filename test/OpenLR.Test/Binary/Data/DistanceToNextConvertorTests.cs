@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using OpenLR.Codecs.Binary.Data;
 
-namespace OpenLR.Tests.Binary.Data
+namespace OpenLR.Test.Binary.Data
 {
     /// <summary>
     /// Holds some bearing encoding/decoding tests.

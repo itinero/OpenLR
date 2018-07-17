@@ -33,8 +33,9 @@ using OpenLR.Referenced.Locations;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Serilog;
 
-namespace OpenLR.Tests.Functional.NWB
+namespace OpenLR.Test.Functional.NWB
 {
     /// <summary>
     /// Contains tests for the netherlands.
@@ -85,8 +86,7 @@ namespace OpenLR.Tests.Functional.NWB
         public static void TestEncodeDecodeRoutes(RouterDb routerDb)
         {
             var coder = new Coder(routerDb, new NWBCoderProfile(routerDb.GetSupportedVehicle("nwb.car")));
-
-            var features = Extensions.FromGeoJsonFile(@".\Data\line_locations.geojson");
+            var features = Extensions.FromGeoJsonFile(Path.Combine(".", "Data", "line_locations.geojson"));
 
             var i = 0;
             foreach (var feature in features.Features)
@@ -101,8 +101,8 @@ namespace OpenLR.Tests.Functional.NWB
 
                 if (!feature.Attributes.Contains("nwb", "no"))
                 {
-                    System.Console.WriteLine("Testing line location {0}/{1} @ {2}->{3}", i + 1, features.Features.Count,
-                        points[0].ToInvariantString(), points[1].ToInvariantString());
+                    Log.Logger.Verbose($"Testing line location {i + 1}/{features.Features.Count}" +
+                                       $" @ {points[0].ToInvariantString()}->{points[1].ToInvariantString()}");
                     TestEncodeDecoderRoute(coder, points.ToArray());
                 }
 
@@ -136,13 +136,14 @@ namespace OpenLR.Tests.Functional.NWB
         {
             var coder = new Coder(routerDb, new NWBCoderProfile(routerDb.GetSupportedVehicle("nwb.car")));
             
-            var locations = Extensions.PointsFromGeoJsonFile(@".\Data\locations.geojson");
+            var locations = Extensions.PointsFromGeoJsonFile(Path.Combine(".", "Data", "locations.geojson"));
             
             for (var i = 0; i < locations.Length; i++)
             {
                 try
                 {
-                    System.Console.WriteLine("Testing location {0}/{1} @ {2}", i + 1, locations.Length, locations[i].ToInvariantString());
+                    Log.Logger.Verbose($"Testing location {i + 1}/{locations.Length}" +
+                                       $" @ {locations[i].ToInvariantString()}");
                     var location = locations[i].Item1;
                     var attributes = locations[i].Item2;
                     if (!attributes.Contains("nwb", "no"))

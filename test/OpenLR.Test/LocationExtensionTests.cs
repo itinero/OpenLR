@@ -26,7 +26,7 @@ using Itinero.Data.Network;
 using NUnit.Framework;
 using OpenLR.Referenced.Locations;
 
-namespace OpenLR.Tests
+namespace OpenLR.Test
 {
     /// <summary>
     /// Contains tests for the location extensions.

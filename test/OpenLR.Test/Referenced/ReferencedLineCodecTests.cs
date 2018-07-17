@@ -29,10 +29,9 @@ using OpenLR.Model.Locations;
 using OpenLR.Osm;
 using OpenLR.Referenced.Codecs;
 using OpenLR.Referenced.Locations;
-using OpenLR.Tests.Functional;
 using System.Collections.Generic;
 
-namespace OpenLR.Tests.Referenced
+namespace OpenLR.Test.Referenced
 {
     /// <summary>
     /// Contains tests for decoding/encoding an OpenLR polygon location to a referenced polygon location.

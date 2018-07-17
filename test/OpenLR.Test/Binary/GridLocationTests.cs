@@ -3,7 +3,7 @@ using OpenLR.Codecs.Binary.Decoders;
 using OpenLR.Model.Locations;
 using System;
 
-namespace OpenLR.Tests.Binary
+namespace OpenLR.Test.Binary
 {
     /// <summary>
     /// Contains tests for decoding/encoding a grid location to/from OpenLR binary representation.

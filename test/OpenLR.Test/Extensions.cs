@@ -29,13 +29,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace OpenLR.Tests.Functional
+namespace OpenLR.Test
 {
     public static class Extensions
     {
         public static string ToGeoJson(this FeatureCollection featureCollection)
         {
-            var jsonSerializer = new NetTopologySuite.IO.GeoJsonSerializer();
+            var jsonSerializer = NetTopologySuite.IO.GeoJsonSerializer.Create();
             var jsonStream = new StringWriter();
             jsonSerializer.Serialize(jsonStream, featureCollection);
             var json = jsonStream.ToInvariantString();
@@ -44,7 +44,7 @@ namespace OpenLR.Tests.Functional
 
         public static FeatureCollection FromGeoJson(string geoJson)
         {
-            var jsonSerializer = new NetTopologySuite.IO.GeoJsonSerializer();
+            var jsonSerializer = NetTopologySuite.IO.GeoJsonSerializer.Create();
             var jsonStream = new StringReader(geoJson);
             return jsonSerializer.Deserialize<FeatureCollection>(new JsonTextReader(jsonStream)) as FeatureCollection;
         }

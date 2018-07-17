@@ -1,10 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFramework>net451</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
     <OutputType>Exe</OutputType>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
-    <RuntimeIdentifier>win7-x64</RuntimeIdentifier>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
@@ -14,28 +12,25 @@
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
     <StartupObject />
+    <LangVersion>7.2</LangVersion>
   </PropertyGroup>
-
   <ItemGroup>
     <Compile Remove="NWB\**" />
     <EmbeddedResource Remove="NWB\**" />
     <None Remove="NWB\**" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\src\OpenLR.Geo\OpenLR.Geo.csproj" />
     <ProjectReference Include="..\..\src\OpenLR\OpenLR.csproj" />
   </ItemGroup>
-
   <ItemGroup>
-    <PackageReference Include="Itinero.IO.Shape" Version="1.4.0-pre18" />
+    <PackageReference Include="Itinero.IO.Shape" Version="1.4.0-pre20" />
     <PackageReference Include="NetTopologySuite.IO" Version="1.15.0-pre032" />
     <PackageReference Include="NetTopologySuite.IO.GeoJSON" Version="1.15.0-pre032" />
+    <PackageReference Include="NetTopologySuite.IO.PortableShape" Version="0.0.1-pre002" />
     <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
-    <PackageReference Include="NUnit" Version="3.4.1" />
-    <PackageReference Include="dotnet-test-nunit" Version="3.4.0-beta-2" />
+    <PackageReference Include="NUnit" Version="3.9.0" />
   </ItemGroup>
-
   <ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">
     <Reference Include="System.Xml" />
     <Reference Include="System.IO.Compression" />
@@ -43,15 +38,12 @@
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
-
   <ItemGroup>
     <Reference Include="System.Net.Http" />
   </ItemGroup>
-
   <ItemGroup>
     <None Update="car.lua">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
 </Project>

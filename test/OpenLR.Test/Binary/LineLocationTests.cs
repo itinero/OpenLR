@@ -4,7 +4,7 @@ using OpenLR.Model;
 using OpenLR.Model.Locations;
 using System;
 
-namespace OpenLR.Tests.Binary
+namespace OpenLR.Test.Binary
 {
     /// <summary>
     /// Contains tests for decoding/encoding a line location to/from OpenLR binary representation.

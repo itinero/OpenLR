@@ -2,7 +2,7 @@
 using OpenLR.Codecs.Binary.Data;
 using System;
 
-namespace OpenLR.Tests.Binary.Data
+namespace OpenLR.Test.Binary.Data
 {
     /// <summary>
     /// Holds some bearing encoding/decoding tests.

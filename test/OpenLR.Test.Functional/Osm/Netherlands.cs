@@ -23,18 +23,17 @@
 using Itinero;
 using Itinero.IO.Osm;
 using Itinero.LocalGeo;
-using Itinero.Profiles;
 using NetTopologySuite.Algorithm.Distance;
 using NUnit.Framework;
 using OpenLR.Geo;
 using OpenLR.Osm;
 using OpenLR.Referenced.Locations;
-using OpenLR.Tests.Functional.NWB;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Serilog;
 
-namespace OpenLR.Tests.Functional.Osm
+namespace OpenLR.Test.Functional.Osm
 {
     /// <summary>
     /// Contains tests for the netherlands.
@@ -49,9 +48,11 @@ namespace OpenLR.Tests.Functional.Osm
             if (!File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "netherlands.c.routerdb")))
             {
                 // download test data and extract to 'temp' directory relative to application base directory.
+                Log.Logger.Verbose($"Download the netherlands pbf...");
                 Download.DownloadPbf("netherlands-latest.osm.pbf");
 
                 // create a new router db and load the osm data.
+                Log.Logger.Verbose($"Building routerdb...");
                 var routerDb = new RouterDb();
                 using (var stream = File.OpenRead("netherlands-latest.osm.pbf"))
                 {
@@ -59,6 +60,7 @@ namespace OpenLR.Tests.Functional.Osm
                 }
 
                 // write the router db to disk for later use.
+                Log.Logger.Verbose($"Writing routerdb...");
                 using (var ouputStream = File.OpenWrite(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "netherlands.c.routerdb")))
                 {
                     routerDb.Serialize(ouputStream);
@@ -67,6 +69,7 @@ namespace OpenLR.Tests.Functional.Osm
             }
             else
             {
+                Log.Logger.Verbose($"Loading routerdb...");
                 return RouterDb.Deserialize(File.OpenRead(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "netherlands.c.routerdb")));
             }
         }
@@ -86,8 +89,7 @@ namespace OpenLR.Tests.Functional.Osm
         public static void TestEncodeDecodeRoutes(RouterDb routerDb)
         {
             var coder = new Coder(routerDb, new OsmCoderProfile(0.3f), new OpenLR.Codecs.Binary.BinaryCodec());
-
-            var features = Extensions.FromGeoJsonFile(@".\Data\line_locations.geojson");
+            var features = Extensions.FromGeoJsonFile(Path.Combine(".", "Data", "line_locations.geojson"));
 
             var i = 0;
             foreach (var feature in features.Features)
@@ -100,8 +102,8 @@ namespace OpenLR.Tests.Functional.Osm
                     points.Add(new Coordinate((float)c.Y, (float)c.X));
                 }
 
-                System.Console.WriteLine("Testing line location {0}/{1} @ {2}->{3}", i + 1, features.Features.Count, 
-                    points[0].ToInvariantString(), points[1].ToInvariantString());
+                Log.Logger.Verbose($"Testing line location {i + 1}/{features.Features.Count}" +
+                                   $" @ {points[0].ToInvariantString()}->{points[1].ToInvariantString()}");
                 TestEncodeDecoderRoute(coder, points.ToArray());
 
                 i++;
@@ -139,13 +141,14 @@ namespace OpenLR.Tests.Functional.Osm
         {
             var coder = new Coder(routerDb, new OsmCoderProfile(0.3f), new OpenLR.Codecs.Binary.BinaryCodec());
             
-            var locations = Extensions.PointsFromGeoJsonFile(@".\Data\locations.geojson");
+            var locations = Extensions.PointsFromGeoJsonFile(Path.Combine(".", "Data", "locations.geojson"));
 
             for (var i = 0; i < locations.Length; i++)
             {
                 try
                 {
-                    System.Console.WriteLine("Testing location {0}/{1} @ {2}", i + 1, locations.Length, locations[i].ToInvariantString());
+                    Log.Logger.Verbose($"Testing location {i + 1}/{locations.Length}" +
+                                       $" @ {locations[i].ToInvariantString()}");
                     Netherlands.TestEncodeDecodePointAlongLine(coder, locations[i].Item1.Latitude, locations[i].Item1.Longitude, 30);
                 }
                 catch(Exception ex)

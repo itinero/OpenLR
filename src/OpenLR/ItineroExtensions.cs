@@ -239,18 +239,6 @@ namespace OpenLR.Referenced
             routerPoint = null;
             return false;
         }
-
-        /// <summary>
-        /// Gets the directed edge id for the routerpoint.
-        /// </summary>
-        public static long EdgeIdDirected(this RouterPoint point, bool forward = true)
-        {
-            if (forward)
-            {
-                return point.EdgeId + 1;
-            }
-            return -(point.EdgeId + 1);
-        }
     }
 
     /// <summary>

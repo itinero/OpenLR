@@ -76,7 +76,7 @@ namespace OpenLR.Geo
             var table = new AttributesTable();
             foreach(var att in attributes)
             {
-                table.AddAttribute(att.Key, att.Value);
+                table.Add(att.Key, att.Value);
             }
             return table;
         }
@@ -276,13 +276,13 @@ namespace OpenLR.Geo
         public static Feature ToFeature(this RouterPoint routerPoint, RouterDb routerDb)
         {
             var attributes = new AttributesTable();
-            attributes.AddAttribute("edge_id", routerPoint.EdgeId.ToInvariantString());
-            attributes.AddAttribute("offset", routerPoint.Offset.ToInvariantString());
+            attributes.Add("edge_id", routerPoint.EdgeId.ToInvariantString());
+            attributes.Add("offset", routerPoint.Offset.ToInvariantString());
             if (routerPoint.Attributes != null)
             {
                 foreach(var attribute in routerPoint.Attributes)
                 {
-                    attributes.AddAttribute(attribute.Key, attribute.Value);
+                    attributes.Add(attribute.Key, attribute.Value);
                 }
             }
 

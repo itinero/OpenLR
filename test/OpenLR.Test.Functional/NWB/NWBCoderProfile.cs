@@ -24,7 +24,7 @@ using Itinero.Attributes;
 using Itinero.Profiles;
 using OpenLR.Model;
 
-namespace OpenLR.Tests.Functional.NWB
+namespace OpenLR.Test.Functional.NWB
 {
     /// <summary>
     /// An NWB coder profile.

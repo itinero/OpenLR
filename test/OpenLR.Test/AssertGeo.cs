@@ -25,7 +25,7 @@ using NetTopologySuite.Algorithm.Distance;
 using NetTopologySuite.IO;
 using NUnit.Framework;
 
-namespace OpenLR.Tests
+namespace OpenLR.Test
 {
     /// <summary>
     /// Holds extra assert functionality.

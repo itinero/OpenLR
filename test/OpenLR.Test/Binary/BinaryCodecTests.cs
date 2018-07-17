@@ -3,7 +3,7 @@ using OpenLR.Codecs.Binary;
 using OpenLR.Codecs.Binary.Data;
 using System;
 
-namespace OpenLR.Tests.Binary
+namespace OpenLR.Test.Binary
 {
     /// <summary>
     /// Contains tests the binary decoder base class.

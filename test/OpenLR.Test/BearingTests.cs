@@ -25,7 +25,7 @@ using NUnit.Framework;
 using OpenLR.Referenced.Codecs;
 using System.Collections.Generic;
 
-namespace OpenLR.Tests
+namespace OpenLR.Test
 {
     /// <summary>
     /// Holds tests for converting bearings to/from angles.

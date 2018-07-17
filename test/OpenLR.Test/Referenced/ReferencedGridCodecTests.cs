@@ -2,7 +2,7 @@
 using OpenLR.Model.Locations;
 using OpenLR.Referenced.Codecs;
 
-namespace OpenLR.Tests.Referenced
+namespace OpenLR.Test.Referenced
 {
     /// <summary>
     /// Contains tests for decoding/encoding an OpenLR grid location to a referenced grid location.
