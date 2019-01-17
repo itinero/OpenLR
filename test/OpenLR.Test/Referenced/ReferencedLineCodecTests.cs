@@ -231,72 +231,34 @@ namespace OpenLR.Test.Referenced
             // setup a routing network to test against.
             var routerDb = new RouterDb();
             routerDb.AddSupportedVehicle(Vehicle.Car);
-
             var bollardProfile = new AttributeCollection();
             bollardProfile.AddOrReplace("barrier", "bollard");
             bollardProfile.AddOrReplace("motor", "no");
-
+            routerDb.VertexMeta[1] = bollardProfile;
             var restrictionsDb = new RestrictionsDb();
-             restrictionsDb.Add(1);
-            routerDb.AddRestrictions("motor_car", 
+            restrictionsDb.Add(1);
+            routerDb.AddRestrictions("motor_car",
                 restrictionsDb);
 
-
             routerDb.Network.AddVertex(0, 51.0f, 4.0f);
-            routerDb.Network.AddVertex(1, 51.1f, 4.1f);
-            routerDb.Network.AddVertex(2, 51.2f, 4.2f);
-            routerDb.Network.AddVertex(3, 51.3f, 4.3f);
+            routerDb.Network.AddVertex(1, 51.0001f, 4.0001f);
+            routerDb.Network.AddVertex(2, 51.0002f, 4.0002f);
 
-            routerDb.VertexMeta[1] = bollardProfile;
-            routerDb.VertexMeta[2] = bollardProfile;
-
-            // to make junctions
-            routerDb.Network.AddVertex(4, 51.0f, 4.3f);
-            routerDb.Network.AddVertex(5, 51.3f, 4.0f);
-            
             var profile = new AttributeCollection();
 
             profile.AddOrReplace("highway", "residential");
             var residential = routerDb.EdgeProfiles.Add(profile);
 
 
-            for (var i = (uint) 0; i < 3; i++)
+            routerDb.Network.AddEdge(0, 1, new EdgeData()
             {
-                var edgeId = routerDb.Network.AddEdge(i, i + 1, new EdgeData()
-                {
-                    Distance = (float) 100,
-                    MetaId = 0,
-                    Profile = (ushort) residential
-                }, null);
-                Console.WriteLine($"Created edge {edgeId} between vertex {i} and {i + 1}");
-            }
-
-            Console.WriteLine(routerDb.GetGeoJson());
-
-            routerDb.Network.AddEdge(0, 4, new EdgeData()
-            {
-                Distance = (float) 100,
+                Distance = (float) Coordinate.DistanceEstimateInMeter(51.0f,4.0f,51.0001f,4.0001f),
                 MetaId = 0,
                 Profile = (ushort) residential
             }, null);
-
-            routerDb.Network.AddEdge(4, 3, new EdgeData()
+            routerDb.Network.AddEdge(1, 2, new EdgeData()
             {
-                Distance = (float) 100,
-                MetaId = 0,
-                Profile = (ushort) residential
-            }, null);
-
-            routerDb.Network.AddEdge(0, 5, new EdgeData()
-            {
-                Distance = (float) 100,
-                MetaId = 0,
-                Profile = (ushort) residential
-            }, null);
-
-            routerDb.Network.AddEdge(3, 5, new EdgeData()
-            {
-                Distance = (float) 100,
+                Distance = (float) Coordinate.DistanceEstimateInMeter(51.0001f,4.0001f,51.0002f,4.0002f),
                 MetaId = 0,
                 Profile = (ushort) residential
             }, null);
@@ -306,9 +268,9 @@ namespace OpenLR.Test.Referenced
             var location = new ReferencedLine()
             {
                 Edges = new long[] {1,2}, // Edge-id +1, see https://github.com/itinero/routing/issues/95
-                Vertices = new uint[] {0, 1, 2},
+                Vertices = new uint[] {0, 1,2},
                 StartLocation = routerDb.CreateRouterPointForVertex(0, routerDb.GetSupportedProfile("car")),
-                EndLocation = routerDb.CreateRouterPointForVertex(2 , routerDb.GetSupportedProfile("car")),
+                EndLocation = routerDb.CreateRouterPointForVertex(2, routerDb.GetSupportedProfile("car")),
                 NegativeOffsetPercentage = 0,
                 PositiveOffsetPercentage = 0
             };
