@@ -225,16 +225,11 @@ namespace OpenLR.Test.Referenced
         [Test]
         public void EncodeReferencedLineLocationBetweenBollards()
         {
-            var e = 0.00001f;
-
 
             // setup a routing network to test against.
             var routerDb = new RouterDb();
             routerDb.AddSupportedVehicle(Vehicle.Car);
-            var bollardProfile = new AttributeCollection();
-            bollardProfile.AddOrReplace("barrier", "bollard");
-            bollardProfile.AddOrReplace("motor", "no");
-            routerDb.VertexMeta[1] = bollardProfile;
+            
             var restrictionsDb = new RestrictionsDb();
             restrictionsDb.Add(1);
             routerDb.AddRestrictions("motorcar",
@@ -252,13 +247,13 @@ namespace OpenLR.Test.Referenced
 
             routerDb.Network.AddEdge(0, 1, new EdgeData()
             {
-                Distance = (float) Coordinate.DistanceEstimateInMeter(51.0f,4.0f,51.0001f,4.0001f),
+                Distance = Coordinate.DistanceEstimateInMeter(51.0f,4.0f,51.0001f,4.0001f),
                 MetaId = 0,
                 Profile = (ushort) residential
             }, null);
             routerDb.Network.AddEdge(1, 2, new EdgeData()
             {
-                Distance = (float) Coordinate.DistanceEstimateInMeter(51.0001f,4.0001f,51.0002f,4.0002f),
+                Distance = Coordinate.DistanceEstimateInMeter(51.0001f,4.0001f,51.0002f,4.0002f),
                 MetaId = 0,
                 Profile = (ushort) residential
             }, null);
@@ -280,8 +275,6 @@ namespace OpenLR.Test.Referenced
             Console.WriteLine("Encoded OpenLR-reference:");
             Console.WriteLine(encoded.ToFeatures().ToGeoJson());
             Assert.IsNotNull(encoded.First);
-            Assert.AreEqual(0, encoded.NegativeOffsetPercentage);
-            Assert.AreEqual(0, encoded.PositiveOffsetPercentage);
             Assert.AreEqual(FunctionalRoadClass.Frc4, encoded.First.FuntionalRoadClass);
         }
     }
