@@ -51,7 +51,7 @@ namespace OpenLR
             var profile = coder.Profile;
             var edges = coder.Router.Db.Network.GetEdges(vertex);
             var db = coder.Router.Db;
-            var restrictionsFunc =   db.GetGetRestrictions(profile.Profile, null);
+            var restrictionsFunc = db.GetGetRestrictions(profile.Profile, null);
 
 
             // go over each arc and count the traversable arcs.
@@ -82,12 +82,16 @@ namespace OpenLR
                 // If this vertex happens to be a bollard, gate or some other roadblock, the vertex just happens to connect two dead ends
                 // Then, the vertex is valid! That is what we are checking below 
                 var restrictions = restrictionsFunc.Invoke(vertex);
-                if (restrictions.Any())
+                foreach (var restriction in restrictions)
                 {
-                    // There is some barrier here!
-                    return true;
+                    if (restriction.Length == 1)
+                    {
+                        // This is a simple restriction
+                        return true;
+                        // Other cases are probably turn restrictions and do not imply validity of this point
+                    }
                 }
-                
+
 
                 return false;
             }
