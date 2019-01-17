@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Itinero;
 using Itinero.Algorithms;
 using Itinero.Algorithms.PriorityQueues;
@@ -50,6 +51,8 @@ namespace OpenLR
             var profile = coder.Profile;
             var edges = coder.Router.Db.Network.GetEdges(vertex);
             var db = coder.Router.Db;
+            var restrictionsFunc =   db.GetGetRestrictions(profile.Profile, null);
+
 
             // go over each arc and count the traversable arcs.
             var traversCount = 0;
@@ -74,21 +77,17 @@ namespace OpenLR
                 // Normally, this should _not_ be a valid point
 
 
-                // There is one exception however!
+                // There are exceptions however!
+
                 // If this vertex happens to be a bollard, gate or some other roadblock, the vertex just happens to connect two dead ends
                 // Then, the vertex is valid! That is what we are checking below 
-
-                // ReSharper disable once InvertIf
-                if (db.TryGetRestrictions(profile.Profile.FullName, out var restrictions))
+                var restrictions = restrictionsFunc.Invoke(vertex);
+                if (restrictions.Any())
                 {
-                    var enumerator = restrictions.GetEnumerator();
-                    if (enumerator.MoveTo(vertex))
-                    {
-                        // This vertex is mentioned in the restrictionsDB, so can not be taken
-                        // In other words, this vertex happen to be two dead ends together -> valid
-                        return true;
-                    }
+                    // There is some barrier here!
+                    return true;
                 }
+                
 
                 return false;
             }

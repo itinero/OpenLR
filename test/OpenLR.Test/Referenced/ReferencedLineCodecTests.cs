@@ -231,7 +231,7 @@ namespace OpenLR.Test.Referenced
 
             var restrictionsDb = new RestrictionsDb();
             restrictionsDb.Add(1);
-            routerDb.AddRestrictions("car.shortest",
+            routerDb.AddRestrictions("motorcar",
                 restrictionsDb);
 
             routerDb.Network.AddVertex(0, 51.0f, 4.0f);
@@ -298,8 +298,19 @@ namespace OpenLR.Test.Referenced
                 PositiveOffsetPercentage = 0
             };
 
-            var encodedAll = ReferencedLineCodec.Encode(locationFull, new Coder(routerDb, new OsmCoderProfile()));
-            Console.WriteLine($"Entire OpenLR: \n{encodedAll.ToFeatures().ToGeoJson()}");
+            try
+            {
+                ReferencedLineCodec.Encode(locationFull, new Coder(routerDb, new OsmCoderProfile()));
+                Assert.Fail("This should have crashed. It didn't, that is an error.");
+            }
+            catch (Exception e)
+            {
+                if (e.InnerException == null)
+                {
+                    throw e;
+                }
+                Assert.AreEqual("No path found between two edges of the line location.", e.InnerException.Message);
+            }
         }
     }
 }
