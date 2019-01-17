@@ -27,6 +27,7 @@ using Itinero;
 using Itinero.Algorithms.Search.Hilbert;
 using Itinero.Attributes;
 using Itinero.Data.Network.Edges;
+using Itinero.Data.Network.Restrictions;
 using Itinero.Osm.Vehicles;
 using NUnit.Framework;
 using OpenLR.Geo;
@@ -235,6 +236,11 @@ namespace OpenLR.Test.Referenced
             bollardProfile.AddOrReplace("barrier", "bollard");
             bollardProfile.AddOrReplace("motor", "no");
 
+            var restrictionsDb = new RestrictionsDb();
+             restrictionsDb.Add(1);
+            routerDb.AddRestrictions("motor_car", 
+                restrictionsDb);
+
 
             routerDb.Network.AddVertex(0, 51.0f, 4.0f);
             routerDb.Network.AddVertex(1, 51.1f, 4.1f);
@@ -247,7 +253,7 @@ namespace OpenLR.Test.Referenced
             // to make junctions
             routerDb.Network.AddVertex(4, 51.0f, 4.3f);
             routerDb.Network.AddVertex(5, 51.3f, 4.0f);
-
+            
             var profile = new AttributeCollection();
 
             profile.AddOrReplace("highway", "residential");
@@ -295,13 +301,14 @@ namespace OpenLR.Test.Referenced
                 Profile = (ushort) residential
             }, null);
 
+            Console.WriteLine(routerDb.GetGeoJson());
 
             var location = new ReferencedLine()
             {
-                Edges = new long[] {2},
-                Vertices = new uint[] {1, 2},
-                StartLocation = routerDb.CreateRouterPointForVertex(1, routerDb.GetSupportedProfile("car")),
-                EndLocation = routerDb.CreateRouterPointForVertex(2, routerDb.GetSupportedProfile("car")),
+                Edges = new long[] {1,2}, // Edge-id +1, see https://github.com/itinero/routing/issues/95
+                Vertices = new uint[] {0, 1, 2},
+                StartLocation = routerDb.CreateRouterPointForVertex(0, routerDb.GetSupportedProfile("car")),
+                EndLocation = routerDb.CreateRouterPointForVertex(2 , routerDb.GetSupportedProfile("car")),
                 NegativeOffsetPercentage = 0,
                 PositiveOffsetPercentage = 0
             };
