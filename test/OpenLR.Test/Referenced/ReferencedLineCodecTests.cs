@@ -237,7 +237,7 @@ namespace OpenLR.Test.Referenced
             routerDb.VertexMeta[1] = bollardProfile;
             var restrictionsDb = new RestrictionsDb();
             restrictionsDb.Add(1);
-            routerDb.AddRestrictions("motor_car",
+            routerDb.AddRestrictions("motorcar",
                 restrictionsDb);
 
             routerDb.Network.AddVertex(0, 51.0f, 4.0f);
@@ -267,16 +267,15 @@ namespace OpenLR.Test.Referenced
 
             var location = new ReferencedLine()
             {
-                Edges = new long[] {1,2}, // Edge-id +1, see https://github.com/itinero/routing/issues/95
-                Vertices = new uint[] {0, 1,2},
+                Edges = new long[] { 1 }, // Edge-id +1, see https://github.com/itinero/routing/issues/95
+                Vertices = new uint[] {0, 1},
                 StartLocation = routerDb.CreateRouterPointForVertex(0, routerDb.GetSupportedProfile("car")),
-                EndLocation = routerDb.CreateRouterPointForVertex(2, routerDb.GetSupportedProfile("car")),
+                EndLocation = routerDb.CreateRouterPointForVertex(1, routerDb.GetSupportedProfile("car")),
                 NegativeOffsetPercentage = 0,
                 PositiveOffsetPercentage = 0
             };
 
             // encode and verify result.
-
             var encoded = ReferencedLineCodec.Encode(location, new Coder(routerDb, new OsmCoderProfile()));
             Console.WriteLine("Encoded OpenLR-reference:");
             Console.WriteLine(encoded.ToFeatures().ToGeoJson());
