@@ -77,7 +77,7 @@ namespace OpenLR
                 // There is one exception however!
                 // If this vertex happens to be a bollard, gate or some other roadblock, the vertex just happens to connect two dead ends
                 // Then, the vertex is valid! That is what we are checking below 
-                
+
                 // ReSharper disable once InvertIf
                 if (db.TryGetRestrictions(profile.Profile.FullName, out var restrictions))
                 {
@@ -98,7 +98,7 @@ namespace OpenLR
                 // Always a valid refence point
                 return true;
             }
-            
+
             // At this point, traversCount == 3
 
             // special cases are possible here, but we need more info:
@@ -215,7 +215,7 @@ namespace OpenLR
                 // edges are clearly not going in the same direction -> this is a valid junction.
                 return true;
             }
-            
+
             /*
              * This vertex could happen to be restricted (e.g. a roadblock could be standing here)
              * In that case, the vertex would happen to be three dead ends coming together.
