@@ -257,8 +257,6 @@ namespace OpenLR.Test.Referenced
                 Profile = (ushort) residential
             }, null);
 
-            Console.WriteLine(routerDb.GetGeoJson());
-
             var location = new ReferencedLine()
             {
                 Edges = new long[] {1}, // Edge-id +1, see https://github.com/itinero/routing/issues/95
