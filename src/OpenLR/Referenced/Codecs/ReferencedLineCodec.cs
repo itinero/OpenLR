@@ -255,10 +255,6 @@ namespace OpenLR.Referenced.Codecs
                                         throw new Exception("No path found between two edges of the line location.");
                                     }
                                 }
-                                catch
-                                {
-                                    throw;
-                                }
                                 finally
                                 {
                                     coder.Profile.RoutingSettings.SetMaxSearch(coder.Profile.Profile.FullName, coder.Profile.MaxSearch);

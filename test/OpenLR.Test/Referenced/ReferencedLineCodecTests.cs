@@ -20,8 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+using System.Collections.Generic;
+using System.Reflection;
 using Itinero;
 using Itinero.Algorithms.Search.Hilbert;
+using Itinero.Attributes;
+using Itinero.Data.Network.Edges;
+using Itinero.Data.Network.Restrictions;
+using Itinero.Osm.Vehicles;
 using NUnit.Framework;
 using OpenLR.Geo;
 using OpenLR.Model;
@@ -29,7 +36,7 @@ using OpenLR.Model.Locations;
 using OpenLR.Osm;
 using OpenLR.Referenced.Codecs;
 using OpenLR.Referenced.Locations;
-using System.Collections.Generic;
+using Coordinate = Itinero.LocalGeo.Coordinate;
 
 namespace OpenLR.Test.Referenced
 {
@@ -50,18 +57,18 @@ namespace OpenLR.Test.Referenced
             // setup a routing network to test against.
             var routerDb = new RouterDb();
             routerDb.LoadTestNetwork(
-                System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(
                     "OpenLR.Test.test_data.networks.network3.geojson"));
             routerDb.Sort();
-            routerDb.AddSupportedVehicle(Itinero.Osm.Vehicles.Vehicle.Car);
+            routerDb.AddSupportedVehicle(Vehicle.Car);
 
             // setup test location and data to verify this.
             var start = routerDb.Network.GetVertex(7);
             var end = routerDb.Network.GetVertex(6);
             var location = new ReferencedLine()
             {
-                Edges = new long[] { 1, -6, 2 },
-                Vertices = new uint[] { 7, 4, 5, 6 },
+                Edges = new long[] {1, -6, 2},
+                Vertices = new uint[] {7, 4, 5, 6},
                 StartLocation = routerDb.CreateRouterPointForVertex(7, routerDb.GetSupportedProfile("car")),
                 EndLocation = routerDb.CreateRouterPointForVertex(6, routerDb.GetSupportedProfile("car")),
                 NegativeOffsetPercentage = 0,
@@ -80,10 +87,10 @@ namespace OpenLR.Test.Referenced
             Assert.AreEqual(0, encoded.PositiveOffsetPercentage);
             Assert.AreEqual(FunctionalRoadClass.Frc4, encoded.First.FuntionalRoadClass);
             Assert.AreEqual(FunctionalRoadClass.Frc4, encoded.First.LowestFunctionalRoadClassToNext);
-            Assert.AreEqual(Itinero.LocalGeo.Coordinate.DistanceEstimateInMeter(start, end),
+            Assert.AreEqual(Coordinate.DistanceEstimateInMeter(start, end),
                 encoded.First.DistanceToNext, 1);
         }
-        
+
         /// <summary>
         /// Tests decoding a referenced line location.
         /// </summary>
@@ -93,10 +100,10 @@ namespace OpenLR.Test.Referenced
             // setup a routing network to test against.
             var routerDb = new RouterDb();
             routerDb.LoadTestNetwork(
-                System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(
                     "OpenLR.Test.test_data.networks.network3.geojson"));
             routerDb.Sort();
-            routerDb.AddSupportedVehicle(Itinero.Osm.Vehicles.Vehicle.Car);
+            routerDb.AddSupportedVehicle(Vehicle.Car);
 
             // setup test location and data to verify this.
             var start = routerDb.Network.GetVertex(7);
@@ -106,12 +113,12 @@ namespace OpenLR.Test.Referenced
                 First = new LocationReferencePoint()
                 {
                     Bearing = 90,
-                    Coordinate = new Coordinate()
+                    Coordinate = new Model.Coordinate()
                     {
                         Latitude = start.Latitude,
                         Longitude = start.Longitude
                     },
-                    DistanceToNext = (int)Itinero.LocalGeo.Coordinate.DistanceEstimateInMeter(start, end),
+                    DistanceToNext = (int) Coordinate.DistanceEstimateInMeter(start, end),
                     FormOfWay = FormOfWay.SingleCarriageWay,
                     FuntionalRoadClass = FunctionalRoadClass.Frc4,
                     LowestFunctionalRoadClassToNext = FunctionalRoadClass.Frc4
@@ -120,7 +127,7 @@ namespace OpenLR.Test.Referenced
                 Last = new LocationReferencePoint()
                 {
                     Bearing = 270,
-                    Coordinate = new Coordinate()
+                    Coordinate = new Model.Coordinate()
                     {
                         Latitude = end.Latitude,
                         Longitude = end.Longitude
@@ -139,14 +146,14 @@ namespace OpenLR.Test.Referenced
             Assert.AreEqual(0, decoded.NegativeOffsetPercentage);
             Assert.AreEqual(0, decoded.PositiveOffsetPercentage);
             Assert.IsNotNull(decoded.Vertices);
-            Assert.AreEqual(new uint[] { 7, 4, 5, 6 }, decoded.Vertices);
+            Assert.AreEqual(new uint[] {7, 4, 5, 6}, decoded.Vertices);
             Assert.IsNotNull(decoded.Edges);
-            Assert.AreEqual(new long[] { 1, -6, 2 }, decoded.Edges);
+            Assert.AreEqual(new long[] {1, -6, 2}, decoded.Edges);
             Assert.IsNotNull(decoded.StartLocation);
-            Assert.IsTrue(Itinero.LocalGeo.Coordinate.DistanceEstimateInMeter(
-                decoded.StartLocation.LocationOnNetwork(routerDb), start) < 1);
-            Assert.IsTrue(Itinero.LocalGeo.Coordinate.DistanceEstimateInMeter(
-                decoded.EndLocation.LocationOnNetwork(routerDb), end) < 1);
+            Assert.IsTrue(Coordinate.DistanceEstimateInMeter(
+                              decoded.StartLocation.LocationOnNetwork(routerDb), start) < 1);
+            Assert.IsTrue(Coordinate.DistanceEstimateInMeter(
+                              decoded.EndLocation.LocationOnNetwork(routerDb), end) < 1);
         }
 
         /// <summary>
@@ -159,11 +166,12 @@ namespace OpenLR.Test.Referenced
 
             // setup a routing network to test against.
             var routerDb = new RouterDb();
+
             routerDb.LoadTestNetwork(
-                System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(
                     "OpenLR.Test.test_data.networks.network3.geojson"));
             routerDb.Sort();
-            routerDb.AddSupportedVehicle(Itinero.Osm.Vehicles.Vehicle.Car);
+            routerDb.AddSupportedVehicle(Vehicle.Car);
 
             // setup test location and data to verify this.
             var vertex2 = routerDb.Network.GetVertex(2);
@@ -174,8 +182,8 @@ namespace OpenLR.Test.Referenced
             var vertex7 = routerDb.Network.GetVertex(7);
             var location = new ReferencedLine()
             {
-                Edges = new long[] { 1, 3, 4, 5, 2 },
-                Vertices = new uint[] { 7, 4, 3, 2, 5, 6 },
+                Edges = new long[] {1, 3, 4, 5, 2},
+                Vertices = new uint[] {7, 4, 3, 2, 5, 6},
                 StartLocation = routerDb.CreateRouterPointForVertex(7, routerDb.GetSupportedProfile("car")),
                 EndLocation = routerDb.CreateRouterPointForVertex(6, routerDb.GetSupportedProfile("car")),
                 NegativeOffsetPercentage = 0,
@@ -183,8 +191,8 @@ namespace OpenLR.Test.Referenced
             };
             var json = location.ToFeatures(routerDb).ToGeoJson();
 
-            var length = Itinero.LocalGeo.Coordinate.DistanceEstimateInMeter(
-                new List<Itinero.LocalGeo.Coordinate>(new Itinero.LocalGeo.Coordinate[]
+            var length = Coordinate.DistanceEstimateInMeter(
+                new List<Coordinate>(new Coordinate[]
                 {
                     vertex7,
                     vertex4,
@@ -207,6 +215,100 @@ namespace OpenLR.Test.Referenced
             Assert.AreEqual(FunctionalRoadClass.Frc4, encoded.First.FuntionalRoadClass);
             Assert.AreEqual(FunctionalRoadClass.Frc4, encoded.First.LowestFunctionalRoadClassToNext);
             Assert.AreEqual(length, encoded.First.DistanceToNext + encoded.Intermediate[0].DistanceToNext, 1);
+        }
+
+
+        /// <summary>
+        /// Tests encoding a line that can be navigated and is within two bollards.
+        /// 
+        /// </summary>
+        [Test]
+        public void EncodeReferencedLineLocationBetweenBollards()
+        {
+            // setup a routing network to test against.
+            var routerDb = new RouterDb();
+            routerDb.AddSupportedVehicle(Vehicle.Car);
+
+            var restrictionsDb = new RestrictionsDb();
+            restrictionsDb.Add(1);
+            routerDb.AddRestrictions("motorcar",
+                restrictionsDb);
+
+            routerDb.Network.AddVertex(0, 51.0f, 4.0f);
+            routerDb.Network.AddVertex(1, 51.0001f, 4.0001f);
+            routerDb.Network.AddVertex(2, 51.0002f, 4.0002f);
+
+            var profile = new AttributeCollection();
+
+            profile.AddOrReplace("highway", "residential");
+            var residential = routerDb.EdgeProfiles.Add(profile);
+
+
+            routerDb.Network.AddEdge(0, 1, new EdgeData()
+            {
+                Distance = Coordinate.DistanceEstimateInMeter(51.0f, 4.0f, 51.0001f, 4.0001f),
+                MetaId = 0,
+                Profile = (ushort) residential
+            }, null);
+            routerDb.Network.AddEdge(1, 2, new EdgeData()
+            {
+                Distance = Coordinate.DistanceEstimateInMeter(51.0001f, 4.0001f, 51.0002f, 4.0002f),
+                MetaId = 0,
+                Profile = (ushort) residential
+            }, null);
+
+            var location = new ReferencedLine()
+            {
+                Edges = new long[] {1}, // Edge-id +1, see https://github.com/itinero/routing/issues/95
+                Vertices = new uint[] {0, 1},
+                StartLocation = routerDb.CreateRouterPointForVertex(0, routerDb.GetSupportedProfile("car")),
+                EndLocation = routerDb.CreateRouterPointForVertex(1, routerDb.GetSupportedProfile("car")),
+                NegativeOffsetPercentage = 0,
+                PositiveOffsetPercentage = 0
+            };
+
+            // encode and verify result.
+            var encoded = ReferencedLineCodec.Encode(location, new Coder(routerDb, new OsmCoderProfile()));
+            Assert.IsNotNull(encoded.First);
+            Assert.AreEqual(FunctionalRoadClass.Frc4, encoded.First.FuntionalRoadClass);
+
+            var location1 = new ReferencedLine()
+            {
+                Edges = new long[] {1}, // Edge-id +1, see https://github.com/itinero/routing/issues/95
+                Vertices = new uint[] {1, 2},
+                StartLocation = routerDb.CreateRouterPointForVertex(0, routerDb.GetSupportedProfile("car")),
+                EndLocation = routerDb.CreateRouterPointForVertex(1, routerDb.GetSupportedProfile("car")),
+                NegativeOffsetPercentage = 0,
+                PositiveOffsetPercentage = 0
+            };
+
+            var encoded1 = ReferencedLineCodec.Encode(location, new Coder(routerDb, new OsmCoderProfile()));
+            Assert.IsNotNull(encoded1.First);
+            Assert.AreEqual(FunctionalRoadClass.Frc4, encoded1.First.FuntionalRoadClass);
+
+            var locationFull = new ReferencedLine()
+            {
+                Edges = new long[] {1, 2}, // Edge-id +1, see https://github.com/itinero/routing/issues/95
+                Vertices = new uint[] {0, 1, 2},
+                StartLocation = routerDb.CreateRouterPointForVertex(0, routerDb.GetSupportedProfile("car")),
+                EndLocation = routerDb.CreateRouterPointForVertex(2, routerDb.GetSupportedProfile("car")),
+                NegativeOffsetPercentage = 0,
+                PositiveOffsetPercentage = 0
+            };
+
+            try
+            {
+                ReferencedLineCodec.Encode(locationFull, new Coder(routerDb, new OsmCoderProfile()));
+                Assert.Fail("This should have crashed. It didn't, that is an error.");
+            }
+            catch (Exception e)
+            {
+                if (e.InnerException == null)
+                {
+                    throw e;
+                }
+                Assert.AreEqual("No path found between two edges of the line location.", e.InnerException.Message);
+            }
         }
     }
 }

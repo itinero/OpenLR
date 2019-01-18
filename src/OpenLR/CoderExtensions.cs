@@ -20,21 +20,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Itinero;
 using Itinero.Algorithms;
 using Itinero.Algorithms.PriorityQueues;
-using Itinero.Algorithms.Weights;
 using Itinero.Attributes;
 using Itinero.Data.Network;
 using Itinero.Graphs;
-using Itinero.LocalGeo;
 using Itinero.Profiles;
 using OpenLR.Model;
 using OpenLR.Referenced;
 using OpenLR.Referenced.Codecs;
 using OpenLR.Referenced.Locations;
-using System;
-using System.Collections.Generic;
+using Coordinate = Itinero.LocalGeo.Coordinate;
 
 namespace OpenLR
 {
@@ -50,8 +50,11 @@ namespace OpenLR
         {
             var profile = coder.Profile;
             var edges = coder.Router.Db.Network.GetEdges(vertex);
+            var db = coder.Router.Db;
+            var restrictionsFunc = db.GetGetRestrictions(profile.Profile, null);
 
-            // go over each arc and count the traversible arcs.
+
+            // go over each arc and count the traversable arcs.
             var traversCount = 0;
             foreach (var edge in edges)
             {
@@ -61,106 +64,173 @@ namespace OpenLR
                     traversCount++;
                 }
             }
-            if (traversCount != 3)
-            { // no special cases, only 1=valid, 2=invalid or 4 and up=valid.
-                if (traversCount == 2)
-                { // only two traversable edges, no options here!
-                    return false;
-                }
+
+            if (traversCount == 1)
+            {
+                // This is a dead end, and thus always a valid reference point
                 return true;
             }
-            else
-            { // special cases possible here, we need more info here.
-                var incoming = new List<Tuple<long, IAttributeCollection, uint>>();
-                var outgoing = new List<Tuple<long, IAttributeCollection, uint>>();
-                var bidirectional = new List<Tuple<long, IAttributeCollection, uint>>();
-                foreach (var edge in edges)
+
+            if (traversCount == 2)
+            {
+                // This is probably just a helper point to indicate the road shape
+                // Normally, this should _not_ be a valid point
+
+
+                // There are exceptions however!
+
+                // If this vertex happens to be a bollard, gate or some other roadblock, the vertex just happens to connect two dead ends
+                // Then, the vertex is valid! That is what we are checking below 
+                var restrictions = restrictionsFunc.Invoke(vertex);
+                foreach (var restriction in restrictions)
                 {
-                    var edgeProfile = coder.Router.Db.EdgeProfiles.Get(edge.Data.Profile);
-                    var factor = profile.Profile.Factor(edgeProfile);
-                    if (factor.Value != 0)
+                    if (restriction.Length == 1)
                     {
-                        if (factor.Direction == 0)
-                        { // bidirectional, can be used as incoming.
-                            bidirectional.Add(new Tuple<long, IAttributeCollection, uint>(edge.From, edgeProfile, edge.Id));
-                        }
-                        else if ((factor.Direction == 2 && !edge.DataInverted) ||
-                                 (factor.Direction == 1 && edge.DataInverted))
-                        { // oneway is forward but arc is backward, arc is incoming.
-                            // oneway is backward and arc is forward, arc is incoming.
-                            incoming.Add(new Tuple<long, IAttributeCollection, uint>(edge.From, edgeProfile, edge.Id));
-                        }
-                        else if ((factor.Direction == 2 && edge.DataInverted) ||
-                                 (factor.Direction == 1 && !edge.DataInverted))
-                        { // oneway is forward and arc is forward, arc is outgoing.
-                            // oneway is backward and arc is backward, arc is outgoing.
-                            outgoing.Add(new Tuple<long, IAttributeCollection, uint>(edge.From, edgeProfile, edge.Id));
-                        }
+                        // This is a simple restriction
+                        return true;
+                        // Other cases are probably turn restrictions and do not imply validity of this point
                     }
                 }
 
-                if (bidirectional.Count == 1 && incoming.Count == 1 && outgoing.Count == 1)
-                { // all special cases are found here.
-                    // get incoming's frc and fow.
-                    FormOfWay incomingFow, outgoingFow, bidirectionalFow;
-                    FunctionalRoadClass incomingFrc, outgoingFrc, bidirectionalFrc;
-                    if (profile.Extract(incoming[0].Item2, out incomingFrc, out incomingFow))
-                    {
-                        if (incomingFow == FormOfWay.Roundabout)
-                        { // is this a roundabout, always valid.
-                            return true;
-                        }
-                        if (profile.Extract(outgoing[0].Item2, out outgoingFrc, out outgoingFow))
-                        {
-                            if (outgoingFow == FormOfWay.Roundabout)
-                            { // is this a roundabout, always valid.
-                                return true;
-                            }
 
-                            if (incomingFrc != outgoingFrc)
-                            { // is there a difference in frc.
-                                return true;
-                            }
+                return false;
+            }
 
-                            if (profile.Extract(bidirectional[0].Item2, out bidirectionalFrc, out bidirectionalFow))
-                            {
-                                if (incomingFrc != bidirectionalFrc)
-                                { // is there a difference in frc.
-                                    return true;
-                                }
-                            }
-                        }
-
-                        // at this stage we have:
-                        // - two oneways, in opposite direction
-                        // - one bidirectional
-                        // - all same frc.
-
-                        // the only thing left to check is if the oneway edges go in the same general direction or not.
-                        // compare bearings but only if distance is large enough.
-                        var incomingShape = coder.Router.Db.Network.GetShape(coder.Router.Db.Network.GetEdge(incoming[0].Item3));
-                        var outgoingShape = coder.Router.Db.Network.GetShape(coder.Router.Db.Network.GetEdge(outgoing[0].Item3));
-
-                        if (incomingShape.Length() < 25 &&
-                            outgoingShape.Length() < 25)
-                        { // edges are too short to compare bearing in a way meaningful for determining this.
-                            // assume not valid.
-                            return false;
-                        }
-                        var incomingBearing = BearingEncoder.EncodeBearing(incomingShape);
-                        var outgoingBearing = BearingEncoder.EncodeBearing(outgoingShape);
-
-                        if (OpenLR.Extensions.AngleSmallestDifference(incomingBearing, outgoingBearing) > 30)
-                        { // edges are clearly not going in the same direction.
-                            return true;
-                        }
-                    }
-                    return false;
-                }
+            if (traversCount >= 4)
+            {
+                // Always a valid refence point
                 return true;
             }
+
+            // At this point, traversCount == 3
+
+            // special cases are possible here, but we need more info:
+            // how many roads go in this vertex? How many roads go out? How many are bidirectional?
+
+            var incoming = new List<Tuple<long, IAttributeCollection, uint>>();
+            var outgoing = new List<Tuple<long, IAttributeCollection, uint>>();
+            var bidirectional = new List<Tuple<long, IAttributeCollection, uint>>();
+            foreach (var edge in edges)
+            {
+                var edgeProfile = coder.Router.Db.EdgeProfiles.Get(edge.Data.Profile);
+                var factor = profile.Profile.Factor(edgeProfile);
+
+
+                if (factor.Value == 0) continue;
+
+
+                if (factor.Direction == 0)
+                {
+                    // bidirectional, can be used as incoming.
+                    bidirectional.Add(new Tuple<long, IAttributeCollection, uint>(edge.From, edgeProfile, edge.Id));
+                }
+                else if ((factor.Direction == 2 && !edge.DataInverted) ||
+                         (factor.Direction == 1 && edge.DataInverted))
+                {
+                    // oneway is forward but arc is backward, arc is incoming.
+                    // oneway is backward and arc is forward, arc is incoming.
+                    incoming.Add(new Tuple<long, IAttributeCollection, uint>(edge.From, edgeProfile, edge.Id));
+                }
+                else if ((factor.Direction == 2 && edge.DataInverted) ||
+                         (factor.Direction == 1 && !edge.DataInverted))
+                {
+                    // oneway is forward and arc is forward, arc is outgoing.
+                    // oneway is backward and arc is backward, arc is outgoing.
+                    outgoing.Add(new Tuple<long, IAttributeCollection, uint>(edge.From, edgeProfile, edge.Id));
+                }
+            }
+
+            if (bidirectional.Count != 1 || incoming.Count != 1 || outgoing.Count != 1)
+            {
+                // It's NOT a special case:
+                // There are (for example): two outgoing vertices, meaning that this is a junction which can be referenced
+                return true;
+            }
+
+            // all special cases are found below here: there is exactly one incoming, one outgoing and one bidirectional arc
+            // In other words, this _could_ be simple a change in representation (a bidirectional street where a part of it is represented as two roads)
+
+            // get incoming's frc and fow.
+            FormOfWay incomingFow, outgoingFow;
+            FunctionalRoadClass incomingFrc, outgoingFrc, bidirectionalFrc;
+
+            if (!profile.Extract(incoming[0].Item2, out incomingFrc, out incomingFow))
+            {
+                // We can not extract more information: assume invalid
+                return false;
+            }
+
+
+            if (incomingFow == FormOfWay.Roundabout)
+            {
+                // is this a roundabout, always a valid reference point.
+                return true;
+            }
+
+            if (profile.Extract(outgoing[0].Item2, out outgoingFrc, out outgoingFow))
+            {
+                if (outgoingFow == FormOfWay.Roundabout)
+                {
+                    // is this a roundabout, always valid.
+                    return true;
+                }
+
+                if (incomingFrc != outgoingFrc)
+                {
+                    // is there a difference in frc.
+                    return true;
+                }
+
+                if (profile.Extract(bidirectional[0].Item2, out bidirectionalFrc, out _))
+                {
+                    if (incomingFrc != bidirectionalFrc)
+                    {
+                        // is there a difference in frc.
+                        return true;
+                    }
+                }
+            }
+
+            // at this stage we have:
+            // - two oneways, in opposite direction
+            // - one bidirectional
+            // - all same frc.
+
+            // the only thing left to check is if the oneway edges go in the same general direction or not.
+            // compare bearings but only if distance is large enough.
+            var incomingShape = coder.Router.Db.Network.GetShape(coder.Router.Db.Network.GetEdge(incoming[0].Item3));
+            var outgoingShape = coder.Router.Db.Network.GetShape(coder.Router.Db.Network.GetEdge(outgoing[0].Item3));
+
+            if (incomingShape.Length() < 25 &&
+                outgoingShape.Length() < 25)
+            {
+                // edges are too short to compare bearing in a way meaningful for determining this.
+                // assume not valid.
+                return false;
+            }
+
+            var incomingBearing = BearingEncoder.EncodeBearing(incomingShape);
+            var outgoingBearing = BearingEncoder.EncodeBearing(outgoingShape);
+
+            // ReSharper disable once ConvertIfStatementToReturnStatement
+            if (Extensions.AngleSmallestDifference(incomingBearing, outgoingBearing) > 30)
+            {
+                // edges are clearly not going in the same direction -> this is a valid junction.
+                return true;
+            }
+
+            /*
+             * This vertex could happen to be restricted (e.g. a roadblock could be standing here)
+             * In that case, the vertex would happen to be three dead ends coming together.
+             * However, then we'd logically have three bidirectional arcs, so that case could never reach here
+             * (Or the data might be wrong)
+             */
+
+            // We checked all special cases that we know of and that should be valid - we assume the point is invalid;
+            // Found a special case that is forgotten here? Open an issue
+            return false;
         }
-        
+
         /// <summary>
         /// Finds the shortest path between the given from->to.
         /// </summary>
@@ -179,6 +249,7 @@ namespace OpenLR
                     result = coder.Router.TryCalculateRaw(coder.Profile.Profile, weightHandler,
                         fromRouterPoint, toRouterPoint, coder.Profile.GetAggressiveRoutingSettings(100));
                 }
+
                 return result.Value;
             }
             else
@@ -190,6 +261,7 @@ namespace OpenLR
                     result = coder.Router.TryCalculateRaw(coder.Profile.Profile, weightHandler,
                         toRouterPoint, fromRouterPoint, coder.Profile.GetAggressiveRoutingSettings(100));
                 }
+
                 return result.Value;
             }
         }
@@ -204,18 +276,20 @@ namespace OpenLR
             for (var i = 1; i < path.Count; i++)
             {
                 if (path[i - 1] == vertex1 &&
-                   path[i] == vertex2)
+                    path[i] == vertex2)
                 {
                     return true;
                 }
             }
+
             return false;
         }
 
         /// <summary>
         /// Finds a valid vertex for the given vertex but does not search in the direction of the target neighbour.
         /// </summary>
-        public static EdgePath<float> FindValidVertexFor(this Coder coder, uint vertex, long targetDirectedEdgeId, uint targetVertex, HashSet<uint> excludeSet, bool searchForward)
+        public static EdgePath<float> FindValidVertexFor(this Coder coder, uint vertex, long targetDirectedEdgeId,
+            uint targetVertex, HashSet<uint> excludeSet, bool searchForward)
         {
             var profile = coder.Profile.Profile;
 
@@ -223,14 +297,14 @@ namespace OpenLR
             // this will return a vertex that is on the shortest path:
             // foundVertex -> vertex -> targetNeighbour.
 
-            var targetEdge = Itinero.Constants.NO_EDGE;
+            var targetEdge = Constants.NO_EDGE;
             if (targetDirectedEdgeId > 0)
             {
-                targetEdge = (uint)(targetDirectedEdgeId - 1);
+                targetEdge = (uint) (targetDirectedEdgeId - 1);
             }
             else
             {
-                targetEdge = (uint)((-targetDirectedEdgeId) - 1);
+                targetEdge = (uint) ((-targetDirectedEdgeId) - 1);
             }
 
             // initialize settled set.
@@ -239,7 +313,7 @@ namespace OpenLR
 
             // initialize heap.
             var heap = new BinaryHeap<EdgePath<float>>(10);
-            heap.Push(new EdgePath<float>((uint)vertex), 0);
+            heap.Push(new EdgePath<float>((uint) vertex), 0);
 
             // find the path to the closest valid vertex.
             EdgePath<float> pathTo = null;
@@ -249,25 +323,30 @@ namespace OpenLR
                 // get next.
                 var current = heap.Pop();
                 if (settled.Contains(current.Vertex))
-                { // don't consider vertices twice.
+                {
+                    // don't consider vertices twice.
                     continue;
                 }
+
                 settled.Add(current.Vertex);
 
                 // limit search.
                 if (settled.Count > coder.Profile.MaxSettles)
-                { // not valid vertex found.
+                {
+                    // not valid vertex found.
                     return null;
                 }
 
                 // check if valid.
                 if (current.Vertex != vertex &&
                     coder.IsVertexValid(current.Vertex))
-                { // ok! vertex is valid.
+                {
+                    // ok! vertex is valid.
                     pathTo = current;
                 }
                 else
-                { // continue search.
+                {
+                    // continue search.
                     // add unsettled neighbours.
                     edgeEnumerator.MoveTo(current.Vertex);
                     foreach (var edge in edgeEnumerator)
@@ -275,17 +354,19 @@ namespace OpenLR
                         if (!excludeSet.Contains(edge.To) &&
                             !settled.Contains(edge.To) &&
                             !(edge.Id == targetEdge))
-                        { // ok, new neighbour, and ok, not the edge and neighbour to ignore.
+                        {
+                            // ok, new neighbour, and ok, not the edge and neighbour to ignore.
                             var edgeProfile = coder.Router.Db.EdgeProfiles.Get(edge.Data.Profile);
                             var factor = profile.Factor(edgeProfile);
 
                             if (factor.Value > 0 && (factor.Direction == 0 ||
-                                (searchForward && (factor.Direction == 1) != edge.DataInverted) ||
-                                (!searchForward && (factor.Direction == 1) == edge.DataInverted)))
-                            { // ok, we can traverse this edge and no oneway or oneway reversed.
+                                                     (searchForward && (factor.Direction == 1) != edge.DataInverted) ||
+                                                     (!searchForward && (factor.Direction == 1) == edge.DataInverted)))
+                            {
+                                // ok, we can traverse this edge and no oneway or oneway reversed.
                                 var weight = current.Weight + factor.Value * edge.Data.Distance;
                                 var path = new EdgePath<float>(edge.To, weight, edge.IdDirected(), current);
-                                heap.Push(path, (float)path.Weight);
+                                heap.Push(path, (float) path.Weight);
                             }
                         }
                     }
@@ -294,7 +375,8 @@ namespace OpenLR
 
             // ok, is there a path found.
             if (pathTo == null)
-            { // oeps, probably something wrong with network-topology.
+            {
+                // oeps, probably something wrong with network-topology.
                 // just take the default option.
                 //throw new Exception(
                 //    string.Format("Could not find a valid vertex for invalid vertex [{0}].", vertex));
@@ -304,20 +386,20 @@ namespace OpenLR
             // add the path to the given location.
             return pathTo;
         }
-        
+
         /// <summary>
         /// Builds a point along line location.
         /// </summary>
-        public static ReferencedPointAlongLine BuildPointAlongLine(this Coder coder, Itinero.LocalGeo.Coordinate coordinate)
+        public static ReferencedPointAlongLine BuildPointAlongLine(this Coder coder, Coordinate coordinate)
         {
-            RouterPoint resolvedPoint;
-            return coder.BuildPointAlongLine(coordinate, out resolvedPoint);
+            return coder.BuildPointAlongLine(coordinate, out _);
         }
-        
+
         /// <summary>
         /// Builds a point along line location.
         /// </summary>
-        public static ReferencedPointAlongLine BuildPointAlongLine(this Coder coder, Itinero.LocalGeo.Coordinate coordinate, out RouterPoint resolvedPoint)
+        public static ReferencedPointAlongLine BuildPointAlongLine(this Coder coder, Coordinate coordinate,
+            out RouterPoint resolvedPoint)
         {
             return coder.BuildPointAlongLine(coordinate.Latitude, coordinate.Longitude, out resolvedPoint);
         }
@@ -327,20 +409,22 @@ namespace OpenLR
         /// </summary>
         public static ReferencedPointAlongLine BuildPointAlongLine(this Coder coder, float latitude, float longitude)
         {
-            RouterPoint resolvedPoint;
-            return coder.BuildPointAlongLine(latitude, longitude, out resolvedPoint);
+            return coder.BuildPointAlongLine(latitude, longitude, out _);
         }
 
         /// <summary>
         /// Builds a point along line location.
         /// </summary>
-        public static ReferencedPointAlongLine BuildPointAlongLine(this Coder coder, float latitude, float longitude, out RouterPoint resolvedPoint)
+        public static ReferencedPointAlongLine BuildPointAlongLine(this Coder coder, float latitude, float longitude,
+            out RouterPoint resolvedPoint)
         {
             var routerPoint = coder.Router.TryResolve(coder.Profile.Profile, latitude, longitude);
             if (routerPoint.IsError)
             {
-                throw new Exception("Could not build point along line: Could not find an edge close to the given location.");
+                throw new Exception(
+                    "Could not build point along line: Could not find an edge close to the given location.");
             }
+
             resolvedPoint = routerPoint.Value;
             var locationOnNetwork = resolvedPoint.LocationOnNetwork(coder.Router.Db);
 
@@ -363,8 +447,8 @@ namespace OpenLR
                 {
                     Route = new ReferencedLine()
                     {
-                        Edges = new long[] { edge.IdDirected() },
-                        Vertices = new uint[] { edge.From, edge.To },
+                        Edges = new long[] {edge.IdDirected()},
+                        Vertices = new uint[] {edge.From, edge.To},
                         StartLocation = coder.Router.Db.CreateRouterPointForEdgeAndVertex(edge.IdDirected(), edge.From),
                         EndLocation = coder.Router.Db.CreateRouterPointForEdgeAndVertex(edge.IdDirected(), edge.To)
                     },
@@ -379,8 +463,8 @@ namespace OpenLR
                 {
                     Route = new ReferencedLine()
                     {
-                        Edges = new long[] { -edge.IdDirected() },
-                        Vertices = new uint[] { edge.To, edge.From },
+                        Edges = new long[] {-edge.IdDirected()},
+                        Vertices = new uint[] {edge.To, edge.From},
                         StartLocation = coder.Router.Db.CreateRouterPointForEdgeAndVertex(edge.IdDirected(), edge.To),
                         EndLocation = coder.Router.Db.CreateRouterPointForEdgeAndVertex(edge.IdDirected(), edge.From)
                     },
@@ -395,7 +479,7 @@ namespace OpenLR
             referencedPointAlongLine.Route.StartLocation = coder.Router.Db.CreateRouterPointForEdgeAndVertex(
                 referencedPointAlongLine.Route.Edges[0], referencedPointAlongLine.Route.Vertices[0]);
             referencedPointAlongLine.Route.EndLocation = coder.Router.Db.CreateRouterPointForEdgeAndVertex(
-                referencedPointAlongLine.Route.Edges[referencedPointAlongLine.Route.Edges.Length - 1], 
+                referencedPointAlongLine.Route.Edges[referencedPointAlongLine.Route.Edges.Length - 1],
                 referencedPointAlongLine.Route.Vertices[referencedPointAlongLine.Route.Vertices.Length - 1]);
 
             return referencedPointAlongLine;
@@ -406,25 +490,24 @@ namespace OpenLR
         /// </summary>
         public static string EncodeAsPointAlongLine(this Coder coder, float latitude, float longitude)
         {
-            RouterPoint resolvedPoint;
-            return coder.EncodeAsPointAlongLine(latitude, longitude, out resolvedPoint);
+            return coder.EncodeAsPointAlongLine(latitude, longitude, out _);
         }
 
         /// <summary>
         /// Encodes a set of coordinates as a point along line.
         /// </summary>
-        public static string EncodeAsPointAlongLine(this Coder coder, float latitude, float longitude, out RouterPoint resolvedPoint)
+        public static string EncodeAsPointAlongLine(this Coder coder, float latitude, float longitude,
+            out RouterPoint resolvedPoint)
         {
             return coder.Encode(coder.BuildPointAlongLine(latitude, longitude, out resolvedPoint));
         }
-        
+
         /// <summary>
         /// Builds the shortest path between the two coordinates as a referenced line.
         /// </summary>
-        public static ReferencedLine BuildLine(this Coder coder, Itinero.LocalGeo.Coordinate coordinate1, Itinero.LocalGeo.Coordinate coordinate2)
+        public static ReferencedLine BuildLine(this Coder coder, Coordinate coordinate1, Coordinate coordinate2)
         {
-            Route route;
-            return coder.BuildLine(coordinate1, coordinate2, out route);
+            return coder.BuildLine(coordinate1, coordinate2, out _);
         }
 
         /// <summary>
@@ -451,11 +534,12 @@ namespace OpenLR
                 EndLocation = coder.Router.Db.CreateRouterPointForEdgeAndVertex(directedEdgeId, edge.To)
             };
         }
-        
+
         /// <summary>
         /// Builds the shortest path between the two coordinates as a referenced line.
         /// </summary>
-        public static ReferencedLine BuildLine(this Coder coder, Itinero.LocalGeo.Coordinate coordinate1, Itinero.LocalGeo.Coordinate coordinate2, out Route route)
+        public static ReferencedLine BuildLine(this Coder coder, Coordinate coordinate1, Coordinate coordinate2,
+            out Route route)
         {
             // calculate raw path.
             var weightHandler = coder.Router.GetDefaultWeightHandler(coder.Profile.Profile);
@@ -467,11 +551,12 @@ namespace OpenLR
             {
                 throw new InvalidOperationException("No route found.");
             }
+
             var pathDistance = path.Value.Weight;
 
             // build route.
             route = coder.Router.BuildRoute(coder.Profile.Profile, weightHandler, source, target, path.Value).Value;
-            
+
             // build referenced line by building vertices and edge list.
             var pathAsList = path.Value.ToList();
             var edges = new List<long>();
@@ -481,36 +566,35 @@ namespace OpenLR
                 vertices.Add(pathAsList[i].Vertex);
                 if (i > 0)
                 {
-                    if (pathAsList[i].Edge != Itinero.Constants.NO_EDGE &&
-                        pathAsList[i].Edge != -Itinero.Constants.NO_EDGE)
+                    if (pathAsList[i].Edge != Constants.NO_EDGE &&
+                        pathAsList[i].Edge != -Constants.NO_EDGE)
                     {
                         edges.Add(pathAsList[i].Edge);
                     }
                     else
                     {
                         var edgeEnumerator = coder.Router.Db.Network.GeometricGraph.Graph.GetEdgeEnumerator();
-                        float best;
                         var edge = edgeEnumerator.FindBestEdge(weightHandler, vertices[vertices.Count - 2],
-                            vertices[vertices.Count - 1], out best);
+                            vertices[vertices.Count - 1], out _);
                         edges.Add(edge);
                     }
                 }
             }
 
-            // makersure first and last are real vertices.
+            // make sure that 'first' and 'last' are real vertices.
             var sourceOffset = 0f;
             if (vertices[0] == Constants.NO_VERTEX)
             {
                 var edge = coder.Router.Db.Network.GetEdge(edges[0]);
                 if (edge.From == vertices[1])
                 {
-                    sourceOffset = Itinero.LocalGeo.Coordinate.DistanceEstimateInMeter(coordinate1,
+                    sourceOffset = Coordinate.DistanceEstimateInMeter(coordinate1,
                         coder.Router.Db.Network.GetVertex(edge.To));
                     vertices[0] = edge.To;
                 }
                 else if (edge.To == vertices[1])
                 {
-                    sourceOffset = Itinero.LocalGeo.Coordinate.DistanceEstimateInMeter(coordinate1,
+                    sourceOffset = Coordinate.DistanceEstimateInMeter(coordinate1,
                         coder.Router.Db.Network.GetVertex(edge.From));
                     vertices[0] = edge.From;
                 }
@@ -519,19 +603,20 @@ namespace OpenLR
                     throw new Exception("First edge does not match first vertex.");
                 }
             }
+
             var targetOffset = 0f;
             if (vertices[vertices.Count - 1] == Constants.NO_VERTEX)
             {
                 var edge = coder.Router.Db.Network.GetEdge(edges[edges.Count - 1]);
                 if (edge.From == vertices[vertices.Count - 2])
                 {
-                    targetOffset = Itinero.LocalGeo.Coordinate.DistanceEstimateInMeter(coordinate2,
+                    targetOffset = Coordinate.DistanceEstimateInMeter(coordinate2,
                         coder.Router.Db.Network.GetVertex(edge.To));
                     vertices[vertices.Count - 1] = edge.To;
                 }
                 else if (edge.To == vertices[vertices.Count - 2])
                 {
-                    targetOffset = Itinero.LocalGeo.Coordinate.DistanceEstimateInMeter(coordinate2,
+                    targetOffset = Coordinate.DistanceEstimateInMeter(coordinate2,
                         coder.Router.Db.Network.GetVertex(edge.From));
                     vertices[vertices.Count - 1] = edge.From;
                 }
@@ -549,15 +634,17 @@ namespace OpenLR
                 Vertices = vertices.ToArray(),
                 NegativeOffsetPercentage = 100.0f * (targetOffset / totalDistance),
                 PositiveOffsetPercentage = 100.0f * (sourceOffset / totalDistance),
-                StartLocation = coder.Router.Db.CreateRouterPointForEdgeAndVertex(edges[0],  vertices[0]),
-                EndLocation = coder.Router.Db.CreateRouterPointForEdgeAndVertex(edges[edges.Count - 1], vertices[vertices.Count - 1])
+                StartLocation = coder.Router.Db.CreateRouterPointForEdgeAndVertex(edges[0], vertices[0]),
+                EndLocation =
+                    coder.Router.Db.CreateRouterPointForEdgeAndVertex(edges[edges.Count - 1],
+                        vertices[vertices.Count - 1])
             };
         }
 
         /// <summary>
         /// Builds the shortest path along all the given coordinates as a referenced line.
         /// </summary>
-        public static ReferencedLine BuildLine(this Coder coder, Itinero.LocalGeo.Coordinate[] coordinates)
+        public static ReferencedLine BuildLine(this Coder coder, Coordinate[] coordinates)
         {
             var edgesTotal = new List<long>();
             var verticesTotal = new List<uint>();
@@ -582,10 +669,11 @@ namespace OpenLR
                 }
 
                 // build route.
-                var route = coder.Router.BuildRoute(coder.Profile.Profile, weightHandler, source, target, path.Value).Value;
+                var route = coder.Router.BuildRoute(coder.Profile.Profile, weightHandler, source, target, path.Value)
+                    .Value;
                 //pathDistance += path.Value.Weight;
                 pathDistance += route.TotalDistance;
-                
+
                 // build referenced line by building vertices and edge list.
                 var pathAsList = path.Value.ToList();
                 var edges = new List<long>();
@@ -595,17 +683,16 @@ namespace OpenLR
                     vertices.Add(pathAsList[i].Vertex);
                     if (i > 0)
                     {
-                        if (pathAsList[i].Edge != Itinero.Constants.NO_EDGE &&
-                            pathAsList[i].Edge != -Itinero.Constants.NO_EDGE)
+                        if (pathAsList[i].Edge != Constants.NO_EDGE &&
+                            pathAsList[i].Edge != -Constants.NO_EDGE)
                         {
                             edges.Add(pathAsList[i].Edge);
                         }
                         else
                         {
                             var edgeEnumerator = coder.Router.Db.Network.GeometricGraph.Graph.GetEdgeEnumerator();
-                            float best;
                             var edge = edgeEnumerator.FindBestEdge(weightHandler, vertices[vertices.Count - 2],
-                                vertices[vertices.Count - 1], out best);
+                                vertices[vertices.Count - 1], out _);
                             edges.Add(edge);
                         }
                     }
@@ -654,19 +741,21 @@ namespace OpenLR
                     vertices.RemoveAt(0);
                     vertices.RemoveAt(0);
                 }
+
                 verticesTotal.AddRange(vertices);
             }
 
+            // ReSharper disable once InconsistentNaming
             var edge_ = coder.Router.Db.Network.GetEdge(edgesTotal[0]);
             if (edge_.From == verticesTotal[1])
             {
-                sourceOffset = Itinero.LocalGeo.Coordinate.DistanceEstimateInMeter(coordinates[0],
+                sourceOffset = Coordinate.DistanceEstimateInMeter(coordinates[0],
                     coder.Router.Db.Network.GetVertex(edge_.To));
             }
             else if (edge_.To == verticesTotal[1])
             {
-                sourceOffset = Itinero.LocalGeo.Coordinate.DistanceEstimateInMeter(coordinates[0],
-                coder.Router.Db.Network.GetVertex(edge_.From));
+                sourceOffset = Coordinate.DistanceEstimateInMeter(coordinates[0],
+                    coder.Router.Db.Network.GetVertex(edge_.From));
             }
             else
             {
@@ -676,12 +765,12 @@ namespace OpenLR
             edge_ = coder.Router.Db.Network.GetEdge(edgesTotal[edgesTotal.Count - 1]);
             if (edge_.From == verticesTotal[verticesTotal.Count - 2])
             {
-                targetOffset = Itinero.LocalGeo.Coordinate.DistanceEstimateInMeter(coordinates[coordinates.Length - 1],
+                targetOffset = Coordinate.DistanceEstimateInMeter(coordinates[coordinates.Length - 1],
                     coder.Router.Db.Network.GetVertex(edge_.To));
             }
             else if (edge_.To == verticesTotal[verticesTotal.Count - 2])
             {
-                targetOffset = Itinero.LocalGeo.Coordinate.DistanceEstimateInMeter(coordinates[coordinates.Length - 1],
+                targetOffset = Coordinate.DistanceEstimateInMeter(coordinates[coordinates.Length - 1],
                     coder.Router.Db.Network.GetVertex(edge_.From));
             }
             else
@@ -698,7 +787,8 @@ namespace OpenLR
                 NegativeOffsetPercentage = 100.0f * (targetOffset / totalDistance),
                 PositiveOffsetPercentage = 100.0f * (sourceOffset / totalDistance),
                 StartLocation = coder.Router.Db.CreateRouterPointForEdgeAndVertex(edgesTotal[0], verticesTotal[0]),
-                EndLocation = coder.Router.Db.CreateRouterPointForEdgeAndVertex(edgesTotal[edgesTotal.Count - 1], verticesTotal[verticesTotal.Count - 1])
+                EndLocation = coder.Router.Db.CreateRouterPointForEdgeAndVertex(edgesTotal[edgesTotal.Count - 1],
+                    verticesTotal[verticesTotal.Count - 1])
             };
         }
     }
