@@ -239,6 +239,14 @@ namespace OpenLR
             var fromRouterPoint = coder.Router.Db.Network.CreateRouterPointForVertex(from);
             var toRouterPoint = coder.Router.Db.Network.CreateRouterPointForVertex(to);
 
+            return FindShortestPath(coder, fromRouterPoint, toRouterPoint, searchForward);
+        }
+
+        /// <summary>
+        /// Finds the shortest path between the given from->to.
+        /// </summary>
+        public static EdgePath<float> FindShortestPath(this Coder coder, RouterPoint fromRouterPoint, RouterPoint toRouterPoint, bool searchForward)
+        {
             var weightHandler = coder.Router.GetDefaultWeightHandler(coder.Profile.Profile);
             if (searchForward)
             {
@@ -273,6 +281,25 @@ namespace OpenLR
         public static bool IsOnShortestPath(this Coder coder, uint from, uint to, uint vertex1, uint vertex2)
         {
             var path = coder.FindShortestPath(from, to, true).ToListAsVertices();
+            for (var i = 1; i < path.Count; i++)
+            {
+                if (path[i - 1] == vertex1 &&
+                    path[i] == vertex2)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Returns true if the sequence vertex1->vertex2 occurs on the shortest path between from and to.
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsOnShortestPath(this Coder coder, RouterPoint fromRouterPoint, RouterPoint toRouterPoint, uint vertex1, uint vertex2)
+        {
+            var path = coder.FindShortestPath(fromRouterPoint, toRouterPoint, true).ToListAsVertices();
             for (var i = 1; i < path.Count; i++)
             {
                 if (path[i - 1] == vertex1 &&
