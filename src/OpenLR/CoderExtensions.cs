@@ -252,10 +252,10 @@ namespace OpenLR
             {
                 var result = coder.Router.TryCalculateRaw(coder.Profile.Profile, weightHandler,
                     fromRouterPoint, toRouterPoint, coder.Profile.RoutingSettings);
-                if (result.IsError)
+                if (result.IsError && coder.Profile.HasAggressiveSettings)
                 {
                     result = coder.Router.TryCalculateRaw(coder.Profile.Profile, weightHandler,
-                        fromRouterPoint, toRouterPoint, coder.Profile.GetAggressiveRoutingSettings(100));
+                        fromRouterPoint, toRouterPoint, coder.Profile.AggressiveRoutingSettings);
                 }
 
                 return result.Value;
@@ -264,10 +264,10 @@ namespace OpenLR
             {
                 var result = coder.Router.TryCalculateRaw(coder.Profile.Profile, weightHandler,
                     toRouterPoint, fromRouterPoint, coder.Profile.RoutingSettings);
-                if (result.IsError)
+                if (result.IsError && coder.Profile.HasAggressiveSettings)
                 {
                     result = coder.Router.TryCalculateRaw(coder.Profile.Profile, weightHandler,
-                        toRouterPoint, fromRouterPoint, coder.Profile.GetAggressiveRoutingSettings(100));
+                        toRouterPoint, fromRouterPoint, coder.Profile.AggressiveRoutingSettings);
                 }
 
                 return result.Value;
