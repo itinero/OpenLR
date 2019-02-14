@@ -27,11 +27,9 @@
     <ProjectReference Include="..\..\src\OpenLR\OpenLR.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Itinero.IO.Osm" Version="1.4.0-pre63" />
-    <PackageReference Include="Itinero.IO.Shape" Version="1.4.0-pre20" />
-    <PackageReference Include="NetTopologySuite.IO" Version="1.15.0-pre032" />
-    <PackageReference Include="NetTopologySuite.IO.GeoJSON" Version="1.15.0-pre032" />
-    <PackageReference Include="NetTopologySuite.IO.PortableShape" Version="0.0.1-pre002" />
+    <PackageReference Include="Itinero.IO.Osm" Version="1.4.0-pre92" />
+    <PackageReference Include="Itinero.IO.Shape" Version="1.4.0-pre92" />
+    <PackageReference Include="NetTopologySuite.IO.GeoJSON" Version="1.15.0" />
     <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
     <PackageReference Include="NUnit" Version="3.9.0" />
     <PackageReference Include="Serilog">
