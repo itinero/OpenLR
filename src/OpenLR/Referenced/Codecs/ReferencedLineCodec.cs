@@ -225,6 +225,11 @@ namespace OpenLR.Referenced.Codecs
             {
                 // Step – 1: Check validity of the location and offsets to be encoded.
                 // validate connected and traversal.
+                if (referencedLocation == null)
+                {
+                    throw new NullReferenceException(nameof(referencedLocation));
+                }
+                
                 referencedLocation.ValidateConnected(coder);
                 // validate offsets.
                 referencedLocation.ValidateOffsets();

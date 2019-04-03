@@ -18,9 +18,16 @@ namespace OpenLR.Test.Functional.bam
     {
         public static void TestEncodeAll()
         {
+            TestEncodeAll("bam/data.routerdb");
+            TestEncodeAll("bam/bam2.routerdb");
+
+        }
+
+        public static void TestEncodeAll(string router)
+        {
             Log.Information("Running BAM-test");
             RouterDb routerDb;
-            using (var stream = File.OpenRead("bam/data.routerdb"))
+            using (var stream = File.OpenRead(router))
             {
                 routerDb = RouterDb.Deserialize(stream);
             }
@@ -29,11 +36,17 @@ namespace OpenLR.Test.Functional.bam
             var coder = new Coder(routerDb, coderProfile);
 
             var enumerator = routerDb.Network.GetEdgeEnumerator();
-            for (uint v = 41188; v < routerDb.Network.VertexCount; v++)
+            for (uint v = 0; v < routerDb.Network.VertexCount; v++)
             {
-                Log.Information(
-                    $"Encoding edge {v}");
-                var encoding = coder.BuildLineLocation(new DirectedEdgeId(v, true), true);
+                try
+                {
+
+                    var encoding = coder.BuildLineLocation(new DirectedEdgeId(v, true), true);
+                }
+                catch (Exception e)
+                {
+                    Log.Warning($"Edge {v}: {e}");
+                }
             }
         }
     }
@@ -108,8 +121,11 @@ namespace OpenLR.Test.Functional.bam
         {
             var referenced = this.BuildReferencedLine(edge, correctDirection);
 
+            if (referenced == null)
+            {
+                return null;
+            }
             return ReferencedLineCodec.Encode(referenced, this);
-                
         }
 
         /// <summary>
