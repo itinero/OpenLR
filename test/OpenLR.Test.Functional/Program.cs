@@ -28,6 +28,7 @@ using OpenLR.Geo;
 using OpenLR.Model.Locations;
 using System;
 using System.IO;
+using OpenLR.Test.Functional.bam;
 using Serilog;
 
 namespace OpenLR.Test.Functional
@@ -37,6 +38,9 @@ namespace OpenLR.Test.Functional
         static void Main(string[] args)
         {
             SetupLogging();
+            
+            
+            // BamEncode.TestEncodeAll();
             
             // executes the netherlands tests based on OSM.
             var routerDb = Osm.Netherlands.DownloadAndBuildRouterDb();

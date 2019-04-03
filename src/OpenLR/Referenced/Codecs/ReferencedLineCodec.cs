@@ -377,7 +377,7 @@ namespace OpenLR.Referenced.Codecs
                     // ReSharper disable once InvertIf
                     if (divergentPoint != -1)
                     {
-                        if (points.Contains(divergentPoint))
+                        if (points.Contains(divergentPoint+1))
                         {
                             throw new ReferencedEncodingException(referencedLine, $"Could not encode edge: can not normalize to shortest path. Point {divergentPoint} keeps diverging");   
                         }
