@@ -37,7 +37,7 @@ test-results*/
 .idea
 .idea/*
 
-./test/OpenLR.Test.Functional/logs*/
+test/OpenLR.Test.Functional/logs/*
 
 packages/*
 !packages/repositories.config
