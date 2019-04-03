@@ -344,7 +344,6 @@ namespace OpenLR.Referenced.Codecs
 
                     var fromEdge = referencedLine.Edges[fromPoint];
                     var toEdge = referencedLine.Edges[toPoint - 1];
-var edgeCount = toPoint - fromPoint;
 
                     // calculate shortest path between their first and last edge.
                     var path = SearchPath(coder, fromEdge, toEdge);
@@ -378,11 +377,16 @@ var edgeCount = toPoint - fromPoint;
                     // ReSharper disable once InvertIf
                     if (divergentPoint != -1)
                     {
+                        if (points.Contains(divergentPoint))
+                        {
+                            throw new ReferencedEncodingException(referencedLine, $"Could not encode edge: can not normalize to shortest path. Point {divergentPoint} keeps diverging");   
+                        }
                         // split if needed
                         // we add the point of the referenced line just _after_ the point where divergence happened
                         // Thus at index 'divergentPoint' + 1
                         points.Add(divergentPoint + 1);
                         points.Sort();
+
 
                         // This implies we were not on the shortest path and should check again
                         isOnShortestPath = false;
