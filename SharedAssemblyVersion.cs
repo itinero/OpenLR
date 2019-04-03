@@ -1,4 +1,4 @@
 ﻿using System.Reflection;
 
-[assembly: AssemblyVersion("1.1.0")] // semantic versioning Major.Minor.Patch
-[assembly: AssemblyInformationalVersion("1.1.0-pre02")]
+[assembly: AssemblyVersion("1.1.1")] // semantic versioning Major.Minor.Patch
+[assembly: AssemblyInformationalVersion("1.1.1-pre04")]

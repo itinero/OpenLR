@@ -333,6 +333,41 @@ namespace OpenLR
         }
 
         /// <summary>
+        /// Gets a proper router point for a vertex in the referenced line for the vertex at the given index. 
+        /// </summary>
+        /// <param name="line">The line location.</param>
+        /// <param name="i">The index of the vertex.</param>
+        /// <returns>A router point using an edge in the line location.</returns>
+        public static RouterPoint RouterPointForVertex(this ReferencedLine line, int i)
+        {
+            if (i >= line.Vertices.Length) throw new IndexOutOfRangeException();
+            
+            if (i == line.Vertices.Length - 1)
+            { // in the last vertex use the previous edge.
+                var edge = line.Edges[i - 1];
+                var directedEdge = new DirectedEdgeId(edge);
+
+                if (directedEdge.Forward)
+                {
+                    return new RouterPoint(0, 0, directedEdge.EdgeId, ushort.MaxValue);
+                }
+                return new RouterPoint(0, 0, directedEdge.EdgeId, 0);
+            }
+            else
+            { // use the next edge for the router point.
+                var edge = line.Edges[i];
+                var directedEdge = new DirectedEdgeId(edge);
+
+                if (directedEdge.Forward)
+                {
+                    return new RouterPoint(0, 0, directedEdge.EdgeId, 0);
+                }
+
+                return new RouterPoint(0, 0, directedEdge.EdgeId, ushort.MaxValue);
+            }
+        }
+
+        /// <summary>
         /// Adjusts this location to use valid LR-points.
         /// </summary>
         public static void AdjustToValidPoints(this ReferencedLine line, Coder coder)
@@ -350,7 +385,7 @@ namespace OpenLR
             var vertex1 = line.Vertices[0];
             var vertex2 = line.Vertices[1];
 
-            if (!coder.IsOnShortestPath(line.Vertices[0], line.Vertices[line.Vertices.Length - 1],
+            if (!coder.IsOnShortestPath(line.RouterPointForVertex(0), line.RouterPointForVertex(line.Vertices.Length - 1),
                 vertex1, vertex2))
             { // impossible to expand edge.
                 return;

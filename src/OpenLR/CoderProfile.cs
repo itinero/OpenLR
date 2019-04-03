@@ -37,13 +37,12 @@ namespace OpenLR
         private readonly Profile _profile;
         private readonly float _scoreThreshold;
         private readonly float _maxSearch;
-
         private readonly RoutingSettings<float> _routingSettings;
 
         /// <summary>
         /// Creates a new coder profile.
         /// </summary>
-        public CoderProfile(Profile profile, float scoreThreshold, float maxSearch)
+        public CoderProfile(Profile profile, float scoreThreshold, float maxSearch, float aggressiveFactor = 100)
         {
             if (profile == null) { throw new ArgumentNullException("profile"); }
 
@@ -51,6 +50,7 @@ namespace OpenLR
             _scoreThreshold = scoreThreshold;
             _maxSearch = maxSearch;
 
+            this.AggressiveFactor = aggressiveFactor;
             this.MaxSettles = 65536;
 
             _routingSettings = new RoutingSettings<float>();
@@ -102,14 +102,27 @@ namespace OpenLR
         }
 
         /// <summary>
-        /// Gets more aggressive routing settings.
+        /// Gets the aggressive factor.
         /// </summary>
-        public RoutingSettings<float> GetAggressiveRoutingSettings(float factor)
-        {
-            var routingSettings = new RoutingSettings<float>();
-            routingSettings.SetMaxSearch(_profile.Name, _maxSearch * factor);
+        public float AggressiveFactor { get; set; }
 
-            return routingSettings;
+        /// <summary>
+        /// Returns true if this profile has aggressive settings.
+        /// </summary>
+        public bool HasAggressiveSettings => this.AggressiveFactor > 1;
+        
+        /// <summary>
+        /// Gets the routing settings.
+        /// </summary>
+        public RoutingSettings<float> AggressiveRoutingSettings
+        {
+            get
+            {
+                var routingSettings = new RoutingSettings<float>();
+                routingSettings.SetMaxSearch(_profile.Name, _maxSearch * this.AggressiveFactor);
+
+                return routingSettings;
+            }
         }
 
         /// <summary>

@@ -27,6 +27,7 @@ using Itinero;
 using Itinero.Algorithms.Search.Hilbert;
 using Itinero.Attributes;
 using Itinero.Data.Network.Edges;
+using Itinero.Data.Network.Restrictions;
 using Itinero.Osm.Vehicles;
 using NUnit.Framework;
 using OpenLR.Geo;
@@ -224,29 +225,18 @@ namespace OpenLR.Test.Referenced
         [Test]
         public void EncodeReferencedLineLocationBetweenBollards()
         {
-            var e = 0.00001f;
-
-
             // setup a routing network to test against.
             var routerDb = new RouterDb();
             routerDb.AddSupportedVehicle(Vehicle.Car);
 
-            var bollardProfile = new AttributeCollection();
-            bollardProfile.AddOrReplace("barrier", "bollard");
-            bollardProfile.AddOrReplace("motor", "no");
-
+            var restrictionsDb = new RestrictionsDb();
+            restrictionsDb.Add(1);
+            routerDb.AddRestrictions("motorcar",
+                restrictionsDb);
 
             routerDb.Network.AddVertex(0, 51.0f, 4.0f);
-            routerDb.Network.AddVertex(1, 51.1f, 4.1f);
-            routerDb.Network.AddVertex(2, 51.2f, 4.2f);
-            routerDb.Network.AddVertex(3, 51.3f, 4.3f);
-
-            routerDb.VertexMeta[1] = bollardProfile;
-            routerDb.VertexMeta[2] = bollardProfile;
-
-            // to make junctions
-            routerDb.Network.AddVertex(4, 51.0f, 4.3f);
-            routerDb.Network.AddVertex(5, 51.3f, 4.0f);
+            routerDb.Network.AddVertex(1, 51.0001f, 4.0001f);
+            routerDb.Network.AddVertex(2, 51.0002f, 4.0002f);
 
             var profile = new AttributeCollection();
 
@@ -254,67 +244,71 @@ namespace OpenLR.Test.Referenced
             var residential = routerDb.EdgeProfiles.Add(profile);
 
 
-            for (var i = (uint) 0; i < 3; i++)
+            routerDb.Network.AddEdge(0, 1, new EdgeData()
             {
-                var edgeId = routerDb.Network.AddEdge(i, i + 1, new EdgeData()
-                {
-                    Distance = (float) 100,
-                    MetaId = 0,
-                    Profile = (ushort) residential
-                }, null);
-                Console.WriteLine($"Created edge {edgeId} between vertex {i} and {i + 1}");
-            }
-
-            Console.WriteLine(routerDb.GetGeoJson());
-
-            routerDb.Network.AddEdge(0, 4, new EdgeData()
-            {
-                Distance = (float) 100,
+                Distance = Coordinate.DistanceEstimateInMeter(51.0f, 4.0f, 51.0001f, 4.0001f),
                 MetaId = 0,
                 Profile = (ushort) residential
             }, null);
-
-            routerDb.Network.AddEdge(4, 3, new EdgeData()
+            routerDb.Network.AddEdge(1, 2, new EdgeData()
             {
-                Distance = (float) 100,
+                Distance = Coordinate.DistanceEstimateInMeter(51.0001f, 4.0001f, 51.0002f, 4.0002f),
                 MetaId = 0,
                 Profile = (ushort) residential
             }, null);
-
-            routerDb.Network.AddEdge(0, 5, new EdgeData()
-            {
-                Distance = (float) 100,
-                MetaId = 0,
-                Profile = (ushort) residential
-            }, null);
-
-            routerDb.Network.AddEdge(3, 5, new EdgeData()
-            {
-                Distance = (float) 100,
-                MetaId = 0,
-                Profile = (ushort) residential
-            }, null);
-
 
             var location = new ReferencedLine()
             {
-                Edges = new long[] {2},
-                Vertices = new uint[] {1, 2},
-                StartLocation = routerDb.CreateRouterPointForVertex(1, routerDb.GetSupportedProfile("car")),
-                EndLocation = routerDb.CreateRouterPointForVertex(2, routerDb.GetSupportedProfile("car")),
+                Edges = new long[] {1}, // Edge-id +1, see https://github.com/itinero/routing/issues/95
+                Vertices = new uint[] {0, 1},
+                StartLocation = routerDb.CreateRouterPointForVertex(0, routerDb.GetSupportedProfile("car")),
+                EndLocation = routerDb.CreateRouterPointForVertex(1, routerDb.GetSupportedProfile("car")),
                 NegativeOffsetPercentage = 0,
                 PositiveOffsetPercentage = 0
             };
 
             // encode and verify result.
-
             var encoded = ReferencedLineCodec.Encode(location, new Coder(routerDb, new OsmCoderProfile()));
-            Console.WriteLine("Encoded OpenLR-reference:");
-            Console.WriteLine(encoded.ToFeatures().ToGeoJson());
             Assert.IsNotNull(encoded.First);
-            Assert.AreEqual(0, encoded.NegativeOffsetPercentage);
-            Assert.AreEqual(0, encoded.PositiveOffsetPercentage);
             Assert.AreEqual(FunctionalRoadClass.Frc4, encoded.First.FuntionalRoadClass);
+
+            var location1 = new ReferencedLine()
+            {
+                Edges = new long[] {1}, // Edge-id +1, see https://github.com/itinero/routing/issues/95
+                Vertices = new uint[] {1, 2},
+                StartLocation = routerDb.CreateRouterPointForVertex(0, routerDb.GetSupportedProfile("car")),
+                EndLocation = routerDb.CreateRouterPointForVertex(1, routerDb.GetSupportedProfile("car")),
+                NegativeOffsetPercentage = 0,
+                PositiveOffsetPercentage = 0
+            };
+
+            var encoded1 = ReferencedLineCodec.Encode(location, new Coder(routerDb, new OsmCoderProfile()));
+            Assert.IsNotNull(encoded1.First);
+            Assert.AreEqual(FunctionalRoadClass.Frc4, encoded1.First.FuntionalRoadClass);
+
+            var locationFull = new ReferencedLine()
+            {
+                Edges = new long[] {1, 2}, // Edge-id +1, see https://github.com/itinero/routing/issues/95
+                Vertices = new uint[] {0, 1, 2},
+                StartLocation = routerDb.CreateRouterPointForVertex(0, routerDb.GetSupportedProfile("car")),
+                EndLocation = routerDb.CreateRouterPointForVertex(2, routerDb.GetSupportedProfile("car")),
+                NegativeOffsetPercentage = 0,
+                PositiveOffsetPercentage = 0
+            };
+
+            try
+            {
+                ReferencedLineCodec.Encode(locationFull, new Coder(routerDb, new OsmCoderProfile()));
+                Assert.Fail("This should have crashed. It didn't, that is an error.");
+            }
+            catch (Exception e)
+            {
+                if (e.InnerException == null)
+                {
+                    throw e;
+                }
+                Assert.AreEqual("No path found between two edges of the line location.", e.InnerException.Message);
+            }
         }
     }
 }

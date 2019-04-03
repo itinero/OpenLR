@@ -344,6 +344,7 @@ namespace OpenLR.Referenced.Codecs
 
                     var fromEdge = referencedLine.Edges[fromPoint];
                     var toEdge = referencedLine.Edges[toPoint - 1];
+var edgeCount = toPoint - fromPoint;
 
                     // calculate shortest path between their first and last edge.
                     var path = SearchPath(coder, fromEdge, toEdge);
@@ -355,7 +356,7 @@ namespace OpenLR.Referenced.Codecs
                         path = path.From;
                     }
 
-                    edges.Reverse();
+                    edges.Reverse(); // Path is, by default, a linked list which is reversed. We reverse again to have normal ordering
 
                     // calculate coverage.
                     var divergentPoint = -1;
@@ -377,7 +378,9 @@ namespace OpenLR.Referenced.Codecs
                     // ReSharper disable once InvertIf
                     if (divergentPoint != -1)
                     {
-                        // split if needed: we add the point of the referenced line just _after_ the point where divergence happened
+                        // split if needed
+                        // we add the point of the referenced line just _after_ the point where divergence happened
+                        // Thus at index 'divergentPoint' + 1
                         points.Add(divergentPoint + 1);
                         points.Sort();
 

@@ -15,7 +15,7 @@
     <ProjectReference Include="..\OpenLR\OpenLR.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Itinero.Geo" Version="1.4.0-pre19" />
+    <PackageReference Include="Itinero.Geo" Version="1.4.0-pre92" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">
     <Reference Include="System.Xml" />
