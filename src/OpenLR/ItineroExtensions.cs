@@ -88,7 +88,8 @@ namespace OpenLR.Referenced
             var previousShapeIndex = -1;
             var shapeEnumerator = shape.GetEnumerator();
             Coordinate? previous = null;
-
+            var coordinate = new Coordinate(latitude, longitude);
+            
             while (true)
             {
                 // make sure there is a previous.
@@ -99,6 +100,17 @@ namespace OpenLR.Referenced
                         break;
                     }
                     previous = shapeEnumerator.Current;
+                    
+                    // check previous for candidacy.
+                    var distance = Coordinate.DistanceEstimateInMeter(
+                        previous.Value.Latitude, previous.Value.Longitude,
+                        latitude, longitude);
+                    distanceToProjected = distance;
+                    projectedDistanceFromFirst = 0;
+                    projectedLatitude = previous.Value.Latitude;
+                    projectedLongitude = previous.Value.Longitude;
+                    projectedShapeIndex = 0;
+                    position = LinePointPosition.On;
                 }
 
                 // get next point.
@@ -108,9 +120,9 @@ namespace OpenLR.Referenced
                     break;
                 }
                 current = shapeEnumerator.Current;
-
+                
+                // project on segment.
                 var line = new Line(previous.Value, current.Value);
-                var coordinate = new Coordinate(latitude, longitude);
                 var projectedPoint = line.ProjectOn(coordinate);
                 if (projectedPoint != null)
                 { // ok, projection succeeded.
@@ -135,6 +147,21 @@ namespace OpenLR.Referenced
                 previousShapeDistance += Coordinate.DistanceEstimateInMeter(
                         previous.Value.Latitude, previous.Value.Longitude,
                         current.Value.Latitude, current.Value.Longitude);
+                
+                // check current for candidacy.
+                var currentDistance = Coordinate.DistanceEstimateInMeter(
+                    current.Value.Latitude, current.Value.Longitude,
+                    latitude, longitude);
+                if (currentDistance < distanceToProjected)
+                {
+                    distanceToProjected = currentDistance;
+                    projectedDistanceFromFirst = previousShapeDistance;
+                    projectedLatitude = current.Value.Latitude;
+                    projectedLongitude = current.Value.Longitude;
+                    projectedShapeIndex = previousShapeIndex + 1;
+                    position = LinePointPosition.On;
+                }
+                
                 previousShapeIndex++;
 
                 previous = current.Value;
