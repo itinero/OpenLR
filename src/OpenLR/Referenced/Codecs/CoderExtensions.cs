@@ -91,12 +91,12 @@ namespace OpenLR.Referenced.Codecs
                     // check if there are edges that can be used for the given profile.
                     edgeEnumerator.MoveTo(v);
 
-                    RouterPoint location;
-                    if (coder.Router.Db.TryCreateRouterPointForVertex(v, coder.Profile.Profile, out location))
+                    if (coder.Router.TryCreateRouterPointForVertex(v, coder.Profile.Profile, out var location))
                     {
                         scoredCandidates.Add(new CandidateLocation()
                         {
-                            Score = Score.New(Score.VERTEX_DISTANCE, string.Format("The vertex score compare to max distance {0}", maxVertexDistanceInMeter),
+                            Score = Score.New(Score.VERTEX_DISTANCE,
+                                $"The vertex score compare to max distance {maxVertexDistanceInMeter}",
                                 (float)System.Math.Max(0, (1.0 - (distance / maxVertexDistanceInMeter))), 1), // calculate scoring compared to the fixed max distance.
                             Location = location
                         });

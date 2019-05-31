@@ -245,6 +245,32 @@ namespace OpenLR.Referenced
         /// <summary>
         /// Creates a router point for the given vertex.
         /// </summary>
+        public static bool TryCreateRouterPointForVertex(this Router router, uint vertex, Profile profile, out RouterPoint routerPoint)
+        {
+            if (!router.Db.Network.GeometricGraph.GetVertex(vertex, out var latitude, out var longitude))
+            {
+                throw new ArgumentException("Vertex doesn't exist, cannot create routerpoint.");
+            }
+
+            var getFactor = router.GetDefaultGetFactor(profile);
+            var edges = router.Db.Network.GetEdgeEnumerator(vertex);
+            while (edges.MoveNext())
+            {
+                var factor = getFactor(edges.Data.Profile);
+                if (factor.Value > 0)
+                {
+                    routerPoint = router.Db.CreateRouterPointForEdgeAndVertex(edges.IdDirected(), vertex);
+                    return true;
+                }
+            }
+            routerPoint = null;
+            return false;
+        }
+
+        /// <summary>
+        /// Creates a router point for the given vertex.
+        /// </summary>
+        [Obsolete]
         public static bool TryCreateRouterPointForVertex(this RouterDb routerDb, uint vertex, Profile profile, out RouterPoint routerPoint)
         {
             float latitude, longitude;
