@@ -12,17 +12,13 @@
     <projectUrl>https://github.com/Itinero/OpenLR</projectUrl>
     <iconUrl>http://www.itinero.tech/logos/openlr_logo64.png</iconUrl>
     <dependencies>
-      <group targetFramework=".NETFramework4.0">
-        <dependency id="OpenLR" version="$version$" exclude="Build,Analyzers" />
-        <dependency id="Itinero.Geo" version="1.4.0-pre92" exclude="Build,Analyzers" />
-      </group>
       <group targetFramework=".NETFramework4.5.1">
         <dependency id="OpenLR" version="$version$" exclude="Build,Analyzers" />
-        <dependency id="Itinero.Geo" version="1.4.0-pre92" exclude="Build,Analyzers" />
+        <dependency id="Itinero.Geo" version="1.4.0" exclude="Build,Analyzers" />
       </group>
       <group targetFramework=".NETStandard1.3">
         <dependency id="OpenLR" version="$version$" exclude="Build,Analyzers" />
-        <dependency id="Itinero.Geo" version="1.4.0-pre92" exclude="Build,Analyzers" />
+        <dependency id="Itinero.Geo" version="1.4.0" exclude="Build,Analyzers" />
       </group>
     </dependencies>
   </metadata>

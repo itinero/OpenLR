@@ -13,25 +13,21 @@
     <iconUrl>http://www.itinero.tech/logos/openlr_logo64.png</iconUrl>
     <dependencies>
       <group targetFramework=".NETFramework4.5">
-        <dependency id="Itinero" version="1.4.0-pre92" exclude="Build,Analyzers" />
-      </group>
-      <group targetFramework=".NETFramework4.0">
-        <dependency id="Itinero" version="1.4.0-pre92" exclude="Build,Analyzers" />
+        <dependency id="Itinero" version="1.4.0" exclude="Build,Analyzers" />
       </group>
       <group targetFramework=".NETFramework4.5.1">
-        <dependency id="Itinero" version="1.4.0-pre92" exclude="Build,Analyzers" />
+        <dependency id="Itinero" version="1.4.0" exclude="Build,Analyzers" />
       </group>
       <group targetFramework=".NETStandard1.3">
-        <dependency id="Itinero" version="1.4.0-pre92" exclude="Build,Analyzers" />
+        <dependency id="Itinero" version="1.4.0" exclude="Build,Analyzers" />
         <dependency id="NETStandard.Library" version="1.6.1" exclude="Build,Analyzers" />
       </group>
       <group targetFramework=".NETStandard2.0">
-        <dependency id="Itinero" version="1.4.0-pre92" exclude="Build,Analyzers" />
+        <dependency id="Itinero" version="1.4.0" exclude="Build,Analyzers" />
       </group>
     </dependencies>
   </metadata>
   <files>
-    <file src="src\OpenLR\bin\Release\net40\OpenLR.dll" target="lib\net40\OpenLR.dll" />
     <file src="src\OpenLR\bin\Release\net45\OpenLR.dll" target="lib\net45\OpenLR.dll" />
     <file src="src\OpenLR\bin\Release\net451\OpenLR.dll" target="lib\net451\OpenLR.dll" />
     <file src="src\OpenLR\bin\Release\netstandard1.3\OpenLR.dll" target="lib\netstandard1.3\OpenLR.dll" />
