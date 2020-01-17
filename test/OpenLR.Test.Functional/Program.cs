@@ -21,15 +21,20 @@
 // THE SOFTWARE.
 
 using Itinero;
-using Itinero.LocalGeo;
 using Itinero.Osm.Vehicles;
 using NetTopologySuite.Features;
 using OpenLR.Geo;
 using OpenLR.Model.Locations;
 using System;
 using System.IO;
+using Itinero.Data.Network;
+using OpenLR.Model;
+using OpenLR.Osm;
+using OpenLR.Referenced;
+using OpenLR.Referenced.Locations;
 using OpenLR.Test.Functional.bam;
 using Serilog;
+using Coordinate = Itinero.LocalGeo.Coordinate;
 
 namespace OpenLR.Test.Functional
 {
@@ -38,27 +43,100 @@ namespace OpenLR.Test.Functional
         static void Main(string[] args)
         {
             SetupLogging();
-            
-            
-            BamEncode.TestEncodeAll();
-            
-            // executes the netherlands tests based on OSM.
-            var routerDb = Osm.Netherlands.DownloadAndBuildRouterDb();
-            routerDb.RemoveContracted(Vehicle.Car.Shortest());
-            Action netherlandsTest = () => { Osm.Netherlands.TestEncodeDecodePointAlongLine(routerDb); };
-            netherlandsTest.TestPerf("Testing netherlands point along line performance");
-            netherlandsTest = () => { Osm.Netherlands.TestEncodeDecodeRoutes(routerDb); };
-            netherlandsTest.TestPerf("Testing netherlands line performance");
 
-            // executes the netherlands tests based on NWB.
-            routerDb = NWB.Netherlands.DownloadExtractAndBuildRouterDb();
-            netherlandsTest = () => { NWB.Netherlands.TestEncodeDecodePointAlongLine(routerDb); };
-            netherlandsTest.TestPerf("Testing netherlands point along line performance");
-            netherlandsTest = () => { NWB.Netherlands.TestEncodeDecodeRoutes(routerDb); };
-            netherlandsTest.TestPerf("Testing netherlands line performance");
+            RouterDb routerDb;
+            using (var stream = File.OpenRead(@"/data/work/via/data/osm-service-debug/daily_20190603.routerdb"))
+            {
+                routerDb = RouterDb.Deserialize(stream);
+            }
+            
+            
+            var coderProfile = new OsmCoderProfile {AggressiveFactor = 1};
+            var coder = new Coder(routerDb, coderProfile);
+
+            var profile = coder.Router.Db.GetSupportedProfile("car");
+
+            var resolved = coder.Router.Resolve(profile, new Coordinate(13.116919569193875f, -13.76497839932718f));
+            var line = BuildLine(coder, resolved);
+            var encoded = coder.Encode(line);
+
+//            BamEncode.TestEncodeAll();
+//            
+//            // executes the netherlands tests based on OSM.
+//            var routerDb = Osm.Netherlands.DownloadAndBuildRouterDb();
+//            routerDb.RemoveContracted(Vehicle.Car.Shortest());
+//            Action netherlandsTest = () => { Osm.Netherlands.TestEncodeDecodePointAlongLine(routerDb); };
+//            netherlandsTest.TestPerf("Testing netherlands point along line performance");
+//            netherlandsTest = () => { Osm.Netherlands.TestEncodeDecodeRoutes(routerDb); };
+//            netherlandsTest.TestPerf("Testing netherlands line performance");
+//
+//            // executes the netherlands tests based on NWB.
+//            routerDb = NWB.Netherlands.DownloadExtractAndBuildRouterDb();
+//            netherlandsTest = () => { NWB.Netherlands.TestEncodeDecodePointAlongLine(routerDb); };
+//            netherlandsTest.TestPerf("Testing netherlands point along line performance");
+//            netherlandsTest = () => { NWB.Netherlands.TestEncodeDecodeRoutes(routerDb); };
+//            netherlandsTest.TestPerf("Testing netherlands line performance");
 #if DEBUG
             Console.ReadLine();
 #endif
+        }
+        
+        /// <summary>
+        /// Builds a referenced line.
+        /// </summary>
+        /// <param name="coder">The coder.</param>
+        /// <param name="routerPoint">The router point to build the point along line location for.</param>
+        /// <returns>A referenced line location representing the given edge.</returns>
+        public static ReferencedPointAlongLine BuildLine(Coder coder, RouterPoint routerPoint)
+        {
+            var edge = coder.Router.Db.Network.GetEdge(routerPoint.EdgeId);
+            var locationOnNetwork = routerPoint.LocationOnNetwork(coder.Router.Db);
+            
+            // check direction.
+            var forward = true;
+            var getFactor = coder.Router.GetDefaultGetFactor(coder.Profile.Profile);
+            var factor = getFactor(edge.Data.Profile);
+            if (factor.Direction == 2)
+            {
+                forward = false;
+            }
+
+            // build the location with one edge.
+            ReferencedPointAlongLine referencedPointAlongLine = null;
+            if (forward)
+            {
+                referencedPointAlongLine = new ReferencedPointAlongLine()
+                {
+                    Route = new ReferencedLine()
+                    {
+                        Edges = new long[] {edge.IdDirected()},
+                        Vertices = new uint[] {edge.From, edge.To},
+                        StartLocation = coder.Router.Db.CreateRouterPointForEdgeAndVertex(edge.IdDirected(), edge.From),
+                        EndLocation = coder.Router.Db.CreateRouterPointForEdgeAndVertex(edge.IdDirected(), edge.To)
+                    },
+                    Latitude = locationOnNetwork.Latitude,
+                    Longitude = locationOnNetwork.Longitude,
+                    Orientation = Orientation.NoOrientation
+                };
+            }
+            else
+            {
+                referencedPointAlongLine = new ReferencedPointAlongLine()
+                {
+                    Route = new ReferencedLine()
+                    {
+                        Edges = new long[] {-edge.IdDirected()},
+                        Vertices = new uint[] {edge.To, edge.From},
+                        StartLocation = coder.Router.Db.CreateRouterPointForEdgeAndVertex(edge.IdDirected(), edge.To),
+                        EndLocation = coder.Router.Db.CreateRouterPointForEdgeAndVertex(edge.IdDirected(), edge.From)
+                    },
+                    Latitude = locationOnNetwork.Latitude,
+                    Longitude = locationOnNetwork.Longitude,
+                    Orientation = Orientation.NoOrientation
+                };
+            }
+
+            return referencedPointAlongLine;
         }
 
         private static void SetupLogging()
