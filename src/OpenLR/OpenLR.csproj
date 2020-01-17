@@ -9,6 +9,15 @@
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
     <LangVersion>default</LangVersion>
+    <PackageVersion />
+    <Title>OpenLR</Title>
+    <Description>OpenLR library for .NET.</Description>
+    <Copyright>Itinero BV</Copyright>
+    <PackageProjectUrl>https://github.com/Itinero/OpenLR</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/itinero/OpenLR/blob/develop/LICENSE.md</PackageLicenseUrl>
+    <PackageIconUrl>http://www.itinero.tech/logos/openlr_logo64.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/Itinero/OpenLR</RepositoryUrl>
+    <PackageTags>openlr, routing</PackageTags>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\..\SharedAssemblyVersion.cs" Link="Properties\SharedAssemblyVersion.cs" />

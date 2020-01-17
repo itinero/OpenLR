@@ -9,13 +9,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{684B6559-C01
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenLR.Geo", "src\OpenLR.Geo\OpenLR.Geo.csproj", "{A2D0D3EA-6D13-46A4-A5DD-7C181F6F00AD}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nuget", "nuget", "{C698DA28-DCEF-4DE6-8F2E-9147E241CFE0}"
-	ProjectSection(SolutionItems) = preProject
-		nuspec\OpenLR.Geo.nuspec = nuspec\OpenLR.Geo.nuspec
-		nuspec\OpenLR.nuspec = nuspec\OpenLR.nuspec
-		nuspec\OpenLR_logo64.png = nuspec\OpenLR_logo64.png
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{E9F7404A-912C-429C-AD40-E4A8E4E47D20}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenLR.Test.Functional", "test\OpenLR.Test.Functional\OpenLR.Test.Functional.csproj", "{FB4094CB-9898-4112-B2CB-CD4F91818890}"
