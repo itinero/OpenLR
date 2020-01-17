@@ -44,38 +44,22 @@ namespace OpenLR.Test.Functional
         {
             SetupLogging();
 
-            RouterDb routerDb;
-            using (var stream = File.OpenRead(@"/data/work/via/data/osm-service-debug/daily_20190603.routerdb"))
-            {
-                routerDb = RouterDb.Deserialize(stream);
-            }
+            //BamEncode.TestEncodeAll();
             
-            
-            var coderProfile = new OsmCoderProfile {AggressiveFactor = 1};
-            var coder = new Coder(routerDb, coderProfile);
+            // executes the netherlands tests based on OSM.
+            var routerDb = Osm.Netherlands.DownloadAndBuildRouterDb();
+            routerDb.RemoveContracted(Vehicle.Car.Shortest());
+            Action netherlandsTest = () => { Osm.Netherlands.TestEncodeDecodePointAlongLine(routerDb); };
+            netherlandsTest.TestPerf("Testing netherlands point along line performance");
+            netherlandsTest = () => { Osm.Netherlands.TestEncodeDecodeRoutes(routerDb); };
+            netherlandsTest.TestPerf("Testing netherlands line performance");
 
-            var profile = coder.Router.Db.GetSupportedProfile("car");
-
-            var resolved = coder.Router.Resolve(profile, new Coordinate(13.116919569193875f, -13.76497839932718f));
-            var line = BuildLine(coder, resolved);
-            var encoded = coder.Encode(line);
-
-//            BamEncode.TestEncodeAll();
-//            
-//            // executes the netherlands tests based on OSM.
-//            var routerDb = Osm.Netherlands.DownloadAndBuildRouterDb();
-//            routerDb.RemoveContracted(Vehicle.Car.Shortest());
-//            Action netherlandsTest = () => { Osm.Netherlands.TestEncodeDecodePointAlongLine(routerDb); };
-//            netherlandsTest.TestPerf("Testing netherlands point along line performance");
-//            netherlandsTest = () => { Osm.Netherlands.TestEncodeDecodeRoutes(routerDb); };
-//            netherlandsTest.TestPerf("Testing netherlands line performance");
-//
-//            // executes the netherlands tests based on NWB.
-//            routerDb = NWB.Netherlands.DownloadExtractAndBuildRouterDb();
-//            netherlandsTest = () => { NWB.Netherlands.TestEncodeDecodePointAlongLine(routerDb); };
-//            netherlandsTest.TestPerf("Testing netherlands point along line performance");
-//            netherlandsTest = () => { NWB.Netherlands.TestEncodeDecodeRoutes(routerDb); };
-//            netherlandsTest.TestPerf("Testing netherlands line performance");
+            // executes the netherlands tests based on NWB.
+            routerDb = NWB.Netherlands.DownloadExtractAndBuildRouterDb();
+            netherlandsTest = () => { NWB.Netherlands.TestEncodeDecodePointAlongLine(routerDb); };
+            netherlandsTest.TestPerf("Testing netherlands point along line performance");
+            netherlandsTest = () => { NWB.Netherlands.TestEncodeDecodeRoutes(routerDb); };
+            netherlandsTest.TestPerf("Testing netherlands line performance");
 #if DEBUG
             Console.ReadLine();
 #endif
