@@ -43,7 +43,7 @@ namespace Samples.NWB
         {
             Itinero.Logging.Logger.LogAction = (o, level, message, parameters) =>
             {
-                Console.WriteLine(string.Format("[{0}] {1} - {2}", o, level, message));
+                Console.WriteLine($"[{o}] {level} - {message}");
             };
             
             // download and build router db from NWB-data if needed.
@@ -76,13 +76,12 @@ namespace Samples.NWB
         static void EncodeDecodeRoute(Coder coder, Coordinate coordinate1, Coordinate coordinate2)
         {
             // build referenced line and calculate shortest path.
-            Route route;
-            var referencedLine = coder.BuildLine(coordinate1, coordinate2, out route);
+            var referencedLine = coder.BuildLine(coordinate1, coordinate2, out _);
 
             // encode.
             var encoded = coder.Encode(referencedLine);
 
-            // decodee.
+            // decoded.
             var decodedReferencedLine = coder.Decode(encoded) as ReferencedLine;
         }
 
@@ -112,10 +111,8 @@ namespace Samples.NWB
             routerDb.LoadFromShape(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "temp"), "wegvakken.shp", "JTE_ID_BEG", "JTE_ID_END", vehicle);
 
             // write the router db to disk for later use.
-            using (var ouputStream = File.OpenWrite(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "nwb.routerdb")))
-            {
-                routerDb.Serialize(ouputStream);
-            }
+            using var outputStream = File.OpenWrite(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "nwb.routerdb"));
+            routerDb.Serialize(outputStream);
         }
     }
 }
