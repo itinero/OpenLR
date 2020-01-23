@@ -18,14 +18,13 @@ namespace OpenLR.Test.Functional.bam
     {
         public static void TestEncodeAll()
         {
+            Log.Information("Encode all edges in a network.");
             TestEncodeAll("bam/data.routerdb");
             TestEncodeAll("bam/bam2.routerdb");
-
         }
 
         public static void TestEncodeAll(string router)
         {
-            Log.Information("Running BAM-test");
             RouterDb routerDb;
             using (var stream = File.OpenRead(router))
             {
@@ -35,18 +34,28 @@ namespace OpenLR.Test.Functional.bam
             var coderProfile = new OsmCoderProfile();
             var coder = new Coder(routerDb, coderProfile);
 
+            var getFactor = coder.Router.GetDefaultGetFactor(coder.Profile.Profile);
+
             var enumerator = routerDb.Network.GetEdgeEnumerator();
             for (uint v = 0; v < routerDb.Network.VertexCount; v++)
             {
-                try
-                {
+                    if (!enumerator.MoveTo(v)) continue;
 
-                    var encoding = coder.BuildLineLocation(new DirectedEdgeId(v, true), true);
-                }
-                catch (Exception e)
-                {
-                    Log.Warning($"Edge {v}: {e}");
-                }
+                    while (enumerator.MoveNext())
+                    {
+                        if (enumerator.To < v) continue;
+                        
+                        var factor = getFactor(enumerator.Data.Profile);
+                    
+                        try
+                        {
+                            var encoding = coder.BuildLineLocation(new DirectedEdgeId(enumerator.Id, true), true);
+                        }
+                        catch (Exception e)
+                        {
+                            Log.Warning($"Edge {enumerator.Id}: {e}");
+                        }
+                    }
             }
         }
     }
@@ -105,7 +114,7 @@ namespace OpenLR.Test.Functional.bam
                 return _rawCodec.Encode(ReferencedPolygonCodec.Encode(location as ReferencedPolygon));
             if (location is ReferencedRectangle)
                 return _rawCodec.Encode(ReferencedRectangleCodec.Encode(location as ReferencedRectangle));
-            throw new ArgumentOutOfRangeException(nameof(location), "Unknow location type.");
+            throw new ArgumentOutOfRangeException(nameof(location), "Unknown location type.");
         }
 
 
@@ -143,8 +152,7 @@ namespace OpenLR.Test.Functional.bam
                 var edgeDetails = Router.Db.Network.GetEdge(edge.EdgeId);
 
                 // check if this edge is ok with this profile.
-                var factor = Profile.Profile.Factor(Router.Db.GetProfileAndMeta(edgeDetails.Data.Profile,
-                    edgeDetails.Data.MetaId));
+                var factor = Router.GetDefaultGetFactor(Profile.Profile)(edgeDetails.Data.Profile);
                 if (factor.Value <= 0)
                 {
                     // not traversable in any direction.
@@ -165,19 +173,29 @@ namespace OpenLR.Test.Functional.bam
                 // build the line location.
                 var vertex1 = edgeDetails.From;
                 var vertex2 = edgeDetails.To;
-                var startRouterPoint = Router.Db.Network.CreateRouterPointForVertex(vertex1,
+                var vertex1RouterPoint = Router.Db.Network.CreateRouterPointForVertex(vertex1,
                     vertex2);
-                var endRouterPoint = Router.Db.Network.CreateRouterPointForVertex(vertex2,
+                var vertex2RouterPoint = Router.Db.Network.CreateRouterPointForVertex(vertex2,
                     vertex1);
+                
+                
+                if (!edge.Forward)
+                {
+                    return new ReferencedLine()
+                    {
+                        Edges = new[] {edge.SignedDirectedId},
+                        Vertices = new[] {vertex2, vertex1},
+                        StartLocation = vertex2RouterPoint,
+                        EndLocation = vertex1RouterPoint
+                    };
+                }
 
-
-                var direction = edge.Forward ? edge.SignedDirectedId : -edge.SignedDirectedId;
                 return new ReferencedLine()
                 {
-                    Edges = new[] {direction},
+                    Edges = new[] {edge.SignedDirectedId},
                     Vertices = new[] {vertex1, vertex2},
-                    StartLocation = startRouterPoint,
-                    EndLocation = endRouterPoint
+                    StartLocation = vertex1RouterPoint,
+                    EndLocation = vertex2RouterPoint
                 };
             }
             catch (Exception ex)

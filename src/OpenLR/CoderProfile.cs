@@ -80,6 +80,12 @@ namespace OpenLR
         }
 
         /// <summary>
+        /// Gets or sets the max resolve distance in meters.
+        /// </summary>
+
+        public float MaxResolveDistance { get; set; } = 200;
+
+        /// <summary>
         /// Gets the maximum search (time or distance depending on used profile).
         /// </summary>
         public float MaxSearch

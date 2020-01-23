@@ -267,6 +267,7 @@ namespace OpenLR
         public static void ValidateConnected(this ReferencedLine line, Coder coder)
         {
             var profile = coder.Profile;
+            var getFactor = coder.Router.GetDefaultGetFactor(profile.Profile);
 
             var edges = line.Edges;
             var vertices = line.Vertices;
@@ -298,7 +299,7 @@ namespace OpenLR
                 }
 
                 // check whether the edge can traversed.
-                var factor = profile.Profile.Factor(coder.Router.Db.EdgeProfiles.Get(foundEdge.Data.Profile));
+                var factor = getFactor(foundEdge.Data.Profile);
                 if (factor.Value == 0)
                 { // oeps, cannot be traversed.
                     throw new ArgumentOutOfRangeException(string.Format("Edge at index {0} cannot be traversed by vehicle {1}.", edgeIdx, profile.Profile.Name));

@@ -49,6 +49,7 @@ namespace OpenLR
         public static bool IsVertexValid(this Coder coder, uint vertex)
         {
             var profile = coder.Profile;
+            var getFactor = coder.Router.GetDefaultGetFactor(profile.Profile);
             var edges = coder.Router.Db.Network.GetEdges(vertex);
             var db = coder.Router.Db;
             var restrictionsFunc = db.GetGetRestrictions(profile.Profile, null);
@@ -58,7 +59,7 @@ namespace OpenLR
             var traversCount = 0;
             foreach (var edge in edges)
             {
-                var factor = profile.Profile.Factor(coder.Router.Db.EdgeProfiles.Get(edge.Data.Profile));
+                var factor = getFactor(edge.Data.Profile);
                 if (factor.Value != 0)
                 {
                     traversCount++;
@@ -113,7 +114,7 @@ namespace OpenLR
             foreach (var edge in edges)
             {
                 var edgeProfile = coder.Router.Db.EdgeProfiles.Get(edge.Data.Profile);
-                var factor = profile.Profile.Factor(edgeProfile);
+                var factor = getFactor(edge.Data.Profile);
 
 
                 if (factor.Value == 0) continue;
@@ -258,6 +259,7 @@ namespace OpenLR
                         fromRouterPoint, toRouterPoint, coder.Profile.AggressiveRoutingSettings);
                 }
 
+                if (result.IsError) return null;
                 return result.Value;
             }
             else
@@ -270,6 +272,7 @@ namespace OpenLR
                         toRouterPoint, fromRouterPoint, coder.Profile.AggressiveRoutingSettings);
                 }
 
+                if (result.IsError) return null;
                 return result.Value;
             }
         }
@@ -445,7 +448,7 @@ namespace OpenLR
         public static ReferencedPointAlongLine BuildPointAlongLine(this Coder coder, float latitude, float longitude,
             out RouterPoint resolvedPoint)
         {
-            var routerPoint = coder.Router.TryResolve(coder.Profile.Profile, latitude, longitude);
+            var routerPoint = coder.Router.TryResolve(coder.Profile.Profile, latitude, longitude, coder.Profile.MaxResolveDistance);
             if (routerPoint.IsError)
             {
                 throw new Exception(
@@ -459,8 +462,9 @@ namespace OpenLR
             var edge = coder.Router.Db.Network.GetEdge(routerPoint.Value.EdgeId);
 
             // check direction.
+            var getFactor = coder.Router.GetDefaultGetFactor(coder.Profile.Profile);
             var forward = true;
-            var factor = coder.Profile.Profile.Factor(coder.Router.Db.EdgeProfiles.Get(edge.Data.Profile));
+            var factor = getFactor(edge.Data.Profile);
             if (factor.Direction == 2)
             {
                 forward = false;

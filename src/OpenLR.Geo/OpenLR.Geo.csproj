@@ -24,7 +24,7 @@
     <ProjectReference Include="..\OpenLR\OpenLR.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Itinero.Geo" Version="1.4.0" />
+    <PackageReference Include="Itinero.Geo" Version="1.6.0-pre025" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

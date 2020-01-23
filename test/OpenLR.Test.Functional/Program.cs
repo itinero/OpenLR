@@ -44,7 +44,7 @@ namespace OpenLR.Test.Functional
         {
             SetupLogging();
 
-            //BamEncode.TestEncodeAll();
+            BamEncode.TestEncodeAll();
             
             // executes the netherlands tests based on OSM.
             var routerDb = Osm.Netherlands.DownloadAndBuildRouterDb();

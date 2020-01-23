@@ -26,6 +26,6 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Itinero" Version="1.4.0" />
+    <PackageReference Include="Itinero" Version="1.6.0-pre025" />
   </ItemGroup>
 </Project>

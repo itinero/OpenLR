@@ -141,6 +141,7 @@ namespace OpenLR.Referenced.Codecs
         public static IEnumerable<CandidatePathSegment> FindCandidatePathSegmentsFor(this Coder coder, CandidateLocation location, bool forward, FormOfWay fow, FunctionalRoadClass frc, 
             float bearing)
         {
+            var getFactor = coder.Router.GetDefaultGetFactor(coder.Profile.Profile);
             var profile = coder.Profile;
             var relevantEdges = new List<CandidatePathSegment>();
             if (location.Location.IsVertex())
@@ -149,13 +150,13 @@ namespace OpenLR.Referenced.Codecs
                 var edgeEnumerator = coder.Router.Db.Network.GetEdgeEnumerator(vertex);
                 foreach (var edge in edgeEnumerator)
                 {
-                    var edgeProfile = coder.Router.Db.EdgeProfiles.Get(edge.Data.Profile);
-                    var factor = profile.Profile.Factor(edgeProfile);
+                    var factor = getFactor(edge.Data.Profile);
 
                     if (factor.Value > 0 && (factor.Direction == 0 ||
                         (forward && (factor.Direction == 1) != edge.DataInverted) ||
                         (!forward && (factor.Direction == 1) == edge.DataInverted)))
                     {
+                        var edgeProfile = coder.Router.Db.EdgeProfiles.Get(edge.Data.Profile);
                         var matchScore = Score.New(Score.MATCH_ARC, "Metric indicating a match with fow, frc etc...",
                             profile.Match(edgeProfile, fow, frc), 2);
                         if (matchScore.Value > 0)

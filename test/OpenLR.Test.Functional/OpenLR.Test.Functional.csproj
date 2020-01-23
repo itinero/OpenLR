@@ -18,6 +18,18 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="NWB\car.lua" />
+    <None Update="Data\line_locations.geojson">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\locations.geojson">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bam\bam2.routerdb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bam\data.routerdb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="NWB\car.lua" />
@@ -27,8 +39,8 @@
     <ProjectReference Include="..\..\src\OpenLR\OpenLR.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Itinero.IO.Osm" Version="1.4.0" />
-    <PackageReference Include="Itinero.IO.Shape" Version="1.4.0" />
+    <PackageReference Include="Itinero.IO.Osm" Version="1.6.0-pre025" />
+    <PackageReference Include="Itinero.IO.Shape" Version="1.6.0-pre025" />
     <PackageReference Include="NetTopologySuite.IO.GeoJSON" Version="1.15.5" />
     <PackageReference Include="NUnit" Version="3.12.0" />
     <PackageReference Include="Serilog">
