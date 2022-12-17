@@ -53,7 +53,7 @@ namespace OpenLR.Referenced.Codecs
             CombinedScore bestCombinedEdge = null;
 
             // get candidate vertices and edges.
-            var candidates = new List<Itinero.Algorithms.Collections.SortedSet<CandidatePathSegment>>();
+            var candidates = new List<Itinero.Algorithms.Collections.SortedSet<CandidateSnapPoint>>();
             var lrps = new List<LocationReferencePoint>();
             var fromBearingReference = location.First.Bearing;
             var toBearingReference = location.Last.Bearing;
@@ -106,20 +106,20 @@ namespace OpenLR.Referenced.Codecs
                     var expectedDistance = location.First.DistanceToNext;
 
                     // default a perfect score, only compare large distances.
-                    var deviation = Score.New(Score.DISTANCE_COMPARISON,
+                    var deviation = Score.New(Score.DistanceComparison,
                         "Compares expected location distance with decoded location distance (1=perfect, 0=difference bigger than total distance)", 1, 1);
-                    if (expectedDistance > Parameters.DONT_CARE_DISTANCE || distance > Parameters.DONT_CARE_DISTANCE)
+                    if (expectedDistance > Parameters.DontCareDistance || distance > Parameters.DontCareDistance)
                     { // non-perfect score.
                         // don't care about difference smaller than Parameters.DONT_CARE_DISTANCE, the binary encoding only handles segments of about 50m.
-                        var distanceDiff = System.Math.Max(System.Math.Abs(distance - expectedDistance) - Parameters.DONT_CARE_DISTANCE, 0);
-                        deviation = Score.New(Score.DISTANCE_COMPARISON, "Compares expected location distance with decoded location distance (1=prefect, 0=difference bigger than total distance)",
+                        var distanceDiff = System.Math.Max(System.Math.Abs(distance - expectedDistance) - Parameters.DontCareDistance, 0);
+                        deviation = Score.New(Score.DistanceComparison, "Compares expected location distance with decoded location distance (1=prefect, 0=difference bigger than total distance)",
                             1 - System.Math.Min(System.Math.Max(distanceDiff / expectedDistance, 0), 1), 1);
                     }
 
                     // add deviation-score.
                     candidate.Score = candidate.Score * deviation;
 
-                    if ((candidate.Score.Value / candidate.Score.Reference) > coder.Profile.ScoreThreshold)
+                    if ((candidate.Score.Value / candidate.Score.Reference) > coder.Settings.ScoreThreshold)
                     { // ok, candidate is good enough.
                         // check candidate.
                         if (best == null)

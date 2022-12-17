@@ -1,39 +1,14 @@
-﻿// The MIT License (MIT)
-
-// Copyright (c) 2016 Ben Abelshausen
-
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-
-using Itinero;
-using Itinero.Algorithms;
-using Itinero.Algorithms.Collections;
-using Itinero.Algorithms.Search.Hilbert;
-using Itinero.Algorithms.Weights;
-using Itinero.Data.Network;
-using Itinero.Graphs;
-using Itinero.Profiles;
+﻿using Itinero;
 using OpenLR.Model;
 using OpenLR.Referenced.Codecs.Candidates;
 using OpenLR.Referenced.Locations;
 using OpenLR.Referenced.Scoring;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Itinero.Geo;
+using Itinero.Network;
+using Itinero.Snapping;
 
 namespace OpenLR.Referenced.Codecs
 {
@@ -45,9 +20,9 @@ namespace OpenLR.Referenced.Codecs
         /// <summary>
         /// Finds all candidate vertex/edge pairs for a given location reference point.
         /// </summary>
-        public static Itinero.Algorithms.Collections.SortedSet<CandidatePathSegment> FindCandidatesFor(this Coder coder, LocationReferencePoint lrp, bool forward, float maxVertexDistance = 40)
+        public static Itinero.Algorithms.Collections.SortedSet<CandidateSnapPoint> FindCandidatesFor(this Coder coder, LocationReferencePoint lrp, bool forward, float maxVertexDistance = 40)
         {
-            var vertexEdgeCandidates = new Itinero.Algorithms.Collections.SortedSet<CandidatePathSegment>(new CandidateVertexEdgeComparer());
+            var vertexEdgeCandidates = new Itinero.Algorithms.Collections.SortedSet<CandidateSnapPoint>(new CandidateVertexEdgeComparer());
             var vertexCandidates = coder.FindCandidateLocationsFor(lrp, maxVertexDistance);
             foreach (var vertexCandidate in vertexCandidates)
             {
@@ -64,86 +39,97 @@ namespace OpenLR.Referenced.Codecs
         /// <summary>
         /// Finds candidate vertices for a location reference point.
         /// </summary>
-        public static IEnumerable<CandidateLocation> FindCandidateLocationsFor(this Coder coder, LocationReferencePoint lrp, float maxVertexDistanceInMeter = 40, 
-            float candidateSearchBoxSize = 0.01f)
+        public static async IAsyncEnumerable<CandidateLocation> FindCandidateLocationsFor(this Coder coder,
+            LocationReferencePoint lrp, double maxVertexDistanceInMeter = 40)
         {
-            // build candidates list.
-            var scoredCandidates = new List<CandidateLocation>();
-            var lrpCoordinate = new Itinero.LocalGeo.Coordinate((float)lrp.Coordinate.Latitude, (float)lrp.Coordinate.Longitude);
-
-            // get vertices and check their edges.
-            var vertices = coder.Router.Db.Network.GeometricGraph.Search((float)lrp.Coordinate.Latitude, (float)lrp.Coordinate.Longitude, candidateSearchBoxSize);
-            var candidates = new HashSet<long>();
-            var edgeEnumerator = coder.Router.Db.Network.GetEdgeEnumerator();
-            foreach (var v in vertices)
+            static bool ScoreOk(Coder coder, CandidateLocation candidate)
             {
-                if (candidates.Contains(v))
-                { // vertex was already considered.
-                    continue;
-                }
-
-                var vertexLocation = coder.Router.Db.Network.GetVertex(v);
-                var distance = Itinero.LocalGeo.Coordinate.DistanceEstimateInMeter(vertexLocation, lrpCoordinate);
-                if (distance < maxVertexDistanceInMeter)
-                {
-                    candidates.Add(v);
-
-                    // check if there are edges that can be used for the given profile.
-                    edgeEnumerator.MoveTo(v);
-
-                    if (coder.Router.TryCreateRouterPointForVertex(v, coder.Profile.Profile, out var location))
-                    {
-                        scoredCandidates.Add(new CandidateLocation()
-                        {
-                            Score = Score.New(Score.VERTEX_DISTANCE,
-                                $"The vertex score compare to max distance {maxVertexDistanceInMeter}",
-                                (float)System.Math.Max(0, (1.0 - (distance / maxVertexDistanceInMeter))), 1), // calculate scoring compared to the fixed max distance.
-                            Location = location
-                        });
-                    }
-                }
+                return (candidate.Score.Value / candidate.Score.Reference >=
+                        System.Math.Min(
+                            coder.Settings.ScoreThreshold + coder.Settings.ScoreThreshold, 0.7));
             }
 
-            var candidatesQualityOK = false;
-            foreach(var candidate in scoredCandidates)
+            // search all vertices in box determined by the max distance.
+            var lrpLocation = lrp.Coordinate.ToLocation();
+            var snapper = coder.Network.Snap(coder.Settings.RoutingSettings.Profile, settings =>
             {
-                if (candidate.Score.Value / candidate.Score.Reference >= 
-                    System.Math.Min(coder.Profile.ScoreThreshold + coder.Profile.ScoreThreshold, 0.7))
-                { // at least one above threshold, keep it.
-                    candidatesQualityOK = true;
-                }
+                settings.MaxDistance = maxVertexDistanceInMeter;
+            });
+
+            var candidatesQualityOk = false;
+            await foreach (var vertex in snapper.ToAllVerticesAsync(lrpLocation.longitude, lrpLocation.latitude))
+            {
+                var location = coder.Network.GetVertex(vertex);
+                var distance = lrpLocation.DistanceEstimateInMeter(location);
+                if (distance > maxVertexDistanceInMeter) continue; // too far.
+
+                var snapPoint = snapper.To(vertex).First();
+                var candidate = new CandidateLocation
+                {
+                    Score = Score.New(Score.VertexDistance,
+                        $"The vertex score compare to max distance {maxVertexDistanceInMeter}",
+                        (float)System.Math.Max(0, (1.0 - (distance / maxVertexDistanceInMeter))),
+                        1), // calculate scoring compared to the fixed max distance.
+                    Location = snapPoint
+                };
+                candidatesQualityOk |= ScoreOk(coder, candidate);
+
+                yield return candidate;
             }
 
-            if (!candidatesQualityOK)
-            { // no candidates, create a virtual candidate.
-                var routerPoints = coder.Router.ResolveMultiple(new Itinero.Profiles.Profile[] { coder.Profile.Profile }, lrpCoordinate.Latitude, lrpCoordinate.Longitude, maxVertexDistanceInMeter);
-                if (routerPoints.Count == 0)
+            if (candidatesQualityOk) yield break;
+
+            // no candidates, create a virtual candidate.
+            await foreach (var snapPoint in coder.Network.Snap(coder.Settings.RoutingSettings.Profile, s =>
+                               {
+                                   s.MaxDistance = maxVertexDistanceInMeter;
+                               })
+                               .ToAllAsync(lrpLocation.longitude, lrpLocation.latitude))
+            {
+                var location = snapPoint.LocationOnNetwork(coder.Network);
+                var distance = location.DistanceEstimateInMeter(lrpLocation);
+                if (distance > maxVertexDistanceInMeter) continue; // too far.
+
+                var candidate = new CandidateLocation
                 {
-                    throw new Exception("No candidates found for LRP: Could not resolve a point at the location.");
-                }
-                foreach (var routerPoint in routerPoints)
-                {
-                    var distance = Itinero.LocalGeo.Coordinate.DistanceEstimateInMeter(routerPoint.LocationOnNetwork(coder.Router.Db), lrpCoordinate);
-                    scoredCandidates.Add(new CandidateLocation()
-                    {
-                        Score = Score.New(Score.VERTEX_DISTANCE, string.Format("The vertex score compare to max distance {0}", maxVertexDistanceInMeter),
-                            (float)System.Math.Max(0, (1.0 - (distance / maxVertexDistanceInMeter))), 1), // calculate scoring compared to the fixed max distance.
-                        Location = routerPoint
-                    });
-                }
+                    Score = Score.New(Score.VertexDistance,
+                        $"The vertex score compare to max distance {maxVertexDistanceInMeter}",
+                        (float)System.Math.Max(0, (1.0 - (distance / maxVertexDistanceInMeter))),
+                        1), // calculate scoring compared to the fixed max distance.
+                    Location = snapPoint
+                };
+                yield return candidate;
             }
-            return scoredCandidates;
         }
-        
+
         /// <summary>
         /// Finds candidate edges starting at a given vertex matching a given fow and frc.
         /// </summary>
-        public static IEnumerable<CandidatePathSegment> FindCandidatePathSegmentsFor(this Coder coder, CandidateLocation location, bool forward, FormOfWay fow, FunctionalRoadClass frc, 
+        public static IEnumerable<CandidateSnapPoint> FindCandidatePathSegmentsFor(this Coder coder, CandidateLocation location, bool forward, FormOfWay fow, FunctionalRoadClass frc, 
             float bearing)
         {
-            var getFactor = coder.Router.GetDefaultGetFactor(coder.Profile.Profile);
-            var profile = coder.Profile;
-            var relevantEdges = new List<CandidatePathSegment>();
+            var costFunction = coder.Network.GetCostFunctionFor(coder.Settings.RoutingSettings.Profile);
+            if (location.Location.IsVertex)
+            {
+                var vertex = location.Location.GetVertex(coder.Network);
+
+                var enumerator = coder.Network.GetEdgeEnumerator();
+                enumerator.MoveTo(vertex);
+                while (enumerator.MoveNext())
+                {
+                    var factor = costFunction.Get(enumerator);
+                    if (factor.cost <= 0) continue; // edge cannot be access by profile.
+
+                    var match = coder.Interpreter.Match(enumerator, fow, frc);
+                    if (match <= 0) continue; // match is really really bad.
+                    
+                    
+                }
+            }
+            
+            var getFactor = coder.Router.GetDefaultGetFactor(coder.Settings.Profile);
+            var profile = coder.Settings;
+            var relevantEdges = new List<CandidateSnapPoint>();
             if (location.Location.IsVertex())
             { // location is a vertex, probably 99% of the time.
                 var vertex = location.Location.VertexId(coder.Router.Db);
@@ -157,7 +143,7 @@ namespace OpenLR.Referenced.Codecs
                         (!forward && (factor.Direction == 1) == edge.DataInverted)))
                     {
                         var edgeProfile = coder.Router.Db.EdgeProfiles.Get(edge.Data.Profile);
-                        var matchScore = Score.New(Score.MATCH_ARC, "Metric indicating a match with fow, frc etc...",
+                        var matchScore = Score.New(Score.MatchArc, "Metric indicating a match with fow, frc etc...",
                             profile.Match(edgeProfile, fow, frc), 2);
                         if (matchScore.Value > 0)
                         { // ok, there is a match.
@@ -166,8 +152,8 @@ namespace OpenLR.Referenced.Codecs
                             var localBearing = BearingEncoder.EncodeBearing(shape, false);
                             var localBearingDiff = System.Math.Abs(Extensions.AngleSmallestDifference(localBearing, bearing));
 
-                            var bearingScore = Score.New(Score.BEARING_DIFF, "Bearing difference score (0=1 & 180=0)", (1f - (localBearingDiff / 180f)) * 2, 2);
-                            relevantEdges.Add(new CandidatePathSegment()
+                            var bearingScore = Score.New(Score.BearingDiff, "Bearing difference score (0=1 & 180=0)", (1f - (localBearingDiff / 180f)) * 2, 2);
+                            relevantEdges.Add(new CandidateSnapPoint()
                             {
                                 Score = location.Score * (matchScore + bearingScore),
                                 Location = location.Location,
@@ -179,7 +165,7 @@ namespace OpenLR.Referenced.Codecs
             }
             else
             { // location is not a vertex but a virtual point, try available directions.
-                var paths = location.Location.ToEdgePaths(coder.Router.Db, coder.Profile.Profile.DefaultWeightHandlerCached(coder.Router.Db), forward);
+                var paths = location.Location.ToEdgePaths(coder.Router.Db, coder.Settings.Profile.DefaultWeightHandlerCached(coder.Router.Db), forward);
                 var edgeEnumerator = coder.Router.Db.Network.GetEdgeEnumerator();
                 var locationOnNetwork = location.Location.LocationOnNetwork(coder.Router.Db);
                 foreach (var path in paths)
@@ -192,7 +178,7 @@ namespace OpenLR.Referenced.Codecs
                     var edge = edgeEnumerator.Current;
                     var edgeProfile = coder.Router.Db.EdgeProfiles.Get(edge.Data.Profile);
 
-                    var matchScore = Score.New(Score.MATCH_ARC, "Metric indicating a match with fow, frc etc...",
+                    var matchScore = Score.New(Score.MatchArc, "Metric indicating a match with fow, frc etc...",
                         profile.Match(edgeProfile, fow, frc), 2);
                     if (matchScore.Value > 0)
                     { // ok, there is a match.
@@ -206,8 +192,8 @@ namespace OpenLR.Referenced.Codecs
                         var localBearing = BearingEncoder.EncodeBearing(shape, false);
                         var localBearingDiff = System.Math.Abs(Extensions.AngleSmallestDifference(localBearing, bearing));
 
-                        var bearingScore = Score.New(Score.BEARING_DIFF, "Bearing difference score (0=1 & 180=0)", (1f - (localBearingDiff / 180f)) * 2, 2);
-                        relevantEdges.Add(new CandidatePathSegment()
+                        var bearingScore = Score.New(Score.BearingDiff, "Bearing difference score (0=1 & 180=0)", (1f - (localBearingDiff / 180f)) * 2, 2);
+                        relevantEdges.Add(new CandidateSnapPoint()
                         {
                             Score = location.Score * (matchScore + bearingScore),
                             Location = location.Location,
@@ -222,10 +208,10 @@ namespace OpenLR.Referenced.Codecs
         /// <summary>
         /// Calculates a route between the two given vertices.
         /// </summary>
-        public static CandidateRoute FindCandidateRoute(this Coder coder, CandidatePathSegment from, CandidatePathSegment to, FunctionalRoadClass minimum,
+        public static CandidateRoute FindCandidateRoute(this Coder coder, CandidateSnapPoint from, CandidateSnapPoint to, FunctionalRoadClass minimum,
             bool invertTargetEdge = true)
         {
-            var weightHandler = coder.Profile.Profile.DefaultWeightHandler(coder.Router);
+            var weightHandler = coder.Settings.Profile.DefaultWeightHandler(coder.Router);
 
             var directedEdgeFrom = from.Path.Edge;
             var directedEdgeTo = -to.Path.Edge;
@@ -235,15 +221,15 @@ namespace OpenLR.Referenced.Codecs
             }
 
             // TODO: probably the bug is one-edge routes.
-            var path = coder.Router.TryCalculateRaw(coder.Profile.Profile, weightHandler,
-                directedEdgeFrom, directedEdgeTo, coder.Profile.RoutingSettings);
-            if (Itinero.LocalGeo.Coordinate.DistanceEstimateInMeter(from.Location.Location(), to.Location.Location()) > coder.Profile.MaxSearch / 2)
+            var path = coder.Router.TryCalculateRaw(coder.Settings.Profile, weightHandler,
+                directedEdgeFrom, directedEdgeTo, coder.Settings.RoutingSettings);
+            if (Itinero.LocalGeo.Coordinate.DistanceEstimateInMeter(from.Location.Location(), to.Location.Location()) > coder.Settings.MaxSearch / 2)
             {
                 try
                 {
-                    coder.Profile.RoutingSettings.SetMaxSearch(coder.Profile.Profile.FullName, coder.Profile.MaxSearch * 4);
-                    path = coder.Router.TryCalculateRaw(coder.Profile.Profile, weightHandler,
-                        directedEdgeFrom, directedEdgeTo, coder.Profile.RoutingSettings);
+                    coder.Settings.RoutingSettings.SetMaxSearch(coder.Settings.Profile.FullName, coder.Settings.MaxSearch * 4);
+                    path = coder.Router.TryCalculateRaw(coder.Settings.Profile, weightHandler,
+                        directedEdgeFrom, directedEdgeTo, coder.Settings.RoutingSettings);
                 }
                 catch
                 {
@@ -251,7 +237,7 @@ namespace OpenLR.Referenced.Codecs
                 }
                 finally
                 {
-                    coder.Profile.RoutingSettings.SetMaxSearch(coder.Profile.Profile.FullName, coder.Profile.MaxSearch);
+                    coder.Settings.RoutingSettings.SetMaxSearch(coder.Settings.Profile.FullName, coder.Settings.MaxSearch);
                 }
             }
 
@@ -261,7 +247,7 @@ namespace OpenLR.Referenced.Codecs
                 return new CandidateRoute()
                 {
                     Route = null,
-                    Score = Score.New(Score.CANDIDATE_ROUTE, "Candidate route quality.", 0, 1)
+                    Score = Score.New(Score.CandidateRoute, "Candidate route quality.", 0, 1)
                 };
             }
 
@@ -318,7 +304,7 @@ namespace OpenLR.Referenced.Codecs
                     StartLocation = startLocation,
                     EndLocation = endLocation
                 },
-                Score = Score.New(Score.CANDIDATE_ROUTE, "Candidate route quality.", 1, 1)
+                Score = Score.New(Score.CandidateRoute, "Candidate route quality.", 1, 1)
             };
         }
     }

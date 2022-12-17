@@ -1,181 +1,122 @@
-﻿// The MIT License (MIT)
-
-// Copyright (c) 2016 Ben Abelshausen
-
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-
-using Itinero;
-using OpenLR.Model.Locations;
+﻿using OpenLR.Model.Locations;
 using OpenLR.Referenced;
 using OpenLR.Referenced.Locations;
 using System;
+using Itinero.Network;
+using OpenLR.Codecs;
+using OpenLR.Codecs.Binary;
+using OpenLR.Networks;
 
-namespace OpenLR
+namespace OpenLR;
+
+/// <summary>
+/// The OpenLR encoder/decoder.
+/// </summary>
+public class Coder
 {
     /// <summary>
-    /// The OpenLR encoder/decoder.
+    /// Creates a new coder with a default binary codec.
     /// </summary>
-    public class Coder
+    /// <param name="routingNetwork">The routing network.</param>
+    /// <param name="settings">The settings.</param>
+    public Coder(RoutingNetwork routingNetwork, CoderSettings settings)
     {
-        private readonly Router _router;
-        private readonly Codecs.CodecBase _rawCodec;
-        private readonly CoderProfile _profile;
-
-        /// <summary>
-        /// Creates a new coder with a default binary codec.
-        /// </summary>
-        /// <param name="routerDb"></param>
-        /// <param name="profile"></param>
-        public Coder(RouterDb routerDb, CoderProfile profile)
-            : this(routerDb, profile, new Codecs.Binary.BinaryCodec())
-        {
-
-        }
+        if (settings.NetworkInterpreter == null) throw new Exception("No network data interpreter set.");
+        if (settings.RawCodec == null) throw new Exception("No raw codec set.");
         
-        /// <summary>
-        /// Creates a new coder.
-        /// </summary>
-        public Coder(RouterDb routerDb, CoderProfile profile, Codecs.CodecBase rawCodec)
+        this.Network = routingNetwork;
+        this.Settings = settings;
+
+        this.Interpreter = new EdgeEnumeratorNetworkInterpreter(this.Settings.NetworkInterpreter);
+    }
+    
+    internal RoutingNetwork Network { get; }
+    
+    internal EdgeEnumeratorNetworkInterpreter Interpreter { get; }
+    
+    /// <summary>
+    /// Gets the profile.
+    /// </summary>
+    public CoderSettings Settings { get; }
+
+    /// <summary>
+    /// Encodes a location into an OpenLR string.
+    /// </summary>
+    public string Encode(ReferencedCircle location)
+    {
+        return this.Settings.RawCodec.Encode(Referenced.Codecs.ReferencedCircleCodec.Encode(location));
+    }
+
+    /// <summary>
+    /// Encodes a location into an OpenLR string.
+    /// </summary>
+    public string Encode(ReferencedGeoCoordinate location)
+    {
+        return this.Settings.RawCodec.Encode(Referenced.Codecs.ReferencedGeoCoordinateCodec.Encode(location));
+    }
+
+    /// <summary>
+    /// Encodes a location into an OpenLR string.
+    /// </summary>
+    public string Encode(ReferencedGrid location)
+    {
+        return this.Settings.RawCodec.Encode(Referenced.Codecs.ReferencedGridCodec.Encode(location));
+    }
+
+    /// <summary>
+    /// Encodes a location into an OpenLR string.
+    /// </summary>
+    public string Encode(ReferencedLine location, EncodingSettings? settings = null)
+    {
+        settings ??= EncodingSettings.Default;
+        return this.Settings.RawCodec.Encode(
+            Referenced.Codecs.ReferencedLineCodec.Encode(location, this, settings));
+    }
+
+    /// <summary>
+    /// Encodes a location into an OpenLR string.
+    /// </summary>
+    public string Encode(ReferencedPointAlongLine location)
+    {
+        return this.Settings.RawCodec.Encode(Referenced.Codecs.ReferencedPointAlongLineCodec.Encode(location, this));
+    }
+
+    /// <summary>
+    /// Encodes a location into an OpenLR string.
+    /// </summary>
+    public string Encode(ReferencedPolygon location, EncodingSettings? settings = null)
+    {
+        return this.Settings.RawCodec.Encode(Referenced.Codecs.ReferencedPolygonCodec.Encode(location));
+    }
+
+    /// <summary>
+    /// Encodes a location into an OpenLR string.
+    /// </summary>
+    public string Encode(ReferencedRectangle location, EncodingSettings? settings = null)
+    {
+        return this.Settings.RawCodec.Encode(Referenced.Codecs.ReferencedRectangleCodec.Encode(location));
+    }
+
+    /// <summary>
+    /// Decoders an OpenLR string into a location.
+    /// </summary>
+    public IReferencedLocation Decode(string encoded)
+    {
+        var location = this.Settings.RawCodec.Decode(encoded);
+
+        return location switch
         {
-            _router = new Router(routerDb);
-            _rawCodec = rawCodec;
-            _profile = profile;
-
-            if (!_router.SupportsAll(profile.Profile))
-            {
-                throw new ArgumentException("The router db does not support the profile in the coder profile. Are you using the correct vehicle profile?");
-            }
-        }
-
-        /// <summary>
-        /// Gets the router.
-        /// </summary>
-        public Router Router
-        {
-            get
-            {
-                return _router;
-            }
-        }
-
-        /// <summary>
-        /// Gets the profile.
-        /// </summary>
-        public CoderProfile Profile
-        {
-            get
-            {
-                return _profile;
-            }
-        }
-
-        /// <summary>
-        /// Gets the raw codec.
-        /// </summary>
-        public Codecs.CodecBase RawCodec
-        {
-            get
-            {
-                return _rawCodec;
-            }
-        }
-
-        /// <summary>
-        /// Encodes a location into an OpenLR string.
-        /// </summary>
-        public string Encode(ReferencedLocation location)
-        {
-            return this.Encode(location, EncodingSettings.Default);
-        }
-
-        /// <summary>
-        /// Encodes a location into an OpenLR string.
-        /// </summary>
-        public string Encode(ReferencedLocation location, EncodingSettings settings)
-        {
-            if (location is ReferencedCircle)
-            {
-                return _rawCodec.Encode(Referenced.Codecs.ReferencedCircleCodec.Encode(location as ReferencedCircle));
-            }
-            if (location is ReferencedGeoCoordinate)
-            {
-                return _rawCodec.Encode(Referenced.Codecs.ReferencedGeoCoordinateCodec.Encode(location as ReferencedGeoCoordinate));
-            }
-            if (location is ReferencedGrid)
-            {
-                return _rawCodec.Encode(Referenced.Codecs.ReferencedGridCodec.Encode(location as ReferencedGrid));
-            }
-            if (location is ReferencedLine)
-            {
-                return _rawCodec.Encode(Referenced.Codecs.ReferencedLineCodec.Encode(location as ReferencedLine, this, settings));
-            }
-            if (location is ReferencedPointAlongLine)
-            {
-                return _rawCodec.Encode(Referenced.Codecs.ReferencedPointAlongLineCodec.Encode(location as ReferencedPointAlongLine, this));
-            }
-            if (location is ReferencedPolygon)
-            {
-                return _rawCodec.Encode(Referenced.Codecs.ReferencedPolygonCodec.Encode(location as ReferencedPolygon));
-            }
-            if (location is ReferencedRectangle)
-            {
-                return _rawCodec.Encode(Referenced.Codecs.ReferencedRectangleCodec.Encode(location as ReferencedRectangle));
-            }
-            throw new ArgumentOutOfRangeException("location", "Unknow location type.");
-        }
-
-        /// <summary>
-        /// Decoders an OpenLR string into a location.
-        /// </summary>
-        public ReferencedLocation Decode(string encoded)
-        {
-            var location = _rawCodec.Decode(encoded);
-
-            if (location is CircleLocation)
-            {
-                return Referenced.Codecs.ReferencedCircleCodec.Decode(location as CircleLocation);
-            }
-            if (location is GeoCoordinateLocation)
-            {
-                return Referenced.Codecs.ReferencedGeoCoordinateCodec.Decode(location as GeoCoordinateLocation);
-            }
-            if (location is GridLocation)
-            {
-                return Referenced.Codecs.ReferencedGridCodec.Decode(location as GridLocation);
-            }
-            if (location is LineLocation)
-            {
-                return Referenced.Codecs.ReferencedLineCodec.Decode(location as LineLocation, this);
-            }
-            if (location is PointAlongLineLocation)
-            {
-                return Referenced.Codecs.ReferencedPointAlongLineCodec.Decode(location as PointAlongLineLocation, this);
-            }
-            if (location is PolygonLocation)
-            {
-                return Referenced.Codecs.ReferencedPolygonCodec.Decode(location as PolygonLocation);
-            }
-            if (location is RectangleLocation)
-            {
-                return Referenced.Codecs.ReferencedRectangleCodec.Decode(location as RectangleLocation);
-            }
-            throw new ArgumentOutOfRangeException("encoded", "Unknow encoded string.");
-        }
+            CircleLocation circleLocation => Referenced.Codecs.ReferencedCircleCodec.Decode(circleLocation),
+            GeoCoordinateLocation coordinateLocation => Referenced.Codecs.ReferencedGeoCoordinateCodec.Decode(
+                coordinateLocation),
+            GridLocation gridLocation => Referenced.Codecs.ReferencedGridCodec.Decode(gridLocation),
+            LineLocation lineLocation => Referenced.Codecs.ReferencedLineCodec.Decode(lineLocation, this),
+            PointAlongLineLocation lineLocation => Referenced.Codecs.ReferencedPointAlongLineCodec.Decode(
+                lineLocation, this),
+            PolygonLocation polygonLocation => Referenced.Codecs.ReferencedPolygonCodec.Decode(polygonLocation),
+            RectangleLocation rectangleLocation => Referenced.Codecs.ReferencedRectangleCodec.Decode(
+                rectangleLocation),
+            _ => throw new ArgumentOutOfRangeException(nameof(encoded), "Unknown encoded string.")
+        };
     }
 }

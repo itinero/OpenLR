@@ -27,12 +27,12 @@ namespace OpenLR.Referenced.Codecs.Candidates
     /// <summary>
     /// A comparer for vertex edge candidates.
     /// </summary>
-    public class CandidateVertexEdgeComparer : IComparer<CandidatePathSegment>
+    public class CandidateVertexEdgeComparer : IComparer<CandidateSnapPoint>
     {
         /// <summary>
         /// Compares the two given vertex-edge candidates.
         /// </summary>
-        public int Compare(CandidatePathSegment x, CandidatePathSegment y)
+        public int Compare(CandidateSnapPoint x, CandidateSnapPoint y)
         {
             var comparison = y.Score.Value.CompareTo(x.Score.Value);
             if(comparison == 0)

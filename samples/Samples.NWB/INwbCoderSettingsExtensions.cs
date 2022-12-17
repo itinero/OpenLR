@@ -29,7 +29,7 @@ namespace Samples.NWB
     /// <summary>
     /// An NWB coder profile.
     /// </summary>
-    public class NWBCoderProfile : OpenLR.CoderProfile
+    public class INwbCoderSettingsExtensions : OpenLR.CoderSettings
     {
         public static string BAANSUBSRT = "BST_CODE";
         public static string WEGBEHSRT = "WEGBEHSRT";
@@ -40,7 +40,7 @@ namespace Samples.NWB
         /// <summary>
         /// Creates a new NWB coder profile.
         /// </summary>
-        public NWBCoderProfile(Profile profile)
+        public INwbCoderSettingsExtensions(Profile profile)
             : base(profile, 0.3f, 7500)
         {
 

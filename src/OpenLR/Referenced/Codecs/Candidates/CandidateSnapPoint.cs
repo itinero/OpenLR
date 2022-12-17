@@ -1,31 +1,41 @@
-﻿using Itinero;
-using Itinero.Snapping;
+﻿using Itinero.Snapping;
 using OpenLR.Referenced.Scoring;
 
 namespace OpenLR.Referenced.Codecs.Candidates;
 
 /// <summary>
-/// Represents a candidate point and it's score, a location on the network that could be an LRP.
+/// Represents a candidate snap point and associated score.
 /// </summary>
-public class CandidateLocation
+public class CandidateSnapPoint
 {
     /// <summary>
-    /// Gets or sets the score.
+    /// Creates a new candidate.
     /// </summary>
-    public Score Score { get; set; }
+    /// <param name="location">The location.</param>
+    /// <param name="score">The score.</param>
+    public CandidateSnapPoint(SnapPoint location, Score score)
+    {
+        this.Score = score;
+        this.Location = location;
+    }
 
     /// <summary>
-    /// Gets or sets the location.
+    /// The combined score of vertex and edge.
     /// </summary>
-    public SnapPoint Location { get; set; }
-        
+    public Score Score { get; }
+
+    /// <summary>
+    /// Gets or sets the candidate location.
+    /// </summary>
+    public SnapPoint Location { get; }
+
     /// <summary>
     /// Determines whether this object is equal to the given object.
     /// </summary>
     public override bool Equals(object obj)
     {
-        var other = (obj as CandidateLocation);
-        return other != null && other.Score == this.Score &&
+        var other = (obj as CandidateSnapPoint);
+        return other != null && other.Score == this.Score && 
                other.Location.EdgeId == this.Location.EdgeId &&
                other.Location.Offset == this.Location.Offset;
     }
@@ -45,6 +55,6 @@ public class CandidateLocation
     /// </summary>
     public override string ToString()
     {
-        return $"{this.Location.ToString()}: {this.Score.ToString()}";
+        return $"{this.Location.ToString()} ({this.Score.ToString()})";
     }
 }

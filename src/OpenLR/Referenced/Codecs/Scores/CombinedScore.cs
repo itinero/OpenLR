@@ -33,12 +33,12 @@ namespace OpenLR.Referenced.Codecs.Scoring
         /// <summary>
         /// Gets or sets the source candidate.
         /// </summary>
-        public CandidatePathSegment Source { get; set; }
+        public CandidateSnapPoint Source { get; set; }
 
         /// <summary>
         /// Gets or sets the target candidate.
         /// </summary>
-        public CandidatePathSegment Target { get; set; }
+        public CandidateSnapPoint Target { get; set; }
 
         /// <summary>
         /// Returns the score.

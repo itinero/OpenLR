@@ -1,26 +1,4 @@
-﻿// The MIT License (MIT)
-
-// Copyright (c) 2016 Ben Abelshausen
-
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-
-using Itinero;
+﻿using Itinero;
 using Itinero.Algorithms.Collections;
 using OpenLR.Model;
 using OpenLR.Model.Locations;
@@ -31,6 +9,7 @@ using OpenLR.Referenced.Scoring;
 using System;
 using System.Collections.Generic;
 using Itinero.Algorithms;
+using OpenLR.Exceptions;
 
 namespace OpenLR.Referenced.Codecs
 {
@@ -45,7 +24,7 @@ namespace OpenLR.Referenced.Codecs
         public static ReferencedLine Decode(LineLocation location, Coder coder)
         {
             // get candidate vertices and edges.
-            var candidates = new List<Itinero.Algorithms.Collections.SortedSet<CandidatePathSegment>>();
+            var candidates = new List<Itinero.Algorithms.Collections.SortedSet<CandidateSnapPoint>>();
             var lrps = new List<LocationReferencePoint>();
 
             // loop over all lrps.
@@ -93,7 +72,7 @@ namespace OpenLR.Referenced.Codecs
 
                 // find the best candidate route.
                 CandidateRoute best = null;
-                CandidatePathSegment bestSource = null;
+                CandidateSnapPoint bestSource = null;
                 var targetIsLast = idx == lrps.Count - 2;
                 while (combinedScores.Count > 0)
                 {
@@ -123,7 +102,7 @@ namespace OpenLR.Referenced.Codecs
                     var expectedDistance = source.DistanceToNext;
 
                     // default a perfect score, only compare large distances.
-                    var deviation = Score.New(Score.DISTANCE_COMPARISON,
+                    var deviation = Score.New(Score.DistanceComparison,
                         "Compares expected location distance with decoded location distance (1=perfect, 0=difference bigger than total distance)",
                         1, 1);
                     if (expectedDistance > 200 || distance > 200)
@@ -131,7 +110,7 @@ namespace OpenLR.Referenced.Codecs
                         // non-perfect score.
                         // don't care about difference smaller than 200m, the binary encoding only handles segments of about 50m.
                         var distanceDiff = Math.Max(Math.Abs(distance - expectedDistance) - 200, 0);
-                        deviation = Score.New(Score.DISTANCE_COMPARISON,
+                        deviation = Score.New(Score.DistanceComparison,
                             "Compares expected location distance with decoded location distance (1=prefect, 0=difference bigger than total distance)",
                             1 - Math.Min(Math.Max(distanceDiff / expectedDistance, 0), 1), 1);
                     }
@@ -139,7 +118,7 @@ namespace OpenLR.Referenced.Codecs
                     // add deviation-score.
                     candidate.Score = candidate.Score * deviation;
 
-                    if (!((candidate.Score.Value / candidate.Score.Reference) > coder.Profile.ScoreThreshold))
+                    if (!((candidate.Score.Value / candidate.Score.Reference) > coder.Settings.ScoreThreshold))
                     {
                         continue;
                     }
@@ -190,7 +169,7 @@ namespace OpenLR.Referenced.Codecs
 
                 // assign new next.
                 target = source;
-                targetCandidates = new Itinero.Algorithms.Collections.SortedSet<CandidatePathSegment>();
+                targetCandidates = new Itinero.Algorithms.Collections.SortedSet<CandidateSnapPoint>();
                 targetCandidates.Add(bestSource); // only the best source can be re-used for the next segment.
             }
 
@@ -406,17 +385,17 @@ namespace OpenLR.Referenced.Codecs
 
         private static EdgePath<float> SearchPath(Coder coder, long fromEdge, long toEdge)
         {
-            var pathResult = coder.Router.TryCalculateRaw(coder.Profile.Profile,
-                coder.Router.GetDefaultWeightHandler(coder.Profile.Profile),
-                fromEdge, toEdge, coder.Profile.RoutingSettings);
+            var pathResult = coder.Router.TryCalculateRaw(coder.Settings.Profile,
+                coder.Router.GetDefaultWeightHandler(coder.Settings.Profile),
+                fromEdge, toEdge, coder.Settings.RoutingSettings);
             if (!pathResult.IsError) return pathResult.Value;
 
             try
             {
-                coder.Profile.RoutingSettings.SetMaxSearch(coder.Profile.Profile.FullName, float.MaxValue);
-                pathResult = coder.Router.TryCalculateRaw(coder.Profile.Profile,
-                    coder.Router.GetDefaultWeightHandler(coder.Profile.Profile),
-                    fromEdge, toEdge, coder.Profile.RoutingSettings);
+                coder.Settings.RoutingSettings.SetMaxSearch(coder.Settings.Profile.FullName, float.MaxValue);
+                pathResult = coder.Router.TryCalculateRaw(coder.Settings.Profile,
+                    coder.Router.GetDefaultWeightHandler(coder.Settings.Profile),
+                    fromEdge, toEdge, coder.Settings.RoutingSettings);
                 if (pathResult.IsError)
                 {
                     throw new Exception("No path found between two edges of the line location.");
@@ -428,8 +407,8 @@ namespace OpenLR.Referenced.Codecs
             }
             finally
             {
-                coder.Profile.RoutingSettings.SetMaxSearch(coder.Profile.Profile.FullName,
-                    coder.Profile.MaxSearch);
+                coder.Settings.RoutingSettings.SetMaxSearch(coder.Settings.Profile.FullName,
+                    coder.Settings.MaxSearch);
             }
         }
     }

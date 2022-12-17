@@ -57,7 +57,7 @@ namespace Samples.NWB
 
             // create 'coder'.
             var vehicle = routerDb.GetSupportedVehicle("nwb.car");
-            var coder = new Coder(routerDb, new NWBCoderProfile(vehicle.Shortest()));
+            var coder = new Coder(routerDb, new INwbCoderSettingsExtensions(vehicle.Shortest()));
 
             // encode/decode some shortest paths.
             EncodeDecodeRoute(coder, new Coordinate(52.41239352799169f, 5.832839012145995f), new Coordinate(52.41021421939001f, 5.848240256309509f));

@@ -24,69 +24,67 @@ using OpenLR.Codecs.Binary.Data;
 using OpenLR.Model;
 using OpenLR.Model.Locations;
 
-namespace OpenLR.Codecs.Binary.Decoders
+namespace OpenLR.Codecs.Binary.Codecs;
+
+/// <summary>
+/// A decoder that decodes binary data into a circle location.
+/// </summary>
+public static class PoiWithAccessPointLocationCodec
 {
     /// <summary>
-    /// A decoder that decodes binary data into a circle location.
+    /// Decodes the given data into a location reference.
     /// </summary>
-    public static class PoiWithAccessPointLocationCodec
+    public static PoiWithAccessPointLocation Decode(byte[] data)
     {
-        /// <summary>
-        /// Decodes the given data into a location reference.
-        /// </summary>
-        public static PoiWithAccessPointLocation Decode(byte[] data)
-        {
-            // decode first location reference point.
-            var first = new LocationReferencePoint();
-            first.Coordinate = CoordinateConverter.Decode(data, 1);
-            var orientation = OrientationConverter.Decode(data, 7, 0);
-            first.FuntionalRoadClass = FunctionalRoadClassConvertor.Decode(data, 7, 2);
-            first.FormOfWay = FormOfWayConvertor.Decode(data, 7, 5);
-            first.LowestFunctionalRoadClassToNext = FunctionalRoadClassConvertor.Decode(data, 8, 0);
-            first.Bearing = BearingConvertor.DecodeAngleFromBearing(BearingConvertor.Decode(data, 8, 3));
-            first.DistanceToNext = DistanceToNextConvertor.Decode(data[9]);
+        // decode first location reference point.
+        var first = new LocationReferencePoint { Coordinate = CoordinateConverter.Decode(data, 1) };
+        var orientation = OrientationConverter.Decode(data, 7, 0);
+        first.FuntionalRoadClass = FunctionalRoadClassConvertor.Decode(data, 7, 2);
+        first.FormOfWay = FormOfWayConvertor.Decode(data, 7, 5);
+        first.LowestFunctionalRoadClassToNext = FunctionalRoadClassConvertor.Decode(data, 8, 0);
+        first.Bearing = BearingConvertor.DecodeAngleFromBearing(BearingConvertor.Decode(data, 8, 3));
+        first.DistanceToNext = DistanceToNextConvertor.Decode(data[9]);
 
-            // decode last location reference point.
-            var last = new LocationReferencePoint();
+        // decode last location reference point.
+        var last = new LocationReferencePoint {
             // no last coordinates, identical to the first.
-            last.Coordinate = CoordinateConverter.DecodeRelative(first.Coordinate, data, 10);
-            var sideOfRoad = SideOfRoadConverter.Decode(data, 14, 0);
-            last.FuntionalRoadClass = FunctionalRoadClassConvertor.Decode(data, 14, 2);
-            last.FormOfWay = FormOfWayConvertor.Decode(data, 14, 5);
-            last.Bearing = BearingConvertor.DecodeAngleFromBearing(BearingConvertor.Decode(data, 15, 3));
+            Coordinate = CoordinateConverter.DecodeRelative(first.Coordinate, data, 10) };
+        var sideOfRoad = SideOfRoadConverter.Decode(data, 14, 0);
+        last.FuntionalRoadClass = FunctionalRoadClassConvertor.Decode(data, 14, 2);
+        last.FormOfWay = FormOfWayConvertor.Decode(data, 14, 5);
+        last.Bearing = BearingConvertor.DecodeAngleFromBearing(BearingConvertor.Decode(data, 15, 3));
 
-            // poi details.
-            var coordinate = CoordinateConverter.DecodeRelative(first.Coordinate, data, 17);
+        // poi details.
+        var coordinate = CoordinateConverter.DecodeRelative(first.Coordinate, data, 17);
 
-            // create line location.
-            var poiWithAccessPointLocation = new PoiWithAccessPointLocation();
-            poiWithAccessPointLocation.First = first;
-            poiWithAccessPointLocation.Last = last;
-            poiWithAccessPointLocation.Coordinate = coordinate;
-            poiWithAccessPointLocation.Orientation = orientation;
-            poiWithAccessPointLocation.PositiveOffset = null;
-            poiWithAccessPointLocation.SideOfRoad = sideOfRoad;
-            return poiWithAccessPointLocation;
-        }
-
-        /// <summary>
-        /// Returns true if the given data can be decoded by this decoder.
-        /// </summary>
-        public static bool CanDecode(byte[] data)
+        // create line location.
+        var poiWithAccessPointLocation = new PoiWithAccessPointLocation
         {
-            // decode the header first.
-            var header = HeaderConvertor.Decode(data, 0);
+            First = first, Last = last, Coordinate = coordinate,
+            Orientation = orientation,
+            PositiveOffset = null,
+            SideOfRoad = sideOfRoad
+        };
+        return poiWithAccessPointLocation;
+    }
 
-            // check header info.
-            if (header.ArF1 &&
-                !header.IsPoint &&
-                header.ArF0 &&
-                !header.HasAttributes)
-            { // header is incorrect.
-                return false;
-            }
+    /// <summary>
+    /// Returns true if the given data can be decoded by this decoder.
+    /// </summary>
+    public static bool CanDecode(byte[] data)
+    {
+        // decode the header first.
+        var header = HeaderConvertor.Decode(data, 0);
 
-            return data != null && (data.Length == 20 || data.Length == 21);
+        // check header info.
+        if (header.ArF1 &&
+            !header.IsPoint &&
+            header.ArF0 &&
+            !header.HasAttributes)
+        { // header is incorrect.
+            return false;
         }
+
+        return data.Length is 20 or 21;
     }
 }

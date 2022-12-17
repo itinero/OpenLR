@@ -47,7 +47,7 @@ namespace Samples.OSM
             }
 
             // create coder.
-            var coder = new Coder(routerDb, new OsmCoderProfile());
+            var coder = new Coder(routerDb, new IOsmCoderSettingsExtensions());
 
             // build a line location from a shortest path.
             // REMARK: this functionality is NOT part of the OpenLR-spec, just a convenient way to build a line location.
@@ -59,7 +59,7 @@ namespace Samples.OSM
             Console.WriteLine(encoded);
 
             // encode edge(s).
-            var resolved1 = coder.Router.Resolve(coder.Profile.Profile, new Itinero.LocalGeo.Coordinate(49.719760878136874f, 6.117909550666809f));
+            var resolved1 = coder.Router.Resolve(coder.Settings.Profile, new Itinero.LocalGeo.Coordinate(49.719760878136874f, 6.117909550666809f));
             var encoded1 = coder.BuildEdge(resolved1.EdgeIdDirected());
 
             // decode this location.

@@ -26,60 +26,54 @@ using OpenLR.Model.Locations;
 using System.Collections.Generic;
 using System;
 
-namespace OpenLR.Codecs.Binary.Decoders
+namespace OpenLR.Codecs.Binary.Codecs;
+
+/// <summary>
+/// A decoder that decodes binary data into a polygon location.
+/// </summary>
+public static class PolygonLocationCodec
 {
     /// <summary>
-    /// A decoder that decodes binary data into a polygon location.
+    /// Decodes the given data into a location reference.
     /// </summary>
-    public static class PolygonLocationCodec
+    public static PolygonLocation Decode(byte[] data)
     {
-        /// <summary>
-        /// Decodes the given data into a location reference.
-        /// </summary>
-        public static PolygonLocation Decode(byte[] data)
+        // just need to decode list of coordinate.
+        var coordinates = new List<Coordinate> { CoordinateConverter.Decode(data, 1) };
+
+        // calculate the number of points.
+        var previous = coordinates[0];
+        const int location = 7;
+        int points = 1 + (data.Length - 6) / 4;
+        for (int idx = 0; idx < points - 1; idx++)
         {
-            // just need to decode list of coordinate.
-            var coordinates = new List<Coordinate>();
-            coordinates.Add(CoordinateConverter.Decode(data, 1));
-
-            // calculate the number of points.
-            var previous = coordinates[0];
-            var location = 7;
-            int points = 1 + (data.Length - 6) / 4;
-            for (int idx = 0; idx < points - 1; idx++)
-            {
-                coordinates.Add(CoordinateConverter.DecodeRelative(
-                    coordinates[coordinates.Count - 1], data, location + (idx * 4)));
-            }
-
-            var polygonLocation = new PolygonLocation();
-            polygonLocation.Coordinates = coordinates.ToArray();
-            return polygonLocation;
+            coordinates.Add(CoordinateConverter.DecodeRelative(
+                coordinates[^1], data, location + (idx * 4)));
         }
 
-        /// <summary>
-        /// Returns true if the given data can be decoded but this decoder.
-        /// </summary>
-        public static bool CanDecode(byte[] data)
+        var polygonLocation = new PolygonLocation { Coordinates = coordinates.ToArray() };
+        return polygonLocation;
+    }
+
+    /// <summary>
+    /// Returns true if the given data can be decoded but this decoder.
+    /// </summary>
+    public static bool CanDecode(byte[] data)
+    {
+        // decode the header first.
+        var header = HeaderConvertor.Decode(data, 0);
+
+        // check header info.
+        if (header.ArF1 ||
+            header.IsPoint ||
+            !header.ArF0 ||
+            header.HasAttributes)
         {
-            if (data != null)
-            {
-                // decode the header first.
-                var header = HeaderConvertor.Decode(data, 0);
-
-                // check header info.
-                if (header.ArF1 ||
-                    header.IsPoint ||
-                    !header.ArF0 ||
-                    header.HasAttributes)
-                { // header is incorrect.
-                    return false;
-                }
-
-                int count = (data.Length - 15);
-                return count % 4 == 0;
-            }
+            // header is incorrect.
             return false;
         }
+
+        int count = (data.Length - 15);
+        return count % 4 == 0;
     }
 }

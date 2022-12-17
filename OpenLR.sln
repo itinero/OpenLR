@@ -18,9 +18,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1108EDD1-DBA6-4728-9FCE-C403C1E2C0BD}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		.editorconfig = .editorconfig
 		LICENSE.md = LICENSE.md
 		README.md = README.md
 		SharedAssemblyVersion.cs = SharedAssemblyVersion.cs
+		OpenLR.Common.props = OpenLR.Common.props
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{082AB082-0910-4B42-AC57-330BE7C57771}"
@@ -28,6 +30,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Samples.NWB", "samples\Samples.NWB\Samples.NWB.csproj", "{EC408DBE-A08C-4132-AFC1-4939690E3D75}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Samples.OSM", "samples\Samples.OSM\Samples.OSM.csproj", "{EC179DC9-835B-4549-B996-AD616A3566EF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Itinero", "..\..\anyways\routing\routing2\src\Itinero\Itinero.csproj", "{8DA95C35-6BDD-4451-9DE0-297C6BB62AF0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,6 +63,10 @@ Global
 		{EC179DC9-835B-4549-B996-AD616A3566EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC179DC9-835B-4549-B996-AD616A3566EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC179DC9-835B-4549-B996-AD616A3566EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DA95C35-6BDD-4451-9DE0-297C6BB62AF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DA95C35-6BDD-4451-9DE0-297C6BB62AF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DA95C35-6BDD-4451-9DE0-297C6BB62AF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DA95C35-6BDD-4451-9DE0-297C6BB62AF0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -70,6 +78,7 @@ Global
 		{9DAC0F4B-F928-4C53-AAFD-E60BCE6182F7} = {E9F7404A-912C-429C-AD40-E4A8E4E47D20}
 		{EC408DBE-A08C-4132-AFC1-4939690E3D75} = {082AB082-0910-4B42-AC57-330BE7C57771}
 		{EC179DC9-835B-4549-B996-AD616A3566EF} = {082AB082-0910-4B42-AC57-330BE7C57771}
+		{8DA95C35-6BDD-4451-9DE0-297C6BB62AF0} = {684B6559-C01F-4862-BA85-F0BF7642FB77}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {450F7C5F-5081-4385-BC20-DC6117BAD3D2}
