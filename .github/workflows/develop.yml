@@ -17,6 +17,10 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x
+
+    - name: Add GitHub Nuget Source
+      run: dotnet nuget add source https://nuget.pkg.github.com/itinero/index.json -n itinero -u xivk -p ${{secrets.PACKAGES_SECRET }} --store-password-in-clear-text
+
     - name: Restore packages.
       run: dotnet restore
     - name: Build all projects.
@@ -45,4 +49,3 @@ jobs:
     - name: Nuget push
       run: dotnet nuget push **/*.nupkg --skip-duplicate -k ${{ secrets.GITHUB_TOKEN }} -s https://nuget.pkg.github.com/itinero/index.json
       working-directory: ./src/
-      
