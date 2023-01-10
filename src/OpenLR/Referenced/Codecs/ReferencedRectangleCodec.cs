@@ -1,67 +1,44 @@
-﻿// The MIT License (MIT)
-
-// Copyright (c) 2016 Ben Abelshausen
-
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-
-using OpenLR.Model.Locations;
+﻿using OpenLR.Model.Locations;
 using OpenLR.Referenced.Locations;
 
-namespace OpenLR.Referenced.Codecs
+namespace OpenLR.Referenced.Codecs;
+
+/// <summary>
+/// The rectangle codec.
+/// </summary>
+public static class ReferencedRectangleCodec
 {
     /// <summary>
-    /// The rectangle codec.
+    /// Decodes the given location.
     /// </summary>
-    public static class ReferencedRectangleCodec
+    public static ReferencedRectangle Decode(RectangleLocation location)
     {
-        /// <summary>
-        /// Decodes the given location.
-        /// </summary>
-        public static ReferencedRectangle Decode(RectangleLocation location)
+        return new ReferencedRectangle()
         {
-            return new ReferencedRectangle()
-            {
-                LowerLeftLatitude = location.LowerLeft.Latitude,
-                LowerLeftLongitude = location.LowerLeft.Longitude,
-                UpperRightLatitude = location.UpperRight.Latitude,
-                UpperRightLongitude = location.UpperRight.Longitude
-            };
-        }
+            LowerLeftLatitude = location.LowerLeft.Latitude,
+            LowerLeftLongitude = location.LowerLeft.Longitude,
+            UpperRightLatitude = location.UpperRight.Latitude,
+            UpperRightLongitude = location.UpperRight.Longitude
+        };
+    }
 
-        /// <summary>
-        /// Encodes the given location.
-        /// </summary>
-        public static RectangleLocation Encode(ReferencedRectangle location)
+    /// <summary>
+    /// Encodes the given location.
+    /// </summary>
+    public static RectangleLocation Encode(ReferencedRectangle location)
+    {
+        return new RectangleLocation()
         {
-            return new RectangleLocation()
+            LowerLeft = new Model.Coordinate()
             {
-                LowerLeft = new Model.Coordinate()
-                {
-                    Latitude = location.LowerLeftLatitude,
-                    Longitude = location.LowerLeftLongitude
-                },
-                UpperRight = new Model.Coordinate()
-                {
-                    Longitude = location.UpperRightLongitude,
-                    Latitude = location.UpperRightLatitude
-                }
-            };
-        }
+                Latitude = location.LowerLeftLatitude,
+                Longitude = location.LowerLeftLongitude
+            },
+            UpperRight = new Model.Coordinate()
+            {
+                Longitude = location.UpperRightLongitude,
+                Latitude = location.UpperRightLatitude
+            }
+        };
     }
 }

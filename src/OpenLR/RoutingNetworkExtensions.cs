@@ -1,5 +1,9 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using Itinero.Network;
+using OpenLR.Model.Locations;
+using OpenLR.Referenced.Locations;
 
 namespace OpenLR;
 

@@ -40,7 +40,7 @@ public static class LineLocationCodec
         // decode first location reference point.
         var first = new LocationReferencePoint();
         first.Coordinate = CoordinateConverter.Decode(data, 1);
-        first.FuntionalRoadClass = FunctionalRoadClassConvertor.Decode(data, 7, 2);
+        first.FunctionalRoadClass = FunctionalRoadClassConvertor.Decode(data, 7, 2);
         first.FormOfWay = FormOfWayConvertor.Decode(data, 7, 5);
         first.LowestFunctionalRoadClassToNext = FunctionalRoadClassConvertor.Decode(data, 8, 0);
         first.Bearing = BearingConvertor.DecodeAngleFromBearing(BearingConvertor.Decode(data, 8, 3));
@@ -58,7 +58,7 @@ public static class LineLocationCodec
             intermediate.Coordinate = CoordinateConverter.DecodeRelative(reference, data, location);
             reference = intermediate.Coordinate;
             location = location + 4;
-            intermediate.FuntionalRoadClass = FunctionalRoadClassConvertor.Decode(data, location, 2);
+            intermediate.FunctionalRoadClass = FunctionalRoadClassConvertor.Decode(data, location, 2);
             intermediate.FormOfWay = FormOfWayConvertor.Decode(data, location, 5);
             location = location + 1;
             intermediate.Bearing = BearingConvertor.DecodeAngleFromBearing(BearingConvertor.Decode(data, location, 3));
@@ -74,7 +74,7 @@ public static class LineLocationCodec
         var last = new LocationReferencePoint();
         last.Coordinate = CoordinateConverter.DecodeRelative(reference, data, location);
         location = location + 4;
-        last.FuntionalRoadClass = FunctionalRoadClassConvertor.Decode(data, location, 2);
+        last.FunctionalRoadClass = FunctionalRoadClassConvertor.Decode(data, location, 2);
         last.FormOfWay = FormOfWayConvertor.Decode(data, location, 5);
         location = location + 1;
         last.Bearing = BearingConvertor.DecodeAngleFromBearing(BearingConvertor.Decode(data, location, 3));
@@ -134,7 +134,7 @@ public static class LineLocationCodec
         };
         HeaderConvertor.Encode(data, 0, header);
         CoordinateConverter.Encode(location.First.Coordinate, data, 1);
-        FunctionalRoadClassConvertor.Encode(location.First.FuntionalRoadClass.Value, data, 7, 2);
+        FunctionalRoadClassConvertor.Encode(location.First.FunctionalRoadClass.Value, data, 7, 2);
         FormOfWayConvertor.Encode(location.First.FormOfWay.Value, data, 7, 5);
         FunctionalRoadClassConvertor.Encode(location.First.LowestFunctionalRoadClassToNext.Value, data, 8, 0);
         BearingConvertor.Encode(BearingConvertor.EncodeAngleToBearing(location.First.Bearing.Value), data, 8, 3);
@@ -151,7 +151,7 @@ public static class LineLocationCodec
                 CoordinateConverter.EncodeRelative(reference, intermediate.Coordinate, data, position);
                 reference = intermediate.Coordinate;
                 position = position + 4;
-                FunctionalRoadClassConvertor.Encode(intermediate.FuntionalRoadClass.Value, data, position, 2);
+                FunctionalRoadClassConvertor.Encode(intermediate.FunctionalRoadClass.Value, data, position, 2);
                 FormOfWayConvertor.Encode(intermediate.FormOfWay.Value, data, position, 5);
                 position = position + 1;
                 BearingConvertor.Encode(BearingConvertor.EncodeAngleToBearing(intermediate.Bearing.Value), data, position, 3);
@@ -163,7 +163,7 @@ public static class LineLocationCodec
         }
 
         CoordinateConverter.EncodeRelative(reference, location.Last.Coordinate, data, position);
-        FunctionalRoadClassConvertor.Encode(location.Last.FuntionalRoadClass.Value, data, position + 4, 2);
+        FunctionalRoadClassConvertor.Encode(location.Last.FunctionalRoadClass.Value, data, position + 4, 2);
         FormOfWayConvertor.Encode(location.Last.FormOfWay.Value, data, position + 4, 5);
         BearingConvertor.Encode(BearingConvertor.EncodeAngleToBearing(location.Last.Bearing.Value), data, position + 5, 3);
 

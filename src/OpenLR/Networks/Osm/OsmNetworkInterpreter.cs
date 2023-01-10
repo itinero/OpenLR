@@ -81,7 +81,7 @@ public sealed class OsmNetworkInterpreter : NetworkInterpreter
     /// <summary>
     /// Tries to match the given attributes to the given fow/frc and returns a score of the match.
     /// </summary>
-    public override float Match(IEnumerable<(string key, string value)> attributes, FormOfWay fow, FunctionalRoadClass frc)
+    public override double Match(IEnumerable<(string key, string value)> attributes, FormOfWay fow, FunctionalRoadClass frc)
     {
         if (!attributes.TryGetValue("highway", out string highway))
         {

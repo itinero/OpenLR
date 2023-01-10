@@ -1,47 +1,24 @@
-﻿// The MIT License (MIT)
+﻿using OpenLR.Model;
 
-// Copyright (c) 2016 Ben Abelshausen
+namespace OpenLR.Model.Locations;
 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-
-using OpenLR.Model;
-
-namespace OpenLR.Model.Locations
+/// <summary>
+/// Represents a closed line location or the area defined by a closed path (i.e. a circuit) in the road network.
+/// </summary>
+public class ClosedLineLocation : ILocation
 {
     /// <summary>
-    /// Represents a closed line location or the area defined by a closed path (i.e. a circuit) in the road network.
+    /// Gets or sets the first point.
     /// </summary>
-    public class ClosedLineLocation : ILocation
-    {
-        /// <summary>
-        /// Gets or sets the first point.
-        /// </summary>
-        public LocationReferencePoint First { get; set; }
+    public LocationReferencePoint First { get; set; }
 
-        /// <summary>
-        /// Gets or sets the intermediate points.
-        /// </summary>
-        public LocationReferencePoint[] Intermediate { get; set; }
+    /// <summary>
+    /// Gets or sets the intermediate points.
+    /// </summary>
+    public LocationReferencePoint[] Intermediate { get; set; }
 
-        /// <summary>
-        /// Gets or sets the last point.
-        /// </summary>
-        public LocationReferencePoint Last { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets the last point.
+    /// </summary>
+    public LocationReferencePoint Last { get; set; }
 }

@@ -39,7 +39,7 @@ public static class PoiWithAccessPointLocationCodec
         // decode first location reference point.
         var first = new LocationReferencePoint { Coordinate = CoordinateConverter.Decode(data, 1) };
         var orientation = OrientationConverter.Decode(data, 7, 0);
-        first.FuntionalRoadClass = FunctionalRoadClassConvertor.Decode(data, 7, 2);
+        first.FunctionalRoadClass = FunctionalRoadClassConvertor.Decode(data, 7, 2);
         first.FormOfWay = FormOfWayConvertor.Decode(data, 7, 5);
         first.LowestFunctionalRoadClassToNext = FunctionalRoadClassConvertor.Decode(data, 8, 0);
         first.Bearing = BearingConvertor.DecodeAngleFromBearing(BearingConvertor.Decode(data, 8, 3));
@@ -50,7 +50,7 @@ public static class PoiWithAccessPointLocationCodec
             // no last coordinates, identical to the first.
             Coordinate = CoordinateConverter.DecodeRelative(first.Coordinate, data, 10) };
         var sideOfRoad = SideOfRoadConverter.Decode(data, 14, 0);
-        last.FuntionalRoadClass = FunctionalRoadClassConvertor.Decode(data, 14, 2);
+        last.FunctionalRoadClass = FunctionalRoadClassConvertor.Decode(data, 14, 2);
         last.FormOfWay = FormOfWayConvertor.Decode(data, 14, 5);
         last.Bearing = BearingConvertor.DecodeAngleFromBearing(BearingConvertor.Decode(data, 15, 3));
 

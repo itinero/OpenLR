@@ -20,7 +20,7 @@ public abstract class NetworkInterpreter
     /// <summary>
     /// Matches nwb/fow.
     /// </summary>
-    public virtual float Match(IEnumerable<(string key, string value)> attributes, FormOfWay fow, FunctionalRoadClass frc)
+    public virtual double Match(IEnumerable<(string key, string value)> attributes, FormOfWay fow, FunctionalRoadClass frc)
     {
         if (this.Extract(attributes, out var actualFrc, out var actualFow))
         { // a mapping was found. match and score.

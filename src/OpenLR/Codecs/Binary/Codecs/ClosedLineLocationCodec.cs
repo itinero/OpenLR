@@ -20,7 +20,7 @@ public class ClosedLineLocationCodec
         var first = new LocationReferencePoint
         {
             Coordinate = CoordinateConverter.Decode(data, 1), 
-            FuntionalRoadClass = FunctionalRoadClassConvertor.Decode(data, 7, 2),
+            FunctionalRoadClass = FunctionalRoadClassConvertor.Decode(data, 7, 2),
             FormOfWay = FormOfWayConvertor.Decode(data, 7, 5),
             LowestFunctionalRoadClassToNext = FunctionalRoadClassConvertor.Decode(data, 8, 0),
             Bearing = BearingConvertor.DecodeAngleFromBearing(BearingConvertor.Decode(data, 8, 3)),
@@ -38,7 +38,7 @@ public class ClosedLineLocationCodec
             var intermediate = new LocationReferencePoint { Coordinate = CoordinateConverter.DecodeRelative(reference, data, location) };
             reference = intermediate.Coordinate;
             location = location + 4;
-            intermediate.FuntionalRoadClass = FunctionalRoadClassConvertor.Decode(data, location, 2);
+            intermediate.FunctionalRoadClass = FunctionalRoadClassConvertor.Decode(data, location, 2);
             intermediate.FormOfWay = FormOfWayConvertor.Decode(data, location, 5);
             location = location + 1;
             intermediate.Bearing = BearingConvertor.DecodeAngleFromBearing(BearingConvertor.Decode(data, location, 3));
@@ -55,7 +55,7 @@ public class ClosedLineLocationCodec
         {
             // no last coordinates, identical to the first.
             Coordinate = first.Coordinate,
-            FuntionalRoadClass = FunctionalRoadClassConvertor.Decode(data, location, 2),
+            FunctionalRoadClass = FunctionalRoadClassConvertor.Decode(data, location, 2),
             FormOfWay = FormOfWayConvertor.Decode(data, location, 5)
         };
         location = location + 1;

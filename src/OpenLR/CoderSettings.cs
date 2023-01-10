@@ -17,7 +17,7 @@ public class CoderSettings
     /// <summary>
     /// Gets the score threshold.
     /// </summary>
-    public float ScoreThreshold { get; set; }
+    public double ScoreThreshold { get; set; } = 0.3;
     
     /// <summary>
     /// Gets the network interpreter.

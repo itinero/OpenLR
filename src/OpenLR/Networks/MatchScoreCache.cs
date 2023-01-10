@@ -2,14 +2,14 @@ namespace OpenLR.Networks;
 
 internal class MatchScoreCache
 {
-    private float?[] _cache;
+    private double?[] _cache;
 
     public MatchScoreCache()
     {
-        _cache = new float?[1024];
+        _cache = new double?[1024];
     }
 
-    public float? Get(uint edgeTypeId)
+    public double? Get(uint edgeTypeId)
     {
         if (_cache.Length <= edgeTypeId)
         {
@@ -19,7 +19,7 @@ internal class MatchScoreCache
         return _cache[edgeTypeId];
     }
 
-    public void Set(uint edgeTypeId, float factor)
+    public void Set(uint edgeTypeId, double factor)
     {
         var cache = _cache;
         if (cache.Length <= edgeTypeId)
@@ -30,7 +30,7 @@ internal class MatchScoreCache
                 newSize += 1024;
             }
 
-            var newCache = new float?[newSize];
+            var newCache = new double?[newSize];
             cache.CopyTo(newCache, 0);
 
             newCache[edgeTypeId] = factor;

@@ -2,9 +2,9 @@
 using OpenLR.Referenced;
 using OpenLR.Referenced.Locations;
 using System;
+using System.Threading.Tasks;
+using Itinero;
 using Itinero.Network;
-using OpenLR.Codecs;
-using OpenLR.Codecs.Binary;
 using OpenLR.Networks;
 
 namespace OpenLR;
@@ -98,9 +98,9 @@ public class Coder
     }
 
     /// <summary>
-    /// Decoders an OpenLR string into a location.
+    /// Decodes an OpenLR string into a location.
     /// </summary>
-    public IReferencedLocation Decode(string encoded)
+    public async Task<Result<IReferencedLocation>> Decode(string encoded)
     {
         var location = this.Settings.RawCodec.Decode(encoded);
 
@@ -110,7 +110,7 @@ public class Coder
             GeoCoordinateLocation coordinateLocation => Referenced.Codecs.ReferencedGeoCoordinateCodec.Decode(
                 coordinateLocation),
             GridLocation gridLocation => Referenced.Codecs.ReferencedGridCodec.Decode(gridLocation),
-            LineLocation lineLocation => Referenced.Codecs.ReferencedLineCodec.Decode(lineLocation, this),
+            LineLocation lineLocation => Result<IReferencedLocation>.Create(await Referenced.Codecs.ReferencedLineCodec.Decode(lineLocation, this)),
             PointAlongLineLocation lineLocation => Referenced.Codecs.ReferencedPointAlongLineCodec.Decode(
                 lineLocation, this),
             PolygonLocation polygonLocation => Referenced.Codecs.ReferencedPolygonCodec.Decode(polygonLocation),
@@ -118,5 +118,15 @@ public class Coder
                 rectangleLocation),
             _ => throw new ArgumentOutOfRangeException(nameof(encoded), "Unknown encoded string.")
         };
+    }
+
+    /// <summary>
+    /// Decodes a line location.
+    /// </summary>
+    /// <param name="lineLocation">The line location.</param>
+    /// <returns>A referenced line, if success.</returns>
+    public async Task<Result<ReferencedLine>> Decode(LineLocation lineLocation)
+    {
+        return await Referenced.Codecs.ReferencedLineCodec.Decode(lineLocation, this);
     }
 }

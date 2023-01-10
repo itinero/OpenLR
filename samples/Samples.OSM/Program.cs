@@ -43,11 +43,12 @@ namespace Samples.OSM
             var routerDb = new RouterDb();
             using (var sourceStream = File.OpenRead("luxembourg-latest.osm.pbf"))
             {
-                routerDb.LoadOsmData(sourceStream, Vehicle.Car);
+                routerDb.LoadOsmData(sourceStream);
             }
+            var network = routerDb.Latest;
 
             // create coder.
-            var coder = new Coder(routerDb, new IOsmCoderSettingsExtensions());
+            var coder = new Coder(network, new IOsmCoderSettingsExtensions());
 
             // build a line location from a shortest path.
             // REMARK: this functionality is NOT part of the OpenLR-spec, just a convenient way to build a line location.

@@ -1,5 +1,5 @@
 ﻿using OpenLR.Model;
-using OpenLR.Referenced.Scoring;
+using OpenLR.Scoring;
 
 namespace OpenLR.Referenced.Locations;
 

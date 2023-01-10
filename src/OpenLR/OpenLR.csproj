@@ -10,9 +10,6 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Itinero" Version="2.0.0-alpha-080" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\..\anyways\routing\routing2\src\Itinero\Itinero.csproj" />
+    <PackageReference Include="Itinero" Version="2.0.0-alpha-085" />
   </ItemGroup>
 </Project>

@@ -14,7 +14,7 @@ public class ReferencedDecodingException : Exception
     public ReferencedDecodingException(ILocation location, string message, Exception innerException)
         : base(message, innerException)
     {
-        Location = location;
+        this.Location = location;
     }
 
     /// <summary>
@@ -23,7 +23,7 @@ public class ReferencedDecodingException : Exception
     public ReferencedDecodingException(ILocation location, string message)
         : base(message)
     {
-        Location = location;
+        this.Location = location;
     }
 
     /// <summary>

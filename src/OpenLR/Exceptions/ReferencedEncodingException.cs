@@ -8,33 +8,25 @@ namespace OpenLR.Exceptions;
 /// </summary>
 public class ReferencedEncodingException : Exception
 {
-    private readonly ReferencedLocation _referencedLocation;
-
     /// <summary>
     /// Creates a new referenced encoding exception.
     /// </summary>
-    public ReferencedEncodingException(ReferencedLocation location, string message, Exception innerException)
+    public ReferencedEncodingException(IReferencedLocation location, string message, Exception innerException)
         : base(message, innerException)
     {
-        _referencedLocation = location;
+        this.Location = location;
     }
     /// <summary>
     /// Creates a new referenced encoding exception.
     /// </summary>
-    public ReferencedEncodingException(ReferencedLocation location, string message)
+    public ReferencedEncodingException(IReferencedLocation location, string message)
         : base(message)
     {
-        _referencedLocation = location;
+        this.Location = location;
     }
 
     /// <summary>
     /// Returns the location that was being encoded.
     /// </summary>
-    public ReferencedLocation Location
-    {
-        get
-        {
-            return _referencedLocation;
-        }
-    }
+    public IReferencedLocation Location { get; }
 }

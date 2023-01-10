@@ -32,7 +32,7 @@ internal sealed class EdgeEnumeratorNetworkInterpreter
     /// <summary>
     /// Matches nwb/fow.
     /// </summary>
-    public float Match(RoutingNetworkEdgeEnumerator enumerator, FormOfWay fow, FunctionalRoadClass frc)
+    public double Match(RoutingNetworkEdgeEnumerator enumerator, FormOfWay fow, FunctionalRoadClass frc)
     {
         if (!enumerator.EdgeTypeId.HasValue)
         {

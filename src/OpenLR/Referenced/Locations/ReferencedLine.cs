@@ -1,7 +1,11 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Itinero.Network;
+using Itinero.Network.Enumerators.Edges;
+using Itinero.Routes.Paths;
+using Path = Itinero.Routes.Paths.Path;
 
 namespace OpenLR.Referenced.Locations;
 
@@ -19,7 +23,7 @@ public class ReferencedLine : IEnumerable<(EdgeId edge, bool forward)>, IReferen
     /// <param name="edges">The edges.</param>
     /// <param name="positiveOffsetPercentage">The offset at the beginning of the path representing this location</param>
     /// <param name="negativeOffsetPercentage">The offset at the end of the path representing this location.</param>
-    public ReferencedLine(RoutingNetwork network, IEnumerable<(EdgeId edge, bool forward)> edges, float positiveOffsetPercentage, float negativeOffsetPercentage)
+    public ReferencedLine(RoutingNetwork network, IEnumerable<(EdgeId edge, bool forward)> edges, double positiveOffsetPercentage, double negativeOffsetPercentage)
     {
         this.RoutingNetwork = network;
         this.PositiveOffsetPercentage = positiveOffsetPercentage;
@@ -35,12 +39,12 @@ public class ReferencedLine : IEnumerable<(EdgeId edge, bool forward)>, IReferen
     /// <summary>
     /// Gets or sets the offset at the beginning of the path representing this location.
     /// </summary>
-    public float PositiveOffsetPercentage { get; }
+    public double PositiveOffsetPercentage { get; }
 
     /// <summary>
     /// Gets or sets the offset at the end of the path representing this location.
     /// </summary>
-    public float NegativeOffsetPercentage { get; }
+    public double NegativeOffsetPercentage { get; }
 
     /// <summary>
     /// Returns the number of edges.
@@ -62,58 +66,67 @@ public class ReferencedLine : IEnumerable<(EdgeId edge, bool forward)>, IReferen
     {
         return this.GetEnumerator();
     }
-    //
-    // /// <summary>
-    // /// Adds another line location to this one.
-    // /// </summary>
-    // public void Add(ReferencedLine location)
-    // {
-    //     if(this.Vertices[this.Vertices.Length - 1] == location.Vertices[0])
-    //     { // there is a match.
-    //         // merge vertices.
-    //         var vertices = new uint[this.Vertices.Length + location.Vertices.Length - 1];
-    //         this.Vertices.CopyTo(vertices, 0);
-    //         for(int idx = 1; idx < location.Vertices.Length; idx++)
-    //         {
-    //             vertices[this.Vertices.Length + idx - 1] = location.Vertices[idx];
-    //         }
-    //         this.Vertices = vertices;
-    //
-    //         // merge edges.
-    //         var edges = new long[this.Edges.Length + location.Edges.Length];
-    //         this.Edges.CopyTo(edges, 0);
-    //         location.Edges.CopyTo(edges, this.Edges.Length);
-    //         this.Edges = edges;
-    //         // Update EndLocation and NegativeOffset
-    //         this.EndLocation = location.EndLocation;
-    //         this.NegativeOffsetPercentage = location.NegativeOffsetPercentage;
-    //         return;
-    //     }
-    //     throw new Exception("Cannot add a location without them having one vertex incommon.");
-    // }
 
-    // /// <summary>
-    // /// Creates a new object that is a copy of the current instance.
-    // /// </summary>
-    // /// <returns></returns>
-    // public override object Clone()
-    // {
-    //     return new ReferencedLine()
-    //     {
-    //         Edges = this.Edges == null ? null : this.Edges.Clone() as long[],
-    //         Vertices = this.Vertices == null ? null : this.Vertices.Clone() as uint[],
-    //         NegativeOffsetPercentage = this.NegativeOffsetPercentage,
-    //         PositiveOffsetPercentage = this.PositiveOffsetPercentage,
-    //         StartLocation = new RouterPoint(
-    //             this.StartLocation.Latitude,
-    //             this.StartLocation.Longitude,
-    //             this.StartLocation.EdgeId,
-    //             this.StartLocation.Offset),
-    //         EndLocation = new RouterPoint(
-    //             this.EndLocation.Latitude,
-    //             this.EndLocation.Longitude,
-    //             this.EndLocation.EdgeId,
-    //             this.EndLocation.Offset)
-    //     };
-    // }
+    /// <summary>
+    /// Creates a referenced line from a path.
+    /// </summary>
+    /// <param name="path">The path.</param>
+    /// <param name="positiveOffsetPercentage"></param>§
+    /// <param name="negativeOffsetPercentage"></param>
+    /// <returns></returns>
+    /// <exception cref="InvalidDataException"></exception>
+    public static ReferencedLine FromPath(Path path, double? positiveOffsetPercentage = null, double? negativeOffsetPercentage = null)
+    {
+        path.Trim();
+
+        // if ((path.Offset1 is 0 or ushort.MaxValue) &&
+        //     (path.Offset2 is 0 or ushort.MaxValue))
+        // {
+        //     return new ReferencedLine(path.RoutingNetwork, path.Select(x => (x.edge, x.forward)), 0, 0);
+        // }
+
+        var length = 0.0;
+        var offsetStart = 0.0;
+        var offsetEnd = 0.0;
+        
+        var edgeEnumerator = path.RoutingNetwork.GetEdgeEnumerator();
+        using var pathEnumerator = path.GetEnumerator();
+        if (pathEnumerator.MoveNext())
+        {
+            var (edge, direction, offset1, offset2) = pathEnumerator.Current;
+            if (!edgeEnumerator.MoveTo(edge, direction)) throw new InvalidDataException("An edge in the path is not found!");
+
+            var edgeLength = edgeEnumerator.EdgeLength();
+            if (offset1 > 0) offsetStart = (offset1 / (double)ushort.MaxValue) * edgeLength;
+            if (offset2 < ushort.MaxValue) offsetEnd = (1.0 - (offset2 / (double)ushort.MaxValue)) * edgeLength;
+            length += edgeLength;
+        }
+
+        while (pathEnumerator.MoveNext())
+        {
+            var (edge, direction, _, offset2) = pathEnumerator.Current;
+            if (!edgeEnumerator.MoveTo(edge, direction)) throw new InvalidDataException("An edge in the path is not found!");
+            
+            var edgeLength = edgeEnumerator.EdgeLength();
+            if (offset2 < ushort.MaxValue) offsetEnd = (1.0 - (offset2 / (double)ushort.MaxValue)) * edgeLength;
+            length += edgeLength;
+        }
+
+        if (positiveOffsetPercentage != null) offsetStart += (positiveOffsetPercentage.Value * length / 100.0);
+        if (negativeOffsetPercentage != null) offsetEnd += (negativeOffsetPercentage.Value * length / 100.0);
+
+        return new ReferencedLine(path.RoutingNetwork, path.Select(x => (x.edge, x.forward)), 
+            offsetStart / length * 100, offsetEnd / length * 100);
+    }
+
+    /// <summary>
+    /// Returns the same referenced line but with new offsets.
+    /// </summary>
+    /// <param name="positiveOffsetPercentage">The offset at the beginning of the path representing this location</param>
+    /// <param name="negativeOffsetPercentage">The offset at the end of the path representing this location.</param>
+    /// <returns>The same referenced line but with new offsets</returns>
+    public ReferencedLine WithOffsets(double positiveOffsetPercentage, double negativeOffsetPercentage)
+    {
+        return new ReferencedLine(this.RoutingNetwork, this, positiveOffsetPercentage, negativeOffsetPercentage);
+    }
 }

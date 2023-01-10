@@ -49,16 +49,16 @@ public static class OffsetConvertor
     /// <summary>
     /// Encodes the offset in meter as a value relative to the length in meter.
     /// </summary>
-    /// <param name="positiveOffsetPercentage"></param>
+    /// <param name="offsetPercentage"></param>
     /// <param name="data"></param>
     /// <param name="startIndex"></param>
-    public static void Encode(float positiveOffsetPercentage, byte[] data, int startIndex)
+    public static void Encode(double offsetPercentage, byte[] data, int startIndex)
     {
-        if (positiveOffsetPercentage is < 0 or >= 100) { throw new ArgumentOutOfRangeException(nameof(positiveOffsetPercentage), 
+        if (offsetPercentage is < 0 or >= 100) { throw new ArgumentOutOfRangeException(nameof(offsetPercentage), 
             "The percentage has to be in the range [0-100["); }
 
         // calculate offset value.
-        var offsetValue = (byte)(int)System.Math.Floor(256.0 * (positiveOffsetPercentage / 100));
+        var offsetValue = (byte)(int)System.Math.Floor(256.0 * (offsetPercentage / 100));
 
         // set byte.
         data[startIndex] = offsetValue;
