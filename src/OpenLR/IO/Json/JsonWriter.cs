@@ -11,7 +11,7 @@ internal class JsonWriter
 {
     private readonly TextWriter _writer;
     private readonly Stack<Status> _statusStack;
-        
+
     /// <summary>
     /// Creates a new json writer.
     /// </summary>
@@ -29,7 +29,7 @@ internal class JsonWriter
         if (_statusStack.Count > 0)
         {
             var status = _statusStack.Peek();
-                
+
             if (status == Status.ArrayValueWritten)
             {
                 _writer.Write(',');
@@ -54,7 +54,7 @@ internal class JsonWriter
         {
             status = _statusStack.Peek();
 
-            if(status == Status.PropertyNameWritten)
+            if (status == Status.PropertyNameWritten)
             {
                 throw new Exception("Cannot close object right after writing a property name.");
             }
@@ -115,7 +115,7 @@ internal class JsonWriter
         _writer.Write(':');
         _statusStack.Push(Status.PropertyNameWritten);
     }
-        
+
     /// <summary>
     /// Writes a property value.
     /// </summary>
@@ -205,7 +205,7 @@ internal class JsonWriter
         _writer.Write(']');
 
         status = _statusStack.Peek();
-        while(status != Status.ArrayOpenWritten)
+        while (status != Status.ArrayOpenWritten)
         {
             _statusStack.Pop();
             status = _statusStack.Peek();

@@ -51,7 +51,7 @@ public static class OrientationExtensions
             return Orientation.NoOrientation;
         }
 
-        if(oneway.Value)
+        if (oneway.Value)
         {
             return Orientation.FirstToSecond;
         }

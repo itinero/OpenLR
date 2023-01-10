@@ -23,7 +23,7 @@ public class BearingExtensionsTests
 
         Assert.That(coordinates.Bearing(), Is.EqualTo(0).Within(1).Or.EqualTo(360).Within(1));
     }
-    
+
     [Test]
     public void Bearing_East_ShouldBe90()
     {
@@ -39,7 +39,7 @@ public class BearingExtensionsTests
 
         Assert.That(coordinates.Bearing(), Is.EqualTo(90).Within(1));
     }
-    
+
     [Test]
     public void Bearing_South_ShouldBe180()
     {
@@ -54,7 +54,7 @@ public class BearingExtensionsTests
 
         Assert.That(coordinates.Bearing(), Is.EqualTo(180).Within(1));
     }
-    
+
     [Test]
     public void Bearing_West_ShouldBe270()
     {

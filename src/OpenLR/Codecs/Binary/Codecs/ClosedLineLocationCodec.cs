@@ -1,8 +1,8 @@
-﻿using OpenLR.Codecs.Binary.Data;
+﻿using System;
+using System.Collections.Generic;
+using OpenLR.Codecs.Binary.Data;
 using OpenLR.Model;
 using OpenLR.Model.Locations;
-using System.Collections.Generic;
-using System;
 
 namespace OpenLR.Codecs.Binary.Codecs;
 
@@ -19,7 +19,7 @@ public class ClosedLineLocationCodec
         // decode first location reference point.
         var first = new LocationReferencePoint
         {
-            Coordinate = CoordinateConverter.Decode(data, 1), 
+            Coordinate = CoordinateConverter.Decode(data, 1),
             FunctionalRoadClass = FunctionalRoadClassConvertor.Decode(data, 7, 2),
             FormOfWay = FormOfWayConvertor.Decode(data, 7, 5),
             LowestFunctionalRoadClassToNext = FunctionalRoadClassConvertor.Decode(data, 8, 0),
@@ -66,8 +66,8 @@ public class ClosedLineLocationCodec
         // create line location.
         var lineLocation = new ClosedLineLocation
         {
-            First = first, 
-            Intermediate = intermediateList.ToArray(), 
+            First = first,
+            Intermediate = intermediateList.ToArray(),
             Last = last
         };
         return lineLocation;

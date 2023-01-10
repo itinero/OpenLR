@@ -1,5 +1,5 @@
-﻿using OpenLR.Model;
-using System;
+﻿using System;
+using OpenLR.Model;
 
 namespace OpenLR.Codecs.Binary.Data;
 

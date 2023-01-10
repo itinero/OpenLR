@@ -55,7 +55,7 @@ public class Score : IComparable<Score>
     /// </summary>
     public virtual Score? TryGetByName(string key)
     {
-        if(this.Name == key)
+        if (this.Name == key)
         {
             return this;
         }
@@ -93,7 +93,7 @@ public class Score : IComparable<Score>
     {
         return $"{this.Name} {this.Value}/{this.Reference}";
     }
-        
+
     /// <summary>
     /// Returns the hashcode.
     /// </summary>
@@ -124,7 +124,7 @@ public class Score : IComparable<Score>
     /// </summary>
     public override bool Equals(object obj)
     {
-        if(obj is Score otherScore)
+        if (obj is Score otherScore)
         {
             return otherScore.Name.Equals(this.Name) &&
                    otherScore.Description.Equals(this.Description) &&
@@ -153,10 +153,10 @@ public class Score : IComparable<Score>
     {
         get
         {
-            return new Score("zero", "A score without a meaning, just zero", 0,1);
+            return new Score("zero", "A score without a meaning, just zero", 0, 1);
         }
     }
-    
+
     /// <summary>
     /// Holds the candidate route score name.
     /// </summary>

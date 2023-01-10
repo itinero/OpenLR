@@ -8,7 +8,7 @@ namespace OpenLR.Tools.LineLocations;
 
 public class LineLocationCover : IEnumerable<(EdgeId edgeId, bool forward, ushort tail, ushort head)>
 {
-    private Dictionary<(EdgeId edgeId, bool forward), (ushort tail, ushort head)> _coverage = new();
+    private readonly Dictionary<(EdgeId edgeId, bool forward), (ushort tail, ushort head)> _coverage = new();
 
     /// <summary>
     /// Adds a new edge cover.

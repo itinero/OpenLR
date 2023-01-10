@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
+using OpenLR.Codecs.Binary.Codecs;
 using OpenLR.Model;
 using OpenLR.Model.Locations;
-using OpenLR.Codecs.Binary.Codecs;
 
 namespace OpenLR.Test.Binary;
 
@@ -32,27 +32,27 @@ public class LineLocationTests
 
         // check first reference.
         Assert.IsNotNull(lineLocation.First);
-        Assert.AreEqual(6.12683, lineLocation.First.Coordinate.Longitude, delta); // 6.12683°
-        Assert.AreEqual(49.60851, lineLocation.First.Coordinate.Latitude, delta); // 49.60851°
-        Assert.AreEqual(FunctionalRoadClass.Frc3, lineLocation.First.FunctionalRoadClass);
-        Assert.AreEqual(FormOfWay.MultipleCarriageWay, lineLocation.First.FormOfWay);
-        Assert.AreEqual(FunctionalRoadClass.Frc3, lineLocation.First.LowestFunctionalRoadClassToNext);
+        Assert.That(lineLocation.First.Coordinate.Longitude, Is.EqualTo(6.12683).Within(delta)); // 6.12683°
+        Assert.That(lineLocation.First.Coordinate.Latitude, Is.EqualTo(49.60851).Within(delta)); // 49.60851°
+        Assert.That(lineLocation.First.FunctionalRoadClass, Is.EqualTo(FunctionalRoadClass.Frc3));
+        Assert.That(lineLocation.First.FormOfWay, Is.EqualTo(FormOfWay.MultipleCarriageWay));
+        Assert.That(lineLocation.First.LowestFunctionalRoadClassToNext, Is.EqualTo(FunctionalRoadClass.Frc3));
 
         // check intermediates.
         Assert.IsNotNull(lineLocation.Intermediate);
-        Assert.AreEqual(1, lineLocation.Intermediate.Length);
-        Assert.AreEqual(6.12838, lineLocation.Intermediate[0].Coordinate.Longitude, delta); // 6.12838°
-        Assert.AreEqual(49.60398, lineLocation.Intermediate[0].Coordinate.Latitude, delta); // 49.60398°
-        Assert.AreEqual(FunctionalRoadClass.Frc3, lineLocation.Intermediate[0].FunctionalRoadClass);
-        Assert.AreEqual(FormOfWay.SingleCarriageWay, lineLocation.Intermediate[0].FormOfWay);
-        Assert.AreEqual(FunctionalRoadClass.Frc5, lineLocation.Intermediate[0].LowestFunctionalRoadClassToNext);
+        Assert.That(lineLocation.Intermediate.Length, Is.EqualTo(1));
+        Assert.That(lineLocation.Intermediate[0].Coordinate.Longitude, Is.EqualTo(6.12838).Within(delta)); // 6.12838°
+        Assert.That(lineLocation.Intermediate[0].Coordinate.Latitude, Is.EqualTo(49.60398).Within(delta)); // 49.60398°
+        Assert.That(lineLocation.Intermediate[0].FunctionalRoadClass, Is.EqualTo(FunctionalRoadClass.Frc3));
+        Assert.That(lineLocation.Intermediate[0].FormOfWay, Is.EqualTo(FormOfWay.SingleCarriageWay));
+        Assert.That(lineLocation.Intermediate[0].LowestFunctionalRoadClassToNext, Is.EqualTo(FunctionalRoadClass.Frc5));
 
         // check second reference.
         Assert.IsNotNull(lineLocation.Last);
-        Assert.AreEqual(6.12817, lineLocation.Last.Coordinate.Longitude, delta); // 6.12817°
-        Assert.AreEqual(49.60305, lineLocation.Last.Coordinate.Latitude, delta); // 49.60305°
-        Assert.AreEqual(FunctionalRoadClass.Frc5, lineLocation.Last.FunctionalRoadClass);
-        Assert.AreEqual(FormOfWay.SingleCarriageWay, lineLocation.Last.FormOfWay);
+        Assert.That(lineLocation.Last.Coordinate.Longitude, Is.EqualTo(6.12817).Within(delta)); // 6.12817°
+        Assert.That(lineLocation.Last.Coordinate.Latitude, Is.EqualTo(49.60305).Within(delta)); // 49.60305°
+        Assert.That(lineLocation.Last.FunctionalRoadClass, Is.EqualTo(FunctionalRoadClass.Frc5));
+        Assert.That(lineLocation.Last.FormOfWay, Is.EqualTo(FormOfWay.SingleCarriageWay));
     }
 
     /// <summary>
@@ -99,27 +99,27 @@ public class LineLocationTests
 
         // check first reference.
         Assert.IsNotNull(lineLocation.First);
-        Assert.AreEqual(6.12683, lineLocation.First.Coordinate.Longitude, delta); // 6.12683°
-        Assert.AreEqual(49.60851, lineLocation.First.Coordinate.Latitude, delta); // 49.60851°
-        Assert.AreEqual(FunctionalRoadClass.Frc3, lineLocation.First.FunctionalRoadClass);
-        Assert.AreEqual(FormOfWay.MultipleCarriageWay, lineLocation.First.FormOfWay);
-        Assert.AreEqual(FunctionalRoadClass.Frc3, lineLocation.First.LowestFunctionalRoadClassToNext);
+        Assert.That(lineLocation.First.Coordinate.Longitude, Is.EqualTo(6.12683).Within(delta)); // 6.12683°
+        Assert.That(lineLocation.First.Coordinate.Latitude, Is.EqualTo(49.60851).Within(delta)); // 49.60851°
+        Assert.That(lineLocation.First.FunctionalRoadClass, Is.EqualTo(FunctionalRoadClass.Frc3));
+        Assert.That(lineLocation.First.FormOfWay, Is.EqualTo(FormOfWay.MultipleCarriageWay));
+        Assert.That(lineLocation.First.LowestFunctionalRoadClassToNext, Is.EqualTo(FunctionalRoadClass.Frc3));
 
         // check intermediates.
         Assert.IsNotNull(lineLocation.Intermediate);
-        Assert.AreEqual(1, lineLocation.Intermediate.Length);
-        Assert.AreEqual(6.12838, lineLocation.Intermediate[0].Coordinate.Longitude, delta); // 6.12838°
-        Assert.AreEqual(49.60398, lineLocation.Intermediate[0].Coordinate.Latitude, delta); // 49.60398°
-        Assert.AreEqual(FunctionalRoadClass.Frc3, lineLocation.Intermediate[0].FunctionalRoadClass);
-        Assert.AreEqual(FormOfWay.SingleCarriageWay, lineLocation.Intermediate[0].FormOfWay);
-        Assert.AreEqual(FunctionalRoadClass.Frc5, lineLocation.Intermediate[0].LowestFunctionalRoadClassToNext);
+        Assert.That(lineLocation.Intermediate.Length, Is.EqualTo(1));
+        Assert.That(lineLocation.Intermediate[0].Coordinate.Longitude, Is.EqualTo(6.12838).Within(delta)); // 6.12838°
+        Assert.That(lineLocation.Intermediate[0].Coordinate.Latitude, Is.EqualTo(49.60398).Within(delta)); // 49.60398°
+        Assert.That(lineLocation.Intermediate[0].FunctionalRoadClass, Is.EqualTo(FunctionalRoadClass.Frc3));
+        Assert.That(lineLocation.Intermediate[0].FormOfWay, Is.EqualTo(FormOfWay.SingleCarriageWay));
+        Assert.That(lineLocation.Intermediate[0].LowestFunctionalRoadClassToNext, Is.EqualTo(FunctionalRoadClass.Frc5));
 
         // check second reference.
         Assert.IsNotNull(lineLocation.Last);
-        Assert.AreEqual(6.12817, lineLocation.Last.Coordinate.Longitude, delta); // 6.12817°
-        Assert.AreEqual(49.60305, lineLocation.Last.Coordinate.Latitude, delta); // 49.60305°
-        Assert.AreEqual(FunctionalRoadClass.Frc5, lineLocation.Last.FunctionalRoadClass);
-        Assert.AreEqual(FormOfWay.SingleCarriageWay, lineLocation.Last.FormOfWay);
+        Assert.That(lineLocation.Last.Coordinate.Longitude, Is.EqualTo(6.12817).Within(delta)); // 6.12817°
+        Assert.That(lineLocation.Last.Coordinate.Latitude, Is.EqualTo(49.60305).Within(delta)); // 49.60305°
+        Assert.That(lineLocation.Last.FunctionalRoadClass, Is.EqualTo(FunctionalRoadClass.Frc5));
+        Assert.That(lineLocation.Last.FormOfWay, Is.EqualTo(FormOfWay.SingleCarriageWay));
 
         // compare again with reference encoded string.
         var referenceBinary = Convert.FromBase64String("CwRbWyNG9BpgAACa/jsboAD/6/+kKwAAAA==");
@@ -127,29 +127,29 @@ public class LineLocationTests
 
         // check first reference.
         Assert.IsNotNull(lineLocation.First);
-        Assert.AreEqual(referenceDecodedLocation.First.Coordinate.Longitude, lineLocation.First.Coordinate.Longitude, delta); // 6.12829°
-        Assert.AreEqual(referenceDecodedLocation.First.Coordinate.Latitude, lineLocation.First.Coordinate.Latitude, delta); // 49.60597°
-        Assert.AreEqual(referenceDecodedLocation.First.FunctionalRoadClass, lineLocation.First.FunctionalRoadClass);
-        Assert.AreEqual(referenceDecodedLocation.First.FormOfWay, lineLocation.First.FormOfWay);
-        Assert.AreEqual(referenceDecodedLocation.First.LowestFunctionalRoadClassToNext, lineLocation.First.LowestFunctionalRoadClassToNext);
-        Assert.AreEqual(referenceDecodedLocation.First.Bearing.Value, lineLocation.First.Bearing.Value, 11.25); // binary encode loses accuracy for bearing.
+        Assert.That(lineLocation.First.Coordinate.Longitude, Is.EqualTo(referenceDecodedLocation.First.Coordinate.Longitude).Within(delta)); // 6.12829°
+        Assert.That(lineLocation.First.Coordinate.Latitude, Is.EqualTo(referenceDecodedLocation.First.Coordinate.Latitude).Within(delta)); // 49.60597°
+        Assert.That(lineLocation.First.FunctionalRoadClass, Is.EqualTo(referenceDecodedLocation.First.FunctionalRoadClass));
+        Assert.That(lineLocation.First.FormOfWay, Is.EqualTo(referenceDecodedLocation.First.FormOfWay));
+        Assert.That(lineLocation.First.LowestFunctionalRoadClassToNext, Is.EqualTo(referenceDecodedLocation.First.LowestFunctionalRoadClassToNext));
+        Assert.That(lineLocation.First.Bearing.Value, Is.EqualTo(referenceDecodedLocation.First.Bearing.Value).Within(11.25)); // binary encode loses accuracy for bearing.
 
         // check intermediates.
         Assert.IsNotNull(referenceDecodedLocation.Intermediate);
-        Assert.AreEqual(referenceDecodedLocation.Intermediate.Length, lineLocation.Intermediate.Length);
-        Assert.AreEqual(referenceDecodedLocation.Intermediate[0].Coordinate.Longitude, lineLocation.Intermediate[0].Coordinate.Longitude, delta); // 6.12838°
-        Assert.AreEqual(referenceDecodedLocation.Intermediate[0].Coordinate.Latitude, lineLocation.Intermediate[0].Coordinate.Latitude, delta); // 49.60398°
-        Assert.AreEqual(referenceDecodedLocation.Intermediate[0].FunctionalRoadClass, lineLocation.Intermediate[0].FunctionalRoadClass);
-        Assert.AreEqual(referenceDecodedLocation.Intermediate[0].FormOfWay, lineLocation.Intermediate[0].FormOfWay);
-        Assert.AreEqual(referenceDecodedLocation.Intermediate[0].LowestFunctionalRoadClassToNext, lineLocation.Intermediate[0].LowestFunctionalRoadClassToNext);
+        Assert.That(lineLocation.Intermediate.Length, Is.EqualTo(referenceDecodedLocation.Intermediate.Length));
+        Assert.That(lineLocation.Intermediate[0].Coordinate.Longitude, Is.EqualTo(referenceDecodedLocation.Intermediate[0].Coordinate.Longitude).Within(delta)); // 6.12838°
+        Assert.That(lineLocation.Intermediate[0].Coordinate.Latitude, Is.EqualTo(referenceDecodedLocation.Intermediate[0].Coordinate.Latitude).Within(delta)); // 49.60398°
+        Assert.That(lineLocation.Intermediate[0].FunctionalRoadClass, Is.EqualTo(referenceDecodedLocation.Intermediate[0].FunctionalRoadClass));
+        Assert.That(lineLocation.Intermediate[0].FormOfWay, Is.EqualTo(referenceDecodedLocation.Intermediate[0].FormOfWay));
+        Assert.That(lineLocation.Intermediate[0].LowestFunctionalRoadClassToNext, Is.EqualTo(referenceDecodedLocation.Intermediate[0].LowestFunctionalRoadClassToNext));
 
         // check second reference.
         Assert.IsNotNull(lineLocation.Last);
-        Assert.AreEqual(referenceDecodedLocation.Last.Coordinate.Longitude, lineLocation.Last.Coordinate.Longitude, delta); // 6.12779°
-        Assert.AreEqual(referenceDecodedLocation.Last.Coordinate.Latitude, lineLocation.Last.Coordinate.Latitude, delta); // 49.60521°
-        Assert.AreEqual(referenceDecodedLocation.Last.FunctionalRoadClass, lineLocation.Last.FunctionalRoadClass);
-        Assert.AreEqual(referenceDecodedLocation.Last.FormOfWay, lineLocation.Last.FormOfWay);
-        Assert.AreEqual(referenceDecodedLocation.Last.Bearing.Value, lineLocation.Last.Bearing.Value, 11.25); // binary encode loses accuracy for bearing.
+        Assert.That(lineLocation.Last.Coordinate.Longitude, Is.EqualTo(referenceDecodedLocation.Last.Coordinate.Longitude).Within(delta)); // 6.12779°
+        Assert.That(lineLocation.Last.Coordinate.Latitude, Is.EqualTo(referenceDecodedLocation.Last.Coordinate.Latitude).Within(delta)); // 49.60521°
+        Assert.That(lineLocation.Last.FunctionalRoadClass, Is.EqualTo(referenceDecodedLocation.Last.FunctionalRoadClass));
+        Assert.That(lineLocation.Last.FormOfWay, Is.EqualTo(referenceDecodedLocation.Last.FormOfWay));
+        Assert.That(lineLocation.Last.Bearing.Value, Is.EqualTo(referenceDecodedLocation.Last.Bearing.Value).Within(11.25)); // binary encode loses accuracy for bearing.
     }
 
     /// <summary>
@@ -197,25 +197,25 @@ public class LineLocationTests
 
         // decode again (decoding was tested above).
         var decodedLocation = LineLocationCodec.Decode(stringData);
-            
+
         Assert.IsNotNull(decodedLocation);
         Assert.IsInstanceOf<LineLocation>(decodedLocation);
         var lineLocation = (decodedLocation as LineLocation);
 
         // check first reference.
         Assert.IsNotNull(lineLocation.First);
-        Assert.AreEqual(52.932136535644531f, lineLocation.First.Coordinate.Latitude, delta);
-        Assert.AreEqual(-1.5213972330093384f, lineLocation.First.Coordinate.Longitude, delta);
-        Assert.AreEqual(FunctionalRoadClass.Frc0, lineLocation.First.FunctionalRoadClass);
-        Assert.AreEqual(FormOfWay.Motorway, lineLocation.First.FormOfWay);
-        Assert.AreEqual(FunctionalRoadClass.Frc0, lineLocation.First.LowestFunctionalRoadClassToNext);
+        Assert.That(lineLocation.First.Coordinate.Latitude, Is.EqualTo(52.932136535644531f).Within(delta));
+        Assert.That(lineLocation.First.Coordinate.Longitude, Is.EqualTo(-1.5213972330093384f).Within(delta));
+        Assert.That(lineLocation.First.FunctionalRoadClass, Is.EqualTo(FunctionalRoadClass.Frc0));
+        Assert.That(lineLocation.First.FormOfWay, Is.EqualTo(FormOfWay.Motorway));
+        Assert.That(lineLocation.First.LowestFunctionalRoadClassToNext, Is.EqualTo(FunctionalRoadClass.Frc0));
 
         // check second reference.
         Assert.IsNotNull(lineLocation.Last);
-        Assert.AreEqual(-1.5055110454559326f, lineLocation.Last.Coordinate.Longitude, delta); // 6.12817°
-        Assert.AreEqual(52.929317474365234f, lineLocation.Last.Coordinate.Latitude, delta); // 49.60305°
-        Assert.AreEqual(FunctionalRoadClass.Frc0, lineLocation.Last.FunctionalRoadClass);
-        Assert.AreEqual(FormOfWay.Motorway, lineLocation.Last.FormOfWay);
+        Assert.That(lineLocation.Last.Coordinate.Longitude, Is.EqualTo(-1.5055110454559326f).Within(delta)); // 6.12817°
+        Assert.That(lineLocation.Last.Coordinate.Latitude, Is.EqualTo(52.929317474365234f).Within(delta)); // 49.60305°
+        Assert.That(lineLocation.Last.FunctionalRoadClass, Is.EqualTo(FunctionalRoadClass.Frc0));
+        Assert.That(lineLocation.Last.FormOfWay, Is.EqualTo(FormOfWay.Motorway));
     }
 
     /// <summary>
@@ -228,24 +228,24 @@ public class LineLocationTests
 
         var json = "{\r\n  \"First\": {\r\n    \"Coordinate\": {\r\n      \"Latitude\": 52.275665283203125,\r\n      \"Longitude\": 6.825572490692139\r\n    },\r\n    \"Bearing\": 83,\r\n    \"FunctionalRoadClass\": 5,\r\n    \"FormOfWay\": 7,\r\n    \"LowestFunctionalRoadClassToNext\": 5,\r\n    \"DistanceToNext\": 7012\r\n  },\r\n  \"Intermediate\": [\r\n    {\r\n      \"Coordinate\": {\r\n        \"Latitude\": 52.30723190307617,\r\n        \"Longitude\": 6.911031246185303\r\n      },\r\n      \"Bearing\": 95,\r\n      \"FunctionalRoadClass\": 5,\r\n      \"FormOfWay\": 7,\r\n      \"LowestFunctionalRoadClassToNext\": 5,\r\n      \"DistanceToNext\": 70\r\n    },\r\n    {\r\n      \"Coordinate\": {\r\n        \"Latitude\": 52.307552337646484,\r\n        \"Longitude\": 6.9113054275512695\r\n      },\r\n      \"Bearing\": 27,\r\n      \"FunctionalRoadClass\": 3,\r\n      \"FormOfWay\": 6,\r\n      \"LowestFunctionalRoadClassToNext\": 3,\r\n      \"DistanceToNext\": 1924\r\n    },\r\n    {\r\n      \"Coordinate\": {\r\n        \"Latitude\": 52.32027053833008,\r\n        \"Longitude\": 6.928611755371094\r\n      },\r\n      \"Bearing\": 73,\r\n      \"FunctionalRoadClass\": 3,\r\n      \"FormOfWay\": 2,\r\n      \"LowestFunctionalRoadClassToNext\": 5,\r\n      \"DistanceToNext\": 7658\r\n    }\r\n  ],\r\n  \"Last\": {\r\n    \"Coordinate\": {\r\n      \"Latitude\": 52.36980438232422,\r\n      \"Longitude\": 6.999289512634277\r\n    },\r\n    \"Bearing\": 230,\r\n    \"FunctionalRoadClass\": 5,\r\n    \"FormOfWay\": 7,\r\n    \"LowestFunctionalRoadClassToNext\": null,\r\n    \"DistanceToNext\": 0\r\n  },\r\n  \"PositiveOffsetPercentage\": 0,\r\n  \"NegativeOffsetPercentage\": 0.638994753\r\n}";
         var location = Newtonsoft.Json.JsonConvert.DeserializeObject<LineLocation>(json);
-            
+
         // encode.
         var stringData = LineLocationCodec.Encode(location);
 
         // decode again (decoding was tested above).
         var decodedLocation = LineLocationCodec.Decode(stringData);
 
-        Assert.AreEqual(location.First.Coordinate.Latitude, decodedLocation.First.Coordinate.Latitude, e);
-        Assert.AreEqual(location.First.Coordinate.Longitude, decodedLocation.First.Coordinate.Longitude, e);
+        Assert.That(decodedLocation.First.Coordinate.Latitude, Is.EqualTo(location.First.Coordinate.Latitude).Within(e));
+        Assert.That(decodedLocation.First.Coordinate.Longitude, Is.EqualTo(location.First.Coordinate.Longitude).Within(e));
 
-        Assert.AreEqual(location.Intermediate.Length, decodedLocation.Intermediate.Length);
-        for(var i = 0; i < location.Intermediate.Length; i++)
+        Assert.That(decodedLocation.Intermediate.Length, Is.EqualTo(location.Intermediate.Length));
+        for (var i = 0; i < location.Intermediate.Length; i++)
         {
-            Assert.AreEqual(location.Intermediate[i].Coordinate.Latitude, decodedLocation.Intermediate[i].Coordinate.Latitude, e);
-            Assert.AreEqual(location.Intermediate[i].Coordinate.Longitude, decodedLocation.Intermediate[i].Coordinate.Longitude, e);
+            Assert.That(decodedLocation.Intermediate[i].Coordinate.Latitude, Is.EqualTo(location.Intermediate[i].Coordinate.Latitude).Within(e));
+            Assert.That(decodedLocation.Intermediate[i].Coordinate.Longitude, Is.EqualTo(location.Intermediate[i].Coordinate.Longitude).Within(e));
         }
 
-        Assert.AreEqual(location.Last.Coordinate.Latitude, decodedLocation.Last.Coordinate.Latitude, e);
-        Assert.AreEqual(location.Last.Coordinate.Longitude, decodedLocation.Last.Coordinate.Longitude, e);
+        Assert.That(decodedLocation.Last.Coordinate.Latitude, Is.EqualTo(location.Last.Coordinate.Latitude).Within(e));
+        Assert.That(decodedLocation.Last.Coordinate.Longitude, Is.EqualTo(location.Last.Coordinate.Longitude).Within(e));
     }
 }

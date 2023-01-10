@@ -13,7 +13,8 @@ public static class CircleLocationCodec
     /// </summary>
     public static CircleLocation Decode(byte[] data)
     {
-        return new CircleLocation() {
+        return new CircleLocation()
+        {
             Coordinate = CoordinateConverter.Decode(data, 1),
             Radius = data[7]
         };

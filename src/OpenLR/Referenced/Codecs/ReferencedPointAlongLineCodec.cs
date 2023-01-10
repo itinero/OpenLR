@@ -1,11 +1,11 @@
-﻿using OpenLR.Exceptions;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using OpenLR.Exceptions;
 using OpenLR.Model;
 using OpenLR.Model.Locations;
 using OpenLR.Referenced.Locations;
 using OpenLR.Scoring;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace OpenLR.Referenced.Codecs;
 

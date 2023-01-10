@@ -50,7 +50,7 @@ public class ReferencedLine : IEnumerable<(EdgeId edge, bool forward)>, IReferen
     /// Returns the number of edges.
     /// </summary>
     public int Count => _edges.Count;
-    
+
     /// <inheritdoc/>
     public IEnumerator<(EdgeId edge, bool forward)> GetEnumerator()
     {
@@ -88,7 +88,7 @@ public class ReferencedLine : IEnumerable<(EdgeId edge, bool forward)>, IReferen
         var length = 0.0;
         var offsetStart = 0.0;
         var offsetEnd = 0.0;
-        
+
         var edgeEnumerator = path.RoutingNetwork.GetEdgeEnumerator();
         using var pathEnumerator = path.GetEnumerator();
         if (pathEnumerator.MoveNext())
@@ -106,7 +106,7 @@ public class ReferencedLine : IEnumerable<(EdgeId edge, bool forward)>, IReferen
         {
             var (edge, direction, _, offset2) = pathEnumerator.Current;
             if (!edgeEnumerator.MoveTo(edge, direction)) throw new InvalidDataException("An edge in the path is not found!");
-            
+
             var edgeLength = edgeEnumerator.EdgeLength();
             if (offset2 < ushort.MaxValue) offsetEnd = (1.0 - (offset2 / (double)ushort.MaxValue)) * edgeLength;
             length += edgeLength;
@@ -115,7 +115,7 @@ public class ReferencedLine : IEnumerable<(EdgeId edge, bool forward)>, IReferen
         if (positiveOffsetPercentage != null) offsetStart += (positiveOffsetPercentage.Value * length / 100.0);
         if (negativeOffsetPercentage != null) offsetEnd += (negativeOffsetPercentage.Value * length / 100.0);
 
-        return new ReferencedLine(path.RoutingNetwork, path.Select(x => (x.edge, x.forward)), 
+        return new ReferencedLine(path.RoutingNetwork, path.Select(x => (x.edge, x.forward)),
             offsetStart / length * 100, offsetEnd / length * 100);
     }
 

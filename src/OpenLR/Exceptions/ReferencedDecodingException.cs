@@ -1,5 +1,5 @@
-﻿using OpenLR.Model.Locations;
-using System;
+﻿using System;
+using OpenLR.Model.Locations;
 
 namespace OpenLR.Exceptions;
 

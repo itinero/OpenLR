@@ -1,8 +1,8 @@
 ﻿using System;
-using Itinero;
-using OpenLR.Referenced.Locations;
 using System.Collections.Generic;
 using System.Globalization;
+using Itinero;
+using OpenLR.Referenced.Locations;
 
 namespace OpenLR;
 
@@ -89,14 +89,14 @@ public static class Extensions
     public static double AngleSmallestDifference(double angle1, double angle2)
     {
         var diff = angle1 - angle2;
-        
+
         if (diff > 180)
         {
             return diff - 360;
         }
         return diff;
     }
-        
+
     //
     // /// <summary>
     // /// Converts the given coordinate to and OpenLR coordinate.
@@ -109,7 +109,7 @@ public static class Extensions
     //         Longitude = coordinate.Longitude
     //     };
     // }
-        
+
     /// <summary>
     /// Returns a string representing the object in a culture invariant way.
     /// </summary>

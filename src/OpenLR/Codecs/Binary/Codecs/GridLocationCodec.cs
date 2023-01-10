@@ -17,7 +17,7 @@ public static class GridLocationCodec
         // decode box.
         var lowerLeft = CoordinateConverter.Decode(data, 1);
         var upperRight = CoordinateConverter.DecodeRelative(lowerLeft, data, 7);
-            
+
         // decode column/row info.
         var columns = data[11] * 256 + data[12];
         var rows = data[13] * 256 + data[14];
@@ -25,7 +25,10 @@ public static class GridLocationCodec
         // create grid location.
         var grid = new GridLocation
         {
-            LowerLeft = lowerLeft, UpperRight = upperRight, Columns = columns, Rows = rows
+            LowerLeft = lowerLeft,
+            UpperRight = upperRight,
+            Columns = columns,
+            Rows = rows
         };
         return grid;
     }

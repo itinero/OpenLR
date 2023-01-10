@@ -12,13 +12,13 @@ public class CoderSettings
     /// <summary>
     /// Gets the routing settings.
     /// </summary>
-    public RoutingSettings RoutingSettings { get; } = new ();
+    public RoutingSettings RoutingSettings { get; } = new();
 
     /// <summary>
     /// Gets the score threshold.
     /// </summary>
     public double ScoreThreshold { get; set; } = 0.3;
-    
+
     /// <summary>
     /// Gets the network interpreter.
     /// </summary>

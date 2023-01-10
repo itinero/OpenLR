@@ -38,7 +38,7 @@ internal sealed class EdgeEnumeratorNetworkInterpreter
         {
             return _networkInterpreter.Match(enumerator.Attributes, fow, frc);
         }
-        
+
         // get from cache.
         var match = _matchScoreCache.Get(enumerator.EdgeTypeId.Value);
         if (match != null) return match.Value;

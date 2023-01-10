@@ -42,14 +42,14 @@ public static class ReferencedLineExtensions
                 currentEdgeOffset = edgeEnd;
                 continue;
             }
-            
+
             // edge starts after head ends.
             if (edgeStart > headOffsetInMeters)
             {
                 currentEdgeOffset = edgeEnd;
                 continue;
             }
-            
+
             // for sure edge, or part of it, is included now.
             ushort tailOffset = 0;
             if (tailOffsetInMeters > edgeStart)
@@ -60,7 +60,7 @@ public static class ReferencedLineExtensions
             ushort headOffset = ushort.MaxValue;
             if (headOffsetInMeters < edgeEnd)
             {
-                headOffset =  (ushort)(((headOffsetInMeters - edgeEnd) / edgeLength) * ushort.MaxValue);
+                headOffset = (ushort)(((headOffsetInMeters - edgeEnd) / edgeLength) * ushort.MaxValue);
             }
 
             yield return (edge, forward, tailOffset, headOffset);
@@ -68,7 +68,7 @@ public static class ReferencedLineExtensions
             currentEdgeOffset = edgeEnd;
         }
     }
-    
+
     /// <summary>
     /// Calculates the covered edges.
     /// </summary>

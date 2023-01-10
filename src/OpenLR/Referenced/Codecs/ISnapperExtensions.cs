@@ -14,7 +14,7 @@ internal static class ISnapperExtensions
     /// <returns>The results if any. If the edge cannot be accessed by any configured profiles the result is in error.</returns>
     public static Result<SnapPoint> ToTail(this ISnapper snapper, IEdgeEnumerator edgeEnumerator)
     {
-        return snapper.To(edgeEnumerator.EdgeId, (ushort)(edgeEnumerator.Forward ? 0 : ushort.MaxValue), 
+        return snapper.To(edgeEnumerator.EdgeId, (ushort)(edgeEnumerator.Forward ? 0 : ushort.MaxValue),
             edgeEnumerator.Forward);
     }
 }

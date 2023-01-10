@@ -20,10 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System.Collections.Generic;
 using OpenLR.Codecs.Binary.Data;
 using OpenLR.Model;
 using OpenLR.Model.Locations;
-using System.Collections.Generic;
 
 namespace OpenLR.Codecs.Binary.Codecs;
 
@@ -51,7 +51,7 @@ public static class LineLocationCodec
         int intermediates = (data.Length - 16) / 7;
         int location = 10;
         var reference = first.Coordinate; // the reference for the relative coordinates.
-        for(int idx = 0; idx < intermediates; idx++)
+        for (int idx = 0; idx < intermediates; idx++)
         {
             // create an intermediate point.
             var intermediate = new LocationReferencePoint();
@@ -78,7 +78,7 @@ public static class LineLocationCodec
         last.FormOfWay = FormOfWayConvertor.Decode(data, location, 5);
         location = location + 1;
         last.Bearing = BearingConvertor.DecodeAngleFromBearing(BearingConvertor.Decode(data, location, 3));
-        location = location + 1;                
+        location = location + 1;
 
         // create line location.
         var lineLocation = new LineLocation();
@@ -87,7 +87,7 @@ public static class LineLocationCodec
             lineLocation.PositiveOffsetPercentage = OffsetConvertor.Decode(data, location);
             location = location + 1;
         }
-        if(location < data.Length)
+        if (location < data.Length)
         { // if present.
             lineLocation.NegativeOffsetPercentage = OffsetConvertor.Decode(data, location);
             location = location + 1;
@@ -129,7 +129,12 @@ public static class LineLocationCodec
         size = size + (location.Intermediate.Length * 7);
         var data = new byte[size];
 
-        var header = new Header { Version = 3, HasAttributes = true, ArF0 = false, IsPoint = false,
+        var header = new Header
+        {
+            Version = 3,
+            HasAttributes = true,
+            ArF0 = false,
+            IsPoint = false,
             ArF1 = false
         };
         HeaderConvertor.Encode(data, 0, header);

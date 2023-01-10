@@ -1,5 +1,5 @@
-﻿using OpenLR.Referenced.Locations;
-using OpenLR.Model.Locations;
+﻿using OpenLR.Model.Locations;
+using OpenLR.Referenced.Locations;
 
 namespace OpenLR.Referenced.Codecs;
 

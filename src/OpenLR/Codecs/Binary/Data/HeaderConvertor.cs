@@ -43,7 +43,7 @@ public static class HeaderConvertor
     /// <param name="data"></param>
     /// <returns></returns>
     private static ushort DecodeVersion(byte data)
-    {            
+    {
         // create mask.
         const int mask = 7;
         int value = (data & mask);

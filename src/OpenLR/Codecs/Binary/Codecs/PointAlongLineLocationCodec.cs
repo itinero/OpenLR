@@ -19,7 +19,8 @@ public static class PointAlongLineLocationCodec
         // decode first location reference point.
         var first = new LocationReferencePoint
         {
-            Coordinate = CoordinateConverter.Decode(data, 1), FunctionalRoadClass = FunctionalRoadClassConvertor.Decode(data, 7, 2),
+            Coordinate = CoordinateConverter.Decode(data, 1),
+            FunctionalRoadClass = FunctionalRoadClassConvertor.Decode(data, 7, 2),
             FormOfWay = FormOfWayConvertor.Decode(data, 7, 5),
             LowestFunctionalRoadClassToNext = FunctionalRoadClassConvertor.Decode(data, 8, 0),
             Bearing = BearingConvertor.DecodeAngleFromBearing(BearingConvertor.Decode(data, 8, 3)),
@@ -71,7 +72,12 @@ public static class PointAlongLineLocationCodec
     {
         var data = new byte[17];
 
-        var header = new Header { Version = 3, HasAttributes = true, ArF0 = false, IsPoint = true,
+        var header = new Header
+        {
+            Version = 3,
+            HasAttributes = true,
+            ArF0 = false,
+            IsPoint = true,
             ArF1 = false
         };
         HeaderConvertor.Encode(data, 0, header);

@@ -59,7 +59,8 @@ internal static class JsonTools
                         t = "000" + string.Format("X", c);
                         sb.Append("\\u" + t[^4..]);
                     }
-                    else {
+                    else
+                    {
                         sb.Append(c);
                     }
                     break;

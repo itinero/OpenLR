@@ -35,8 +35,8 @@ public static class OffsetConvertor
         if (byteIndex > 7) { throw new ArgumentOutOfRangeException(nameof(byteIndex), "byteIndex has to be a value in the range of [0-7]."); }
 
         byte mask = (byte)(1 << (7 - byteIndex));
-            
-        if(offset)
+
+        if (offset)
         { // set to 1
             data[startIndex] |= mask;
         }
@@ -54,8 +54,11 @@ public static class OffsetConvertor
     /// <param name="startIndex"></param>
     public static void Encode(double offsetPercentage, byte[] data, int startIndex)
     {
-        if (offsetPercentage is < 0 or >= 100) { throw new ArgumentOutOfRangeException(nameof(offsetPercentage), 
-            "The percentage has to be in the range [0-100["); }
+        if (offsetPercentage is < 0 or >= 100)
+        {
+            throw new ArgumentOutOfRangeException(nameof(offsetPercentage),
+            "The percentage has to be in the range [0-100[");
+        }
 
         // calculate offset value.
         var offsetValue = (byte)(int)System.Math.Floor(256.0 * (offsetPercentage / 100));

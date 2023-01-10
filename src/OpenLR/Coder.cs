@@ -1,11 +1,11 @@
-﻿using OpenLR.Model.Locations;
-using OpenLR.Referenced;
-using OpenLR.Referenced.Locations;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Itinero;
 using Itinero.Network;
+using OpenLR.Model.Locations;
 using OpenLR.Networks;
+using OpenLR.Referenced;
+using OpenLR.Referenced.Locations;
 
 namespace OpenLR;
 
@@ -23,17 +23,17 @@ public class Coder
     {
         if (settings.NetworkInterpreter == null) throw new Exception("No network data interpreter set.");
         if (settings.RawCodec == null) throw new Exception("No raw codec set.");
-        
+
         this.Network = routingNetwork;
         this.Settings = settings;
 
         this.Interpreter = new EdgeEnumeratorNetworkInterpreter(this.Settings.NetworkInterpreter);
     }
-    
+
     internal RoutingNetwork Network { get; }
-    
+
     internal EdgeEnumeratorNetworkInterpreter Interpreter { get; }
-    
+
     /// <summary>
     /// Gets the profile.
     /// </summary>

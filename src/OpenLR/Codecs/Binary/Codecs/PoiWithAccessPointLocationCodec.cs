@@ -46,9 +46,11 @@ public static class PoiWithAccessPointLocationCodec
         first.DistanceToNext = DistanceToNextConvertor.Decode(data[9]);
 
         // decode last location reference point.
-        var last = new LocationReferencePoint {
+        var last = new LocationReferencePoint
+        {
             // no last coordinates, identical to the first.
-            Coordinate = CoordinateConverter.DecodeRelative(first.Coordinate, data, 10) };
+            Coordinate = CoordinateConverter.DecodeRelative(first.Coordinate, data, 10)
+        };
         var sideOfRoad = SideOfRoadConverter.Decode(data, 14, 0);
         last.FunctionalRoadClass = FunctionalRoadClassConvertor.Decode(data, 14, 2);
         last.FormOfWay = FormOfWayConvertor.Decode(data, 14, 5);
@@ -60,7 +62,9 @@ public static class PoiWithAccessPointLocationCodec
         // create line location.
         var poiWithAccessPointLocation = new PoiWithAccessPointLocation
         {
-            First = first, Last = last, Coordinate = coordinate,
+            First = first,
+            Last = last,
+            Coordinate = coordinate,
             Orientation = orientation,
             PositiveOffset = null,
             SideOfRoad = sideOfRoad

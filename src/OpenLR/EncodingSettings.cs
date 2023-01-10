@@ -12,11 +12,11 @@ public class EncodingSettings
     {
         this.VerifyShortestPath = verifyShortestPath;
     }
-        
+
     /// <summary>
     /// Gets the default settings.
     /// </summary>
-    public static readonly EncodingSettings Default = new ();
+    public static readonly EncodingSettings Default = new();
 
     /// <summary>
     /// Gets or sets the verify shortest path flag.

@@ -1,21 +1,21 @@
 ﻿using System;
-using Itinero;
-using OpenLR.Model;
-using OpenLR.Referenced.Locations;
-using OpenLR.Scoring;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Itinero;
 using Itinero.Geo;
 using Itinero.Network;
 using Itinero.Network.Enumerators.Edges;
 using Itinero.Routes.Paths;
 using Itinero.Routing;
 using Itinero.Snapping;
+using OpenLR.Model;
+using OpenLR.Referenced.Locations;
+using OpenLR.Scoring;
 using OpenLR.Scoring.Candidates;
 
-[assembly:InternalsVisibleTo("OpenLR.Test")]
+[assembly: InternalsVisibleTo("OpenLR.Test")]
 namespace OpenLR.Referenced.Codecs;
 
 /// <summary>
@@ -99,7 +99,7 @@ internal static class CoderExtensions
             yield return candidate;
         }
     }
-        
+
     /// <summary>
     /// Finds candidate edges starting at a given vertex matching a given fow and frc.
     /// </summary>
@@ -110,7 +110,7 @@ internal static class CoderExtensions
     /// <param name="frc">The frc.</param>
     /// <param name="bearing">The bearing.</param>
     /// <returns></returns>
-    public static IEnumerable<ScoredCandidate<(SnapPoint snapPoint, bool direction)>> FindCandidateSnapPointAndDirectionFor(this Coder coder, ScoredCandidate<SnapPoint> candidate, 
+    public static IEnumerable<ScoredCandidate<(SnapPoint snapPoint, bool direction)>> FindCandidateSnapPointAndDirectionFor(this Coder coder, ScoredCandidate<SnapPoint> candidate,
         bool pointsForward, FormOfWay fow, FunctionalRoadClass frc, double bearing)
     {
         var enumerator = coder.Network.GetEdgeEnumerator();
@@ -128,7 +128,7 @@ internal static class CoderExtensions
                 var matchScore = Score.New(Score.MatchArc, "Metric indicating a match with fow, frc etc...",
                     match, 2);
                 if (!(match > 0)) continue;
-                
+
                 // consider forward direction.
                 var shape = enumerator.GetCompleteShape();
                 var localBearing = shape.Bearing(!pointsForward);
@@ -140,7 +140,7 @@ internal static class CoderExtensions
                 yield return new ScoredCandidate<(SnapPoint snapPoint, bool direction)>(
                     (snapPoint, enumerator.Forward),
                     candidate.Score * (matchScore + bearingScore));
-                    
+
                 // consider backward direction.
                 localBearing = shape.Bearing(pointsForward);
                 localBearingDiff = Math.Abs(Extensions.AngleSmallestDifference(localBearing, bearing));
@@ -174,7 +174,7 @@ internal static class CoderExtensions
                     yield return new ScoredCandidate<(SnapPoint snapPoint, bool direction)>((result.Value, pointsForward ? enumerator.Forward : !enumerator.Forward), candidate.Score * (matchScore + bearingScore));
                 }
             }
-                
+
             enumerator.MoveTo(candidate.Candidate.EdgeId, false);
             result = snapper.To(candidate.Candidate.EdgeId, candidate.Candidate.Offset, false);
             if (!result.IsError)
@@ -200,12 +200,13 @@ internal static class CoderExtensions
     /// <summary>
     /// Calculates a route between the two given vertices.
     /// </summary>
-    public static async Task<ScoredCandidate<Path?>> FindCandidateRoute(this Coder coder, (SnapPoint snapPoint, bool direction) from, (SnapPoint snapPoint, bool direction) to, 
+    public static async Task<ScoredCandidate<Path?>> FindCandidateRoute(this Coder coder, (SnapPoint snapPoint, bool direction) from, (SnapPoint snapPoint, bool direction) to,
         FunctionalRoadClass minimum, double distanceToNext)
     {
         var router = coder.Network.Route(new RoutingSettings()
         {
-            MaxDistance = distanceToNext * 4, Profile = coder.Settings.RoutingSettings.Profile,
+            MaxDistance = distanceToNext * 4,
+            Profile = coder.Settings.RoutingSettings.Profile,
         });
 
         var path = await router.From((from.snapPoint, from.direction)).To((to.snapPoint, to.direction)).PathAsync();

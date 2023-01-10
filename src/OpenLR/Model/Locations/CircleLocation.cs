@@ -8,7 +8,7 @@ public class CircleLocation : ILocation
     /// <summary>
     /// Gets or sets the location (COORD).
     /// </summary>
-    public Coordinate Coordinate { get; set;  }
+    public Coordinate Coordinate { get; set; }
 
     /// <summary>
     /// Gets or sets the radius in meter (RAD).

@@ -29,7 +29,7 @@ public class LocationReferencePoint
     /// <summary>
     /// Gets or sets the lowest functional road class to the next point.
     /// </summary>
-    public FunctionalRoadClass? LowestFunctionalRoadClassToNext { get;set; }
+    public FunctionalRoadClass? LowestFunctionalRoadClassToNext { get; set; }
 
     /// <summary>
     /// Gets or sets the distance to the next point in meters.

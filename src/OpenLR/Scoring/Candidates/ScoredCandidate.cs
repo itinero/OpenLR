@@ -23,7 +23,7 @@ public class ScoredCandidate<T> : IComparable<ScoredCandidate<T>>
     /// The candidate.
     /// </summary>
     public T Candidate { get; }
-    
+
     /// <summary>
     /// The score.
     /// </summary>
@@ -47,7 +47,7 @@ public class ScoredCandidate<T> : IComparable<ScoredCandidate<T>>
     /// <returns></returns>
     public ScoredCandidate<(ScoredCandidate<T> left, ScoredCandidate<TOther> right)> Add<TOther>(ScoredCandidate<TOther> other)
     {
-        return new ScoredCandidate<(ScoredCandidate<T> left, ScoredCandidate<TOther> right)>((this, other), 
+        return new ScoredCandidate<(ScoredCandidate<T> left, ScoredCandidate<TOther> right)>((this, other),
             this.Score + other.Score);
     }
 
@@ -64,7 +64,7 @@ public class ScoredCandidate<T> : IComparable<ScoredCandidate<T>>
         if (obj is not ScoredCandidate<T> other) return false;
 
         if (!this.Score.Equals(other.Score)) return false;
-        
+
         if (this.Candidate != null && other.Candidate != null)
         {
             return this.Candidate.Equals(other.Candidate);

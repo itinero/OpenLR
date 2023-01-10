@@ -31,7 +31,7 @@ public class ScoresMultiplied : Score
         var leftScore = this.Left.TryGetByName(key);
         var rightScore = this.Right.TryGetByName(key);
         if (leftScore == null || rightScore == null) return null;
-        
+
         return leftScore + rightScore;
     }
 }

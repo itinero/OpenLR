@@ -17,7 +17,7 @@ public static class AssertGeo
     /// <param name="delta"></param>
     public static void AreEqual(Geometry expected, Geometry actual, double delta)
     {
-        if(expected is LineString lineString && actual is LineString s)
+        if (expected is LineString lineString && actual is LineString s)
         {
             AssertGeo.AreEqual(lineString, s, delta);
         }
@@ -36,7 +36,7 @@ public static class AssertGeo
     public static void AreEqual(LineString expected, LineString actual, double delta)
     {
         var distance = new PointPairDistance();
-        foreach(Coordinate actualCoordinate in actual.Coordinates)
+        foreach (Coordinate actualCoordinate in actual.Coordinates)
         {
             DistanceToPoint.ComputeDistance(expected, actualCoordinate, distance);
             Assert.That(distance.Distance, Is.EqualTo(0.0).Within(delta));

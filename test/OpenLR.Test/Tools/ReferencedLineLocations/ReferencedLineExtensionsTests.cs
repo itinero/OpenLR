@@ -25,14 +25,14 @@ public class ReferencedLineExtensionsTests
         (double longitude, double latitude, float? e) end = (
             4.795721368475275,
             51.26693716841704, null);
-        
+
         // calculate shortest path.
         var path = (await network.Route(new DefaultProfile()).From(
             await network.Snap().ToAsync(start)).To(
             await network.Snap().ToAsync(end)).PathAsync()).Value;
 
-        var lineLocation = ReferencedLine.FromPath(path).WithOffsets(25,25);
-            
+        var lineLocation = ReferencedLine.FromPath(path).WithOffsets(25, 25);
+
         var covered = lineLocation.GetCoveredEdges().ToList();
         Assert.That(covered, Has.Count.EqualTo(path.Count));
         foreach (var (edge, forward, _, _) in path)
@@ -46,7 +46,7 @@ public class ReferencedLineExtensionsTests
             });
         }
     }
-    
+
     [Test]
     public async Task GetCoveredEdges_3Edges_ShouldCover3Edges()
     {
@@ -60,7 +60,7 @@ public class ReferencedLineExtensionsTests
         (double longitude, double latitude, float? e) end = (
             4.791841506958008,
             51.268158160891474, null);
-        
+
         // calculate shortest path.
         var path = (await network.Route(new DefaultProfile()).From(
             await network.Snap().ToAsync(start)).To(
@@ -75,7 +75,7 @@ public class ReferencedLineExtensionsTests
             Assert.That(covered, Does.Contain((edge, forward, 0, ushort.MaxValue)));
         }
     }
-    
+
     [Test]
     public async Task GetCoveredEdges_2Edge_WithOffsets_ShouldCover2PartialEdges()
     {
@@ -89,13 +89,13 @@ public class ReferencedLineExtensionsTests
         (double longitude, double latitude, float? e) end = (
             4.795721368475275,
             51.26693716841704, null);
-        
+
         // calculate shortest path.
         var path = (await network.Route(new DefaultProfile()).From(
             await network.Snap().ToAsync(start)).To(
             await network.Snap().ToAsync(end)).PathAsync()).Value;
 
-        var lineLocation = ReferencedLine.FromPath(path).WithOffsets(10,10);
+        var lineLocation = ReferencedLine.FromPath(path).WithOffsets(10, 10);
         var offset10Percent = lineLocation.GetCoordinates().DistanceEstimateInMeter() * 0.1;
 
         var edgeEnumerator = network.GetEdgeEnumerator();

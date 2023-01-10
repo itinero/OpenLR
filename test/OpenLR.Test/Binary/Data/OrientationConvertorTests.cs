@@ -1,53 +1,52 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 using OpenLR.Codecs.Binary.Data;
 using OpenLR.Model;
-using System;
 
-namespace OpenLR.Test.Binary.Data
+namespace OpenLR.Test.Binary.Data;
+
+/// <summary>
+/// Holds some orientation encoding/decoding tests.
+/// </summary>
+[TestFixture]
+public class OrientationConvertorTests
 {
     /// <summary>
-    /// Holds some orientation encoding/decoding tests.
+    /// Tests simple decoding.
     /// </summary>
-    [TestFixture]
-    public class OrientationConvertorTests
+    [Test]
+    public void TestDecoding1()
     {
-        /// <summary>
-        /// Tests simple decoding.
-        /// </summary>
-        [Test]
-        public void TestDecoding1()
+        Assert.Catch<ArgumentOutOfRangeException>(() =>
         {
-            Assert.Catch<ArgumentOutOfRangeException>(() =>
-            {
-                OrientationConverter.Decode(new byte[] { 0 }, 10);
-            });
+            OrientationConverter.Decode(new byte[] { 0 }, 10);
+        });
 
-            Assert.AreEqual(Orientation.NoOrientation, OrientationConverter.Decode(new byte[] { 0 }, 0, 0));
-            Assert.AreEqual(Orientation.FirstToSecond, OrientationConverter.Decode(new byte[] { 1 }, 0, 6));
-            Assert.AreEqual(Orientation.SecondToFirst, OrientationConverter.Decode(new byte[] { 2 }, 0, 6));
-            Assert.AreEqual(Orientation.BothDirections, OrientationConverter.Decode(new byte[] { 3 }, 0, 6));
-        }
+        Assert.That(OrientationConverter.Decode(new byte[] { 0 }, 0, 0), Is.EqualTo(Orientation.NoOrientation));
+        Assert.That(OrientationConverter.Decode(new byte[] { 1 }, 0, 6), Is.EqualTo(Orientation.FirstToSecond));
+        Assert.That(OrientationConverter.Decode(new byte[] { 2 }, 0, 6), Is.EqualTo(Orientation.SecondToFirst));
+        Assert.That(OrientationConverter.Decode(new byte[] { 3 }, 0, 6), Is.EqualTo(Orientation.BothDirections));
+    }
 
-        /// <summary>
-        /// Tests simple encoding.
-        /// </summary>
-        [Test]
-        public void TestEncoding1()
+    /// <summary>
+    /// Tests simple encoding.
+    /// </summary>
+    [Test]
+    public void TestEncoding1()
+    {
+        var data = new byte[1];
+        Assert.Catch<ArgumentOutOfRangeException>(() =>
         {
-            var data = new byte[1];
-            Assert.Catch<ArgumentOutOfRangeException>(() =>
-            {
-                OrientationConverter.Encode(Orientation.NoOrientation, data, 0, 10);
-            });
+            OrientationConverter.Encode(Orientation.NoOrientation, data, 0, 10);
+        });
 
-            OrientationConverter.Encode(Orientation.NoOrientation, data, 0, 6);
-            Assert.AreEqual(0, data[0]);
-            OrientationConverter.Encode(Orientation.FirstToSecond, data, 0, 6);
-            Assert.AreEqual(1, data[0]);
-            OrientationConverter.Encode(Orientation.SecondToFirst, data, 0, 6);
-            Assert.AreEqual(2, data[0]);
-            OrientationConverter.Encode(Orientation.BothDirections, data, 0, 6);
-            Assert.AreEqual(3, data[0]);
-        }
+        OrientationConverter.Encode(Orientation.NoOrientation, data, 0, 6);
+        Assert.That(data[0], Is.EqualTo(0));
+        OrientationConverter.Encode(Orientation.FirstToSecond, data, 0, 6);
+        Assert.That(data[0], Is.EqualTo(1));
+        OrientationConverter.Encode(Orientation.SecondToFirst, data, 0, 6);
+        Assert.That(data[0], Is.EqualTo(2));
+        OrientationConverter.Encode(Orientation.BothDirections, data, 0, 6);
+        Assert.That(data[0], Is.EqualTo(3));
     }
 }

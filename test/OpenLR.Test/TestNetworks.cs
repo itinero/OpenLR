@@ -1,9 +1,9 @@
 ﻿using System.Reflection;
-using NetTopologySuite.Features;
-using NetTopologySuite.Geometries;
 using Itinero;
 using Itinero.Geo;
 using Itinero.Network;
+using NetTopologySuite.Features;
+using NetTopologySuite.Geometries;
 
 namespace OpenLR.Test;
 
@@ -22,7 +22,7 @@ public static class TestNetworks
                 "OpenLR.Test.test_data.networks.network1.geojson"));
         return routerDb.Latest;
     }
-    
+
     public static async Task<RoutingNetwork> Network3()
     {
         var routerDb = new RouterDb();
@@ -84,7 +84,7 @@ public static class TestNetworks
                 }
 
                 networkWriter.AddEdge(vertex1, vertex2, shape, feature.Attributes.ToAttributes());
-                
+
                 shape.Clear();
                 vertex1 = vertex2;
             }

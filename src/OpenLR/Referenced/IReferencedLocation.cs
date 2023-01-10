@@ -5,5 +5,5 @@ namespace OpenLR.Referenced;
 /// </summary>
 public interface IReferencedLocation
 {
-    
+
 }

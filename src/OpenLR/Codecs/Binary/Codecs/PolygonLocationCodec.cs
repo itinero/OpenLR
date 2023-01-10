@@ -20,11 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+using System.Collections.Generic;
 using OpenLR.Codecs.Binary.Data;
 using OpenLR.Model;
 using OpenLR.Model.Locations;
-using System.Collections.Generic;
-using System;
 
 namespace OpenLR.Codecs.Binary.Codecs;
 

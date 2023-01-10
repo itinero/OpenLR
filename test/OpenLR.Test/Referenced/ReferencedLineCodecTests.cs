@@ -108,14 +108,14 @@ public class ReferencedLineCodecTests
         };
 
         // decode.
-        var decodedResult = await ReferencedLineCodec.Decode(location,coder);
+        var decodedResult = await ReferencedLineCodec.Decode(location, coder);
         var decoded = decodedResult.Value;
-        
+
         // calculate shortest path.
         var path = (await coder.Network.Route(coder.Settings.RoutingSettings.Profile).From(
             await coder.Network.Snap().ToAsync(start)).To(
             await coder.Network.Snap().ToAsync(end)).PathAsync()).Value;
-        
+
         // verify result, should be equal to shortest path.
         Assert.That(decoded, Is.Not.Null);
         Assert.Multiple(() =>

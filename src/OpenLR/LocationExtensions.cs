@@ -1,12 +1,12 @@
-﻿using Itinero;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Itinero;
+using Itinero.Geo;
+using OpenLR.Exceptions;
 using OpenLR.Referenced;
 using OpenLR.Referenced.Codecs;
 using OpenLR.Referenced.Locations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Itinero.Geo;
-using OpenLR.Exceptions;
 
 namespace OpenLR;
 

@@ -28,5 +28,5 @@ public class LineLocation : ILocation
     /// <summary>
     /// Gets or sets the negative offset percentage value (POFF).
     /// </summary>
-    public double? NegativeOffsetPercentage { get;set; }
+    public double? NegativeOffsetPercentage { get; set; }
 }

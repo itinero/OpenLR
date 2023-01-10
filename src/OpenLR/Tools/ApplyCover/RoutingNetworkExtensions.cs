@@ -16,7 +16,7 @@ public static class RoutingNetworkExtensions
     /// A function to rewrite edge attributes that are covered.
     /// </summary>
     public delegate IEnumerable<(string key, string value)> RewriteEdgeAttributesFunc(IEnumerable<(string key, string value)> attributes, bool coverIsForward);
-    
+
     /// <summary>
     /// Applies the given edge cover, splits edges accordingly and rewrites tags on covered sections.
     /// </summary>

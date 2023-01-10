@@ -1,5 +1,5 @@
-﻿using OpenLR.Model;
-using System;
+﻿using System;
+using OpenLR.Model;
 
 namespace OpenLR.Codecs.Binary.Data;
 
@@ -112,7 +112,7 @@ public static class CoordinateConverter
     /// <param name="startIndex"></param>
     public static void EncodeInt24(int value, byte[] data, int startIndex)
     {
-        data[startIndex + 0]  = (byte)(value >> 16);
+        data[startIndex + 0] = (byte)(value >> 16);
         if (value < 0)
         { // set sign bit.
             data[startIndex + 0] = (byte)(data[startIndex + 0] | (1 << 7));

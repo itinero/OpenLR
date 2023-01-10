@@ -1,8 +1,4 @@
-﻿using OpenLR.Model;
-using OpenLR.Model.Locations;
-using OpenLR.Referenced.Locations;
-using OpenLR.Scoring;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Itinero;
@@ -10,6 +6,10 @@ using Itinero.IO.Json.GeoJson;
 using Itinero.Routes.Paths;
 using Itinero.Snapping;
 using OpenLR.Exceptions;
+using OpenLR.Model;
+using OpenLR.Model.Locations;
+using OpenLR.Referenced.Locations;
+using OpenLR.Scoring;
 using OpenLR.Scoring.Candidates;
 
 namespace OpenLR.Referenced.Codecs;
@@ -47,10 +47,10 @@ public static class ReferencedLineCodec
                 new SortedSet<ScoredCandidate<(ScoredCandidate<(SnapPoint snapPoint, bool direction)> left,
                     ScoredCandidate<(SnapPoint snapPoint, bool direction)> right)>>();
             foreach (var tailCandidate in tailCandidates)
-            foreach (var headCandidate in headCandidates)
-            {
-                combinedScoresSet.Add(tailCandidate.Add(headCandidate));
-            }
+                foreach (var headCandidate in headCandidates)
+                {
+                    combinedScoresSet.Add(tailCandidate.Add(headCandidate));
+                }
 
             // calculate paths and build candidate routes.
             var best = new ScoredCandidate<Path?>(null, Score.Zero);
@@ -59,7 +59,7 @@ public static class ReferencedLineCodec
                 var deviation = Score.New(Score.DistanceComparison,
                     "Compares expected location distance with decoded location distance (1=perfect, 0=difference bigger than total distance)",
                     1, 1);
-                
+
                 // calculate perfect score, if it is worst than best, stop search.
                 var perfectScore = combinedCandidates.Score + Score.New(Score.CandidateRoute, "Perfect route", 1, 1) +
                                    deviation;
@@ -101,7 +101,7 @@ public static class ReferencedLineCodec
                 // if score is worse, move to next.
                 if (best.Score.Value >= candidate.Score.Value) continue;
                 best = candidate;
-                
+
                 // if score is perfect, stop.
                 if (best.Score.IsPerfect) break;
             }
