@@ -1,0 +1,48 @@
+name: .NET Core
+
+on:
+  push:
+    branches: [ features/itinero2 ]
+
+jobs:
+  build-and-test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: 'true'
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: Restore packages.
+      run: dotnet restore
+    - name: Build all projects.
+      run: dotnet build --configuration Release --no-restore
+
+    - name: Run dotnet format
+      run: dotnet format --verify-no-changes --verbosity diagnostic --no-restore
+      
+    - name: Test with coverage report.
+      run: dotnet test --no-build --verbosity normal
+
+    - name: Publish
+      run: dotnet publish -c release
+      working-directory: ./src/OpenLR/
+    - name: Publish
+      run: dotnet publish -c release
+      working-directory: ./src/OpenLR.Geo/
+
+    - name: Nuget Pack
+      run: dotnet pack -c release
+      working-directory: ./src/OpenLR/
+    - name: Nuget Pack
+      run: dotnet pack -c release
+      working-directory: ./src/OpenLR.Geo/
+      
+    - name: Nuget push
+      run: dotnet nuget push **/*.nupkg --skip-duplicate -k ${{ secrets.GITHUB_TOKEN }} -s https://nuget.pkg.github.com/itinero/index.json
+      working-directory: ./src/
+      
