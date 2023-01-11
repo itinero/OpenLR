@@ -26,7 +26,7 @@ public static class RoutingNetworkExtensions
     public static RoutingNetwork ApplyCover(this RoutingNetwork routingNetwork, IEnumerable<(EdgeId edge, bool forward, ushort tailOffset, ushort headOffset)> edges,
         RewriteEdgeAttributesFunc rewrite)
     {
-        using (var mutator = routingNetwork.RouterDb.GetMutableNetwork())
+        using (var mutator = routingNetwork.GetAsMutable())
         {
             // apply per edge.
             var edgeEnumerator = mutator.GetEdgeEnumerator();
