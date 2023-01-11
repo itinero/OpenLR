@@ -30,7 +30,7 @@ jobs:
       run: dotnet format --verify-no-changes --verbosity diagnostic --no-restore
       
     - name: Test with coverage report.
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test --verbosity normal
 
     - name: Publish
       run: dotnet publish -c release
