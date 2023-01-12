@@ -57,7 +57,7 @@ namespace OpenLR.Codecs.Binary.Decoders
             pointAlongLine.First = first;
             pointAlongLine.Orientation = OrientationConverter.Decode(data, 7, 0);
             pointAlongLine.SideOfRoad = SideOfRoadConverter.Decode(data, 14, 0);
-            pointAlongLine.PositiveOffsetPercentage = OffsetConvertor.Decode(data, 16);
+            pointAlongLine.PositiveOffsetPercentage = data.Length > 16 ? OffsetConvertor.Decode(data, 16) : null;
             pointAlongLine.Last = last;
 
             return pointAlongLine;
