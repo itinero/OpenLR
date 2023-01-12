@@ -10,6 +10,6 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Itinero" Version="2.0.0-alpha-086" />
+    <PackageReference Include="Itinero" Version="2.0.0-alpha-087" />
   </ItemGroup>
 </Project>

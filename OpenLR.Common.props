@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
     <PropertyGroup>
-        <PackageVersion>2.0.0-alpha-002</PackageVersion>
+        <PackageVersion>2.0.0-alpha-003</PackageVersion>
         <NeutralLanguage>en</NeutralLanguage>
         <Description>OpenLR library for .NET.</Description>
         <Copyright>Itinero BV</Copyright>

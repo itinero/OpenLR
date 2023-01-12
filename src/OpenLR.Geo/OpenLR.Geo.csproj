@@ -1,23 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../../OpenLR.Common.props" />
+  
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <AssemblyName>OpenLR.Geo</AssemblyName>
     <PackageId>OpenLR.Geo</PackageId>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
-    <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
     <LangVersion>default</LangVersion>
-    <PackageVersion />
     <Title>OpenLR.Geo</Title>
-    <Authors>Itinero BV</Authors>
-    <Description>OpenLR library for .NET.</Description>
-    <Copyright>Itinero BV</Copyright>
-    <PackageProjectUrl>https://github.com/Itinero/OpenLR</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/itinero/OpenLR/blob/develop/LICENSE.md</PackageLicenseUrl>
-    <PackageIconUrl>https://www.itinero.tech/logos/openlr_logo64.png</PackageIconUrl>
-    <RepositoryUrl>https://github.com/Itinero/OpenLR</RepositoryUrl>
     <PackageTags>openlr, routing, NTS</PackageTags>
   </PropertyGroup>
   <ItemGroup>
