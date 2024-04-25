@@ -113,6 +113,7 @@ namespace OpenLR.Codecs.Binary.Decoders
             SideOfRoadConverter.Encode(location.SideOfRoad.Value, data, 14, 0);
             if (location.PositiveOffsetPercentage.HasValue)
             { // positive offset percentage is present.
+                OffsetConvertor.EncodeFlag(true, data, 15, 1);
                 OffsetConvertor.Encode(location.PositiveOffsetPercentage.Value, data, 16);
             }
 
