@@ -3,7 +3,7 @@
 
     <!--- Package information, Version -->
     <PropertyGroup>
-        <PackageVersion>1.1.1-pre12</PackageVersion>
+        <PackageVersion>1.1.1-pre13</PackageVersion>
         <NeutralLanguage>en</NeutralLanguage>
         <Description>OpenLR library for .NET.</Description>
         <Copyright>Itinero BV</Copyright>
