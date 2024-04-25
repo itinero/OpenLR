@@ -6,6 +6,8 @@ using System;
 
 namespace OpenLR.Test.Binary
 {
+    using NuGet.Frameworks;
+
     /// <summary>
     /// Contains tests for decoding/encoding a point along location to/from OpenLR binary representation.
     /// </summary>
@@ -52,6 +54,19 @@ namespace OpenLR.Test.Binary
             Assert.AreEqual(Orientation.NoOrientation, pointAlongLineLocation.Orientation);
             Assert.AreEqual(SideOfRoad.Left, pointAlongLineLocation.SideOfRoad);
             Assert.AreEqual(30.19, pointAlongLineLocation.PositiveOffsetPercentage, 0.5); // binary encode loses accuracy.
+        }
+        
+        /// <summary>
+        /// Decode a message with only 16 bytes, i.e. no positive offset byte
+        /// </summary>
+        [Test]
+        public void DecodeBase64WithNoOffset()
+        {
+            // Message with 16 bytes.
+            var stringData = Convert.FromBase64String("Kwhv2ikWNjPZAP/XAAUzCA==");
+            
+            Assert.IsTrue(PointAlongLineLocationCodec.CanDecode(stringData));
+            Assert.DoesNotThrow(() => PointAlongLineLocationCodec.Decode(stringData));
         }
 
         /// <summary>
