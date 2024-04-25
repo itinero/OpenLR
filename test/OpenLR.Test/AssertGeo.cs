@@ -20,8 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using GeoAPI.Geometries;
 using NetTopologySuite.Algorithm.Distance;
+using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
 using NUnit.Framework;
 
@@ -38,11 +38,11 @@ namespace OpenLR.Test
         /// <param name="expected"></param>
         /// <param name="actual"></param>
         /// <param name="delta"></param>
-        public static void AreEqual(IGeometry expected, IGeometry actual, double delta)
+        public static void AreEqual(Geometry expected, Geometry actual, double delta)
         {
-            if(expected is ILineString && actual is ILineString)
+            if(expected is LineString && actual is LineString)
             {
-                AssertGeo.AreEqual(expected as ILineString, actual as ILineString, delta);
+                AssertGeo.AreEqual(expected as LineString, actual as LineString, delta);
             }
             //else if (expected is ILineString && actual is ILineString)
             //{
@@ -56,7 +56,7 @@ namespace OpenLR.Test
         /// <param name="expected"></param>
         /// <param name="actual"></param>
         /// <param name="delta"></param>
-        public static void AreEqual(ILineString expected, ILineString actual, double delta)
+        public static void AreEqual(LineString expected, LineString actual, double delta)
         {
             var distance = new PointPairDistance();
             foreach(Coordinate actualCoordinate in actual.Coordinates)
@@ -79,8 +79,8 @@ namespace OpenLR.Test
         public static void AreEqual(string geoJsonActual, string geoJson, double delta)
         {
             var geoJsonReader = new GeoJsonReader();
-            var actual = geoJsonReader.Read<IGeometry>(geoJsonActual);
-            var expected = geoJsonReader.Read<IGeometry>(geoJson);
+            var actual = geoJsonReader.Read<Geometry>(geoJsonActual);
+            var expected = geoJsonReader.Read<Geometry>(geoJson);
 
             AssertGeo.AreEqual(actual, expected, delta);
         }

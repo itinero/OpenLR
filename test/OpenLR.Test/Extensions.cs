@@ -28,6 +28,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Coordinate = Itinero.LocalGeo.Coordinate;
 
 namespace OpenLR.Test
 {
@@ -58,7 +59,7 @@ namespace OpenLR.Test
         {
             var coordinates = new List<Tuple<Coordinate, IAttributesTable>>();
             var features = FromGeoJsonFile(geoJsonFile);
-            foreach(var feature in features.Features)
+            foreach(var feature in features)
             {
                 if (feature.Geometry is Point)
                 {

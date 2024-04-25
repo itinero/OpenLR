@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using GeoAPI.Geometries;
 using Itinero;
 using Itinero.Attributes;
 using Itinero.Data.Network;
@@ -207,18 +206,18 @@ namespace OpenLR.Geo
             var features = new FeatureCollection();
 
             var first = location.First.ToFeature();
-            first.Attributes.AddAttribute("positive_offset_percentage", location.PositiveOffsetPercentage == null ? string.Empty :
+            first.Attributes.Add("positive_offset_percentage", location.PositiveOffsetPercentage == null ? string.Empty :
                 location.PositiveOffsetPercentage.ToInvariantString());
-            first.Attributes.AddAttribute("orientation", location.Orientation == null ? string.Empty :
+            first.Attributes.Add("orientation", location.Orientation == null ? string.Empty :
                 location.Orientation.ToInvariantString());
-            first.Attributes.AddAttribute("side_of_road", location.SideOfRoad == null ? string.Empty : 
+            first.Attributes.Add("side_of_road", location.SideOfRoad == null ? string.Empty : 
                 location.SideOfRoad.ToInvariantString());
-            first.Attributes.AddAttribute("type", "first");
+            first.Attributes.Add("type", "first");
             features.Add(first);
             var last = location.Last.ToFeature();
-            last.Attributes.AddAttribute("negative_offset_percentage", location.NegativeOffsetPercentage == null ? string.Empty :
+            last.Attributes.Add("negative_offset_percentage", location.NegativeOffsetPercentage == null ? string.Empty :
                 location.NegativeOffsetPercentage.ToInvariantString());
-            last.Attributes.AddAttribute("type", "last");
+            last.Attributes.Add("type", "last");
             features.Add(last);
 
             return features;

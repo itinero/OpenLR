@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+
+    <!--- Package information, Version -->
+    <PropertyGroup>
+        <PackageVersion>1.1.1-pre11=2</PackageVersion>
+        <NeutralLanguage>en</NeutralLanguage>
+        <Description>OpenLR library for .NET.</Description>
+        <Copyright>Itinero BV</Copyright>
+        <PackageProjectUrl>https://github.com/Itinero/OpenLR</PackageProjectUrl>
+        <PackageLicenseUrl>https://github.com/itinero/OpenLR/blob/develop/LICENSE.md</PackageLicenseUrl>
+        <PackageIconUrl>http://www.itinero.tech/logos/openlr_logo64.png</PackageIconUrl>
+        <RepositoryUrl>https://github.com/Itinero/OpenLR</RepositoryUrl>
+        <PackageTags>openlr, routing</PackageTags>
+        <RepositoryType>git</RepositoryType>
+        <Authors>Itinero Contributors</Authors>
+        <Company>Itinero BV</Company>
+    </PropertyGroup>
+</Project>

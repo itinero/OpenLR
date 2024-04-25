@@ -92,7 +92,7 @@ namespace OpenLR.Test.Functional.Osm
             var features = Extensions.FromGeoJsonFile(Path.Combine(".", "Data", "line_locations.geojson"));
 
             var i = 0;
-            foreach (var feature in features.Features)
+            foreach (var feature in features)
             {
                 var points = new List<Coordinate>();
                 var coordinates = (feature.Geometry as NetTopologySuite.Geometries.LineString).Coordinates;
@@ -102,7 +102,7 @@ namespace OpenLR.Test.Functional.Osm
                     points.Add(new Coordinate((float)c.Y, (float)c.X));
                 }
 
-                Log.Logger.Verbose($"Testing line location {i + 1}/{features.Features.Count}" +
+                Log.Logger.Verbose($"Testing line location {i + 1}/{features.Count}" +
                                    $" @ {points[0].ToInvariantString()}->{points[1].ToInvariantString()}");
                 TestEncodeDecoderRoute(coder, points.ToArray());
 

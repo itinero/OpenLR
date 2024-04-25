@@ -87,7 +87,7 @@ namespace OpenLR.Test.Functional.NWB
         public static void TestEncodeDecodeRoutes(RouterDb routerDb)
         {
             var coder = new Coder(routerDb, new NWBCoderProfile(routerDb.GetSupportedVehicle("nwb.car")));
-            var features = Extensions.FromGeoJsonFile(Path.Combine(".", "Data", "line_locations.geojson")).Features.ToList();
+            var features = Extensions.FromGeoJsonFile(Path.Combine(".", "Data", "line_locations.geojson")).ToList();
 
             for (var i = 0; i < features.Count; i++)
             {

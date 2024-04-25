@@ -29,6 +29,7 @@ using System.IO;
 using Itinero.Geo;
 using Itinero.Data.Network.Restrictions;
 using Itinero;
+using Coordinate = Itinero.LocalGeo.Coordinate;
 
 namespace OpenLR.Test
 {
@@ -58,7 +59,7 @@ namespace OpenLR.Test
             var geoJsonReader = new NetTopologySuite.IO.GeoJsonReader();
             var features = geoJsonReader.Read<FeatureCollection>(geoJson);
 
-            foreach (var feature in features.Features)
+            foreach (var feature in features)
             {
                 if (feature.Geometry is Point)
                 {
@@ -74,7 +75,7 @@ namespace OpenLR.Test
                 }
             }
 
-            foreach (var feature in features.Features)
+            foreach (var feature in features)
             {
                 if (feature.Geometry is LineString)
                 {
@@ -138,7 +139,7 @@ namespace OpenLR.Test
                 }
             }
 
-            foreach (var feature in features.Features)
+            foreach (var feature in features)
             {
                 if (feature.Geometry is LineString &&
                     feature.Attributes.Contains("restriction", "yes"))

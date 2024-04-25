@@ -381,7 +381,7 @@ namespace OpenLR
             { // already valid.
                 return;
             }
-            if (line.Vertices.Length > 2) { return; } // line was already adjusted.
+            // if (line.Vertices.Length > 2) { return; } // line was already adjusted.
 
             var vertex1 = line.Vertices[0];
             var vertex2 = line.Vertices[1];

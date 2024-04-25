@@ -31,7 +31,7 @@ namespace OpenLR.Test.Functional
 {
     public static class Download
     {
-        public static string NetherlandsPbf = "http://files.itinero.tech/data/OSM/planet/europe/netherlands-latest.osm.pbf";
+        public static string NetherlandsPbf = "http://planet.anyways.eu/planet/europe/netherlands/netherlands-latest.osm.pbf";
 
         /// <summary>
         /// Downloads all test-data.
