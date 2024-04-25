@@ -6,7 +6,6 @@ using System;
 
 namespace OpenLR.Test.Binary
 {
-    using NuGet.Frameworks;
 
     /// <summary>
     /// Contains tests for decoding/encoding a point along location to/from OpenLR binary representation.
